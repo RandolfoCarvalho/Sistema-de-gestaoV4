@@ -1,0 +1,492 @@
+﻿import React, { useState, useEffect, useCallback } from "react";
+import Modal from "react-modal";
+import usePayment from "./hooks/usePayment"; // Assumindo que este hook lida com a chamada ao seu backend
+import { useNavigate } from "react-router-dom";
+import { initMercadoPago, CardPayment, Wallet } from "@mercadopago/sdk-react";
+import PaymentLoadingSpinner from '../ui/loadings'
+import useSignalRPedidos from './hooks/useSignalRPedidos';
+
+const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSuccess, preparePedidoDTO }) => {
+    const { processPayment, processPaymentPix,  loading: paymentLoading, error: paymentError } = usePayment(); // Renomeado para evitar conflito
+
+    const [amount, setAmount] = useState(cartTotal);
+    const [pixKey, setPixKey] = useState(""); 
+    const [troco, setTroco] = useState("");
+    const navigate = useNavigate();
+    const [preferenceId, setPreferenceId] = useState(null); 
+    const [internalLoading, setInternalLoading] = useState(false); 
+    const [internalError, setInternalError] = useState(null); 
+    const [pixData, setPixData] = useState(null);
+    //const PUBLIC_KEY = "APP_USR-9d429645-4c80-4f72-aa71-b303ee60755f";
+    const PUBLIC_KEY = "TEST-f34a05b5-e64c-4ea1-aae3-164636ff3db1"; // Use sua Public Key real
+    
+    // Atualiza o valor se o total do carrinho mudar
+    useEffect(() => {
+        setAmount(cartTotal);
+    }, [cartTotal]);
+
+    // Carrega o script de segurança do MercadoPago
+    useEffect(() => {
+        if (isOpen && (paymentMethod === "mercadopago" || paymentMethod === "cartao")) {
+            // Inicializa o Mercado Pago SDK
+            initMercadoPago(PUBLIC_KEY, {
+                locale: 'pt-BR'
+            });
+
+            // Carrega o script de segurança
+            const loadMercadoPagoScript = () => {
+                const script = document.createElement('script');
+                script.src = "https://www.mercadopago.com/v2/security.js";
+                script.setAttribute('view', 'checkout');
+                script.async = true;
+                script.onload = () => {
+                    console.log("MercadoPago security script loaded");
+                    setMercadoPagoLoaded(true);
+                };
+                document.body.appendChild(script);
+                
+                return () => {
+                    // Limpa o script quando o componente for desmontado
+                    if (document.body.contains(script)) {
+                        document.body.removeChild(script);
+                    }
+                };
+            };
+            
+            // Verifica se o script já está carregado
+            if (!window.MercadoPago) {
+                return loadMercadoPagoScript();
+            } else {
+                setMercadoPagoLoaded(true);
+            }
+        }
+    }, [isOpen, paymentMethod, PUBLIC_KEY]);
+
+    // Gera a Preferência de Pagamento para o botão Wallet (Checkout Pro)
+    useEffect(() => {
+        // Resetar estados ao abrir ou mudar método
+        setPreferenceId(null);
+        setInternalError(null);
+
+        if (isOpen && paymentMethod === "mercadopago") {
+            const generatePreference = async () => {
+                setInternalLoading(true);
+                setInternalError(null);
+                console.log("Preparando Pedido DTO para gerar preferência...");
+                const pedidoDTO = preparePedidoDTO(); // Pega os dados do pedido ATUALIZADOS
+
+                if (!pedidoDTO) {
+                    console.error("Falha ao preparar PedidoDTO para gerar preferência.");
+                    setInternalError("Não foi possível preparar os dados do pedido.");
+                    setInternalLoading(false);
+                    return;
+                }
+
+                try {
+                    // Seu hook `processPayment` deve retornar { preferenceId: '...' } ou lançar um erro
+                    const response = await processPayment({ FormaPagamento: "mercadopago", Amount: amount }, pedidoDTO);
+
+                    if (response?.preferenceId) {
+                        console.log("Preferência gerada:", response.preferenceId);
+                        setPreferenceId(response.preferenceId);
+                    } else {
+                        console.error("Erro: Resposta da geração de preferência inválida:", response);
+                        setInternalError(response?.error || "Erro ao gerar a preferência de pagamento. Verifique o backend.");
+                    }
+                } catch (error) {
+                    console.error("Catch: Erro ao gerar preferência:", error);
+                    setInternalError(error.message || "Ocorreu um erro inesperado ao gerar a preferência.");
+                } finally {
+                    setInternalLoading(false);
+                }
+            };
+            generatePreference();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen, paymentMethod, amount]); // Adicionado 'amount' como dependência
+
+    const handleCardPaymentSubmit = async (formData, additionalData) => {
+        setInternalLoading(true);
+        setInternalError(null);
+    
+        console.log("Card payment form data received:", formData);
+        console.log("Additional data received:", additionalData);
+    
+        // Process cardholder name safely
+        const fullName = (additionalData?.cardholderName || "").trim();
+        let firstName = "";
+        let lastName = "";
+    
+        if (fullName) {
+            const nameParts = fullName.split(/\s+/);
+            if (nameParts.length === 1) {
+                firstName = nameParts[0];
+                lastName = " "; // Empty space as fallback
+            } else {
+                lastName = nameParts.pop();
+                firstName = nameParts.join(" ");
+            }
+        } else {
+            firstName = "Unknown";
+            lastName = "Unknown";
+        }
+    
+        // Get the order data
+        const pedidoDTO = preparePedidoDTO();
+        if (!pedidoDTO) {
+            console.error("Falha ao preparar PedidoDTO para pagamento com cartão.");
+            setInternalError("Não foi possível preparar os dados do pedido.");
+            setInternalLoading(false);
+            return;
+        }
+        // Monta os dados para seu backend - mapeando para seu DTO
+        const paymentData = {
+            FormaPagamento: "cartao",
+            Amount: transactionAmount,
+            Token: formData.token,
+            PaymentMethodId: formData.payment_method_id,
+            Installments: formData.installments || 1,
+            IssuerId: formData.issuer_id || "",
+            // Dados do pagador
+            PayerFirstName: firstName,
+            PayerLastName: lastName,
+            PayerEmail: payerData.email,
+            PayerIdentificationType: payerData.identification.type,
+            PayerIdentificationNumber: payerData.identification.number,
+            StatusCode: 0, // Valor inicial
+            Message: "" // Valor inicial
+        };
+        try {
+            // Seu hook processPayment deve lidar com esses dados e retornar sucesso/erro
+            const response = await processPayment(paymentData, pedidoDTO);
+            console.log("Payment response:", response);
+    
+            // Verificação de resposta e tratamento de erro...
+            if (response?.ok || response?.status === 'approved') {
+                console.log("Pagamento com cartão bem-sucedido:", response);
+                if (onPaymentSuccess) onPaymentSuccess();
+                navigate("/pedidos");
+                onClose();
+            } else {
+                console.error("Erro no pagamento com cartão (resposta backend):", response);
+                setInternalError(response?.error || response?.message || "Pagamento com cartão falhou.");
+            }
+        } catch (error) {
+            console.error("Catch: Erro ao processar pagamento com cartão:", error);
+            setInternalError(error?.message || "Ocorreu um erro inesperado no pagamento com cartão.");
+        } finally {
+            setInternalLoading(false);
+        }
+    };
+
+    // Create a stable callback function with useCallback
+    const handlePedidoConfirmado = useCallback((pedidoDTO) => {
+        // Only process if we're in PIX payment mode
+        if (pixData && paymentMethod === 'pix') {
+        alert("✅ Pagamento confirmado! Pedido realizado com sucesso.");
+        onClose?.();
+        }
+    }, [pixData, paymentMethod, onClose]);
+
+    // Use the SignalR hook at the top level
+    useSignalRPedidos(handlePedidoConfirmado);
+
+
+    const handlePixDinheiroSubmit = async (e) => {
+        e.preventDefault();
+        setInternalLoading(true);
+        setInternalError(null);
+        setPixData(null);
+        
+        
+        let paymentData;
+    
+        if (paymentMethod === "pix") {
+            paymentData = {
+                FormaPagamento: "pix",
+                Amount: parseFloat(amount),
+            };
+        } else if (paymentMethod === "dinheiro") {
+            // Validação simples - troco não pode ser menor que o valor a pagar
+            if (troco && parseFloat(troco) < parseFloat(amount)) {
+                setInternalError("O valor do troco não pode ser menor que o total a pagar.");
+                setInternalLoading(false);
+                return;
+            }
+            paymentData = {
+                FormaPagamento: "dinheiro",
+                Amount: parseFloat(amount),
+                trocoPara: troco ? parseFloat(troco) : null,
+            };
+        } else {
+             setInternalLoading(false);
+             return;
+        }
+    
+        const pedidoDTO = preparePedidoDTO();
+        if (!pedidoDTO) {
+            console.error("Falha ao preparar PedidoDTO para pagamento:", paymentMethod);
+            setInternalError("Não foi possível preparar os dados do pedido.");
+            setInternalLoading(false);
+            return;
+        }
+    
+        console.log(`Enviando para processPayment (${paymentMethod}):`, paymentData, "com DTO:", pedidoDTO);
+    
+        try {
+            const response = await processPaymentPix(paymentData, pedidoDTO);
+    
+            // Verifique a resposta do backend
+            if (response?.ok) {
+                console.log(`Resposta do backend para ${paymentMethod}:`, response);
+    
+                if (paymentMethod === "pix") {
+                    // --- MOSTRAR DADOS PIX ---
+                    if (response.data && response.data.qrCodeBase64) {
+                        setPixData({
+                            qrCodeBase64: response.data.qrCodeBase64,
+                            qrCodeCopyPaste: response.data.qrCodeString
+                        });
+                    } else {
+                         console.error("Resposta do backend para PIX inválida:", response);
+                         setInternalError("Não foi possível obter os dados do PIX. Tente novamente.");
+                    }
+                } else if (paymentMethod === "dinheiro") {
+                     console.log(`Pagamento com ${paymentMethod} iniciado com sucesso:`, response);
+                     if (onPaymentSuccess) onPaymentSuccess();
+                     onClose(); 
+                }
+            } else {
+                 console.error(`Erro no pagamento com ${paymentMethod} (resposta backend):`, response);
+                 setInternalError(response?.error || response?.message || `Pagamento com ${paymentMethod} falhou.`);
+            }
+        } catch (error) {
+            console.error(`Catch: Erro ao processar pagamento com ${paymentMethod}:`, error);
+            setInternalError(error.message || `Ocorreu um erro inesperado no pagamento com ${paymentMethod}.`);
+        } finally {
+            setInternalLoading(false);
+        }
+    };
+
+    // Função para copiar o código PIX
+    const handleCopyPixCode = () => {
+        if(pixData?.qrCodeCopyPaste) {
+            navigator.clipboard.writeText(pixData.qrCodeCopyPaste)
+                .then(() => {
+                    alert('Código PIX copiado para a área de transferência!'); // Ou usar um toast/snackbar
+                })
+                .catch(err => {
+                    console.error('Erro ao copiar código PIX:', err);
+                    alert('Erro ao copiar o código PIX.');
+                });
+        }
+        
+    };
+
+    // Determina o estado geral de loading
+    const isLoading = paymentLoading || internalLoading;
+    // Combina erros do hook e internos
+    const displayError = paymentError || internalError;
+
+
+    // --- Renderização ---
+
+    if (!isOpen) return null;
+
+    // Configuração para o CardPayment (exemplo mínimo)
+    const cardPaymentInitialization = {
+        amount: parseFloat(amount) || 0, // Garante que seja um número
+        // payer: { // Você pode pré-preencher dados do pagador se os tiver
+        //   email: 'payer@email.com',
+        // }
+    };
+
+    const cardPaymentCustomization = {
+        visual: {
+            style: {
+                theme: 'default', // 'dark', 'bootstrap', 'flat'
+            }
+        },
+        paymentMethods: {
+             maxInstallments: 10, // Limitar parcelas se necessário
+        },
+    };
+
+    return (
+        <Modal
+            isOpen={isOpen}
+            onRequestClose={onClose}
+            contentLabel="Modal de Pagamento"
+            className="bg-white p-6 rounded-lg shadow-xl max-w-md mx-auto mt-10 mb-10 border border-gray-300" // Estilo melhorado
+            overlayClassName="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4" // Z-index e padding
+            shouldCloseOnOverlayClick={!isLoading} // Impede fechar durante loading
+            appElement={document.getElementById('root') || undefined} // Acessibilidade
+        >
+            {/* --- loadings */}
+            <script src="https://www.mercadopago.com/v2/security.js" view="checkout"></script>
+            {internalLoading && <PaymentLoadingSpinner />}
+            <div className="space-y-4">
+                <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Detalhes de Pagamento</h2>
+                {/* --- Formulário de Cartão (usando CardPayment) --- */}
+                {paymentMethod === "cartao" && (
+                    <div className="mb-4">
+                        <p className="text-gray-700 text-center mb-4">Insira os dados do cartão:</p>
+                        {mercadoPagoLoaded ? (
+                            <CardPayment
+                                initialization={cardPaymentInitialization}
+                                customization={cardPaymentCustomization}
+                                onSubmit={handleCardPaymentSubmit} // A função que será chamada no sucesso
+                                onError={(error) => {
+                                    console.error("Erro DETALHADO no CardPayment:", JSON.stringify(error, null, 2)); // Log completo
+                                    setInternalError("Erro ao processar dados do cartão. Verifique os campos e tente novamente. Detalhes no console.");
+                                }}
+                                onReady={() => console.log("CardPayment pronto!")} // Opcional
+                            />
+                        ) : (
+                            <p className="text-center">Carregando sistema de pagamento...</p>
+                        )}
+                        {/* O componente CardPayment renderiza todos os campos necessários, incluindo CPF */}
+                        {/* O botão de submit é gerenciado internamente pelo CardPayment */}
+                        <div className="flex justify-center mt-6">
+                             <button
+                                onClick={onClose}
+                                type="button"
+                                className="px-5 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-200 disabled:opacity-50"
+                                disabled={isLoading}
+                             >
+                                Voltar
+                             </button>
+                             {/* O botão de confirmação é renderizado pelo CardPayment */}
+                        </div>
+                    </div>
+                )}
+
+                {pixData && paymentMethod === 'pix' && (
+                    <div className="text-center space-y-4 my-4">
+                        <p className="font-medium">Pague com PIX para confirmar seu pedido!</p>
+                        <p className="text-sm text-gray-600">Escaneie o QR Code abaixo com o app do seu banco:</p>
+                        <img
+                            src={`data:image/png;base64,${pixData.qrCodeBase64}`}
+                            alt="QR Code PIX"
+                            className="w-[300px] h-[300px] mx-auto"
+                        />
+
+                        <p className="text-sm text-gray-600 mt-4">Ou copie o código PIX:</p>
+                        <div className="relative">
+                            <input
+                                type="text"
+                                value={pixData.qrCodeCopyPaste}
+                                readOnly
+                                className="w-full border border-gray-300 p-2 rounded bg-gray-100 text-sm"
+                            />
+                            <button
+                                onClick={handleCopyPixCode}
+                                title="Copiar Código PIX"
+                                className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-gray-200 hover:bg-gray-300 p-1.5 rounded"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-2">Após o pagamento, o status do seu pedido será atualizado automaticamente.</p>
+                        <button
+                            onClick={onClose}
+                            type="button"
+                            className="w-full mt-4 px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-200"
+                        >
+                            Fechar
+                        </button>
+                    </div>
+                )}
+
+
+                {paymentMethod === "pix" && !pixData && ( // Só mostra o form inicial se pixData não existir
+                    <form onSubmit={handlePixDinheiroSubmit} className="space-y-4">
+                        <p className="text-gray-700 text-center">Confirme o valor para gerar o QR Code PIX.</p>
+                         <div className="mb-4">
+                             <label className="block text-sm font-medium text-gray-700">Valor a pagar</label>
+                             <input
+                                type="text"
+                                value={`R$ ${parseFloat(amount || 0).toFixed(2)}`}
+                                readOnly
+                                className="w-full border border-gray-300 p-2 rounded mt-1 bg-gray-100 text-lg"
+                             />
+                         </div>
+                        <div className="flex justify-between gap-4 pt-4">
+                            <button
+                                onClick={onClose}
+                                type="button"
+                                className="flex-1 px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-200 disabled:opacity-50"
+                                disabled={isLoading}
+                            >
+                                Voltar
+                            </button>
+                            <button
+                                type="submit"
+                                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? "Gerando..." : "Gerar PIX"} {/* Texto do botão atualizado */}
+                            </button>
+                        </div>
+                    </form>
+                )}
+
+                {/* --- Formulário Dinheiro --- */}
+                {paymentMethod === "dinheiro" && (
+                     <form onSubmit={handlePixDinheiroSubmit} className="space-y-4">
+                         <p className="text-gray-700 text-center">Confirme o valor e informe se precisará de troco.</p>
+                         <div className="mb-4">
+                             <label className="block text-sm font-medium text-gray-700">Valor a pagar</label>
+                             <input
+                                type="text"
+                                value={`R$ ${parseFloat(amount || 0).toFixed(2)}`}
+                                readOnly
+                                className="w-full border border-gray-300 p-2 rounded mt-1 bg-gray-100 text-lg"
+                             />
+                         </div>
+                         <div className="mb-4">
+                             <label htmlFor="troco" className="block text-sm font-medium text-gray-700">Troco para (R$):</label>
+                             <input
+                                id="troco"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                value={troco}
+                                onChange={(e) => setTroco(e.target.value)}
+                                className="w-full border border-gray-300 p-2 rounded mt-1 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Deixe em branco se não precisar"
+                             />
+                         </div>
+                         <div className="flex justify-between gap-4 pt-4">
+                             <button
+                                 onClick={onClose}
+                                 type="button"
+                                 className="flex-1 px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-200 disabled:opacity-50"
+                                 disabled={isLoading}
+                             >
+                                Voltar
+                             </button>
+                             <button
+                                 type="submit"
+                                 className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                 disabled={isLoading}
+                             >
+                                 {isLoading ? "Processando..." : "Confirmar Pedido"}
+                             </button>
+                         </div>
+                     </form>
+                )}
+                {/* --- Exibição de Erros --- */}
+                {displayError && (
+                    <p className="text-red-600 text-center mt-4 bg-red-100 p-3 rounded border border-red-300 text-sm">
+                        {displayError}
+                    </p>
+                )}
+            </div>
+        </Modal>
+    );
+};
+
+export default PaymentModal;

@@ -1,0 +1,201 @@
+[33mcommit aa666c6b748fc24e1badd5fb7a6c77cebe0cd289[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/TT-001[m[33m, [m[1;31morigin/feature/TT-001[m[33m)[m
+Author: randolfoCarvalho <randolfoirades@gmail.com>
+Date:   Sat Mar 1 16:51:29 2025 -0300
+
+    Mudancas
+
+[1mdiff --git "a/.vs/ProjectEvaluation/sistemadegest\303\243o.metadata.v8.bin" "b/.vs/ProjectEvaluation/sistemadegest\303\243o.metadata.v8.bin"[m
+[1mindex f47a2c9..b24ba55 100644[m
+Binary files "a/.vs/ProjectEvaluation/sistemadegest\303\243o.metadata.v8.bin" and "b/.vs/ProjectEvaluation/sistemadegest\303\243o.metadata.v8.bin" differ
+[1mdiff --git "a/.vs/ProjectEvaluation/sistemadegest\303\243o.projects.v8.bin" "b/.vs/ProjectEvaluation/sistemadegest\303\243o.projects.v8.bin"[m
+[1mindex 7929c86..8c65ddb 100644[m
+Binary files "a/.vs/ProjectEvaluation/sistemadegest\303\243o.projects.v8.bin" and "b/.vs/ProjectEvaluation/sistemadegest\303\243o.projects.v8.bin" differ
+[1mdiff --git "a/.vs/ProjectEvaluation/sistemadegest\303\243o.strings.v8.bin" "b/.vs/ProjectEvaluation/sistemadegest\303\243o.strings.v8.bin"[m
+[1mindex 7e699ff..91feda7 100644[m
+Binary files "a/.vs/ProjectEvaluation/sistemadegest\303\243o.strings.v8.bin" and "b/.vs/ProjectEvaluation/sistemadegest\303\243o.strings.v8.bin" differ
+[1mdiff --git "a/.vs/SistemaDeGest\303\243o/DesignTimeBuild/.dtbcache.v2" "b/.vs/SistemaDeGest\303\243o/DesignTimeBuild/.dtbcache.v2"[m
+[1mindex db4694c..dffbf6d 100644[m
+Binary files "a/.vs/SistemaDeGest\303\243o/DesignTimeBuild/.dtbcache.v2" and "b/.vs/SistemaDeGest\303\243o/DesignTimeBuild/.dtbcache.v2" differ
+[1mdiff --git "a/.vs/SistemaDeGest\303\243o/FileContentIndex/029e7e04-f31d-4d23-a3fb-b4c2983fdb5d.vsidx" "b/.vs/SistemaDeGest\303\243o/FileContentIndex/029e7e04-f31d-4d23-a3fb-b4c2983fdb5d.vsidx"[m
+[1mnew file mode 100644[m
+[1mindex 0000000..3c7bb08[m
+Binary files /dev/null and "b/.vs/SistemaDeGest\303\243o/FileContentIndex/029e7e04-f31d-4d23-a3fb-b4c2983fdb5d.vsidx" differ
+[1mdiff --git "a/.vs/SistemaDeGest\303\243o/FileContentIndex/0a29c319-bc05-4e01-be93-27103eab7fce.vsidx" "b/.vs/SistemaDeGest\303\243o/FileContentIndex/0a29c319-bc05-4e01-be93-27103eab7fce.vsidx"[m
+[1mdeleted file mode 100644[m
+[1mindex 762cd59..0000000[m
+Binary files "a/.vs/SistemaDeGest\303\243o/FileContentIndex/0a29c319-bc05-4e01-be93-27103eab7fce.vsidx" and /dev/null differ
+[1mdiff --git "a/.vs/SistemaDeGest\303\243o/FileContentIndex/0be32c80-1f23-4c5d-bad5-a010dd490c06.vsidx" "b/.vs/SistemaDeGest\303\243o/FileContentIndex/0be32c80-1f23-4c5d-bad5-a010dd490c06.vsidx"[m
+[1mdeleted file mode 100644[m
+[1mindex 6dfd196..0000000[m
+Binary files "a/.vs/SistemaDeGest\303\243o/FileContentIndex/0be32c80-1f23-4c5d-bad5-a010dd490c06.vsidx" and /dev/null differ
+[1mdiff --git "a/.vs/SistemaDeGest\303\243o/FileContentIndex/144ce4f9-6244-4052-952e-d2cdfb282813.vsidx" "b/.vs/SistemaDeGest\303\243o/FileContentIndex/144ce4f9-6244-4052-952e-d2cdfb282813.vsidx"[m
+[1mdeleted file mode 100644[m
+[1mindex 0a2efc8..0000000[m
+Binary files "a/.vs/SistemaDeGest\303\243o/FileContentIndex/144ce4f9-6244-4052-952e-d2cdfb282813.vsidx" and /dev/null differ
+[1mdiff --git "a/.vs/SistemaDeGest\303\243o/FileContentIndex/3f38f2a2-07f3-4cfd-9078-545d7c939937.vsidx" "b/.vs/SistemaDeGest\303\243o/FileContentIndex/3f38f2a2-07f3-4cfd-9078-545d7c939937.vsidx"[m
+[1mdeleted file mode 100644[m
+[1mindex 3059463..0000000[m
+Binary files "a/.vs/SistemaDeGest\303\243o/FileContentIndex/3f38f2a2-07f3-4cfd-9078-545d7c939937.vsidx" and /dev/null differ
+[1mdiff --git "a/.vs/SistemaDeGest\303\243o/FileContentIndex/66fdd155-472c-4bd1-976f-6b9ae2167920.vsidx" "b/.vs/SistemaDeGest\303\243o/FileContentIndex/66fdd155-472c-4bd1-976f-6b9ae2167920.vsidx"[m
+[1mdeleted file mode 100644[m
+[1mindex 3c2eb88..0000000[m
+Binary files "a/.vs/SistemaDeGest\303\243o/FileContentIndex/66fdd155-472c-4bd1-976f-6b9ae2167920.vsidx" and /dev/null differ
+[1mdiff --git "a/.vs/SistemaDeGest\303\243o/v17/.futdcache.v2" "b/.vs/SistemaDeGest\303\243o/v17/.futdcache.v2"[m
+[1mindex ab2c393..d2362a8 100644[m
+Binary files "a/.vs/SistemaDeGest\303\243o/v17/.futdcache.v2" and "b/.vs/SistemaDeGest\303\243o/v17/.futdcache.v2" differ
+[1mdiff --git "a/.vs/SistemaDeGest\303\243o/v17/.suo" "b/.vs/SistemaDeGest\303\243o/v17/.suo"[m
+[1mindex e714a7e..eb0c727 100644[m
+Binary files "a/.vs/SistemaDeGest\303\243o/v17/.suo" and "b/.vs/SistemaDeGest\303\243o/v17/.suo" differ
+[1mdiff --git "a/.vs/SistemaDeGest\303\243o/v17/DocumentLayout.json" "b/.vs/SistemaDeGest\303\243o/v17/DocumentLayout.json"[m
+[1mindex cc1fe28..90eaf0a 100644[m
+[1m--- "a/.vs/SistemaDeGest\303\243o/v17/DocumentLayout.json"[m
+[1m+++ "b/.vs/SistemaDeGest\303\243o/v17/DocumentLayout.json"[m
+[36m@@ -1,201 +1,201 @@[m
+ {[m
+   "Version": 1,[m
+[31m-  "WorkspaceRootPath": "C:\\temp\\Sistema-de-Gestao\\",[m
+[32m+[m[32m  "WorkspaceRootPath": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\",[m
+   "Documents": [[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\data\\databasecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\data\\databasecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\data\\databasecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\produtoadicional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\produtoadicional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\produtoadicional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\grupoadicional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\grupoadicional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\grupoadicional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\adicional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\adicional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\adicional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\produtoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\produtoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\services\\produtoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\produtocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\produtocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\produtocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\adicionalcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\adicionalcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\adicionalcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\createaddgroup.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\createaddgroup.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\createaddgroup.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\productdetailscomponent.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\productdetailscomponent.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\client-app\\src\\components\\productdetailscomponent.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\createcomplement.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\createcomplement.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\createcomplement.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\grupocomplemento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\grupocomplemento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\grupocomplemento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\complemento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\complemento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\complemento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\adicionalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\adicionalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\services\\adicionalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\complementocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\complementocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\complementocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\complementoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\complementoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\services\\complementoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\produtoscomponent.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\produtoscomponent.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\client-app\\src\\components\\produtoscomponent.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\produtocomplemento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\produtocomplemento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\produtocomplemento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\createproduct.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\createproduct.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\createproduct.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\produto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\produto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\produto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\ui\\main.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\ui\\main.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\client-app\\src\\components\\admin\\ui\\main.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\gestaocomponent.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\gestaocomponent.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\client-app\\src\\components\\gestaocomponent.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\products.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\products.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\products.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\card.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\card.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\card.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\barchart.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\barchart.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\barchart.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\balance.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\balance.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\balance.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\ui\\content.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\ui\\content.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\client-app\\src\\components\\admin\\ui\\content.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\pedidoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\pedidoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\services\\pedidoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\logout.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\logout.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\client-app\\src\\components\\admin\\stats\\logout.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"[m
+     },[m
+     {[m
+[31m-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\temp\\sistema-de-gestao\\sistemadegest\u00E3o\\client-app\\src\\components\\autenticacaocomponent.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",[m
+[32m+[m[32m      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\client-a

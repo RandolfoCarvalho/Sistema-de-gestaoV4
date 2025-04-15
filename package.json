@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "apexcharts": "^4.1.0",
+    "bootstrap": "^5.3.3",
+    "react": "^19.0.0",
+    "react-apexcharts": "^1.7.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.13"
+  }
+}

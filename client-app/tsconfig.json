@@ -1,0 +1,11 @@
+﻿{
+  "compilerOptions": {
+    "jsx": "react",
+    "baseUrl": "src",
+    "moduleResolution": "Node",
+    "paths": {
+      "@/*": [ "./*" ],
+      "@admin-components/*": [ "src/Admin/src/components/dashboard/*" ] // Ajuste para apontar para src/Admin/src/components
+    }
+  }
+}

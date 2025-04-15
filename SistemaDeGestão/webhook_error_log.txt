@@ -1,0 +1,11 @@
+22/03/2025 03:01:41: 'System.Text.Json.JsonElement' does not contain a definition for 'action'
+   at CallSite.Target(Closure, CallSite, Object)
+   at System.Dynamic.UpdateDelegates.UpdateAndExecute1[T0,TRet](CallSite site, T0 arg0)
+   at SistemaDeGestão.Controllers.MercadoPagoController.ReceiveMercadoPagoWebhook(Object notification)
+22/03/2025 03:07:57: 'System.Text.Json.JsonElement' does not contain a definition for 'id'
+   at CallSite.Target(Closure, CallSite, Object)
+   at System.Dynamic.UpdateDelegates.UpdateAndExecute1[T0,TRet](CallSite site, T0 arg0)
+   at SistemaDeGestão.Controllers.MercadoPagoController.ReceiveMercadoPagoWebhook(Object notification) in C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\Areas\Admin\Controllers\MercadoPagoController.cs:line 52
+22/03/2025 03:09:07: 'System.Text.Json.JsonElement' does not contain a definition for 'id'
+   at CallSite.Target(Closure, CallSite, Object)
+   at SistemaDeGestão.Controllers.MercadoPagoController.ReceiveMercadoPagoWebhook(Object notification) in C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\Areas\Admin\Controllers\MercadoPagoController.cs:line 52

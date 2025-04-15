@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Esse arquivo é usado pelo processo de publicação/pacote do seu projeto Web. É possível personalizar o comportamento deste processo
+ao editar este arquivo MSBuild. Para saber mais sobre isso, visite https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAJ9cI/4P+yUywSJpbgzQFEwAAAAACAAAAAAAQZgAAAAEAACAAAACvsx/mO/tCij8cPLh/xCwAqYccrI5FWeoKWclpWm3gDAAAAAAOgAAAAAIAACAAAABu1lHrU6bH0Ev1RDO75CC2cCtgaCBWjbCBcs4friMheyAAAAD195vRuGS0w4oFoUWQX7cVBUNJE35+EyuVNtzl8Ve23UAAAACrzEGWkXtlilwdDmqMR9oew2dCDpvf0QV46CwFFRXcBLL0v/HrkeV0Hboa4FdDb9MrMtx0BrsuYVdjL9xavx9I</EncryptedPassword>
+    <History>False|2025-04-09T18:16:13.0075602Z||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <AzureDBConnectionStrings Include="Data Source=apppedeja1-server.database.windows.net,1433;Initial Catalog=apppedeja1-database;User ID=apppedeja1-server-admin;Password=9$ZJ4zdshJX2$BPQ" />
+    <AzureDBConnectionStrings Include="REDACTED" />
+  </ItemGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Data Source=apppedeja1-server.database.windows.net,1433%3bInitial Catalog=apppedeja1-database%3bUser ID=apppedeja1-server-admin%3bPassword=9%24ZJ4zdshJX2%24BPQ</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

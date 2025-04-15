@@ -1,0 +1,855 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\mercadopagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\mercadopagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\mercadopagoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\services\\mercadopagoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\responses\\pagamentopixresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\responses\\pagamentopixresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\resquests\\pagamentopixdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\resquests\\pagamentopixdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\1cc6d2a634203e0de348b5980fee97b87977d5074b436e24ff974f8438968be4\\ActionMethodExecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\0e599f47268ea62b9af937dc43e1103c8accf8988ef11d1cec2bae5c647caaf7\\TaskAwaiter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\resquests\\pagamentocartaodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\resquests\\pagamentocartaodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\pedidocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\pedidocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\restaurantecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\restaurantecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\complementocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\complementocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\produto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\produto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\complementoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\services\\complementoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411002411_InitialMigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\produtocomplemento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\produtocomplemento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\finaluserauthcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\finaluserauthcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\responses\\grupocomplementoresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\responses\\grupocomplementoresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\responses\\complementoresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\responses\\complementoresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\resquests\\grupocomplementodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\resquests\\grupocomplementodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\resquests\\complementodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\resquests\\complementodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\produtocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\produtocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\produtoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\services\\produtoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250410001348_FirstMigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\properties\\publishprofiles\\grupopedejaprod - web deploy.pubxml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\properties\\publishprofiles\\grupopedejaprod - web deploy.pubxml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\properties\\publishprofiles\\apppedeja1 - web deploy.pubxml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\properties\\publishprofiles\\apppedeja1 - web deploy.pubxml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409225810_FirstMigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\itempedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\itempedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\produtoadicional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\produtoadicional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\produtogrupoadicional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\produtogrupoadicional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\itempedidoopcao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\itempedidoopcao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409224234_FirstMigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409223934_FirstMigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\sistemadegest\u00E3o.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\sistemadegest\u00E3o.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409222922_FirstMigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\sistemadegest\u00E3o.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\sistemadegest\u00E3o.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409221526_InitalMigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\5af38de1500880bdc4e9cb3784c250111fdfcdc4a8a93bde753f983cfb947ca0\\ControllerActionInvoker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\2c424ba62aeea7fae028d734633c61a97366736854c29bce8159a17fc93bc98d\\BrowserRefreshMiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\4f27ca365fb557601894825398065680807a5612f6e758107f6714a7aea600a3\\Int32.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\44aa595dc2a1078aa662bebf92f46ec0aa83d37961bfc5ec1f12f1b995219153\\AddressBinder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\d2a5067946c81b9d19517dd136fabcfe4687ce078e51a140746d27a270724388\\Object.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\resquests\\pagamentodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\resquests\\pagamentodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\pedidoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\services\\pedidoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\automapper\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\automapper\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\enums\\orderstatusupdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\enums\\orderstatusupdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\pictures\\sistema-de-gestao\\sistemadegest\u00E3o\\migrations\\20250411004956_initialmigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\migrations\\20250411004956_initialmigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\IdentificationDTO.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\IdentificationDTO.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PayerDTO.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PayerDTO.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MercadoPagoService.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
+              "ViewState": "AQIAABcAAAAAAAAAAAAAABkBAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-22T14:58:07.128Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PagamentoPixResponse.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-15T00:17:34.58Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PagamentoPixDTO.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoPixDTO.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoPixDTO.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoPixDTO.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoPixDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-15T00:16:59.023Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "TaskAwaiter.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\0e599f47268ea62b9af937dc43e1103c8accf8988ef11d1cec2bae5c647caaf7\\TaskAwaiter.cs",
+              "RelativeDocumentMoniker": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\0e599f47268ea62b9af937dc43e1103c8accf8988ef11d1cec2bae5c647caaf7\\TaskAwaiter.cs",
+              "ToolTip": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\0e599f47268ea62b9af937dc43e1103c8accf8988ef11d1cec2bae5c647caaf7\\TaskAwaiter.cs",
+              "RelativeToolTip": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\0e599f47268ea62b9af937dc43e1103c8accf8988ef11d1cec2bae5c647caaf7\\TaskAwaiter.cs",
+              "ViewState": "AQIAAKEAAAAAAAAAAAAiwLAAAAACAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-13T03:21:53.931Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MercadoPagoController.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAfAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-13T03:18:20.716Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PedidoController.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\PedidoController.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\PedidoController.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\PedidoController.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\PedidoController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-22T14:45:52.01Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\appsettings.json",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\appsettings.json",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\appsettings.json",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\appsettings.json",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAABAAAAAcAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-02T02:29:57.604Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 50,
+              "Title": "PayerDTO.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PayerDTO.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PayerDTO.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PayerDTO.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PayerDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAcAAAAgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T22:33:39.734Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ActionMethodExecutor.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\1cc6d2a634203e0de348b5980fee97b87977d5074b436e24ff974f8438968be4\\ActionMethodExecutor.cs",
+              "RelativeDocumentMoniker": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\1cc6d2a634203e0de348b5980fee97b87977d5074b436e24ff974f8438968be4\\ActionMethodExecutor.cs",
+              "ToolTip": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\1cc6d2a634203e0de348b5980fee97b87977d5074b436e24ff974f8438968be4\\ActionMethodExecutor.cs",
+              "RelativeToolTip": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\1cc6d2a634203e0de348b5980fee97b87977d5074b436e24ff974f8438968be4\\ActionMethodExecutor.cs",
+              "ViewState": "AQIAAJ0AAAAAAAAAAAAiwK4AAAADAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-07T22:49:40.459Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 49,
+              "Title": "IdentificationDTO.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\IdentificationDTO.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\IdentificationDTO.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\IdentificationDTO.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\IdentificationDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAYAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T22:34:11.77Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PagamentoCartaoDTO.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoCartaoDTO.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoCartaoDTO.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoCartaoDTO.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoCartaoDTO.cs",
+              "ViewState": "AQIAABQAAAAAAAAAAAAUwCIAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-08T01:07:56.389Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "20250411002411_InitialMigration.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411002411_InitialMigration.cs",
+              "RelativeDocumentMoniker": "..\\..\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411002411_InitialMigration.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411002411_InitialMigration.cs",
+              "RelativeToolTip": "..\\..\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411002411_InitialMigration.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T00:24:11.465Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "RestauranteController.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\RestauranteController.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\RestauranteController.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\RestauranteController.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\RestauranteController.cs",
+              "ViewState": "AQIAAB4AAAAAAAAAAAAkwC4AAAA4AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T01:04:04.184Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ComplementoController.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ComplementoController.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ComplementoController.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ComplementoController.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ComplementoController.cs",
+              "ViewState": "AQIAALAAAAAAAAAAAAAiwMEAAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-10T23:23:30.507Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ComplementoService.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\ComplementoService.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\ComplementoService.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\ComplementoService.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\ComplementoService.cs",
+              "ViewState": "AQIAAIMAAAAAAAAAAAAYwJUAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-10T23:24:17.609Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
+              "Title": "20250411004956_InitialMigration.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.cs",
+              "ViewState": "AQIAAA0AAAAAAAAAAAAgwCAAAAApAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T00:49:56.575Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "ProdutoService.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\ProdutoService.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\ProdutoService.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\ProdutoService.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\ProdutoService.cs",
+              "ViewState": "AQIAANAAAAAAAAAAAAAowOMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-10T23:13:11.636Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "ProdutoComplemento.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ProdutoComplemento.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\ProdutoComplemento.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ProdutoComplemento.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\ProdutoComplemento.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T22:55:40.413Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Produto.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\Produto.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\Produto.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\Produto.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\Produto.cs",
+              "ViewState": "AQIAADkAAAAAAAAAAAAEwEAAAAAaAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T22:55:34.76Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "ComplementoResponseDTO.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\ComplementoResponseDTO.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\ComplementoResponseDTO.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\ComplementoResponseDTO.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\ComplementoResponseDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAzAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-10T23:53:53.209Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "GrupoComplementoResponseDTO.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\GrupoComplementoResponseDTO.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\GrupoComplementoResponseDTO.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\GrupoComplementoResponseDTO.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\GrupoComplementoResponseDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-10T23:54:27.259Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "FinalUserAuthController.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-10T23:54:44.146Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Program.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Program.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Program.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Program.cs",
+              "ViewState": "AQIAAA4AAAAAAAAAAAAIwCMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-22T14:54:55.916Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "ComplementoDTO.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\ComplementoDTO.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\ComplementoDTO.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\ComplementoDTO.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\ComplementoDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-10T23:29:27.701Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "GrupoComplementoDTO.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\GrupoComplementoDTO.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\GrupoComplementoDTO.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\GrupoComplementoDTO.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\GrupoComplementoDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-08T01:22:49.926Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "ProdutoController.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ProdutoController.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ProdutoController.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ProdutoController.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ProdutoController.cs",
+              "ViewState": "AQIAABgAAAAAAAAAAAAAACoAAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-10T23:13:48.356Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "20250410001348_FirstMigration.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250410001348_FirstMigration.cs",
+              "RelativeDocumentMoniker": "..\\..\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250410001348_FirstMigration.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250410001348_FirstMigration.cs",
+              "RelativeToolTip": "..\\..\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250410001348_FirstMigration.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-10T00:13:49.019Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "GrupoPedeJaProd - Web Deploy.pubxml",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Properties\\PublishProfiles\\GrupoPedeJaProd - Web Deploy.pubxml",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Properties\\PublishProfiles\\GrupoPedeJaProd - Web Deploy.pubxml",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Properties\\PublishProfiles\\GrupoPedeJaProd - Web Deploy.pubxml",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Properties\\PublishProfiles\\GrupoPedeJaProd - Web Deploy.pubxml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAA3AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2025-04-09T23:55:10.846Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "package.json",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\package.json",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\package.json",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\package.json",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\package.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-08T18:25:19.578Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "AppPedeJa1 - Web Deploy.pubxml",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Properties\\PublishProfiles\\AppPedeJa1 - Web Deploy.pubxml",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Properties\\PublishProfiles\\AppPedeJa1 - Web Deploy.pubxml",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Properties\\PublishProfiles\\AppPedeJa1 - Web Deploy.pubxml",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Properties\\PublishProfiles\\AppPedeJa1 - Web Deploy.pubxml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAA1AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2025-04-09T23:52:29.824Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "20250409225810_FirstMigration.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409225810_FirstMigration.cs",
+              "RelativeDocumentMoniker": "..\\..\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409225810_FirstMigration.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409225810_FirstMigration.cs",
+              "RelativeToolTip": "..\\..\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409225810_FirstMigration.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T22:58:11.205Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "ItemPedido.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ItemPedido.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\ItemPedido.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ItemPedido.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\ItemPedido.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T22:45:25.476Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "ProdutoAdicional.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ProdutoAdicional.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\ProdutoAdicional.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ProdutoAdicional.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\ProdutoAdicional.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T22:55:46.519Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "ProdutoGrupoAdicional.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ProdutoGrupoAdicional.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\ProdutoGrupoAdicional.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ProdutoGrupoAdicional.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\ProdutoGrupoAdicional.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T22:55:43.824Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "ItemPedidoOpcao.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ItemPedidoOpcao.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\ItemPedidoOpcao.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ItemPedidoOpcao.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\ItemPedidoOpcao.cs",
+              "ViewState": "AQIAAAoAAAAAAAAAAAAiwBwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T22:55:29.126Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "20250409224234_FirstMigration.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409224234_FirstMigration.cs",
+              "RelativeDocumentMoniker": "..\\..\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409224234_FirstMigration.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409224234_FirstMigration.cs",
+              "RelativeToolTip": "..\\..\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409224234_FirstMigration.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T22:42:34.799Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "20250409223934_FirstMigration.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409223934_FirstMigration.cs",
+              "RelativeDocumentMoniker": "..\\..\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409223934_FirstMigration.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409223934_FirstMigration.cs",
+              "RelativeToolTip": "..\\..\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409223934_FirstMigration.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T22:39:34.375Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "SistemaDeGest\u00E3o",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-04-09T22:34:00.112Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "20250409222922_FirstMigration.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409222922_FirstMigration.cs",
+              "RelativeDocumentMoniker": "..\\..\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409222922_FirstMigration.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409222922_FirstMigration.cs",
+              "RelativeToolTip": "..\\..\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409222922_FirstMigration.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T22:29:23.254Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "SistemaDeGest\u00E3o.csproj",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-04-09T22:22:50.683Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "20250409221526_InitalMigration.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409221526_InitalMigration.cs",
+              "RelativeDocumentMoniker": "..\\..\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409221526_InitalMigration.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409221526_InitalMigration.cs",
+              "RelativeToolTip": "..\\..\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409221526_InitalMigration.cs",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T22:15:26.71Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "ControllerActionInvoker.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\5af38de1500880bdc4e9cb3784c250111fdfcdc4a8a93bde753f983cfb947ca0\\ControllerActionInvoker.cs",
+              "RelativeDocumentMoniker": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\5af38de1500880bdc4e9cb3784c250111fdfcdc4a8a93bde753f983cfb947ca0\\ControllerActionInvoker.cs",
+              "ToolTip": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\5af38de1500880bdc4e9cb3784c250111fdfcdc4a8a93bde753f983cfb947ca0\\ControllerActionInvoker.cs",
+              "RelativeToolTip": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\5af38de1500880bdc4e9cb3784c250111fdfcdc4a8a93bde753f983cfb947ca0\\ControllerActionInvoker.cs",
+              "ViewState": "AQIAAMsBAAAAAAAAAAAawNoBAAAEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-02T02:35:42.344Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "Object.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\d2a5067946c81b9d19517dd136fabcfe4687ce078e51a140746d27a270724388\\Object.cs",
+              "RelativeDocumentMoniker": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\d2a5067946c81b9d19517dd136fabcfe4687ce078e51a140746d27a270724388\\Object.cs",
+              "ToolTip": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\d2a5067946c81b9d19517dd136fabcfe4687ce078e51a140746d27a270724388\\Object.cs",
+              "RelativeToolTip": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\d2a5067946c81b9d19517dd136fabcfe4687ce078e51a140746d27a270724388\\Object.cs",
+              "ViewState": "AQIAABcAAAAAAAAAAAAawCUAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-08T02:59:41.911Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "PagamentoDTO.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoDTO.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoDTO.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoDTO.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAyAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-08T01:06:53.871Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "BrowserRefreshMiddleware.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\2c424ba62aeea7fae028d734633c61a97366736854c29bce8159a17fc93bc98d\\BrowserRefreshMiddleware.cs",
+              "RelativeDocumentMoniker": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\2c424ba62aeea7fae028d734633c61a97366736854c29bce8159a17fc93bc98d\\BrowserRefreshMiddleware.cs",
+              "ToolTip": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\2c424ba62aeea7fae028d734633c61a97366736854c29bce8159a17fc93bc98d\\BrowserRefreshMiddleware.cs",
+              "RelativeToolTip": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\2c424ba62aeea7fae028d734633c61a97366736854c29bce8159a17fc93bc98d\\BrowserRefreshMiddleware.cs",
+              "ViewState": "AQIAAE0AAAAAAAAAAAAawFsAAAADAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T02:05:49.345Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "Int32.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\4f27ca365fb557601894825398065680807a5612f6e758107f6714a7aea600a3\\Int32.cs",
+              "RelativeDocumentMoniker": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\4f27ca365fb557601894825398065680807a5612f6e758107f6714a7aea600a3\\Int32.cs",
+              "ToolTip": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\4f27ca365fb557601894825398065680807a5612f6e758107f6714a7aea600a3\\Int32.cs",
+              "RelativeToolTip": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\4f27ca365fb557601894825398065680807a5612f6e758107f6714a7aea600a3\\Int32.cs",
+              "ViewState": "AQIAAFoAAAAAAAAAAAAawGgAAAACAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-08T03:11:57.834Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "AddressBinder.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\44aa595dc2a1078aa662bebf92f46ec0aa83d37961bfc5ec1f12f1b995219153\\AddressBinder.cs",
+              "RelativeDocumentMoniker": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\44aa595dc2a1078aa662bebf92f46ec0aa83d37961bfc5ec1f12f1b995219153\\AddressBinder.cs",
+              "ToolTip": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\44aa595dc2a1078aa662bebf92f46ec0aa83d37961bfc5ec1f12f1b995219153\\AddressBinder.cs",
+              "RelativeToolTip": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\44aa595dc2a1078aa662bebf92f46ec0aa83d37961bfc5ec1f12f1b995219153\\AddressBinder.cs",
+              "ViewState": "AQIAAKUAAAAAAAAAAAAMwKkAAAADAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-08T18:19:53.735Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Properties\\launchSettings.json",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Properties\\launchSettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAHAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-08T01:47:30.968Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "OrderStatusUpdate.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Enums\\OrderStatusUpdate.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Enums\\OrderStatusUpdate.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Enums\\OrderStatusUpdate.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Enums\\OrderStatusUpdate.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-22T14:31:44.164Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "PedidoService.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\PedidoService.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\PedidoService.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\PedidoService.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\PedidoService.cs",
+              "ViewState": "AQIAAFYAAAAAAAAAAAAmwF8AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-22T14:45:55.354Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "MappingProfile.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\AutoMapper\\MappingProfile.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\AutoMapper\\MappingProfile.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Pictures\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\AutoMapper\\MappingProfile.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\AutoMapper\\MappingProfile.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAA8AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-22T14:53:32.051Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 164,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{74946827-37a0-11d2-a273-00c04f8ef4ff}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

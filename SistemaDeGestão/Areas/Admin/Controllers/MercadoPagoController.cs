@@ -4,14 +4,17 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Azure.Core;
 using MercadoPago.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using SistemaDeGestão.Data;
+using SistemaDeGestão.Models;
 using SistemaDeGestão.Models.DTOs.Resquests;
 using SistemaDeGestão.Services;
+using SistemaDeGestão.Services.Interfaces;
 
 namespace SistemaDeGestão.Controllers
 {
@@ -23,18 +26,18 @@ namespace SistemaDeGestão.Controllers
         private readonly DataBaseContext _context;
         private readonly PedidoService _pedidoService;
         private readonly IHubContext<OrderHub> _hubContext;
+        private readonly IEncryptionService _encryptionService;
         private static readonly ConcurrentDictionary<string, SemaphoreSlim> _locks = new();
-        private readonly string _accessToken = "APP_USR-4929793273828266-031923-dd42ca24161f10acffd4785370c0358b-482914930";
 
-        //private readonly string _accessToken = "TEST-4929793273828266-031923-ae707d0d8d7446b92af91ce1c37dec0d-482914930";
         public MercadoPagoController(MercadoPagoService paymentService, IConfiguration configuration,
-            DataBaseContext context, PedidoService pedidoService, IHubContext<OrderHub> hubContext)
+            DataBaseContext context, PedidoService pedidoService, IHubContext<OrderHub> hubContext, IEncryptionService encryptionService)
         {
             _paymentService = paymentService;
             _configuration = configuration;
             _context = context;
             _pedidoService = pedidoService;
             _hubContext = hubContext;
+            _encryptionService = encryptionService;
         }
 
         [HttpPost("processaPagamentoPix")]
@@ -43,7 +46,8 @@ namespace SistemaDeGestão.Controllers
             if (request?.DadosPagamento == null || request?.PedidoDTO == null)
                 return BadRequest("Dados incompletos.");
 
-            var resultado = await _paymentService.ProcessarPixAsync(request.DadosPagamento, request.PedidoDTO);
+            var accessToken = await BuscaCredenciaisAsync(request.PedidoDTO.RestauranteId);
+            var resultado = await _paymentService.ProcessarPixAsync(request.DadosPagamento, request.PedidoDTO, accessToken.ToString());
             return Ok(resultado);
         }
 
@@ -53,7 +57,8 @@ namespace SistemaDeGestão.Controllers
         {
             try
             {
-                var paymentResponse = await _paymentService.ProcessPayment(request.DadosPagamento, request.PedidoDTO);
+                var accessToken = await BuscaCredenciaisAsync(request.PedidoDTO.RestauranteId);
+                var paymentResponse = await _paymentService.ProcessPayment(request.DadosPagamento, request.PedidoDTO, accessToken.ToString());
                 return Ok(paymentResponse);
 
             }
@@ -75,8 +80,25 @@ namespace SistemaDeGestão.Controllers
 
                 string transactionId = paymentIdElement.GetString();
 
+                //Buscar restauranteId
+                var pedidoPendente = await _context.PedidosPendentes
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.TransactionId == transactionId);
+
+                if (pedidoPendente == null)
+                    return NotFound("Pedido pendente não encontrado.");
+
+                //Dados estejam serializados como JSON e contenham o restauranteId
+                var dados = JsonSerializer.Deserialize<PedidoDTO>(pedidoPendente.PedidoJson);
+                var restauranteId = dados?.RestauranteId ?? 0;
+
+                if (restauranteId == 0)
+                    return BadRequest("RestauranteId não encontrado.");
+
+                var accessToken = await BuscaCredenciaisAsync(restauranteId);
+
                 using var client = new HttpClient();
-                string url = $"https://api.mercadopago.com/v1/payments/{transactionId}?access_token={_accessToken}";
+                string url = $"https://api.mercadopago.com/v1/payments/{transactionId}?access_token={accessToken}";
                 var response = await client.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)
@@ -105,6 +127,19 @@ namespace SistemaDeGestão.Controllers
                 return StatusCode(500, $"Erro ao processar notificação: {ex.Message}");
             }
         }
+        private async Task<string> BuscaCredenciaisAsync(int restauranteId)
+        {
+            var credencial = await _context.RestauranteCredenciaisMercadoPago
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.RestauranteId == restauranteId && c.Ativo);
+
+            if (credencial == null)
+                throw new Exception("Credencial do Mercado Pago não encontrada ou inativa.");
+
+            var accessToken = _encryptionService.Decrypt(credencial.AccessToken);
+            return accessToken;
+        }
+
         private async Task ProcessarPagamentoAprovadoAsync(string transactionId)
         {
             var semaphore = _locks.GetOrAdd(transactionId, _ => new SemaphoreSlim(1, 1));

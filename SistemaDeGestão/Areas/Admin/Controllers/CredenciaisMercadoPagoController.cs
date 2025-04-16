@@ -4,6 +4,8 @@ using SistemaDeGestão.Models.DTOs.Resquests;
 using SistemaDeGestão.Models;
 using SistemaDeGestão.Services.Interfaces;
 using SistemaDeGestão.Services;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace SistemaDeGestão.Areas.Admin.Controllers
 {
@@ -12,10 +14,13 @@ namespace SistemaDeGestão.Areas.Admin.Controllers
     {
         private readonly DataBaseContext _context;
         private readonly IEncryptionService _encryptionService;
-        public CredenciaisMercadoPagoController(DataBaseContext context, IEncryptionService encryptionService)
+        private readonly RestauranteService _restauranteService;
+        public CredenciaisMercadoPagoController(DataBaseContext context, IEncryptionService encryptionService
+            ,RestauranteService restauranteService)
         {
             _context = context;
             _encryptionService = encryptionService;
+            _restauranteService = restauranteService;
         }
 
         [HttpGet]
@@ -44,30 +49,55 @@ namespace SistemaDeGestão.Areas.Admin.Controllers
         [Route("CreateCredential")]
         public async Task<IActionResult> CreateCredential([FromBody] RestauranteCredencialMercadoPagoDTO dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var credencial = new RestauranteCredencialMercadoPago
+            var restauranteId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var credencialExistente = await _context.RestauranteCredenciaisMercadoPago
+                .FirstOrDefaultAsync(c => c.RestauranteId == restauranteId);
+
+            if (credencialExistente != null)
             {
-                RestauranteId = dto.RestauranteId,
+                // Atualiza a credencial existente
+                credencialExistente.PublicKey = _encryptionService.Encrypt(dto.PublicKey);
+                credencialExistente.AccessToken = _encryptionService.Encrypt(dto.AccessToken);
+                credencialExistente.ClientId = _encryptionService.Encrypt(dto.ClientId);
+                credencialExistente.ClientSecret = _encryptionService.Encrypt(dto.ClientSecret);
+                credencialExistente.Ativo = dto.Ativo;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    credencialExistente.Id,
+                    credencialExistente.RestauranteId,
+                    Message = "Credencial atualizada com sucesso."
+                });
+            }
+
+            // Cria nova credencial
+            var novaCredencial = new RestauranteCredencialMercadoPago
+            {
+                RestauranteId = restauranteId,
                 PublicKey = _encryptionService.Encrypt(dto.PublicKey),
                 AccessToken = _encryptionService.Encrypt(dto.AccessToken),
                 ClientId = _encryptionService.Encrypt(dto.ClientId),
                 ClientSecret = _encryptionService.Encrypt(dto.ClientSecret),
-                DataCadastro = DateTime.UtcNow,
-                Ativo = dto.Ativo
+                Ativo = dto.Ativo,
+                DataCadastro = DateTime.UtcNow
             };
 
-            _context.RestauranteCredenciaisMercadoPago.Add(credencial);
+            _context.RestauranteCredenciaisMercadoPago.Add(novaCredencial);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetCredential), new { id = credencial.Id }, new
+            return CreatedAtAction(nameof(GetCredential), new { id = novaCredencial.Id }, new
             {
-                credencial.Id,
-                credencial.RestauranteId,
+                novaCredencial.Id,
+                novaCredencial.RestauranteId,
                 Message = "Credencial criada com sucesso."
             });
         }
+
         [HttpPut]
         [Route("UpdateCredential/{id}")]
         public async Task<IActionResult> UpdateCredential(int id, [FromBody] RestauranteCredencialMercadoPagoDTO dto)

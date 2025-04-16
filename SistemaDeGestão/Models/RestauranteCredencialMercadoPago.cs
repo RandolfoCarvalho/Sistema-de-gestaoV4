@@ -14,6 +14,6 @@
         public string ClientSecret { get; set; }
 
         public DateTime DataCadastro { get; set; } = DateTime.UtcNow;
-        public bool Ativo { get; set; } = true;
+        public bool Ativo { get; set; } = false;
     }
 }

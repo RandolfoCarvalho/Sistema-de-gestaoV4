@@ -30,7 +30,7 @@ namespace SistemaDeGestão.Services
             _configuration = configuration;
         }
 
-        public async Task<PagamentoPixResponse> ProcessarPixAsync(PagamentoPixDTO pagamento, PedidoDTO pedidoDTO)
+        public async Task<PagamentoPixResponse> ProcessarPixAsync(PagamentoPixDTO pagamento, PedidoDTO pedidoDTO, string accessToken)
         {
             using (var client = new HttpClient())
             {
@@ -52,7 +52,7 @@ namespace SistemaDeGestão.Services
                 // Serialize only once
                 var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
 
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 client.DefaultRequestHeaders.Add("X-Idempotency-Key", Guid.NewGuid().ToString());
 
                 var response = await client.PostAsync(url, content);
@@ -99,7 +99,7 @@ namespace SistemaDeGestão.Services
             }
         }
 
-        public async Task<PaymentResponseDTO> ProcessPayment(PagamentoCartaoDTO paymentData, PedidoDTO pedidoDTO)
+        public async Task<PaymentResponseDTO> ProcessPayment(PagamentoCartaoDTO paymentData, PedidoDTO pedidoDTO, string accessToken)
         {
             try
             {
@@ -111,7 +111,7 @@ namespace SistemaDeGestão.Services
                 if (paymentData.Amount <= 0) throw new ArgumentException("O valor da transação deve ser positivo.", nameof(paymentData.Amount));
 
                 // Configurar o SDK
-                MercadoPagoConfig.AccessToken = _accessToken;
+                MercadoPagoConfig.AccessToken = accessToken;
                 // Configurar opções da requisição
                 var requestOptions = new RequestOptions();
                 requestOptions.CustomHeaders.Add("x-idempotency-key", Guid.NewGuid().ToString());

@@ -821,6 +821,10 @@
       "PackagePath": "staticwebassets\\static\\media\\logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg"
     },
     {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.SistemaDeGestão.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.SistemaDeGestão.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

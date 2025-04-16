@@ -25,9 +25,16 @@ namespace SistemaDeGestão.Data
         public DbSet<Empresa> Empresas { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<FinalUser> FinalUsers { get; set; }
+        public DbSet<RestauranteCredencialMercadoPago> RestauranteCredenciaisMercadoPago { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //tabela credenciais no banco de dados
+            modelBuilder.Entity<Restaurante>()
+                .HasOne(r => r.CredencialMercadoPago)
+                .WithOne(c => c.Restaurante)
+                .HasForeignKey<RestauranteCredencialMercadoPago>(c => c.RestauranteId);
+
             // Grupo complemento
             modelBuilder.Entity<ProdutoGrupoComplemento>(entity =>
             {

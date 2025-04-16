@@ -16,6 +16,7 @@ using System.Text.Json;
 using Amazon;
 using SistemaDeGestão.AutoMapper;
 using Microsoft.AspNetCore.Hosting;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,6 +96,7 @@ builder.Services.AddScoped<IFinalUserService, FinalUserService>();
 builder.Services.AddScoped<FinalUserService>();
 builder.Services.AddScoped<MercadoPagoService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddScoped<IEncryptionService, EncryptionService>();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IAmazonS3>(sp =>
 {
@@ -125,19 +127,23 @@ builder.Services.AddControllers()
 {
     options.LoginPath = "/Auth/Login";  // Caminho para o redirecionamento de login
 }); */
-/*builder.Services.AddCors(options =>
+
+//Usar local
+builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
         builder =>
         {
             builder
-                .SetIsOriginAllowed(_ => true) // Permite qualquer origem durante desenvolvimento
+                .SetIsOriginAllowed(_ => true) 
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials();
         });
-});*/
-builder.Services.AddCors(options => {
+});
+
+//Usar em prod
+/*builder.Services.AddCors(options => {
     options.AddPolicy("AllowSpecificOrigin", builder => {
         builder
             .WithOrigins("https://sistema-de-gestao-v3.vercel.app") // More secure than allowing any origin
@@ -145,7 +151,7 @@ builder.Services.AddCors(options => {
             .AllowAnyHeader()
             .AllowCredentials();
     });
-});
+}); */
 
 //OrderHub
 builder.Services.AddSignalR(options =>

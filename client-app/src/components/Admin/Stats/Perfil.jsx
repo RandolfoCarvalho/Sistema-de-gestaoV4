@@ -8,6 +8,7 @@ const Perfil = () => {
     const [confirmarSenha, setConfirmarSenha] = useState("");
     const [mostrarSenha, setMostrarSenha] = useState(false);
     const [mensagemErro, setMensagemErro] = useState("");
+    const [mostrarAccessToken, setMostrarAccessToken] = useState(false);
     const [restaurante, setRestaurante] = useState({
         id: 0,
         userName: '',
@@ -38,6 +39,13 @@ const Perfil = () => {
                 sabado: false
             },
             observacoes: ''
+        },
+        mercadoPago: {
+            publicKey: '',
+            accessToken: '',
+            clientId: '',
+            clientSecret: '',
+            ativo: false
         }
     });
 
@@ -45,25 +53,24 @@ const Perfil = () => {
     const [message, setMessage] = useState({ type: '', text: '' });
     const [activeTab, setActiveTab] = useState('dados-restaurante');
 
-    // Carregar dados do restaurante
     useEffect(() => {
         const fetchRestaurante = async () => {
             try {
                 setLoading(true);
                 const response = await api.get('/api/1.0/Restaurante/GetRestauranteInfo');
-
-                // Formatar os horários para string HH:MM para o input time
-                console.log(response.data);
-                const horarioAbertura = response.data.empresa.horarioAbertura
-                    ? new Date(`2000-01-01T${response.data.empresa.horarioAbertura}`).toTimeString().slice(0, 5)
+                console.log(response);
+                const restauranteData = response.data.restaurante;
+                const empresa = restauranteData.empresa;
+    
+                const horarioAbertura = empresa.horarioAbertura
+                    ? new Date(`2000-01-01T${empresa.horarioAbertura}`).toTimeString().slice(0, 5)
                     : '08:00';
-
-                const horarioFechamento = response.data.empresa.horarioFechamento
-                    ? new Date(`2000-01-01T${response.data.empresa.horarioFechamento}`).toTimeString().slice(0, 5)
+    
+                const horarioFechamento = empresa.horarioFechamento
+                    ? new Date(`2000-01-01T${empresa.horarioFechamento}`).toTimeString().slice(0, 5)
                     : '18:00';
-
-                // Certificar-se de que diasFuncionamento está presente
-                const diasFuncionamento = response.data.empresa.diasFuncionamento || {
+    
+                const diasFuncionamento = empresa.diasFuncionamento || {
                     domingo: false,
                     segunda: true,
                     terca: true,
@@ -72,16 +79,24 @@ const Perfil = () => {
                     sexta: true,
                     sabado: false
                 };
-
+    
                 setRestaurante({
-                    ...response.data,
+                    ...restauranteData,
                     empresa: {
-                        ...response.data.empresa,
+                        ...empresa,
                         horarioAbertura,
                         horarioFechamento,
                         diasFuncionamento
+                    },
+                    mercadoPago: {
+                        publicKey: response.data.credenciaisMercadoPago?.publicKey || '',
+                        accessToken: response.data.credenciaisMercadoPago?.accessToken || '',
+                        clientId: response.data.credenciaisMercadoPago?.clientId || '',
+                        clientSecret: response.data.credenciaisMercadoPago?.clientSecret || '',
+                        ativo: response.data.credenciaisMercadoPago?.ativo
                     }
                 });
+    
             } catch (error) {
                 console.error('Erro ao carregar dados do restaurante:', error);
                 setMessage({ type: 'error', text: 'Erro ao carregar dados do perfil.' });
@@ -89,10 +104,23 @@ const Perfil = () => {
                 setLoading(false);
             }
         };
-
+    
         fetchRestaurante();
     }, []);
+    
 
+    const handleMercadoPagoChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setRestaurante((prevState) => ({
+            ...prevState,
+            mercadoPago: {
+                ...prevState.mercadoPago,
+                [name]: type === 'checkbox' ? checked : value
+            }
+        }));
+    };
+    
+    
     // Atualizar valores do restaurante
     const handleRestauranteChange = (e) => {
         const { name, value } = e.target;
@@ -168,8 +196,17 @@ const Perfil = () => {
                     ...(restaurante.empresa.cep && { cep: restaurante.empresa.cep }),
                     ...(restaurante.empresa.observacoes && { observacoes: restaurante.empresa.observacoes })
                 }
+            }
+            const CredenciaisDePagamento = {
+                PublicKey: restaurante.mercadoPago?.publicKey || '',
+                AccessToken: restaurante.mercadoPago?.accessToken || '',
+                ClientId: restaurante.mercadoPago?.clientId || '',
+                ClientSecret: restaurante.mercadoPago?.clientSecret || '',
+                Ativo: restaurante.mercadoPago?.ativo || false
             };
+            
 
+            await api.post('/api/1.0/CredenciaisMercadoPago/CreateCredential', CredenciaisDePagamento);
             await api.put('/api/1.0/Restaurante/UpdateProfile', dadosParaEnviar);
 
             setMessage({ type: 'success', text: 'Perfil atualizado com sucesso!' });
@@ -638,6 +675,85 @@ const Perfil = () => {
                         </div>
                     </div>
                 );
+                case 'dados-mercado-pago':
+                    return (
+                        <div style={styles.formGrid}>
+                            <div style={styles.formGroup}>
+                                <label style={styles.label} htmlFor="publicKey">Public Key</label>
+                                <input
+                                    style={styles.input}
+                                    id="publicKey"
+                                    name="publicKey"
+                                    value={restaurante.mercadoPago?.publicKey || ''}
+                                    onChange={handleMercadoPagoChange}
+                                    placeholder="Sua chave pública do Mercado Pago"
+                                />
+                            </div>
+
+                            <div style={styles.formGroup}>
+                                <label style={styles.label} htmlFor="accessToken">Access Token</label>
+                                <input
+                                    style={styles.input}
+                                    id="accessToken"
+                                    name="accessToken"
+                                    type={mostrarAccessToken ? "text" : "password"}
+                                    value={restaurante.mercadoPago?.accessToken || ''}
+                                    onChange={handleMercadoPagoChange}
+                                    placeholder="Sua chave privada do Mercado Pago"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setMostrarAccessToken(!mostrarAccessToken)}
+                                    style={{
+                                        marginTop: '5px',
+                                        background: 'none',
+                                        border: 'none',
+                                        color: 'blue',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    {mostrarAccessToken ? 'Ocultar' : 'Mostrar'} chave
+                                </button>
+                            </div>
+
+                            <div style={styles.formGroup}>
+                                <label style={styles.label} htmlFor="clientId">Client ID</label>
+                                <input
+                                    style={styles.input}
+                                    id="clientId"
+                                    name="clientId"
+                                    value={restaurante.mercadoPago?.clientId || ''}
+                                    onChange={handleMercadoPagoChange}
+                                    placeholder="Client ID"
+                                />
+                            </div>
+
+                            <div style={styles.formGroup}>
+                                <label style={styles.label} htmlFor="clientSecret">Client Secret</label>
+                                <input
+                                    style={styles.input}
+                                    id="clientSecret"
+                                    name="clientSecret"
+                                    value={restaurante.mercadoPago?.clientSecret || ''}
+                                    onChange={handleMercadoPagoChange}
+                                    placeholder="Client Secret"
+                                />
+                            </div>
+
+                            <div style={styles.formGroup}>
+                                <label style={styles.label}>
+                                    <input
+                                        type="checkbox"
+                                        name="ativo"
+                                        checked={restaurante.mercadoPago?.ativo || false}
+                                        onChange={handleMercadoPagoChange}
+                                    />
+                                    {' '}Ativo
+                                </label>
+                            </div>
+                        </div>
+                    );
+
 
             default:
                 return null;
@@ -678,6 +794,12 @@ const Perfil = () => {
                             onClick={() => setActiveTab('horarios')}
                         >
                             Horários e Observações
+                        </button>
+                        <button
+                            style={{ ...styles.tab, ...(activeTab === 'dados-mercado-pago' ? styles.activeTab : {}) }}
+                            onClick={() => setActiveTab('dados-mercado-pago')}
+                        >
+                            Credenciais de recebimento
                         </button>
                     </div>
 

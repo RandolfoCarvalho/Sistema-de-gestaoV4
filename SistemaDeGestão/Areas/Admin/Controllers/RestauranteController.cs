@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using SistemaDeGestão.Data;
 using SistemaDeGestão.Models;
+using SistemaDeGestão.Models.DTOs.Resquests;
 using SistemaDeGestão.Services;
+using SistemaDeGestão.Services.Interfaces;
 using System.Security.Claims;
 
 namespace SistemaDeGestão.Areas.Admin.Controllers
@@ -12,10 +14,14 @@ namespace SistemaDeGestão.Areas.Admin.Controllers
     {
         private readonly DataBaseContext _context;
         private readonly RestauranteService _restauranteService;
-        public RestauranteController(DataBaseContext context, RestauranteService restauranteService)
+        private readonly IEncryptionService _encryptionService;
+        public RestauranteController(DataBaseContext context, RestauranteService restauranteService,
+            IEncryptionService encryptionService)
         {
             _context = context;
             _restauranteService = restauranteService;
+            _encryptionService = encryptionService;
+            
         }
         public IActionResult list()
         {
@@ -57,23 +63,47 @@ namespace SistemaDeGestão.Areas.Admin.Controllers
                 return Unauthorized("Usuário não está autenticado");
             }
 
-            var RestauranteId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(RestauranteId))
+            var restauranteId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(restauranteId))
             {
                 return Unauthorized("ID do usuário não encontrado");
             }
 
-            var RestauranteModel = await _context.Restaurantes
-                .Include(r => r.Empresa) 
-                .FirstOrDefaultAsync(u => u.Id.ToString() == RestauranteId);
+            var restauranteModel = await _context.Restaurantes
+                .Include(r => r.Empresa)
+                .FirstOrDefaultAsync(u => u.Id.ToString() == restauranteId);
 
-            if (RestauranteModel == null)
+            if (restauranteModel == null)
             {
                 return BadRequest("Usuário não encontrado");
             }
 
-            return Ok(RestauranteModel);
+            // Busca a credencial relacionada ao restaurante
+            var credencial = await _context.RestauranteCredenciaisMercadoPago
+                .FirstOrDefaultAsync(c => c.RestauranteId.ToString() == restauranteId);
+
+            RestauranteCredencialMercadoPagoDTO credencialDTO = null;
+
+            if (credencial != null)
+            {
+                credencialDTO = new RestauranteCredencialMercadoPagoDTO
+                {
+                    RestauranteId = credencial.RestauranteId,
+                    PublicKey = _encryptionService.Decrypt(credencial.PublicKey),
+                    AccessToken = _encryptionService.Decrypt(credencial.AccessToken),
+                    ClientId = _encryptionService.Decrypt(credencial.ClientId),
+                    ClientSecret = _encryptionService.Decrypt(credencial.ClientSecret),
+                    Ativo = credencial.Ativo
+                };
+            }
+
+            return Ok(new
+            {
+                Restaurante = restauranteModel,
+                CredenciaisMercadoPago = credencialDTO
+            });
         }
+
         [HttpGet]
         [Route("GetRestauranteInfoByName/{RestauranteName}")]
         public async Task<IActionResult> GetRestauranteInfoByName(string RestauranteName)

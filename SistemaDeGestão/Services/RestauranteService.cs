@@ -7,13 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using SistemaDeGestão.Migrations;
 
 namespace SistemaDeGestão.Services
 {
     public class RestauranteService
     {
-        private readonly DataBaseContext _context; 
-        
+        private readonly DataBaseContext _context;
         public RestauranteService(DataBaseContext dataBaseContext)
         {
             _context = dataBaseContext;
@@ -86,6 +86,7 @@ namespace SistemaDeGestão.Services
                     empresa.DiasFuncionamento.Sexta = updatedRestaurante.Empresa.DiasFuncionamento.Sexta;
                     empresa.DiasFuncionamento.Sabado = updatedRestaurante.Empresa.DiasFuncionamento.Sabado;
                 }
+                //atualiza as credenciais
             }
 
             await _context.SaveChangesAsync();

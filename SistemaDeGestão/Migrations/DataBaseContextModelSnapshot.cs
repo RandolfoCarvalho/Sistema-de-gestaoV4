@@ -728,6 +728,47 @@ namespace SistemaDeGestão.Migrations
                     b.ToTable("Restaurantes");
                 });
 
+            modelBuilder.Entity("SistemaDeGestão.Models.RestauranteCredencialMercadoPago", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AccessToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClientSecret")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PublicKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RestauranteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RestauranteId")
+                        .IsUnique();
+
+                    b.ToTable("RestauranteCredenciaisMercadoPago");
+                });
+
             modelBuilder.Entity("SistemaDeGestão.Models.Adicional", b =>
                 {
                     b.HasOne("SistemaDeGestão.Models.GrupoAdicional", null)
@@ -959,6 +1000,17 @@ namespace SistemaDeGestão.Migrations
                     b.Navigation("Produto");
                 });
 
+            modelBuilder.Entity("SistemaDeGestão.Models.RestauranteCredencialMercadoPago", b =>
+                {
+                    b.HasOne("SistemaDeGestão.Models.Restaurante", "Restaurante")
+                        .WithOne("CredencialMercadoPago")
+                        .HasForeignKey("SistemaDeGestão.Models.RestauranteCredencialMercadoPago", "RestauranteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Restaurante");
+                });
+
             modelBuilder.Entity("SistemaDeGestão.Models.Adicional", b =>
                 {
                     b.Navigation("Produtos");
@@ -1012,6 +1064,9 @@ namespace SistemaDeGestão.Migrations
             modelBuilder.Entity("SistemaDeGestão.Models.Restaurante", b =>
                 {
                     b.Navigation("Categorias");
+
+                    b.Navigation("CredencialMercadoPago")
+                        .IsRequired();
 
                     b.Navigation("Empresa")
                         .IsRequired();

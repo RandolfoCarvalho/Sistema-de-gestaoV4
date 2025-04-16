@@ -1,0 +1,357 @@
+[
+  {
+    "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.FinalUserController",
+    "Method": "GetPedidosByUser",
+    "RelativePath": "api/1.0/FinalUser/GetPedidosByUser/{numeroTelefone}/{restauranteId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "numeroTelefone",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "restauranteId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.FinalUserController",
+    "Method": "GetUserInfoById",
+    "RelativePath": "api/1.0/FinalUser/getUserInfoById/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.FinalUserAuthController",
+    "Method": "VerificarTelefone",
+    "RelativePath": "api/1.0/FinalUserAuth/VerificarTelefone",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "user",
+        "Type": "SistemaDeGest\u00E3o.Models.FinalUser",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.ProdutoController",
+    "Method": "GetProduto",
+    "RelativePath": "api/1.0/Produto/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SistemaDeGest\u00E3o.Models.Produto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.ProdutoController",
+    "Method": "AtualizarProdutoV2",
+    "RelativePath": "api/1.0/Produto/AtualizarProdutoV2",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Nome",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Descricao",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "CategoriaId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PrecoCusto",
+        "Type": "System.Decimal",
+        "IsRequired": false
+      },
+      {
+        "Name": "Ativo",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "PrecoVenda",
+        "Type": "System.Decimal",
+        "IsRequired": false
+      },
+      {
+        "Name": "EstoqueAtual",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "EstoqueMinimo",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "UnidadeMedida",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ImagemPrincipalUrl",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "Complementos",
+        "Type": "System.Collections.Generic.List\u00601[[SistemaDeGest\u00E3o.Models.DTOs.Resquests.ComplementoDTO, SistemaDeGest\u00E3o, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "GruposComplementosIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "GrupoAdicionalIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "AdicionaisIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.ProdutoController",
+    "Method": "BuscarPorSlug",
+    "RelativePath": "api/1.0/Produto/BuscarPorSlug/{slug}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "slug",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SistemaDeGest\u00E3o.Models.DTOs.Resquests.RestauranteDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.ProdutoController",
+    "Method": "CriarProduto",
+    "RelativePath": "api/1.0/Produto/CriarProduto",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Nome",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Descricao",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "CategoriaId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PrecoCusto",
+        "Type": "System.Decimal",
+        "IsRequired": false
+      },
+      {
+        "Name": "Ativo",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "PrecoVenda",
+        "Type": "System.Decimal",
+        "IsRequired": false
+      },
+      {
+        "Name": "EstoqueAtual",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "EstoqueMinimo",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "UnidadeMedida",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ImagemPrincipalUrl",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "Complementos",
+        "Type": "System.Collections.Generic.List\u00601[[SistemaDeGest\u00E3o.Models.DTOs.Resquests.ComplementoDTO, SistemaDeGest\u00E3o, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "GruposComplementosIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "GrupoAdicionalIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "AdicionaisIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.ProdutoController",
+    "Method": "DeletarProduto",
+    "RelativePath": "api/1.0/Produto/DeletarProduto/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.ProdutoController",
+    "Method": "DeleteAll",
+    "RelativePath": "api/1.0/Produto/DeleteAll",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.ProdutoController",
+    "Method": "ListarProdutos",
+    "RelativePath": "api/1.0/Produto/ListarProdutos",
+    "HttpMethod": "",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.ProdutoController",
+    "Method": "ListarProdutosPorLoja",
+    "RelativePath": "api/1.0/Produto/ListarProdutosPorLoja/{lojaId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "lojaId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SistemaDeGest\u00E3o.Models.Produto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.ProdutoController",
+    "Method": "ObterProduto",
+    "RelativePath": "api/1.0/Produto/ObterProduto/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

@@ -125,7 +125,7 @@ builder.Services.AddControllers()
 {
     options.LoginPath = "/Auth/Login";  // Caminho para o redirecionamento de login
 }); */
-builder.Services.AddCors(options =>
+/*builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
         builder =>
@@ -136,6 +136,15 @@ builder.Services.AddCors(options =>
                 .AllowAnyHeader()
                 .AllowCredentials();
         });
+});*/
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowSpecificOrigin", builder => {
+        builder
+            .WithOrigins("https://sistema-de-gestao-v3.vercel.app") // More secure than allowing any origin
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
 });
 
 //OrderHub
@@ -168,9 +177,9 @@ if (!app.Environment.IsDevelopment())
 app.UseDeveloperExceptionPage();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseCors("AllowSpecificOrigin");
 app.UseRouting();
 app.UseStaticFiles();
-app.UseCors("AllowSpecificOrigin");
 app.UseCors();
 app.UseAuthentication(); // Adicione isso
 app.UseAuthorization();  // E isso também

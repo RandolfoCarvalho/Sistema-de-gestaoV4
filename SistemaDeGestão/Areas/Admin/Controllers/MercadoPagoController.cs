@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -22,7 +23,9 @@ namespace SistemaDeGestão.Controllers
         private readonly DataBaseContext _context;
         private readonly PedidoService _pedidoService;
         private readonly IHubContext<OrderHub> _hubContext;
+        private static readonly ConcurrentDictionary<string, SemaphoreSlim> _locks = new();
         private readonly string _accessToken = "APP_USR-4929793273828266-031923-dd42ca24161f10acffd4785370c0358b-482914930";
+
         //private readonly string _accessToken = "TEST-4929793273828266-031923-ae707d0d8d7446b92af91ce1c37dec0d-482914930";
         public MercadoPagoController(MercadoPagoService paymentService, IConfiguration configuration,
             DataBaseContext context, PedidoService pedidoService, IHubContext<OrderHub> hubContext)
@@ -69,47 +72,66 @@ namespace SistemaDeGestão.Controllers
                 {
                     return BadRequest("ID de pagamento não encontrado.");
                 }
+
                 string transactionId = paymentIdElement.GetString();
-                using (var client = new HttpClient())
+
+                using var client = new HttpClient();
+                string url = $"https://api.mercadopago.com/v1/payments/{transactionId}?access_token={_accessToken}";
+                var response = await client.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    string url = $"https://api.mercadopago.com/v1/payments/{transactionId}?access_token={_accessToken}";
-                    var response = await client.GetAsync(url);
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        return StatusCode((int)response.StatusCode, "Erro ao buscar informações de pagamento.");
-                    }
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    var paymentData = JsonDocument.Parse(responseContent).RootElement;
-
-                    // Verificar se o pagamento foi aprovado
-                    if (!paymentData.TryGetProperty("status", out var statusElement))
-                    {
-                        return BadRequest("Status de pagamento não encontrado.");
-                    }
-                    string status = statusElement.GetString();
-                    if (status == "approved")
-                    {
-                        var pedidoPendente = await _context.PedidosPendentes
-                            .FirstOrDefaultAsync(p => p.TransactionId == transactionId);
-
-                        if (pedidoPendente != null)
-                        {
-                            var pedidoDTO = JsonSerializer.Deserialize<PedidoDTO>(pedidoPendente.PedidoJson);
-                            await _pedidoService.CriarPedidoAsync(pedidoDTO);
-                            _context.PedidosPendentes.Remove(pedidoPendente);
-                            await _context.SaveChangesAsync();
-                            await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoDTO);
-                        }
-                    }
-                    return Ok();
+                    return StatusCode((int)response.StatusCode, "Erro ao buscar informações de pagamento.");
                 }
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var paymentData = JsonDocument.Parse(responseContent).RootElement;
+
+                if (!paymentData.TryGetProperty("status", out var statusElement))
+                {
+                    return BadRequest("Status de pagamento não encontrado.");
+                }
+
+                string status = statusElement.GetString();
+                if (status == "approved")
+                {
+                    await ProcessarPagamentoAprovadoAsync(transactionId);
+                }
+
+                return Ok();
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Erro ao processar notificação: {ex.Message}");
             }
         }
+        private async Task ProcessarPagamentoAprovadoAsync(string transactionId)
+        {
+            var semaphore = _locks.GetOrAdd(transactionId, _ => new SemaphoreSlim(1, 1));
+
+            await semaphore.WaitAsync();
+            try
+            {
+                var pedidoPendente = await _context.PedidosPendentes
+                    .FirstOrDefaultAsync(p => p.TransactionId == transactionId);
+                if (pedidoPendente == null) return;
+
+                _context.PedidosPendentes.Remove(pedidoPendente);
+                await _context.SaveChangesAsync();
+
+                var pedidoDTO = JsonSerializer.Deserialize<PedidoDTO>(pedidoPendente.PedidoJson);
+                await _pedidoService.CriarPedidoAsync(pedidoDTO);
+                await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoDTO);
+            }
+            finally
+            {
+                semaphore.Release();
+                _ = Task.Delay(4000).ContinueWith(t => _locks.TryRemove(transactionId, out _));
+            }
+        }
+
     }
+
     public class PagamentoRequest
     {
         public PagamentoCartaoDTO DadosPagamento { get; set; }

@@ -1,0 +1,90 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.product-list {
+    display: flex; /* Usa Flexbox para organizar os itens */
+    flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha */
+    justify-content: center; /* Centraliza os itens na linha */
+}
+
+    .product-list.align-left {
+        justify-content: flex-start; /* Alinha os itens à esquerda */
+    }
+
+
+.product-item {
+    display: flex; /* Alinha a imagem e a informação em linha */
+    align-items: center; /* Alinha verticalmente ao centro */
+    width: calc(50% - 20px); /* Mantém o produto ocupando 50% da largura da linha menos margens */
+    margin: 10px; /* Espaçamento entre os produtos */
+    box-sizing: border-box; /* Garante que o padding e a borda estejam dentro da largura definida */
+    background-color: #f9f9f9; /* Cor de fundo dos produtos */
+    border-radius: 8px; /* Cantos arredondados */
+    padding: 15px; /* Espaçamento interno */
+    text-align: left; /* Alinha o texto à esquerda */
+    transition: transform 0.2s; /* Adiciona uma transição suave para o efeito de hover */
+}
+
+    .product-item:hover {
+        transform: scale(1.05); /* Efeito de aumento ao passar o mouse */
+    }
+
+    .product-item img {
+        max-width: 80px; /* Largura máxima da imagem */
+        height: auto; /* Mantém a proporção da imagem */
+        margin-right: 15px; /* Espaçamento à direita da imagem */
+    }
+
+.product-info {
+    display: flex; /* Permite que os elementos internos se alinhem verticalmente */
+    flex-direction: column; /* Organiza os elementos na coluna */
+    justify-content: center; /* Centraliza verticalmente */
+}
+
+    .product-info h4 {
+        margin: 0;
+        font-size: 1.2em; /* Tamanho da fonte do título */
+    }
+
+    .product-info p {
+        margin: 5px 0 0 0; /* Espaçamento do parágrafo */
+        color: #666; /* Cor do texto */
+    }
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .product-item {
+        width: 90%; /* Largura para telas menores */
+    }
+
+        .product-item img {
+            width: 80px; /* Largura da imagem para telas menores */
+        }
+}
+
+
+
+<!-- Loja view -->
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
+/* Ajuste para telas menores */
+@media (max-width: 768px) {
+    .content {
+        padding: 1rem;
+    }
+
+    .header-content, .bottom-nav-content {
+        padding: 0 1rem;
+    }
+
+    .product-image-container {
+        width: 80px;
+        height: 80px;
+    }
+}

@@ -15,6 +15,7 @@ using MercadoPago.Client;
 using MercadoPago.Config;
 using MercadoPago.Error;
 using MercadoPago.Resource.Payment;
+using Microsoft.AspNetCore.SignalR;
 
 namespace SistemaDeGestão.Services
 {
@@ -29,7 +30,7 @@ namespace SistemaDeGestão.Services
             _configuration = configuration;
         }
 
-        public async Task<PagamentoPixResponse> ProcessarPixAsync(PagamentoPixDTO pagamento, PedidoDTO pedido)
+        public async Task<PagamentoPixResponse> ProcessarPixAsync(PagamentoPixDTO pagamento, PedidoDTO pedidoDTO)
         {
             using (var client = new HttpClient())
             {
@@ -77,6 +78,16 @@ namespace SistemaDeGestão.Services
 
                 var id = doc.RootElement.GetProperty("id").GetInt64();
                 var valor = doc.RootElement.GetProperty("transaction_amount").GetDecimal();
+
+                var pedidoPendente = new PedidoPendente
+                {
+                    TransactionId = id.ToString(),
+                    PedidoJson = JsonConvert.SerializeObject(pedidoDTO),
+                    DataCriacao = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow,
+                            TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))
+                };
+                _context.PedidosPendentes.Add(pedidoPendente);
+                await _context.SaveChangesAsync();
 
                 return new PagamentoPixResponse
                 {
@@ -210,7 +221,8 @@ namespace SistemaDeGestão.Services
                 {
                     TransactionId = payment.Id.ToString(),
                     PedidoJson = JsonConvert.SerializeObject(pedidoDTO),
-                    DataCriacao = DateTime.UtcNow
+                    DataCriacao = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow,
+                            TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))
                 };
                 _context.PedidosPendentes.Add(pedidoPendente);
                 await _context.SaveChangesAsync();
@@ -275,7 +287,6 @@ namespace SistemaDeGestão.Services
                 };
             }
         }
-
 
     }
 }

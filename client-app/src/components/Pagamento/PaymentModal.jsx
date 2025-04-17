@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import usePayment from "./hooks/usePayment";
 import { useNavigate } from "react-router-dom";
 import { initMercadoPago } from "@mercadopago/sdk-react";
-import PaymentLoadingSpinner from '../ui/loadings';
+import LoadingSpinner from '../ui/loadings';
 import useSignalRPedidos from './hooks/useSignalRPedidos';
 import CardPaymentForm from "./CardPaymentForm";
 import PixPaymentSection from "./PixPaymentSection";
@@ -204,17 +204,21 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         
     };
 
-    const handlePixSubmit = async (e) => {
-        e.preventDefault();
+    //Pagamento PIX
+    //Pagamento PIX
+    const handlePixSubmit = async (formData) => {
         setInternalLoading(true);
         setInternalError(null);
         setPixData(null);
-        
+
         const paymentData = {
             FormaPagamento: "pix",
-            Amount: parseFloat(amount),
+            Amount: parseFloat(formData.amount),
+            PayerFirstName: formData.payerFirstName,
+            PayerLastName: formData.payerLastName,
+            PayerEmail: formData.payerEmail
         };
-    
+
         const pedidoDTO = preparePedidoDTO();
         if (!pedidoDTO) {
             console.error("Falha ao preparar PedidoDTO para pagamento: pix");
@@ -222,15 +226,15 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             setInternalLoading(false);
             return;
         }
-    
+
         console.log(`Enviando para processPayment (pix):`, paymentData, "com DTO:", pedidoDTO);
-    
+
         try {
             const response = await processPaymentPix(paymentData, pedidoDTO);
-    
+
             if (response?.ok) {
                 console.log(`Resposta do backend para pix:`, response);
-    
+
                 if (response.data && response.data.qrCodeBase64) {
                     setPixData({
                         qrCodeBase64: response.data.qrCodeBase64,
@@ -252,6 +256,8 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         }
     };
 
+    
+
     const isLoading = paymentLoading || internalLoading;
     const displayError = paymentError || internalError;
 
@@ -267,7 +273,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             shouldCloseOnOverlayClick={!isLoading}
             appElement={document.getElementById('root') || undefined}
         >
-            {internalLoading && <PaymentLoadingSpinner />}
+            {internalLoading && <LoadingSpinner />}
 
             <div className="space-y-4">
                 <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Detalhes de Pagamento</h2>

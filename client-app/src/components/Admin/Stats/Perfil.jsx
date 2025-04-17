@@ -58,8 +58,12 @@ const Perfil = () => {
             try {
                 setLoading(true);
                 const response = await api.get('/api/1.0/Restaurante/GetRestauranteInfo');
-                console.log(response);
                 const restauranteData = response.data.restaurante;
+
+                console.log("resposta", response);
+                console.log("response.data.restaurante", response.data.restaurante);
+                console.log("restauranteData.empresa", restauranteData.empresa);
+
                 const empresa = restauranteData.empresa;
     
                 const horarioAbertura = empresa.horarioAbertura

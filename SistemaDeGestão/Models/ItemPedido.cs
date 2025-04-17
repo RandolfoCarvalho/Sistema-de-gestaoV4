@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace SistemaDeGestão.Models
 {
@@ -7,10 +8,11 @@ namespace SistemaDeGestão.Models
     {
         [Key]
         public int Id { get; set; }
+        [ForeignKey("PedidoId")]
 
         public int PedidoId { get; set; }
 
-        [ForeignKey("PedidoId")]
+        [JsonIgnore]
         public virtual Pedido Pedido { get; set; }
 
         public int ProdutoId { get; set; }

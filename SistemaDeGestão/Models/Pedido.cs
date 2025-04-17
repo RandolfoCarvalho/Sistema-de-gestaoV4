@@ -40,6 +40,7 @@ namespace SistemaDeGestão.Models
         public PedidoPagamento Pagamento { get; set; }
 
         // Itens do pedido
+
         public virtual ICollection<ItemPedido> Itens { get; set; }
 
         public string Observacoes { get; set; }
@@ -48,7 +49,6 @@ namespace SistemaDeGestão.Models
         {
             DataPedido = DateTime.Now;
             Status = OrderStatus.NOVO;
-            Itens = new List<ItemPedido>();
             EnderecoEntrega = new EnderecoEntrega();
             Pagamento = new PedidoPagamento();
         }

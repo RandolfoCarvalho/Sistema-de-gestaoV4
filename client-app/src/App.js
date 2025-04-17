@@ -39,6 +39,9 @@ import MeusProdutos from './components/Admin/Stats/Products';
 import Perfil from './components/Admin/Stats/Perfil';
 import Sair from './components/Admin/Stats/logout';
 
+//protecao da rota admin
+import ProtectedRoute from './components/ProtectedRoute';
+
 // Axios Global Config
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 Modal.setAppElement('#root');
@@ -85,38 +88,38 @@ const App = () => {
                                     <Route path="/auth/login" element={<Autenticacao />} />
                                     <Route path="/pedidos" element={<Pedidos />} />
                                     <Route path="/pedidos/:numeroPedido" element={<PedidosDetalhes />} />
-                                    <Route path="/promo" element={<div>Página de Promoções</div>} />
-                                    <Route path="/carrinho" element={<div>Página do Carrinho</div>} />
+                                    <Route path="/promo" element={<div>Pï¿½gina de Promoï¿½ï¿½es</div>} />
+                                    <Route path="/carrinho" element={<div>Pï¿½gina do Carrinho</div>} />
                                     {/* Admin Routes */}
-                                    <Route path="/admin" element={
-                                        <div className={`${darkMode ? 'dark' : ''} flex bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400`}>
-                                            <Sidebar isSidebarOpen={isSidebarOpen} />
-                                            <div className={`flex-1 min-h-screen transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
-                                                <HeaderAdmin
-                                                    isSidebarOpen={isSidebarOpen}
-                                                    toggleSidebar={toggleSidebar}
-                                                    darkMode={darkMode}
-                                                    toggleDarkMode={toggleDarkMode}
-                                                />
-                                                <Main className="p-4">
-                                                    <Content>
-                                                        <Outlet />
-                                                    </Content>
-                                                </Main>
+                                    <Route element={<ProtectedRoute redirectTo="/auth/login" />}>
+                                        <Route path="/admin" element={
+                                            <div className={`${darkMode ? 'dark' : ''} flex bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400`}>
+                                                <Sidebar isSidebarOpen={isSidebarOpen} />
+                                                <div className={`flex-1 min-h-screen transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+                                                    <HeaderAdmin
+                                                        isSidebarOpen={isSidebarOpen}
+                                                        toggleSidebar={toggleSidebar}
+                                                        darkMode={darkMode}
+                                                        toggleDarkMode={toggleDarkMode}
+                                                    />
+                                                    <Main className="p-4">
+                                                        <Content>
+                                                            <Outlet />
+                                                        </Content>
+                                                    </Main>
+                                                </div>
                                             </div>
-                                        </div>
-                                    }>
-                                        <Route index element={<RestaurantDashboard />} />
-                                        <Route path="dashboard" element={<RestaurantDashboard />} />
-                                        <Route path="CriarProduto" element={<Create />} />
-                                        <Route path="CriarGrupoAdicionais" element={<CriarGrupoAdicionais />} />
-                                        <Route path="CriarComplemento" element={<CriarComplemento />} />
-                                        <Route path="MeusProdutos" element={<MeusProdutos />} />
-                                        <Route path="Perfil" element={<Perfil />} />
-                                        <Route path="Sair" element={<Sair />} />
+                                        }>
+                                            <Route index element={<RestaurantDashboard />} />
+                                            <Route path="dashboard" element={<RestaurantDashboard />} />
+                                            <Route path="CriarProduto" element={<Create />} />
+                                            <Route path="CriarGrupoAdicionais" element={<CriarGrupoAdicionais />} />
+                                            <Route path="CriarComplemento" element={<CriarComplemento />} />
+                                            <Route path="MeusProdutos" element={<MeusProdutos />} />
+                                            <Route path="Perfil" element={<Perfil />} />
+                                            <Route path="Sair" element={<Sair />} />
+                                        </Route>
                                     </Route>
-                                    {/* Dashboard */}
-                                    <Route path="/dashboard" element={<Main />} />
                                 </Routes>
                             </div>
                         </Router>

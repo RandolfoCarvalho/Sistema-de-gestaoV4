@@ -501,3 +501,7 @@ C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\SistemaDeGestão.pdb
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\SistemaDeGestão.genruntimeconfig.cache
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\ref\SistemaDeGestão.dll
+C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll

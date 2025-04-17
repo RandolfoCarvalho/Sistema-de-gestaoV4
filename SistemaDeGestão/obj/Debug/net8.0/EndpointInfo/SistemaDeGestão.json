@@ -1,0 +1,3673 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Minha API",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/1.0/Adicional/ListarAdicionais": {
+      "get": {
+        "tags": [
+          "Adicional"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Adicional/CriarAdicional": {
+      "post": {
+        "tags": [
+          "Adicional"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Adicional"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Adicional"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Adicional"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Adicional/ObterAdicionais/{produtoId}": {
+      "get": {
+        "tags": [
+          "Adicional"
+        ],
+        "parameters": [
+          {
+            "name": "produtoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Adicional"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Adicional"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Adicional"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/1.0/Adicional/AtualizarAdicional": {
+      "put": {
+        "tags": [
+          "Adicional"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Adicional"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Adicional"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Adicional"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Adicional/DeletarAdicional/{id}": {
+      "delete": {
+        "tags": [
+          "Adicional"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Adicional/ListarGrupoAdicionaisAtivosEInativos": {
+      "get": {
+        "tags": [
+          "Adicional"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Adicional/ListarGrupoAdicionais": {
+      "get": {
+        "tags": [
+          "Adicional"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Adicional/ListarGrupoAdicionais/{id}": {
+      "get": {
+        "tags": [
+          "Adicional"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Adicional/ListarGrupoAdicionaisPorProduto/{produtoId}": {
+      "get": {
+        "tags": [
+          "Adicional"
+        ],
+        "parameters": [
+          {
+            "name": "produtoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Adicional/ListarGrupoAdicionaisPorLoja/{nomeDaLoja}/{produtoId}": {
+      "get": {
+        "tags": [
+          "Adicional"
+        ],
+        "parameters": [
+          {
+            "name": "nomeDaLoja",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "produtoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Adicional/CriarGrupoAdicional": {
+      "post": {
+        "tags": [
+          "Adicional"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrupoAdicional"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrupoAdicional"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrupoAdicional"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Adicional/AdicionarAdicionalAoGrupo": {
+      "post": {
+        "tags": [
+          "Adicional"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Adicional/AtualizarGrupoAdicional": {
+      "put": {
+        "tags": [
+          "Adicional"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrupoAdicional"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrupoAdicional"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrupoAdicional"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Adicional/DeletarGrupoAdicional/{id}": {
+      "delete": {
+        "tags": [
+          "Adicional"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Auth/Login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restaurante"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restaurante"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restaurante"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Auth/signin": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restaurante"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restaurante"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restaurante"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Auth/refresh": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenVO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenVO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenVO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Auth/revoke": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Categoria/ListarCategorias": {
+      "get": {
+        "tags": [
+          "Categoria"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Categoria/ListarCategoriasPorLoja/{id}": {
+      "get": {
+        "tags": [
+          "Categoria"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Categoria"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Categoria"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Categoria"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/1.0/Categoria/ListarCategoriasPorLojaGestao": {
+      "get": {
+        "tags": [
+          "Categoria"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Categoria"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Categoria"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Categoria"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/1.0/Categoria/CriarCategoria": {
+      "post": {
+        "tags": [
+          "Categoria"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Categoria"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Categoria"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Categoria"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Categoria/AtualizarCategoria": {
+      "put": {
+        "tags": [
+          "Categoria"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Categoria"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Categoria"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Categoria"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Categoria/DeletarCategoria/{id}": {
+      "delete": {
+        "tags": [
+          "Categoria"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Categoria/AdicionarCategoriaAProduto": {
+      "post": {
+        "tags": [
+          "Categoria"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Complemento/ListarComplementos": {
+      "get": {
+        "tags": [
+          "Complemento"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Complemento/CriarComplemento": {
+      "post": {
+        "tags": [
+          "Complemento"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComplementoDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComplementoDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComplementoDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Complemento/ObterComplementos/{produtoId}": {
+      "get": {
+        "tags": [
+          "Complemento"
+        ],
+        "parameters": [
+          {
+            "name": "produtoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ComplementoDTO"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ComplementoDTO"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ComplementoDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/1.0/Complemento/AtualizarComplemento": {
+      "put": {
+        "tags": [
+          "Complemento"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComplementoDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComplementoDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComplementoDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Complemento/DeletarComplemento/{id}": {
+      "delete": {
+        "tags": [
+          "Complemento"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Complemento/ListarGrupoComplementos": {
+      "get": {
+        "tags": [
+          "Complemento"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Complemento/ListarGrupoComplementos/{id}": {
+      "get": {
+        "tags": [
+          "Complemento"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Complemento/ListarGrupoComplementosAtivosEInativos": {
+      "get": {
+        "tags": [
+          "Complemento"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Complemento/CriarGrupoComplemento": {
+      "post": {
+        "tags": [
+          "Complemento"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrupoComplemento"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrupoComplemento"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrupoComplemento"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Complemento/ListarGrupoComplementosPorProduto/{produtoId}": {
+      "get": {
+        "tags": [
+          "Complemento"
+        ],
+        "parameters": [
+          {
+            "name": "produtoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Complemento/ListarGrupoComplementosPorLoja/{nomeDaLoja}/{produtoId}": {
+      "get": {
+        "tags": [
+          "Complemento"
+        ],
+        "parameters": [
+          {
+            "name": "nomeDaLoja",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "produtoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Complemento/AdicionarComplementoAoGrupo": {
+      "post": {
+        "tags": [
+          "Complemento"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Complemento/AtualizarGrupoComplemento": {
+      "put": {
+        "tags": [
+          "Complemento"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrupoComplemento"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrupoComplemento"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrupoComplemento"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Complemento/DeletarGrupoComplemento/{id}": {
+      "delete": {
+        "tags": [
+          "Complemento"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/CredenciaisMercadoPago/GetCredential/{id}": {
+      "get": {
+        "tags": [
+          "CredenciaisMercadoPago"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/CredenciaisMercadoPago/CreateCredential": {
+      "post": {
+        "tags": [
+          "CredenciaisMercadoPago"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestauranteCredencialMercadoPagoDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestauranteCredencialMercadoPagoDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestauranteCredencialMercadoPagoDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/CredenciaisMercadoPago/UpdateCredential/{id}": {
+      "put": {
+        "tags": [
+          "CredenciaisMercadoPago"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestauranteCredencialMercadoPagoDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestauranteCredencialMercadoPagoDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestauranteCredencialMercadoPagoDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/CredenciaisMercadoPago/DeleteCredential/{id}": {
+      "delete": {
+        "tags": [
+          "CredenciaisMercadoPago"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/FinalUser/getUserInfoById/{id}": {
+      "get": {
+        "tags": [
+          "FinalUser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/FinalUser/GetPedidosByUser/{numeroTelefone}/{restauranteId}": {
+      "get": {
+        "tags": [
+          "FinalUser"
+        ],
+        "parameters": [
+          {
+            "name": "numeroTelefone",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "restauranteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/FinalUserAuth/VerificarTelefone": {
+      "post": {
+        "tags": [
+          "FinalUserAuth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinalUser"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinalUser"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinalUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/MercadoPago/processaPagamentoPix": {
+      "post": {
+        "tags": [
+          "MercadoPago"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagamentoRequestPix"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagamentoRequestPix"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagamentoRequestPix"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/MercadoPago/processaPagamento": {
+      "post": {
+        "tags": [
+          "MercadoPago"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagamentoRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagamentoRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagamentoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/MercadoPago/notificacaoMercadoPago": {
+      "post": {
+        "tags": [
+          "MercadoPago"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { }
+            },
+            "text/json": {
+              "schema": { }
+            },
+            "application/*+json": {
+              "schema": { }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Pedido/ListarPedidos/{status}": {
+      "get": {
+        "tags": [
+          "Pedido"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Pedido"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Pedido"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Pedido"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/1.0/Pedido/ObterPedido/{id}": {
+      "get": {
+        "tags": [
+          "Pedido"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Pedido/ObterPedidoPorIdeRestauranteId/{id}/{restauranteId}": {
+      "get": {
+        "tags": [
+          "Pedido"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "restauranteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Pedido/AtualizarStatusPedido/{id}/{novoStatus}": {
+      "put": {
+        "tags": [
+          "Pedido"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "novoStatus",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/OrderStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Pedido/CriarPedido": {
+      "post": {
+        "tags": [
+          "Pedido"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PedidoDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PedidoDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PedidoDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pedido"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pedido"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pedido"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/1.0/Pedido/ListarItensPedido/{pedidoId}": {
+      "get": {
+        "tags": [
+          "Pedido"
+        ],
+        "parameters": [
+          {
+            "name": "pedidoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Pedido/ObterItemPedido/{id}": {
+      "get": {
+        "tags": [
+          "Pedido"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Pedido/AtualizarObservacoes/{id}": {
+      "put": {
+        "tags": [
+          "Pedido"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemPedidoDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemPedidoDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemPedidoDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Pedido/DeleteAll": {
+      "delete": {
+        "tags": [
+          "Pedido"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Produto/ListarProdutos": {
+      "get": {
+        "tags": [
+          "Produto"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Produto/BuscarPorSlug/{slug}": {
+      "get": {
+        "tags": [
+          "Produto"
+        ],
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestauranteDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestauranteDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestauranteDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/1.0/Produto/ListarProdutosPorLoja/{lojaId}": {
+      "get": {
+        "tags": [
+          "Produto"
+        ],
+        "parameters": [
+          {
+            "name": "lojaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/1.0/Produto/CriarProduto": {
+      "post": {
+        "tags": [
+          "Produto"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Id": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Nome": {
+                    "type": "string"
+                  },
+                  "Descricao": {
+                    "type": "string"
+                  },
+                  "CategoriaId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "PrecoCusto": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "Ativo": {
+                    "type": "boolean"
+                  },
+                  "PrecoVenda": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "EstoqueAtual": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "EstoqueMinimo": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "UnidadeMedida": {
+                    "type": "string"
+                  },
+                  "ImagemPrincipalUrl": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Complementos": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ComplementoDTO"
+                    }
+                  },
+                  "GruposComplementosIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  },
+                  "GrupoAdicionalIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  },
+                  "AdicionaisIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "Id": {
+                  "style": "form"
+                },
+                "Nome": {
+                  "style": "form"
+                },
+                "Descricao": {
+                  "style": "form"
+                },
+                "CategoriaId": {
+                  "style": "form"
+                },
+                "PrecoCusto": {
+                  "style": "form"
+                },
+                "Ativo": {
+                  "style": "form"
+                },
+                "PrecoVenda": {
+                  "style": "form"
+                },
+                "EstoqueAtual": {
+                  "style": "form"
+                },
+                "EstoqueMinimo": {
+                  "style": "form"
+                },
+                "UnidadeMedida": {
+                  "style": "form"
+                },
+                "ImagemPrincipalUrl": {
+                  "style": "form"
+                },
+                "Complementos": {
+                  "style": "form"
+                },
+                "GruposComplementosIds": {
+                  "style": "form"
+                },
+                "GrupoAdicionalIds": {
+                  "style": "form"
+                },
+                "AdicionaisIds": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Produto/ObterProduto/{id}": {
+      "get": {
+        "tags": [
+          "Produto"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Produto/AtualizarProdutoV2": {
+      "put": {
+        "tags": [
+          "Produto"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Id": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Nome": {
+                    "type": "string"
+                  },
+                  "Descricao": {
+                    "type": "string"
+                  },
+                  "CategoriaId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "PrecoCusto": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "Ativo": {
+                    "type": "boolean"
+                  },
+                  "PrecoVenda": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "EstoqueAtual": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "EstoqueMinimo": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "UnidadeMedida": {
+                    "type": "string"
+                  },
+                  "ImagemPrincipalUrl": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Complementos": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ComplementoDTO"
+                    }
+                  },
+                  "GruposComplementosIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  },
+                  "GrupoAdicionalIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  },
+                  "AdicionaisIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "Id": {
+                  "style": "form"
+                },
+                "Nome": {
+                  "style": "form"
+                },
+                "Descricao": {
+                  "style": "form"
+                },
+                "CategoriaId": {
+                  "style": "form"
+                },
+                "PrecoCusto": {
+                  "style": "form"
+                },
+                "Ativo": {
+                  "style": "form"
+                },
+                "PrecoVenda": {
+                  "style": "form"
+                },
+                "EstoqueAtual": {
+                  "style": "form"
+                },
+                "EstoqueMinimo": {
+                  "style": "form"
+                },
+                "UnidadeMedida": {
+                  "style": "form"
+                },
+                "ImagemPrincipalUrl": {
+                  "style": "form"
+                },
+                "Complementos": {
+                  "style": "form"
+                },
+                "GruposComplementosIds": {
+                  "style": "form"
+                },
+                "GrupoAdicionalIds": {
+                  "style": "form"
+                },
+                "AdicionaisIds": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Produto/DeletarProduto/{id}": {
+      "delete": {
+        "tags": [
+          "Produto"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Produto/DeleteAll": {
+      "delete": {
+        "tags": [
+          "Produto"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Produto/{id}": {
+      "get": {
+        "tags": [
+          "Produto"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/1.0/Restaurante": {
+      "get": {
+        "tags": [
+          "Restaurante"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Restaurante/Cadastro": {
+      "post": {
+        "tags": [
+          "Restaurante"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restaurante"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restaurante"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restaurante"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Restaurante/isLojaOpen/{restauranteId}": {
+      "get": {
+        "tags": [
+          "Restaurante"
+        ],
+        "parameters": [
+          {
+            "name": "restauranteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Restaurante/GetRestauranteInfo": {
+      "get": {
+        "tags": [
+          "Restaurante"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Restaurante/GetRestauranteInfoByName/{RestauranteName}": {
+      "get": {
+        "tags": [
+          "Restaurante"
+        ],
+        "parameters": [
+          {
+            "name": "RestauranteName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Restaurante/UpdateProfile": {
+      "put": {
+        "tags": [
+          "Restaurante"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restaurante"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restaurante"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restaurante"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Restaurante/ObterRestauranteIdDoUsuarioAutenticado": {
+      "get": {
+        "tags": [
+          "Restaurante"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/1.0/Restaurante/BuscarRestauranteIdPorNome/{nomeLoja}": {
+      "get": {
+        "tags": [
+          "Restaurante"
+        ],
+        "parameters": [
+          {
+            "name": "nomeLoja",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Adicional": {
+        "required": [
+          "nome"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nome": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "descricao": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "precoBase": {
+            "type": "number",
+            "format": "double"
+          },
+          "ativo": {
+            "type": "boolean"
+          },
+          "maximoPorProduto": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "grupoAdicionalId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "estoqueAtual": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "dataCadastro": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "produtos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProdutoAdicional"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Categoria": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nome": {
+            "type": "string",
+            "nullable": true
+          },
+          "restauranteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "restaurante": {
+            "$ref": "#/components/schemas/Restaurante"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Complemento": {
+        "required": [
+          "nome"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nome": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "descricao": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "preco": {
+            "type": "number",
+            "format": "double"
+          },
+          "ativo": {
+            "type": "boolean"
+          },
+          "maximoPorProduto": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "grupoComplementoId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "grupoComplemento": {
+            "$ref": "#/components/schemas/GrupoComplemento"
+          },
+          "estoqueAtual": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "dataCadastro": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ComplementoDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nome": {
+            "type": "string",
+            "nullable": true
+          },
+          "descricao": {
+            "type": "string",
+            "nullable": true
+          },
+          "preco": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ativo": {
+            "type": "boolean"
+          },
+          "maximoPorProduto": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "grupoComplementoId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeviceIdDTO": {
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string",
+            "nullable": true
+          },
+          "ipAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "userAgent": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DiasFuncionamento": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "domingo": {
+            "type": "boolean"
+          },
+          "segunda": {
+            "type": "boolean"
+          },
+          "terca": {
+            "type": "boolean"
+          },
+          "quarta": {
+            "type": "boolean"
+          },
+          "quinta": {
+            "type": "boolean"
+          },
+          "sexta": {
+            "type": "boolean"
+          },
+          "sabado": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Empresa": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cnpj": {
+            "type": "string",
+            "nullable": true
+          },
+          "cpf": {
+            "type": "string",
+            "nullable": true
+          },
+          "razaoSocial": {
+            "type": "string",
+            "nullable": true
+          },
+          "nomeFantasia": {
+            "type": "string",
+            "nullable": true
+          },
+          "endereco": {
+            "type": "string",
+            "nullable": true
+          },
+          "bairro": {
+            "type": "string",
+            "nullable": true
+          },
+          "cidade": {
+            "type": "string",
+            "nullable": true
+          },
+          "estado": {
+            "type": "string",
+            "nullable": true
+          },
+          "cep": {
+            "type": "string",
+            "nullable": true
+          },
+          "horarioAbertura": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "horarioFechamento": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "diasFuncionamento": {
+            "$ref": "#/components/schemas/DiasFuncionamento"
+          },
+          "observacoes": {
+            "type": "string",
+            "nullable": true
+          },
+          "restauranteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "restaurante": {
+            "$ref": "#/components/schemas/Restaurante"
+          },
+          "diasFuncionamentoId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EnderecoEntrega": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "logradouro": {
+            "type": "string",
+            "nullable": true
+          },
+          "numero": {
+            "type": "string",
+            "nullable": true
+          },
+          "complemento": {
+            "type": "string",
+            "nullable": true
+          },
+          "bairro": {
+            "type": "string",
+            "nullable": true
+          },
+          "cidade": {
+            "type": "string",
+            "nullable": true
+          },
+          "cep": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EnderecoEntregaDTO": {
+        "type": "object",
+        "properties": {
+          "logradouro": {
+            "type": "string",
+            "nullable": true
+          },
+          "numero": {
+            "type": "string",
+            "nullable": true
+          },
+          "complemento": {
+            "type": "string",
+            "nullable": true
+          },
+          "bairro": {
+            "type": "string",
+            "nullable": true
+          },
+          "cidade": {
+            "type": "string",
+            "nullable": true
+          },
+          "cep": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FinalUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "telefone": {
+            "type": "string",
+            "nullable": true
+          },
+          "nome": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataCriacao": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pedidos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pedido"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GrupoAdicional": {
+        "required": [
+          "nome"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nome": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "ativo": {
+            "type": "boolean"
+          },
+          "limiteSelecao": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "adicionais": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Adicional"
+            },
+            "nullable": true
+          },
+          "produtosGruposAdicionais": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProdutoGrupoAdicional"
+            },
+            "nullable": true
+          },
+          "restauranteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "restaurante": {
+            "$ref": "#/components/schemas/Restaurante"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GrupoComplemento": {
+        "required": [
+          "nome"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nome": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "descricao": {
+            "type": "string",
+            "nullable": true
+          },
+          "ativo": {
+            "type": "boolean"
+          },
+          "obrigatorio": {
+            "type": "boolean"
+          },
+          "quantidadeMinima": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "quantidadeMaxima": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "complementos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Complemento"
+            },
+            "nullable": true
+          },
+          "produtosGruposComplementos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProdutoGrupoComplemento"
+            },
+            "nullable": true
+          },
+          "restauranteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "restaurante": {
+            "$ref": "#/components/schemas/Restaurante"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ItemPedido": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pedidoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "produtoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "produto": {
+            "$ref": "#/components/schemas/Produto"
+          },
+          "nomeProduto": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "precoUnitario": {
+            "type": "number",
+            "format": "double"
+          },
+          "subTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "precoCusto": {
+            "type": "number",
+            "format": "double"
+          },
+          "observacoes": {
+            "type": "string",
+            "nullable": true
+          },
+          "opcoesExtras": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemPedidoOpcao"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ItemPedidoDTO": {
+        "type": "object",
+        "properties": {
+          "produtoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nomeProduto": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "precoUnitario": {
+            "type": "number",
+            "format": "double"
+          },
+          "subTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "observacoes": {
+            "type": "string",
+            "nullable": true
+          },
+          "precoCusto": {
+            "type": "number",
+            "format": "double"
+          },
+          "opcoesExtras": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemPedidoOpcaoDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ItemPedidoOpcao": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "itemPedidoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "itemPedido": {
+            "$ref": "#/components/schemas/ItemPedido"
+          },
+          "tipoOpcao": {
+            "$ref": "#/components/schemas/TipoOpcaoExtra"
+          },
+          "referenciaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nome": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "precoUnitario": {
+            "type": "number",
+            "format": "double"
+          },
+          "precoTotal": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ItemPedidoOpcaoDTO": {
+        "type": "object",
+        "properties": {
+          "tipoOpcao": {
+            "$ref": "#/components/schemas/TipoOpcaoExtra"
+          },
+          "referenciaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nome": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "precoUnitario": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrderStatus": {
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "PagamentoCartaoDTO": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "cardNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "expireMonth": {
+            "type": "string",
+            "nullable": true
+          },
+          "expireYear": {
+            "type": "string",
+            "nullable": true
+          },
+          "cvv": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceData": {
+            "$ref": "#/components/schemas/DeviceIdDTO"
+          },
+          "paymentMethodId": {
+            "type": "string",
+            "nullable": true
+          },
+          "token": {
+            "type": "string",
+            "nullable": true
+          },
+          "payerEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "payerFirstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "payerLastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "payerIdentificationType": {
+            "type": "string",
+            "nullable": true
+          },
+          "payerIdentificationNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "installments": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "issuerId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagamentoDTO": {
+        "type": "object",
+        "properties": {
+          "subTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "taxaEntrega": {
+            "type": "number",
+            "format": "double"
+          },
+          "desconto": {
+            "type": "number",
+            "format": "double"
+          },
+          "valorTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "formaPagamento": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagamentoPixDTO": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "payerEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "payerFirstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "payerLastName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagamentoRequest": {
+        "type": "object",
+        "properties": {
+          "dadosPagamento": {
+            "$ref": "#/components/schemas/PagamentoCartaoDTO"
+          },
+          "pedidoDTO": {
+            "$ref": "#/components/schemas/PedidoDTO"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagamentoRequestPix": {
+        "type": "object",
+        "properties": {
+          "dadosPagamento": {
+            "$ref": "#/components/schemas/PagamentoPixDTO"
+          },
+          "pedidoDTO": {
+            "$ref": "#/components/schemas/PedidoDTO"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pedido": {
+        "required": [
+          "numero",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numero": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "dataPedido": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "$ref": "#/components/schemas/OrderStatus"
+          },
+          "finalUserId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "finalUser": {
+            "$ref": "#/components/schemas/FinalUser"
+          },
+          "finalUserName": {
+            "type": "string",
+            "nullable": true
+          },
+          "finalUserTelefone": {
+            "type": "string",
+            "nullable": true
+          },
+          "enderecoEntregaId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "enderecoEntrega": {
+            "$ref": "#/components/schemas/EnderecoEntrega"
+          },
+          "nomeDaLoja": {
+            "type": "string",
+            "nullable": true
+          },
+          "restauranteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "restaurante": {
+            "$ref": "#/components/schemas/Restaurante"
+          },
+          "pagamento": {
+            "$ref": "#/components/schemas/PedidoPagamento"
+          },
+          "itens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemPedido"
+            },
+            "nullable": true
+          },
+          "observacoes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PedidoDTO": {
+        "type": "object",
+        "properties": {
+          "finalUserName": {
+            "type": "string",
+            "nullable": true
+          },
+          "finalUserTelefone": {
+            "type": "string",
+            "nullable": true
+          },
+          "finalUserId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/OrderStatus"
+          },
+          "numero": {
+            "type": "string",
+            "nullable": true
+          },
+          "endereco": {
+            "$ref": "#/components/schemas/EnderecoEntregaDTO"
+          },
+          "pagamento": {
+            "$ref": "#/components/schemas/PagamentoDTO"
+          },
+          "observacoes": {
+            "type": "string",
+            "nullable": true
+          },
+          "nomeDaLoja": {
+            "type": "string",
+            "nullable": true
+          },
+          "restauranteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "itens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemPedidoDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PedidoPagamento": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "subTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "taxaEntrega": {
+            "type": "number",
+            "format": "double"
+          },
+          "desconto": {
+            "type": "number",
+            "format": "double"
+          },
+          "valorTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "formaPagamento": {
+            "type": "string",
+            "nullable": true
+          },
+          "pagamentoAprovado": {
+            "type": "boolean"
+          },
+          "dataAprovacao": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Produto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nome": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "descricao": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "categoriaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoria": {
+            "$ref": "#/components/schemas/Categoria"
+          },
+          "precoCusto": {
+            "type": "number",
+            "format": "double"
+          },
+          "precoVenda": {
+            "type": "number",
+            "format": "double"
+          },
+          "estoqueAtual": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "estoqueMinimo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unidadeMedida": {
+            "type": "string",
+            "nullable": true
+          },
+          "ativo": {
+            "type": "boolean"
+          },
+          "dataCadastro": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "imagemPrincipalUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "lojaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "restaurante": {
+            "$ref": "#/components/schemas/Restaurante"
+          },
+          "complementos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProdutoComplemento"
+            },
+            "nullable": true
+          },
+          "adicionais": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProdutoAdicional"
+            },
+            "nullable": true
+          },
+          "produtosGruposComplementos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProdutoGrupoComplemento"
+            },
+            "nullable": true
+          },
+          "produtosGruposAdicionais": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProdutoGrupoAdicional"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProdutoAdicional": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "produtoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "adicionalId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "precoAdicional": {
+            "type": "number",
+            "format": "double"
+          },
+          "maximoPorProduto": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "produto": {
+            "$ref": "#/components/schemas/Produto"
+          },
+          "adicional": {
+            "$ref": "#/components/schemas/Adicional"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProdutoComplemento": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "produtoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "complementoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "obrigatorio": {
+            "type": "boolean"
+          },
+          "maximoPorProduto": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "produto": {
+            "$ref": "#/components/schemas/Produto"
+          },
+          "complemento": {
+            "$ref": "#/components/schemas/Complemento"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProdutoGrupoAdicional": {
+        "type": "object",
+        "properties": {
+          "produtoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "produto": {
+            "$ref": "#/components/schemas/Produto"
+          },
+          "grupoAdicionalId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "grupoAdicional": {
+            "$ref": "#/components/schemas/GrupoAdicional"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProdutoGrupoComplemento": {
+        "type": "object",
+        "properties": {
+          "produtoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "produto": {
+            "$ref": "#/components/schemas/Produto"
+          },
+          "grupoComplementoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "grupoComplemento": {
+            "$ref": "#/components/schemas/GrupoComplemento"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Restaurante": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "nomeDaLoja": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "refreshToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "refreshTokenExpiryTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "empresa": {
+            "$ref": "#/components/schemas/Empresa"
+          },
+          "produtos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Produto"
+            },
+            "nullable": true
+          },
+          "categorias": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Categoria"
+            },
+            "nullable": true
+          },
+          "credencialMercadoPago": {
+            "$ref": "#/components/schemas/RestauranteCredencialMercadoPago"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RestauranteCredencialMercadoPago": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "restauranteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "restaurante": {
+            "$ref": "#/components/schemas/Restaurante"
+          },
+          "publicKey": {
+            "type": "string",
+            "nullable": true
+          },
+          "accessToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientId": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientSecret": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataCadastro": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ativo": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RestauranteCredencialMercadoPagoDTO": {
+        "type": "object",
+        "properties": {
+          "restauranteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "publicKey": {
+            "type": "string",
+            "nullable": true
+          },
+          "accessToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientId": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientSecret": {
+            "type": "string",
+            "nullable": true
+          },
+          "ativo": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RestauranteDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nome": {
+            "type": "string",
+            "nullable": true
+          },
+          "slug": {
+            "type": "string",
+            "nullable": true
+          },
+          "descricao": {
+            "type": "string",
+            "nullable": true
+          },
+          "logoUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "categorias": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Categoria"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TipoOpcaoExtra": {
+        "enum": [
+          0,
+          1
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "TokenVO": {
+        "type": "object",
+        "properties": {
+          "authenticaded": {
+            "type": "boolean"
+          },
+          "created": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiration": {
+            "type": "string",
+            "nullable": true
+          },
+          "accessToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "refreshToken": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

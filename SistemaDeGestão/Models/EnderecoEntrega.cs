@@ -1,5 +1,8 @@
-﻿namespace SistemaDeGestão.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SistemaDeGestão.Models
 {
+    [Table("EnderecosEntregas")]
     public class EnderecoEntrega
     {
         public int Id { get; set; }

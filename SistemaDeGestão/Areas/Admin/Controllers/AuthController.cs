@@ -16,13 +16,7 @@ namespace SistemaDeGestão.Areas.Admin.Controllers
             _loginService = loginService;
             _logger = logger;
         }
-        [HttpGet]
-        [Route("Login")]
 
-        public IActionResult Login()
-        {
-            return View();
-        }
         [HttpPost]
         [Route("Login")]
         public IActionResult Login([FromBody] Restaurante user)

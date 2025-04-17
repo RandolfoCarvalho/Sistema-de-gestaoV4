@@ -43,9 +43,9 @@ namespace SistemaDeGestão.Services
                     notification_url = "https://grupopedejaprod.azurewebsites.net/api/1.0/MercadoPago/notificacaoMercadoPago",
                     payer = new
                     {
-                        email = "cliente@email.com", // opcional mas recomendável
-                        first_name = "Randolfo",
-                        last_name = "Irades"
+                        email = pagamento.PayerEmail,
+                        first_name = pagamento.PayerFirstName,
+                        last_name = pagamento.PayerLastName
                     }
                 };
 

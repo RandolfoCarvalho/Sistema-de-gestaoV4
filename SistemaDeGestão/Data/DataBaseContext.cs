@@ -80,10 +80,9 @@ namespace SistemaDeGestão.Data
             .HasForeignKey(ip => ip.ProdutoId)
             .OnDelete(DeleteBehavior.NoAction);
 
-            // Configuração da relação ItemPedido-Pedido
-            modelBuilder.Entity<ItemPedido>()
-            .HasOne(ip => ip.Pedido)
-            .WithMany(p => p.Itens)
+            modelBuilder.Entity<Pedido>()
+            .HasMany(p => p.Itens)
+            .WithOne(ip => ip.Pedido) // Aqui precisa ser a propriedade de navegação, não o ID
             .HasForeignKey(ip => ip.PedidoId)
             .OnDelete(DeleteBehavior.NoAction);
 

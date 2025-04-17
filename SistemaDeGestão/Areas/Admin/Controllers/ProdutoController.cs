@@ -33,6 +33,7 @@ namespace SistemaDeGestão.Areas.Admin.Controllers
             _restauranteService = restauranteService;
         }
 
+        [HttpGet]
         [Route("ListarProdutos")]
         public async Task<IActionResult> ListarProdutos()
         {

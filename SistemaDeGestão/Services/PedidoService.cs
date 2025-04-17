@@ -39,7 +39,13 @@ namespace SistemaDeGestão.Services
             {
                 IQueryable<Pedido> query = _context.Pedidos
                     .Include(p => p.Itens)
-                    .AsNoTracking(); 
+                        .ThenInclude(i => i.Produto) 
+                    .Include(p => p.EnderecoEntrega)
+                    .Include(p => p.Pagamento)
+                    .Include(p => p.FinalUser)
+                    .Include(p => p.Restaurante)
+                    .AsNoTracking();
+
                 if (status.HasValue)
                 {
                     query = query.Where(p => p.Status == status.Value);
@@ -69,11 +75,22 @@ namespace SistemaDeGestão.Services
         }
         public async Task<Pedido> ObterPedido(int id)
         {
-            return await _context.Pedidos
+            var pedido = await _context.Pedidos
+                .AsNoTracking() 
                 .Include(p => p.Itens)
                     .ThenInclude(i => i.Produto)
+                .Include(p => p.FinalUser)
+                .Include(p => p.EnderecoEntrega)
+                .Include(p => p.Pagamento)
                 .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (pedido == null)
+            {
+                throw new KeyNotFoundException($"Pedido com ID {id} não foi encontrado.");
+            }
+            return pedido;
         }
+
         public async Task<Pedido> ObterPedidoPorIdeRestauranteId(int id, int restauranteId)
         {
             return await _context.Pedidos

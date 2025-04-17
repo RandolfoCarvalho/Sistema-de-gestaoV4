@@ -22,6 +22,7 @@ namespace SistemaDeGestão.Data
         public DbSet<ProdutoAdicional> ProdutoAdicionais { get; set; }
         public DbSet<ProdutoGrupoComplemento> ProdutosGruposComplementos { get; set; }
         public DbSet<ProdutoGrupoAdicional> ProdutoGrupoAdicional { get; set; }
+        public DbSet<EnderecoEntrega> EnderecosEntregas { get; set; }
         public DbSet<Empresa> Empresas { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<FinalUser> FinalUsers { get; set; }
@@ -34,6 +35,15 @@ namespace SistemaDeGestão.Data
                 .HasOne(r => r.CredencialMercadoPago)
                 .WithOne(c => c.Restaurante)
                 .HasForeignKey<RestauranteCredencialMercadoPago>(c => c.RestauranteId);
+
+            //Pedido para -> endereco de entrega // relacao
+
+            modelBuilder.Entity<Pedido>()
+                .HasOne(p => p.EnderecoEntrega)
+                .WithMany() 
+                .HasForeignKey(p => p.EnderecoEntregaId) 
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.NoAction);
 
             // Grupo complemento
             modelBuilder.Entity<ProdutoGrupoComplemento>(entity =>

@@ -27,6 +27,8 @@ namespace SistemaDeGestão.Models
         public string FinalUserTelefone { get; set; }
 
         // Endereço de entrega
+
+        public int? EnderecoEntregaId { get; set; }
         public EnderecoEntrega EnderecoEntrega { get; set; }
 
         // Informações do restaurante

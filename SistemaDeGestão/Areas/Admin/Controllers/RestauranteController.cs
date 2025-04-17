@@ -23,13 +23,14 @@ namespace SistemaDeGestão.Areas.Admin.Controllers
             _encryptionService = encryptionService;
             
         }
+        [HttpGet]
         public IActionResult list()
         {
             return Ok(_context.Restaurantes.ToList());
         }
 
-        [Route("Cadastro")]
         [HttpPost]
+        [Route("Cadastro")]
         public async Task<IActionResult> CriarUsuario([FromBody] Restaurante Restaurante)
         {
             try

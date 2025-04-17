@@ -17,6 +17,9 @@ using Amazon;
 using SistemaDeGestão.AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using System.Net;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -162,6 +165,13 @@ builder.Services.AddSignalR(options =>
     options.MaximumReceiveMessageSize = 32 * 1024; // 32KB
 });
 
+//swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Minha API", Version = "v1" });
+});
+
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
     serverOptions.ConfigureHttpsDefaults(opts =>
@@ -173,6 +183,7 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 
 var app = builder.Build();
 
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -180,6 +191,10 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+//swagger
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v1"));
+
 app.UseDeveloperExceptionPage();
 app.UseHttpsRedirection();
 app.UseStaticFiles();

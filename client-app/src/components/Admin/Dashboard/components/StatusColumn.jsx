@@ -1,9 +1,18 @@
 ﻿import React, { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
-import OrderCard  from './OrderCard';
+import OrderCard from './OrderCard';
+import OrderModal from './OrderModal';
 
 const StatusColumn = ({ id, title, orders = [], config, onDrop }) => {
     const Icon = config.icon;
+
+    const [selectedOrder, setSelectedOrder] = useState(null);
+
+    const handleCardClick = (order) => {
+        setSelectedOrder(order);
+    };
+
+    const closeModal = () => setSelectedOrder(null);
 
     const handleDragOver = (e) => {
         e.preventDefault();
@@ -43,7 +52,9 @@ const StatusColumn = ({ id, title, orders = [], config, onDrop }) => {
 
             <div className="p-4 h-[calc(100vh-400px)] overflow-y-auto">
                 {orders.map((order) => (
-                    <OrderCard key={order.id} order={order} />
+                    <div key={order.id} onClick={() => handleCardClick(order)} className="cursor-pointer">
+                        <OrderCard order={order} />
+                    </div>
                 ))}
                 {orders.length === 0 && (
                     <div className="flex flex-col items-center justify-center h-32 text-gray-400">
@@ -52,9 +63,15 @@ const StatusColumn = ({ id, title, orders = [], config, onDrop }) => {
                     </div>
                 )}
             </div>
+
+            {selectedOrder && (
+                <OrderModal
+                    order={selectedOrder}
+                    onClose={closeModal}
+                />
+            )}
         </div>
     );
 };
 
 export default StatusColumn;
-

@@ -7,6 +7,7 @@ namespace SistemaDeGestão.Models
         public int Id { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal SubTotal { get; set; }
+        public string TransactionId { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal TaxaEntrega { get; set; }

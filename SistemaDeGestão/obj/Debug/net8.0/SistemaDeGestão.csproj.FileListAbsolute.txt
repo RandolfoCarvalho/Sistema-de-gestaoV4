@@ -391,12 +391,16 @@ C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Microsoft.OpenApi.dll
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Mono.TextTemplating.dll
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\MySqlConnector.dll
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Newtonsoft.Json.dll
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Pomelo.EntityFrameworkCore.MySql.dll
+C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\System.CodeDom.dll
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\System.Composition.AttributedModel.dll
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\System.Composition.Convention.dll
@@ -501,7 +505,3 @@ C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\SistemaDeGestão.pdb
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\SistemaDeGestão.genruntimeconfig.cache
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\ref\SistemaDeGestão.dll
-C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Microsoft.OpenApi.dll
-C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
-C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
-C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll

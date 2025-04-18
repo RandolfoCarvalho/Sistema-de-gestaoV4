@@ -16,6 +16,7 @@ using MercadoPago.Config;
 using MercadoPago.Error;
 using MercadoPago.Resource.Payment;
 using Microsoft.AspNetCore.SignalR;
+using SistemaDeGestão.Controllers;
 
 namespace SistemaDeGestão.Services
 {
@@ -49,7 +50,7 @@ namespace SistemaDeGestão.Services
                     }
                 };
 
-                // Serialize only once
+                // Serialize once
                 var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -97,6 +98,39 @@ namespace SistemaDeGestão.Services
                     ValorTotal = valor
                 };
             }
+        }
+
+        public async Task<ReembolsoResponseDTO> ProcessarReembolso(ReembolsoRequest request, string accessToken)
+        {
+            var httpClient = new HttpClient();
+            var url = $"https://api.mercadopago.com/v1/payments/{request.TransactionId}/refunds";
+            var reembolsoData = new
+            {
+                amount = request.Amount
+            };
+            var json = System.Text.Json.JsonSerializer.Serialize(reembolsoData);
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+            // Cabeçalhos 
+            httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            httpRequest.Headers.Add("X-Idempotency-Key", Guid.NewGuid().ToString()); // Gera uma chave única para evitar duplicidade 
+            var response = await httpClient.SendAsync(httpRequest);
+            if (!response.IsSuccessStatusCode)
+            {
+                var erro = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Erro ao processar reembolso: {erro}");
+            }
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var jsonResponse = JsonDocument.Parse(responseBody).RootElement;
+            var reembolsoResponse = new ReembolsoResponseDTO
+            {
+                TransactionId = (long)jsonResponse.GetProperty("payment_id").GetInt64(),
+                Amount = jsonResponse.GetProperty("amount").GetDecimal(),
+                Status = jsonResponse.GetProperty("status").GetString()
+            };
+            return reembolsoResponse;
         }
 
         public async Task<PaymentResponseDTO> ProcessPayment(PagamentoCartaoDTO paymentData, PedidoDTO pedidoDTO, string accessToken)
@@ -190,9 +224,9 @@ namespace SistemaDeGestão.Services
 
                 // Metadados
                 var metadata = new Dictionary<string, object>
-        {
-            { "store_id", pedidoDTO.RestauranteId }
-        };
+                {
+                    { "store_id", pedidoDTO.RestauranteId }
+                };
 
                 // Criar o request de pagamento
                 var request = new PaymentCreateRequest
@@ -216,6 +250,7 @@ namespace SistemaDeGestão.Services
                 var client = new PaymentClient();
                 Payment payment = await client.CreateAsync(request, requestOptions);
 
+                pedidoDTO.Pagamento.TransactionId = payment.Id.ToString();
                 // Salvar pedido pendente
                 var pedidoPendente = new PedidoPendente
                 {

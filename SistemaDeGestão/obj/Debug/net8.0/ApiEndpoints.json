@@ -775,7 +775,7 @@
   },
   {
     "ContainingType": "SistemaDeGest\u00E3o.Controllers.MercadoPagoController",
-    "Method": "ProcessarPagamentoPix",
+    "Method": "ProcessaPagamentoPix",
     "RelativePath": "api/1.0/MercadoPago/processaPagamentoPix",
     "HttpMethod": "POST",
     "IsController": true,
@@ -784,6 +784,22 @@
       {
         "Name": "request",
         "Type": "SistemaDeGest\u00E3o.Controllers.PagamentoRequestPix",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDeGest\u00E3o.Controllers.MercadoPagoController",
+    "Method": "ProcessaReembolso",
+    "RelativePath": "api/1.0/MercadoPago/processaReembolso",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "SistemaDeGest\u00E3o.Controllers.ReembolsoRequest",
         "IsRequired": true
       }
     ],

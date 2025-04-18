@@ -1,9 +1,9 @@
-﻿import React from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '../BottomNav';
-import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from 'axios';
 import { useStore } from '../Context/StoreContext';
+import FinalUserModal from '../Modals/FinalUserModal';
 
 const OrderHistory = () => {
     const { currentStore } = useStore();
@@ -20,10 +20,7 @@ const OrderHistory = () => {
             setShowModal(true);
         }
     }, [userPhone]);
-    const viewOrderDetails = (order) => {
-        navigate(`/pedidos/${order.id}`, { state: { orderData: order } });
-    };
-
+    
     const fetchOrders = async (phone) => {
         try {
             const restauranteResponse = await axios.get(
@@ -34,6 +31,9 @@ const OrderHistory = () => {
                 `${process.env.REACT_APP_API_URL}/api/1.0/FinalUser/GetPedidosByUser/${phone}/${restauranteId}`
             );
             setOrders(Array.isArray(response.data) ? response.data : []);
+            console.log("Pedidos: ", response.data);
+            console.log("Phone: ", userPhone);
+            console.log("restauranteId: ", restauranteId);
         } catch (error) {
             console.error("Erro ao buscar pedidos:", error);
             setOrders([]);
@@ -42,15 +42,16 @@ const OrderHistory = () => {
         }
     };
 
+    const viewOrderDetails = (order) => {
+        navigate(`/pedidos/${order.id}`, { state: { orderData: order } });
+    };
+
     const repeatOrder = (orderId) => {
-        // Implementação futura para repetir o pedido
         console.log("Repetir pedido", orderId);
     };
 
-    // Função auxiliar para formatar data
     const formatDate = (dateString) => {
         if (!dateString) return { date: "N/A", time: "N/A" };
-
         const date = new Date(dateString);
         return {
             date: date.toLocaleDateString('pt-BR'),
@@ -58,7 +59,6 @@ const OrderHistory = () => {
         };
     };
 
-    // Função para mapear status numérico para texto e cor
     const getStatusInfo = (statusCode) => {
         const statusMap = {
             0: { text: "Pendente", color: "bg-yellow-500" },
@@ -70,14 +70,12 @@ const OrderHistory = () => {
         return statusMap[statusCode] || { text: "Desconhecido", color: "bg-gray-500" };
     };
 
-    // Função para formatar número do pedido
     const formatOrderNumber = (numero) => {
         return numero && numero.startsWith("PED: ")
-            ? numero.substring(5) 
+            ? numero.substring(5)
             : numero || "N/A";
     };
 
-    // Função para formatar valor monetário
     const formatCurrency = (value) => {
         const amount = parseFloat(value);
         return !isNaN(amount)
@@ -85,39 +83,14 @@ const OrderHistory = () => {
             : 'R$ 0,00';
     };
 
-    // Modal para entrada do telefone
-    const PhoneInputModal = () => (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg w-full max-w-md">
-                <h2 className="text-xl font-bold mb-4">Informe seu telefone</h2>
-                <p className="mb-4">Para visualizar seus pedidos, precisamos do seu número de telefone.</p>
-                <input
-                    type="tel"
-                    className="w-full border border-gray-300 rounded p-2 mb-4"
-                    placeholder="(XX) XXXXX-XXXX"
-                    value={userPhone || ""}
-                    onChange={(e) => setUserPhone(e.target.value)}
-                />
-                <button
-                    className="w-full bg-blue-500 text-white py-2 rounded font-medium"
-                    onClick={() => {
-                        localStorage.setItem("FinalUserTelefone", userPhone);
-                        setShowModal(false);
-                        fetchOrders(userPhone);
-                    }}
-                >
-                    Confirmar
-                </button>
-            </div>
-        </div>
-    );
-
     return (
         <div className="flex flex-col h-full bg-gray-100">
             {/* Header */}
             <div className="sticky top-0 bg-white shadow-sm p-4 flex items-center z-10">
                 <button className="mr-3" onClick={() => navigate(-1)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                         strokeLinecap="round" strokeLinejoin="round">
                         <path d="M15 18l-6-6 6-6" />
                     </svg>
                 </button>
@@ -208,11 +181,12 @@ const OrderHistory = () => {
             {/* Bottom Navigation */}
             <BottomNav />
 
-            {/* Phone Input Modal */}
-            {showModal && <PhoneInputModal />}
+            {/* Modal de telefone */}
+            {showModal && (
+                <FinalUserModal onClose={() => setShowModal(false)} />
+            )}
         </div>
     );
 };
-
 
 export default OrderHistory;

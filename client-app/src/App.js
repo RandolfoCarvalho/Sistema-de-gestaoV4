@@ -32,6 +32,7 @@ import HeaderAdmin from './components/Admin/Header/Header';
 import Main from './components/Admin/ui/Main';
 import Content from './components/Admin/ui/Content';
 //import RestaurantDashboard from './components/Admin/Stats/RestaurantDashboard';
+import ProtectedStore from './components/ProtectedStore';
 import RestaurantDashboard from './components/Admin/Dashboard/OrderDashboard';
 import Create from './components/Admin/Stats/CreateProduct';
 import CriarGrupoAdicionais from './components/Admin/Stats/CreateAddGroup';
@@ -83,16 +84,17 @@ const App = () => {
                         <Router>
                             <div className={darkMode ? "dark" : ""}>
                                 <Routes>
-                                    {/* Public Routes */}
-                                    <Route path="/" element={<Produtos />} />
-                                    <Route path="/loja/:nomeDaLoja" element={<Produtos />} />
-                                    <Route path="/product/:id" element={<ProductDetails />} />
-                                    <Route path="/checkout" element={<CheckoutPage />} />
-                                    <Route path="/auth/login" element={<Autenticacao />} />
-                                    <Route path="/pedidos" element={<Pedidos />} />
-                                    <Route path="/pedidos/:numeroPedido" element={<PedidosDetalhes />} />
-                                    <Route path="/promo" element={<Promocoes />} />
-                                    <Route path="/carrinho" element={<div>P�gina do Carrinho</div>} />
+                                 <Route path="/" element={<Produtos />} />
+                                    <Route element={<ProtectedStore/>}>
+                                        {/* Public Routes */}
+                                        <Route path="/loja/:nomeDaLoja" element={<Produtos />} />
+                                        <Route path="/product/:id" element={<ProductDetails />} />
+                                        <Route path="/checkout" element={<CheckoutPage />} />
+                                        <Route path="/auth/login" element={<Autenticacao />} />
+                                        <Route path="/pedidos" element={<Pedidos />} />
+                                        <Route path="/pedidos/:numeroPedido" element={<PedidosDetalhes />} />
+                                        <Route path="/promo" element={<Promocoes />} />
+                                    </Route>
                                     {/* Admin Routes */}
                                     <Route element={<ProtectedRoute/>}>
                                         <Route path="/admin" element={

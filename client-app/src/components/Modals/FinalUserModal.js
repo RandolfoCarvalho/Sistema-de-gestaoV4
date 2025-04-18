@@ -25,18 +25,27 @@ const FinalUserModal = ({ isOpen, onClose, onSuccess }) => {
         setLoading(true);
         setError('');
 
+        const telefoneNumerico = formData.telefone.replace(/\D/g, '');
+        if (!/^\d{11}$/.test(telefoneNumerico)) {
+            setError('Número de telefone inválido. Use o formato (DDD) 9XXXXXXXX.');
+            setLoading(false);
+            return;
+        }
+        const sanitizedData = {
+            ...formData,
+            telefone: telefoneNumerico
+        };
+
         try {
             const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/VerificarTelefone`,
-                formData
+                sanitizedData
             );
 
             if (response.data) {
-                // Armazene no localStorage a informação de que o usuário está autenticado
                 localStorage.setItem("userId", response.data.id);
                 localStorage.setItem("isAuthenticated", "true");
                 localStorage.setItem("FinalUserTelefone", formData.telefone);
-                // Passar os dados do usuário para o componente pai
                 onSuccess({
                     ...response.data,
                     FinalUserName: formData.nome,
@@ -56,8 +65,8 @@ const FinalUserModal = ({ isOpen, onClose, onSuccess }) => {
     return (
         <Modal
             isOpen={isOpen}
-            onRequestClose={() => { }} // Remove a funcionalidade de fechar ao clicar fora
-            shouldCloseOnOverlayClick={false} // Impede o fechamento ao clicar fora
+            onRequestClose={() => { }} 
+            shouldCloseOnOverlayClick={false}
             contentLabel="Identifique-se"
             className="bg-white p-6 rounded-lg max-w-md mx-auto mt-20"
             overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"

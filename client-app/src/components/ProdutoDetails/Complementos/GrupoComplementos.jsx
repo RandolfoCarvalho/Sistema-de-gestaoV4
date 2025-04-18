@@ -28,47 +28,47 @@ const GrupoComplementos = ({
     let infoText = '';
 
     if (grupo.obrigatorio) {
-        infoText += '(Obrigatório';
+        infoText += 'Obrigatório';
         if (minQuantity > 0) {
-            infoText += `, mín: ${minQuantity}`;
+            infoText += ` • Mín: ${minQuantity}`;
         }
         if (grupo.quantidadeMaxima) {
-            infoText += `, máx: ${grupo.quantidadeMaxima}`;
+            infoText += ` • Máx: ${grupo.quantidadeMaxima}`;
         }
-        infoText += ')';
     } else {
         if (minQuantity === 1 || (minQuantity === 0 && isSingleChoice)) {
-            infoText = '(No máximo 1)';
+            infoText = 'Escolha até 1';
         } else if (grupo.quantidadeMaxima) {
-            infoText = `(Máx: ${grupo.quantidadeMaxima})`;
+            infoText = `Escolha até ${grupo.quantidadeMaxima}`;
         } else if (minQuantity > 1 || !isSingleChoice) {
             const quantidadeMaximaTotal = calcularQuantidadeMaximaGrupo(grupo.complementos);
-            infoText = `(Máx: ${quantidadeMaximaTotal})`;
+            infoText = `Escolha até ${quantidadeMaximaTotal}`;
         }
     }
 
-   
-
     return (
-        <div className="mb-4 border-b pb-4">
+        <div className="mb-4">
             <button
                 type="button"
-                className="w-full py-3 bg-gray-50 rounded-lg flex justify-between items-center px-4 hover:bg-gray-100 transition-colors"
+                className="w-full py-3 flex justify-between items-center hover:bg-gray-50 transition-colors rounded-lg"
                 onClick={() => toggleGrupo(grupo.id)}
             >
                 <div>
-                    <span className="font-semibold text-gray-800">{grupo.nome}</span>
+                    <div className="font-semibold text-gray-800">{grupo.nome}</div>
                     {infoText && (
-                        <span className="ml-2 text-sm text-gray-500">
+                        <div className="text-xs text-gray-500 mt-1">
                             {infoText}
-                        </span>
+                        </div>
                     )}
                 </div>
-                {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                {isOpen ? 
+                    <ChevronUp size={20} className="text-gray-500" /> : 
+                    <ChevronDown size={20} className="text-gray-500" />
+                }
             </button>
 
             {isOpen && (
-                <div className="mt-3 space-y-3 pl-4">
+                <div className="mt-2 space-y-3 pl-1">
                     {isSingleChoice
                         ? grupo.complementos.map(complemento => (
                             <SingleChoiceItem

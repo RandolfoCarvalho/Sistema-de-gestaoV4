@@ -1,12 +1,13 @@
 ﻿import React from 'react';
+import { ShoppingCart } from 'lucide-react';
 
 const AddToCartButton = ({ onClick }) => {
     return (
         <button
-            type="button"
             onClick={onClick}
-            className="bg-blue-600 text-white py-3 px-8 rounded-xl font-semibold hover:bg-blue-700 active:bg-blue-800 transition-colors"
+            className="bg-blue-500 hover:bg-red-600 text-white py-3 px-6 rounded-lg font-medium flex items-center transition-colors"
         >
+            <ShoppingCart size={18} className="mr-2" />
             Adicionar ao carrinho
         </button>
     );

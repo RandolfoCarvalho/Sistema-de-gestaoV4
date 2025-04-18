@@ -50,9 +50,18 @@ public class OrderHub : Hub
                         cidade = p.EnderecoEntrega.Cidade,
                         cep = p.EnderecoEntrega.CEP,
                         complemento = p.EnderecoEntrega.Complemento
-                    } : null, // Evita erro caso o endereço seja nulo
-                    valorTotal = p.Pagamento?.ValorTotal ?? 0,
-                    formaPagamento = p.Pagamento?.FormaPagamento ?? "Não informado",
+                    } : null,
+                    pagamento = p.Pagamento != null ? new
+                    {
+                        subTotal = p.Pagamento.SubTotal,
+                        taxaEntrega = p.Pagamento.TaxaEntrega,
+                        desconto = p.Pagamento.Desconto,
+                        valorTotal = p.Pagamento.ValorTotal,
+                        formaPagamento = p.Pagamento.FormaPagamento,
+                        pagamentoAprovado = p.Pagamento.PagamentoAprovado,
+                        dataAprovacao = p.Pagamento.DataAprovacao,
+                        transactionId = p.Pagamento.TransactionId
+                    } : null,
                     observacoes = p.Observacoes ?? "",
                     restauranteId = p.RestauranteId,
                     itens = p.Itens.Select(i => new
@@ -67,6 +76,7 @@ public class OrderHub : Hub
                     }).ToList()
                 })
                 .ToList();
+
             // Loga a quantidade de pedidos enviados
             _logger.LogInformation($"Enviando {simplifiedOrders.Count} pedidos para {Context.ConnectionId}");
             // Enviar os pedidos ao cliente

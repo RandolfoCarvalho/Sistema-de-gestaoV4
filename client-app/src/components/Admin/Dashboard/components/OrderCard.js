@@ -14,10 +14,7 @@ const OrderCard = ({ order }) => {
       })
     : 'Data não disponível';
 
-
-    console.log("A ordem: ", order)
   const totalItems = order.itens?.length || 0;
-
   const endereco = order.enderecoEntrega;
   let enderecoFormatado = null;
   
@@ -38,19 +35,46 @@ const OrderCard = ({ order }) => {
     ? `R$ ${Number(order.valorTotal).toFixed(2).replace('.', ',')}`
     : 'R$ 0,00';
 
+  // Verificar se o pedido está bloqueado para drag and drop
+  const isBlocked = order.status === '4' || order.status === 'cancelado';
+  
+  // Definir classes CSS com base no status do pedido
+  const cardClasses = `bg-white rounded-lg shadow-sm p-4 mb-3 transition-all ${
+    isBlocked 
+      ? 'opacity-70' 
+      : 'hover:shadow-md cursor-grab active:cursor-grabbing'
+  }`;
+
+  // Handler para o início do drag
+  const handleDragStart = (e) => {
+    if (isBlocked) {
+      e.preventDefault();
+      return false;
+    }
+    e.dataTransfer.setData('application/json', JSON.stringify(order));
+    e.currentTarget.classList.add('opacity-50');
+  };
+
+  // Handler para o fim do drag
+  const handleDragEnd = (e) => {
+    if (!isBlocked) {
+      e.currentTarget.classList.remove('opacity-50');
+    }
+  };
+
   return (
     <div
-      className="bg-white rounded-lg shadow-sm p-4 mb-3 transition-all hover:shadow-md cursor-grab active:cursor-grabbing"
-      draggable
-      onDragStart={(e) => {
-        e.dataTransfer.setData('application/json', JSON.stringify(order));
-        e.currentTarget.classList.add('opacity-50');
-      }}
-      onDragEnd={(e) => e.currentTarget.classList.remove('opacity-50')}
+      className={cardClasses}
+      draggable={!isBlocked}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
     >
+      
       <div className="flex justify-between items-center mb-3">
         <h4 className="font-medium text-gray-800">{order.numero || 'Sem número'}</h4>
-        <span className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+        <span className={`text-sm px-2 py-1 rounded-full ${
+          isBlocked ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
+        }`}>
           {order.status || 'Status desconhecido'}
         </span>
       </div>
@@ -99,6 +123,12 @@ const OrderCard = ({ order }) => {
       {order.observacoes && order.observacoes.trim() !== '' && (
         <div className="mt-2 text-xs text-gray-600 italic">
           <p className="truncate">Obs: {order.observacoes}</p>
+        </div>
+      )}
+      
+      {isBlocked && (
+        <div className="mt-2 text-xs text-red-500">
+          Este pedido não pode ser movido.
         </div>
       )}
     </div>

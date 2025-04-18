@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaDeGestão.Data;
 
@@ -11,9 +12,11 @@ using SistemaDeGestão.Data;
 namespace SistemaDeGestão.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    partial class DataBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20250418175436_RelacionamentoEntrePedidoEPagamento")]
+    partial class RelacionamentoEntrePedidoEPagamento
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -500,50 +503,6 @@ namespace SistemaDeGestão.Migrations
                     b.ToTable("Pedidos");
                 });
 
-            modelBuilder.Entity("SistemaDeGestão.Models.PedidoCancelado", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CodigoReembolso")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DataCancelamento")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("EstaReembolsado")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("FinalUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MotivoCancelamento")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PedidoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TransacaoReembolsoId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("ValorReembolsado")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FinalUserId");
-
-                    b.HasIndex("PedidoId");
-
-                    b.ToTable("PedidosCancelados");
-                });
-
             modelBuilder.Entity("SistemaDeGestão.Models.PedidoPagamento", b =>
                 {
                     b.Property<int>("Id")
@@ -951,25 +910,6 @@ namespace SistemaDeGestão.Migrations
                     b.Navigation("Pagamento");
 
                     b.Navigation("Restaurante");
-                });
-
-            modelBuilder.Entity("SistemaDeGestão.Models.PedidoCancelado", b =>
-                {
-                    b.HasOne("SistemaDeGestão.Models.FinalUser", "FinalUser")
-                        .WithMany()
-                        .HasForeignKey("FinalUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SistemaDeGestão.Models.Pedido", "Pedido")
-                        .WithMany()
-                        .HasForeignKey("PedidoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FinalUser");
-
-                    b.Navigation("Pedido");
                 });
 
             modelBuilder.Entity("SistemaDeGestão.Models.Produto", b =>

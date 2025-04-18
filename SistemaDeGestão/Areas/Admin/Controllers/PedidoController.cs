@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SistemaDeGestão.Data;
 using SistemaDeGestão.Models;
 using SistemaDeGestão.Models.DTOs;
+using SistemaDeGestão.Models.DTOs.Resquests;
 using SistemaDeGestão.Services;
 using System.Text.Json;
 
@@ -76,6 +77,47 @@ namespace SistemaDeGestão.Areas.Admin.Controllers
             {
                 var bad = ex.InnerException?.Message ?? ex.Message;
                 return BadRequest(bad);
+            }
+        }
+
+        [HttpPost("registrarCancelamento")]
+        public async Task<IActionResult> RegistrarCancelamento([FromBody] CancelamentoPedidoRequest request)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                // Busca o pedido com todos os relacionamentos necessários
+                var pedido = await _context.Pedidos
+                    .Include(p => p.Itens)
+                    .FirstOrDefaultAsync(p => p.Id == request.PedidoId);
+
+                if (pedido == null)
+                    return NotFound("Pedido não encontrado");
+                // Atualiza o status do pedido para cancelado em vez de excluí-lo
+                pedido.Status = OrderStatus.CANCELADO;
+                // Cria o registro de pedido cancelado
+                var pedidoCancelado = new PedidoCancelado
+                {
+                    PedidoId = request.PedidoId,
+                    MotivoCancelamento = request.MotivoCancelamento,
+                    CodigoReembolso = request.CodigoReembolso,
+                    ValorReembolsado = request.ValorReembolsado,
+                    TransacaoReembolsoId = request.TransacaoReembolsoId,
+                    EstaReembolsado = request.EstaReembolsado,
+                    FinalUserId = request.FinalUserId,
+                    DataCancelamento = DateTime.Now
+                };
+                _context.PedidosCancelados.Add(pedidoCancelado);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return Ok(new { Sucesso = true, Mensagem = "Pedido cancelado com sucesso" });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest(new { Sucesso = false, Mensagem = "Erro ao cancelar pedido", Erro = ex.Message });
             }
         }
 

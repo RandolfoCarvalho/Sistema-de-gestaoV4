@@ -39,7 +39,7 @@ namespace SistemaDeGestão.Services
             {
                 IQueryable<Pedido> query = _context.Pedidos
                     .Include(p => p.Itens)
-                        .ThenInclude(i => i.Produto) 
+                        .ThenInclude(i => i.Produto)
                     .Include(p => p.EnderecoEntrega)
                     .Include(p => p.Pagamento)
                     .Include(p => p.FinalUser)

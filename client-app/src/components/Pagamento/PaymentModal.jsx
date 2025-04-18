@@ -220,6 +220,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         };
 
         const pedidoDTO = preparePedidoDTO();
+        console.log("PedidoDTO: ", pedidoDTO); 
         if (!pedidoDTO) {
             console.error("Falha ao preparar PedidoDTO para pagamento: pix");
             setInternalError("Não foi possível preparar os dados do pedido.");

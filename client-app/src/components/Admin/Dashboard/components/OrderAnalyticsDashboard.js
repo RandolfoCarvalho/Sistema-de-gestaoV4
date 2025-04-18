@@ -139,7 +139,7 @@ const OrderAnalyticsDashboard = ({ orders }) => {
                 weekData[weekIndex].orders += 1;
                 weekData[weekIndex].revenue += orderValue;
                 weekData[weekIndex].costs += orderCost; // Corrigido
-                if (statusKey === 'cancelado') {
+                if (statusKey === 'Cancelado') {
                     weekData[weekIndex].canceled += 1;
                 }
             }
@@ -153,7 +153,7 @@ const OrderAnalyticsDashboard = ({ orders }) => {
                 monthData[monthIndex].orders += 1;
                 monthData[monthIndex].revenue += orderValue;
                 monthData[monthIndex].costs += orderCost; 
-                if (statusKey === 'cancelado') {
+                if (statusKey === 'Cancelado') {
                     monthData[monthIndex].canceled += 1;
                 }
             }
@@ -166,7 +166,7 @@ const OrderAnalyticsDashboard = ({ orders }) => {
                 yearData[yearIndex].orders += 1;
                 yearData[yearIndex].revenue += orderValue;
                 yearData[yearIndex].costs += orderCost;
-                if (statusKey === 'cancelado') {
+                if (statusKey === 'Cancelado') {
                     yearData[yearIndex].canceled += 1;
                 }
             }

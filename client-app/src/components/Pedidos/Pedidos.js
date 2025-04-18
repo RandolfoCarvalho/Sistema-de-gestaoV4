@@ -31,9 +31,6 @@ const OrderHistory = () => {
                 `${process.env.REACT_APP_API_URL}/api/1.0/FinalUser/GetPedidosByUser/${phone}/${restauranteId}`
             );
             setOrders(Array.isArray(response.data) ? response.data : []);
-            console.log("Pedidos: ", response.data);
-            console.log("Phone: ", userPhone);
-            console.log("restauranteId: ", restauranteId);
         } catch (error) {
             console.error("Erro ao buscar pedidos:", error);
             setOrders([]);

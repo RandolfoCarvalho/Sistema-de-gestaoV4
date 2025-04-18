@@ -3,16 +3,108 @@
   "WorkspaceRootPath": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\mercadopagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\mercadopagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\pedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\pedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\enderecoentrega.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\enderecoentrega.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\enums\\orderstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\enums\\orderstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\hubs\\orderhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\hubs\\orderhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\hubs\\iorderinterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\hubs\\iorderinterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\pedidocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\pedidocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\responses\\reembolsoresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\responses\\reembolsoresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\resquests\\cancelamentopedidorequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\resquests\\cancelamentopedidorequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\pedidopagamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\pedidopagamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\restauranteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\services\\restauranteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\mercadopagoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\services\\mercadopagoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\data\\databasecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\data\\databasecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\pedidocancelado.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\pedidocancelado.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\finaluser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\finaluser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\resquests\\itempedidodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\resquests\\itempedidodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\migrations\\20250417231831_migracaoaddtransactionaopagamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\migrations\\20250417231831_migracaoaddtransactionaopagamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\itempedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\itempedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\restaurantecredencialmercadopago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\restaurantecredencialmercadopago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\produtocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\produtocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\pedidopendente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\pedidopendente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\pedidoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\services\\pedidoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\sistemadegest\u00E3o.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\sistemadegest\u00E3o.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\finalusercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\finalusercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\finaluserauthcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\finaluserauthcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -27,20 +119,8 @@
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\responses\\paymentresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\mercadopagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\mercadopagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\mercadopagoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\services\\mercadopagoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\sistemadegest\u00E3o.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\sistemadegest\u00E3o.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\responses\\pagamentopixresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -51,28 +131,12 @@
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\automapper\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\pedidoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\services\\pedidoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\resquests\\pedidodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\resquests\\pedidodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\pedidopagamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\pedidopagamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\resquests\\pagamentodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\resquests\\pagamentodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\pedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\pedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\pedidopendente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\pedidopendente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\migrations\\20250417043014_mudatablenameparaenderecosentregas.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -85,10 +149,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\migrations\\20250417022510_retirapedidodeitempedido.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\migrations\\20250417022510_retirapedidodeitempedido.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\pedidocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\pedidocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\migrations\\databasecontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -111,16 +171,8 @@
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\migrations\\20250411004956_initialmigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\responses\\reembolsoresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\responses\\reembolsoresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\implementations\\loginserviceimplementation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\services\\implementations\\loginserviceimplementation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\restaurantecredencialmercadopago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\restaurantecredencialmercadopago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -131,28 +183,8 @@
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\migrations\\20250417043014_mudatablenameparaenderecosentregas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\enderecoentrega.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\enderecoentrega.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\data\\databasecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\data\\databasecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\restaurantecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\restaurantecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\produtocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\produtocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\hubs\\orderhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\hubs\\orderhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\itempedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\itempedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\resquests\\produtodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -173,10 +205,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\models\\dtos\\resquests\\pagamentocartaodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\models\\dtos\\resquests\\pagamentocartaodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\services\\restauranteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\services\\restauranteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\areas\\admin\\controllers\\credenciaismercadopagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -340,8 +368,20 @@
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\migrations\\20250417231307_addtransactionidaopedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\migrations\\20250417231831_migracaoaddtransactionaopagamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\migrations\\20250417231831_migracaoaddtransactionaopagamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\migrations\\20250418191244_mudancaminima.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\migrations\\20250418191244_mudancaminima.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\migrations\\20250418190256_retirapedidosdefinaluser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\migrations\\20250418190256_retirapedidosdefinaluser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\migrations\\20250418181815_addcolumnpedidocancelado.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\migrations\\20250418181815_addcolumnpedidocancelado.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegest\u00E3o\\migrations\\20250418175436_relacionamentoentrepedidoepagamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj|solutionrelative:sistemadegest\u00E3o\\migrations\\20250418175436_relacionamentoentrepedidoepagamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -355,13 +395,13 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 12,
               "Title": "MercadoPagoService.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
               "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
-              "ViewState": "AgIAADkBAAAAAAAAAAAUwEMBAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAcwB8AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-22T14:58:07.128Z",
               "IsPinned": true,
@@ -369,29 +409,30 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 11,
               "Title": "RestauranteService.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\RestauranteService.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\RestauranteService.cs",
               "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\RestauranteService.cs",
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\RestauranteService.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAAAGcAAAAlAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAiwBIAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-16T12:47:44.075Z",
               "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 7,
               "Title": "PedidoController.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\PedidoController.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\PedidoController.cs",
               "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\PedidoController.cs",
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\PedidoController.cs",
-              "ViewState": "AgIAADEAAAAAAAAAAAAkwEcAAABGAAAAAAAAAA==",
+              "ViewState": "AgIAAFsAAAAAAAAAAAAiwHkAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-22T14:45:52.01Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
@@ -404,179 +445,215 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "FinalUserController.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAAwB0AAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-18T13:07:36.309Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Program.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Program.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Program.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Program.cs",
-              "ViewState": "AgIAAIEAAAAAAAAAAAAiwJAAAAALAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-22T14:54:55.916Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "MappingProfile.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\AutoMapper\\MappingProfile.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\AutoMapper\\MappingProfile.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\AutoMapper\\MappingProfile.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\AutoMapper\\MappingProfile.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABMAAAA6AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-22T14:53:32.051Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "PedidoService.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\PedidoService.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\PedidoService.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\PedidoService.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\PedidoService.cs",
-              "ViewState": "AgIAAF8AAAAAAAAAAAAcwHEAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-22T14:45:55.354Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\appsettings.json",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\appsettings.json",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\appsettings.json",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\appsettings.json",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-04-02T02:29:57.604Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "launchSettings.json",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Properties\\launchSettings.json",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Properties\\launchSettings.json",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Properties\\launchSettings.json",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Properties\\launchSettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-04-08T01:47:30.968Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "FinalUserAuthController.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
-              "ViewState": "AgIAABsAAAAAAAAAAAAowAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-10T23:54:44.146Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "SistemaDeGest\u00E3o.csproj",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-04-09T22:22:50.683Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "PaymentResponseDTO.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PaymentResponseDTO.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PaymentResponseDTO.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PaymentResponseDTO.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PaymentResponseDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T22:27:13.996Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
               "Title": "MercadoPagoController.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
               "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
-              "ViewState": "AgIAADQAAAAAAAAAAAAUwEUAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAADsAAAAAAAAAAAAcwFMAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-13T03:18:20.716Z"
+              "WhenOpened": "2025-04-13T03:18:20.716Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "PedidoDTO.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PedidoDTO.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PedidoDTO.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PedidoDTO.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PedidoDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAsAAAAhAAAAAAAAAA==",
+              "DocumentIndex": 6,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Program.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Program.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Program.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Program.cs",
+              "ViewState": "AgIAAHwAAAAAAAAAAAAiwJAAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T02:12:12.903Z"
+              "WhenOpened": "2025-03-22T14:54:55.916Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "OrderHub.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Hubs\\OrderHub.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Hubs\\OrderHub.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Hubs\\OrderHub.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Hubs\\OrderHub.cs",
+              "ViewState": "AgIAAE8AAAAAAAAAAADwv10AAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T01:42:49.871Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "OrderStatus.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Enums\\OrderStatus.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Enums\\OrderStatus.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Enums\\OrderStatus.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Enums\\OrderStatus.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAA+wAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T18:23:30.109Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Pedido.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\Pedido.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\Pedido.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\Pedido.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\Pedido.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAuwCMAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T01:44:28.802Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "EnderecoEntrega.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\EnderecoEntrega.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\EnderecoEntrega.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\EnderecoEntrega.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\EnderecoEntrega.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAA5wA0AAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T03:15:22.438Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 8,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAYwDEAAAAJAAAAAAAAAA==",
+              "Title": "ReembolsoResponseDTO.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\ReembolsoResponseDTO.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\ReembolsoResponseDTO.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\ReembolsoResponseDTO.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\ReembolsoResponseDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T04:09:35.655Z"
+              "WhenOpened": "2025-04-17T21:37:08.552Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IOrderInterface.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Hubs\\IOrderInterface.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Hubs\\IOrderInterface.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Hubs\\IOrderInterface.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Hubs\\IOrderInterface.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T19:43:13.472Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "CancelamentoPedidoRequest.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\CancelamentoPedidoRequest.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\CancelamentoPedidoRequest.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\CancelamentoPedidoRequest.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\CancelamentoPedidoRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T18:23:05.88Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 10,
-              "Title": "PagamentoPixResponse.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Title": "PedidoPagamento.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\PedidoPagamento.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\PedidoPagamento.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\PedidoPagamento.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\PedidoPagamento.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAA1wBkAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T00:17:34.58Z"
+              "WhenOpened": "2025-04-17T23:07:42.882Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 85,
-              "Title": "20250417231307_AddTransactionIdAoPedido.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417231307_AddTransactionIdAoPedido.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417231307_AddTransactionIdAoPedido.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417231307_AddTransactionIdAoPedido.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250417231307_AddTransactionIdAoPedido.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAEAAAAAAAAAA==",
+              "DocumentIndex": 13,
+              "Title": "DataBaseContext.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Data\\DataBaseContext.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Data\\DataBaseContext.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Data\\DataBaseContext.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Data\\DataBaseContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T23:13:07.968Z"
+              "WhenOpened": "2025-04-16T02:29:33.388Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 86,
+              "DocumentIndex": 14,
+              "Title": "PedidoCancelado.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\PedidoCancelado.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\PedidoCancelado.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\PedidoCancelado.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\PedidoCancelado.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T18:12:39.244Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 93,
+              "Title": "20250418191244_mudancaMinima.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250418191244_mudancaMinima.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250418191244_mudancaMinima.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250418191244_mudancaMinima.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250418191244_mudancaMinima.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T19:12:44.802Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "FinalUser.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\FinalUser.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\FinalUser.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\FinalUser.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\FinalUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAoAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T18:56:10.175Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 94,
+              "Title": "20250418190256_retiraPedidosDeFinalUser.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250418190256_retiraPedidosDeFinalUser.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250418190256_retiraPedidosDeFinalUser.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250418190256_retiraPedidosDeFinalUser.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250418190256_retiraPedidosDeFinalUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T19:02:56.982Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "ItemPedidoDTO.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\ItemPedidoDTO.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\ItemPedidoDTO.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\ItemPedidoDTO.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\ItemPedidoDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T18:48:40.69Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "ItemPedido.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ItemPedido.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\ItemPedido.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ItemPedido.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\ItemPedido.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAA4wCkAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T22:45:25.476Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
               "Title": "20250417231831_MigracaoAddTransactionAoPagamento.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417231831_MigracaoAddTransactionAoPagamento.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417231831_MigracaoAddTransactionAoPagamento.cs",
@@ -588,187 +665,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "PagamentoDTO.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoDTO.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoDTO.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoDTO.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAUAAAAxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-08T01:06:53.871Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "Pedido.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\Pedido.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\Pedido.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\Pedido.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\Pedido.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABIAAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T01:44:28.802Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "PedidoPagamento.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\PedidoPagamento.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\PedidoPagamento.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\PedidoPagamento.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\PedidoPagamento.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAsAAAAsAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T23:07:42.882Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "PedidoPendente.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\PedidoPendente.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\PedidoPendente.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\PedidoPendente.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\PedidoPendente.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-16T00:40:47.864Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "20250417043014_MudaTableNameParaEnderecosEntregas.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.Designer.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.Designer.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.Designer.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.Designer.cs",
-              "ViewState": "AgIAAOcBAAAAAAAAAAAiwPcBAABHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T23:07:38.413Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 19,
-              "Title": "20250417031836_EnderecoDeEntregaId.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417031836_EnderecoDeEntregaId.Designer.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417031836_EnderecoDeEntregaId.Designer.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417031836_EnderecoDeEntregaId.Designer.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250417031836_EnderecoDeEntregaId.Designer.cs",
-              "ViewState": "AgIAAGgDAAAAAAAAAAAiwHgDAABEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T23:07:36.65Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "20250417022510_RetiraPedidoDeItemPedido.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417022510_RetiraPedidoDeItemPedido.Designer.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417022510_RetiraPedidoDeItemPedido.Designer.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417022510_RetiraPedidoDeItemPedido.Designer.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250417022510_RetiraPedidoDeItemPedido.Designer.cs",
-              "ViewState": "AgIAAGcDAAAAAAAAAAAiwHcDAABEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T23:07:34.383Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "DataBaseContextModelSnapshot.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\DataBaseContextModelSnapshot.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\DataBaseContextModelSnapshot.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\DataBaseContextModelSnapshot.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\DataBaseContextModelSnapshot.cs",
-              "ViewState": "AgIAAGkDAAAAAAAAAAAiwHkDAABEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T23:07:41.004Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 23,
-              "Title": "20250417015858_MigracaoCorrecaoPedidoEItemPedido.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417015858_MigracaoCorrecaoPedidoEItemPedido.Designer.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417015858_MigracaoCorrecaoPedidoEItemPedido.Designer.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417015858_MigracaoCorrecaoPedidoEItemPedido.Designer.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250417015858_MigracaoCorrecaoPedidoEItemPedido.Designer.cs",
-              "ViewState": "AgIAAGkDAAAAAAAAAAAiwHkDAABEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T23:07:31.818Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
-              "Title": "20250416023136_CredenciaisMercadoPago.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250416023136_CredenciaisMercadoPago.Designer.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250416023136_CredenciaisMercadoPago.Designer.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250416023136_CredenciaisMercadoPago.Designer.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250416023136_CredenciaisMercadoPago.Designer.cs",
-              "ViewState": "AgIAAGkDAAAAAAAAAAAiwHkDAABEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T23:07:29.552Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 25,
-              "Title": "20250411004956_InitialMigration.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.Designer.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.Designer.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.Designer.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.Designer.cs",
-              "ViewState": "AgIAAEADAAAAAAAAAAAiwFADAABEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T23:07:27.509Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 27,
-              "Title": "ReembolsoResponseDTO.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\ReembolsoResponseDTO.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\ReembolsoResponseDTO.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\ReembolsoResponseDTO.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\ReembolsoResponseDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T21:37:08.552Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 26,
-              "Title": "20250411004956_InitialMigration.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.cs",
-              "ViewState": "AgIAAIsCAAAAAAAAAAAiwJsCAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-11T00:49:56.575Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 28,
-              "Title": "LoginServiceImplementation.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\Implementations\\LoginServiceImplementation.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\Implementations\\LoginServiceImplementation.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\Implementations\\LoginServiceImplementation.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\Implementations\\LoginServiceImplementation.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T22:23:10.318Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 31,
-              "Title": "20250417043014_MudaTableNameParaEnderecosEntregas.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T04:30:15.187Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 29,
               "Title": "RestauranteCredencialMercadoPago.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\RestauranteCredencialMercadoPago.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\RestauranteCredencialMercadoPago.cs",
@@ -780,43 +677,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
-              "Title": "DataBaseContext.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Data\\DataBaseContext.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Data\\DataBaseContext.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Data\\DataBaseContext.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Data\\DataBaseContext.cs",
-              "ViewState": "AgIAABEAAAAAAAAAAAAEwBgAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-16T02:29:33.388Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 30,
-              "Title": "package.json",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\package.json",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\package.json",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\package.json",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\package.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-04-08T18:25:19.578Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 37,
-              "Title": "ItemPedido.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ItemPedido.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\ItemPedido.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ItemPedido.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\ItemPedido.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAmwDEAAAAcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-09T22:45:25.476Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 20,
               "Title": "ProdutoController.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ProdutoController.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ProdutoController.cs",
@@ -828,31 +689,331 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
-              "Title": "EnderecoEntrega.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\EnderecoEntrega.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\EnderecoEntrega.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\EnderecoEntrega.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\EnderecoEntrega.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAABAAAAAAAAAA==",
+              "DocumentIndex": 21,
+              "Title": "PedidoPendente.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\PedidoPendente.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\PedidoPendente.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\PedidoPendente.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\PedidoPendente.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T03:15:22.438Z"
+              "WhenOpened": "2025-04-16T00:40:47.864Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
-              "Title": "OrderHub.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Hubs\\OrderHub.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Hubs\\OrderHub.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Hubs\\OrderHub.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Hubs\\OrderHub.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAYwCMAAAA/AAAAAAAAAA==",
+              "DocumentIndex": 95,
+              "Title": "20250418181815_AddColumnPedidoCancelado.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250418181815_AddColumnPedidoCancelado.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250418181815_AddColumnPedidoCancelado.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250418181815_AddColumnPedidoCancelado.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250418181815_AddColumnPedidoCancelado.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T01:42:49.871Z"
+              "WhenOpened": "2025-04-18T18:18:15.574Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 96,
+              "Title": "20250418175436_RelacionamentoEntrePedidoEPagamento.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250418175436_RelacionamentoEntrePedidoEPagamento.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250418175436_RelacionamentoEntrePedidoEPagamento.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250418175436_RelacionamentoEntrePedidoEPagamento.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250418175436_RelacionamentoEntrePedidoEPagamento.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T17:54:37.155Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "SistemaDeGest\u00E3o.csproj",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-04-09T22:22:50.683Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "PedidoService.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\PedidoService.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\PedidoService.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\PedidoService.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\PedidoService.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAUwCcAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-22T14:45:55.354Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\appsettings.json",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\appsettings.json",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\appsettings.json",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\appsettings.json",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-02T02:29:57.604Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "MappingProfile.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\AutoMapper\\MappingProfile.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\AutoMapper\\MappingProfile.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\AutoMapper\\MappingProfile.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\AutoMapper\\MappingProfile.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABMAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-22T14:53:32.051Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "FinalUserController.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAwBwAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T13:07:36.309Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Properties\\launchSettings.json",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-08T01:47:30.968Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "FinalUserAuthController.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAowAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-10T23:54:44.146Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "PaymentResponseDTO.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PaymentResponseDTO.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PaymentResponseDTO.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PaymentResponseDTO.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PaymentResponseDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T22:27:13.996Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "PedidoDTO.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PedidoDTO.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PedidoDTO.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PedidoDTO.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PedidoDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAsAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T02:12:12.903Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAYwDEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T04:09:35.655Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "PagamentoPixResponse.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-15T00:17:34.58Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 92,
+              "Title": "20250417231307_AddTransactionIdAoPedido.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417231307_AddTransactionIdAoPedido.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417231307_AddTransactionIdAoPedido.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417231307_AddTransactionIdAoPedido.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250417231307_AddTransactionIdAoPedido.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T23:13:07.968Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "PagamentoDTO.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoDTO.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoDTO.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoDTO.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAUAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-08T01:06:53.871Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 34,
+              "Title": "20250417043014_MudaTableNameParaEnderecosEntregas.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.Designer.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.Designer.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.Designer.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.Designer.cs",
+              "ViewState": "AgIAAOcBAAAAAAAAAAAiwPcBAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T23:07:38.413Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "20250417031836_EnderecoDeEntregaId.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417031836_EnderecoDeEntregaId.Designer.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417031836_EnderecoDeEntregaId.Designer.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417031836_EnderecoDeEntregaId.Designer.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250417031836_EnderecoDeEntregaId.Designer.cs",
+              "ViewState": "AgIAAGgDAAAAAAAAAAAiwHgDAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T23:07:36.65Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "20250417022510_RetiraPedidoDeItemPedido.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417022510_RetiraPedidoDeItemPedido.Designer.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417022510_RetiraPedidoDeItemPedido.Designer.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417022510_RetiraPedidoDeItemPedido.Designer.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250417022510_RetiraPedidoDeItemPedido.Designer.cs",
+              "ViewState": "AgIAAGcDAAAAAAAAAAAiwHcDAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T23:07:34.383Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "DataBaseContextModelSnapshot.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\DataBaseContextModelSnapshot.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\DataBaseContextModelSnapshot.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\DataBaseContextModelSnapshot.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\DataBaseContextModelSnapshot.cs",
+              "ViewState": "AgIAAGkDAAAAAAAAAAAiwHkDAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T23:07:41.004Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "20250417015858_MigracaoCorrecaoPedidoEItemPedido.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417015858_MigracaoCorrecaoPedidoEItemPedido.Designer.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417015858_MigracaoCorrecaoPedidoEItemPedido.Designer.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417015858_MigracaoCorrecaoPedidoEItemPedido.Designer.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250417015858_MigracaoCorrecaoPedidoEItemPedido.Designer.cs",
+              "ViewState": "AgIAAGkDAAAAAAAAAAAiwHkDAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T23:07:31.818Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "20250416023136_CredenciaisMercadoPago.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250416023136_CredenciaisMercadoPago.Designer.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250416023136_CredenciaisMercadoPago.Designer.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250416023136_CredenciaisMercadoPago.Designer.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250416023136_CredenciaisMercadoPago.Designer.cs",
+              "ViewState": "AgIAAGkDAAAAAAAAAAAiwHkDAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T23:07:29.552Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "20250411004956_InitialMigration.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.Designer.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.Designer.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.Designer.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.Designer.cs",
+              "ViewState": "AgIAAEADAAAAAAAAAAAiwFADAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T23:07:27.509Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "20250411004956_InitialMigration.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250411004956_InitialMigration.cs",
+              "ViewState": "AgIAAIsCAAAAAAAAAAAiwJsCAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T00:49:56.575Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "LoginServiceImplementation.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\Implementations\\LoginServiceImplementation.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\Implementations\\LoginServiceImplementation.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\Implementations\\LoginServiceImplementation.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\Implementations\\LoginServiceImplementation.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T22:23:10.318Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "20250417043014_MudaTableNameParaEnderecosEntregas.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Migrations\\20250417043014_MudaTableNameParaEnderecosEntregas.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T04:30:15.187Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "package.json",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\package.json",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\package.json",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\package.json",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\package.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-08T18:25:19.578Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
               "Title": "RestauranteController.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\RestauranteController.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\RestauranteController.cs",
@@ -864,7 +1025,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 48,
               "Title": "Produto.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\Produto.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\Produto.cs",
@@ -876,7 +1037,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 84,
+              "DocumentIndex": 91,
               "Title": "20250417031836_EnderecoDeEntregaId.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417031836_EnderecoDeEntregaId.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417031836_EnderecoDeEntregaId.cs",
@@ -888,7 +1049,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 47,
               "Title": "TokenVO.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Data\\TokenVO.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Data\\TokenVO.cs",
@@ -900,7 +1061,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 46,
               "Title": "ProdutoDTO.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\ProdutoDTO.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\ProdutoDTO.cs",
@@ -912,7 +1073,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 50,
               "Title": "PagamentoCartaoDTO.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoCartaoDTO.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoCartaoDTO.cs",
@@ -924,7 +1085,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 82,
+              "DocumentIndex": 89,
               "Title": "20250417022510_RetiraPedidoDeItemPedido.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417022510_RetiraPedidoDeItemPedido.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417022510_RetiraPedidoDeItemPedido.cs",
@@ -936,7 +1097,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 49,
               "Title": "PagamentoPixDTO.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoPixDTO.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PagamentoPixDTO.cs",
@@ -948,7 +1109,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 83,
+              "DocumentIndex": 90,
               "Title": "20250417015858_MigracaoCorrecaoPedidoEItemPedido.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250417015858_MigracaoCorrecaoPedidoEItemPedido.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250417015858_MigracaoCorrecaoPedidoEItemPedido.cs",
@@ -960,7 +1121,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 52,
               "Title": "EncryptionService.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\EncryptionService.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\EncryptionService.cs",
@@ -972,7 +1133,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 51,
               "Title": "CredenciaisMercadoPagoController.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\CredenciaisMercadoPagoController.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\CredenciaisMercadoPagoController.cs",
@@ -984,7 +1145,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 53,
               "Title": "AdicionalController.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\AdicionalController.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\AdicionalController.cs",
@@ -996,7 +1157,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 54,
               "Title": "Restaurante.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\Restaurante.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\Restaurante.cs",
@@ -1008,7 +1169,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 55,
               "Title": "RestauranteCredencialMercadoPagoDTO.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\RestauranteCredencialMercadoPagoDTO.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\RestauranteCredencialMercadoPagoDTO.cs",
@@ -1020,7 +1181,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 56,
               "Title": "ProdutoService.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\ProdutoService.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\ProdutoService.cs",
@@ -1032,7 +1193,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 50,
+              "DocumentIndex": 57,
               "Title": "IEncryptionService.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\Interfaces\\IEncryptionService.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\Interfaces\\IEncryptionService.cs",
@@ -1044,7 +1205,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 81,
+              "DocumentIndex": 88,
               "Title": "20250416023136_CredenciaisMercadoPago.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250416023136_CredenciaisMercadoPago.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250416023136_CredenciaisMercadoPago.cs",
@@ -1056,7 +1217,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 53,
+              "DocumentIndex": 60,
               "Title": "TaskAwaiter.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\0e599f47268ea62b9af937dc43e1103c8accf8988ef11d1cec2bae5c647caaf7\\TaskAwaiter.cs",
               "RelativeDocumentMoniker": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\0e599f47268ea62b9af937dc43e1103c8accf8988ef11d1cec2bae5c647caaf7\\TaskAwaiter.cs",
@@ -1068,7 +1229,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 80,
+              "DocumentIndex": 87,
               "Title": "PayerDTO.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PayerDTO.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\PayerDTO.cs",
@@ -1080,7 +1241,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 51,
+              "DocumentIndex": 58,
               "Title": "GrupoPedeJaProd - Web Deploy.pubxml",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Properties\\PublishProfiles\\GrupoPedeJaProd - Web Deploy.pubxml",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Properties\\PublishProfiles\\GrupoPedeJaProd - Web Deploy.pubxml",
@@ -1092,7 +1253,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 52,
+              "DocumentIndex": 59,
               "Title": "ActionMethodExecutor.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\1cc6d2a634203e0de348b5980fee97b87977d5074b436e24ff974f8438968be4\\ActionMethodExecutor.cs",
               "RelativeDocumentMoniker": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\1cc6d2a634203e0de348b5980fee97b87977d5074b436e24ff974f8438968be4\\ActionMethodExecutor.cs",
@@ -1104,7 +1265,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 79,
+              "DocumentIndex": 86,
               "Title": "IdentificationDTO.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\IdentificationDTO.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\IdentificationDTO.cs",
@@ -1116,7 +1277,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 56,
+              "DocumentIndex": 63,
               "Title": "20250411002411_InitialMigration.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250411002411_InitialMigration.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250411002411_InitialMigration.cs",
@@ -1128,7 +1289,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 54,
+              "DocumentIndex": 61,
               "Title": "ComplementoController.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ComplementoController.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ComplementoController.cs",
@@ -1140,7 +1301,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 55,
+              "DocumentIndex": 62,
               "Title": "ComplementoService.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Services\\ComplementoService.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\ComplementoService.cs",
@@ -1152,7 +1313,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 57,
+              "DocumentIndex": 64,
               "Title": "ProdutoComplemento.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ProdutoComplemento.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\ProdutoComplemento.cs",
@@ -1164,7 +1325,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 59,
+              "DocumentIndex": 66,
               "Title": "ComplementoResponseDTO.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\ComplementoResponseDTO.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\ComplementoResponseDTO.cs",
@@ -1176,7 +1337,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 58,
+              "DocumentIndex": 65,
               "Title": "GrupoComplementoResponseDTO.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\GrupoComplementoResponseDTO.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\GrupoComplementoResponseDTO.cs",
@@ -1188,7 +1349,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 61,
+              "DocumentIndex": 68,
               "Title": "ComplementoDTO.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\ComplementoDTO.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\ComplementoDTO.cs",
@@ -1200,7 +1361,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 60,
+              "DocumentIndex": 67,
               "Title": "GrupoComplementoDTO.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\GrupoComplementoDTO.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Resquests\\GrupoComplementoDTO.cs",
@@ -1212,7 +1373,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 62,
+              "DocumentIndex": 69,
               "Title": "20250410001348_FirstMigration.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250410001348_FirstMigration.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250410001348_FirstMigration.cs",
@@ -1224,7 +1385,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 63,
+              "DocumentIndex": 70,
               "Title": "AppPedeJa1 - Web Deploy.pubxml",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Properties\\PublishProfiles\\AppPedeJa1 - Web Deploy.pubxml",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Properties\\PublishProfiles\\AppPedeJa1 - Web Deploy.pubxml",
@@ -1236,7 +1397,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 64,
+              "DocumentIndex": 71,
               "Title": "20250409225810_FirstMigration.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409225810_FirstMigration.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250409225810_FirstMigration.cs",
@@ -1248,7 +1409,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 65,
+              "DocumentIndex": 72,
               "Title": "ProdutoAdicional.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ProdutoAdicional.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\ProdutoAdicional.cs",
@@ -1260,7 +1421,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 66,
+              "DocumentIndex": 73,
               "Title": "ProdutoGrupoAdicional.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ProdutoGrupoAdicional.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\ProdutoGrupoAdicional.cs",
@@ -1272,7 +1433,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 67,
+              "DocumentIndex": 74,
               "Title": "ItemPedidoOpcao.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Models\\ItemPedidoOpcao.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\ItemPedidoOpcao.cs",
@@ -1284,7 +1445,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 68,
+              "DocumentIndex": 75,
               "Title": "20250409224234_FirstMigration.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409224234_FirstMigration.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250409224234_FirstMigration.cs",
@@ -1296,7 +1457,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 69,
+              "DocumentIndex": 76,
               "Title": "20250409223934_FirstMigration.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409223934_FirstMigration.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250409223934_FirstMigration.cs",
@@ -1308,7 +1469,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 70,
+              "DocumentIndex": 77,
               "Title": "SistemaDeGest\u00E3o",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\SistemaDeGest\u00E3o.csproj",
@@ -1319,7 +1480,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 71,
+              "DocumentIndex": 78,
               "Title": "20250409222922_FirstMigration.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409222922_FirstMigration.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250409222922_FirstMigration.cs",
@@ -1331,7 +1492,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 72,
+              "DocumentIndex": 79,
               "Title": "20250409221526_InitalMigration.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Migrations\\20250409221526_InitalMigration.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Migrations\\20250409221526_InitalMigration.cs",
@@ -1342,7 +1503,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 73,
+              "DocumentIndex": 80,
               "Title": "ControllerActionInvoker.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\5af38de1500880bdc4e9cb3784c250111fdfcdc4a8a93bde753f983cfb947ca0\\ControllerActionInvoker.cs",
               "RelativeDocumentMoniker": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\5af38de1500880bdc4e9cb3784c250111fdfcdc4a8a93bde753f983cfb947ca0\\ControllerActionInvoker.cs",
@@ -1354,7 +1515,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 77,
+              "DocumentIndex": 84,
               "Title": "Object.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\d2a5067946c81b9d19517dd136fabcfe4687ce078e51a140746d27a270724388\\Object.cs",
               "RelativeDocumentMoniker": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\d2a5067946c81b9d19517dd136fabcfe4687ce078e51a140746d27a270724388\\Object.cs",
@@ -1366,7 +1527,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 74,
+              "DocumentIndex": 81,
               "Title": "BrowserRefreshMiddleware.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\2c424ba62aeea7fae028d734633c61a97366736854c29bce8159a17fc93bc98d\\BrowserRefreshMiddleware.cs",
               "RelativeDocumentMoniker": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\2c424ba62aeea7fae028d734633c61a97366736854c29bce8159a17fc93bc98d\\BrowserRefreshMiddleware.cs",
@@ -1378,7 +1539,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 75,
+              "DocumentIndex": 82,
               "Title": "Int32.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\4f27ca365fb557601894825398065680807a5612f6e758107f6714a7aea600a3\\Int32.cs",
               "RelativeDocumentMoniker": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\4f27ca365fb557601894825398065680807a5612f6e758107f6714a7aea600a3\\Int32.cs",
@@ -1390,7 +1551,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 76,
+              "DocumentIndex": 83,
               "Title": "AddressBinder.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\AppData\\Local\\Temp\\.vsdbgsrc\\44aa595dc2a1078aa662bebf92f46ec0aa83d37961bfc5ec1f12f1b995219153\\AddressBinder.cs",
               "RelativeDocumentMoniker": "..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\44aa595dc2a1078aa662bebf92f46ec0aa83d37961bfc5ec1f12f1b995219153\\AddressBinder.cs",
@@ -1402,7 +1563,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 78,
+              "DocumentIndex": 85,
               "Title": "OrderStatusUpdate.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGest\u00E3o\\Enums\\OrderStatusUpdate.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Enums\\OrderStatusUpdate.cs",

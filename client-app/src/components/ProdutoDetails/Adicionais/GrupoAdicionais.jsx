@@ -8,17 +8,28 @@ const GrupoAdicionais = ({ grupo, selectedExtrasQuantities, handleQuantityChange
     if (!grupo.adicionais || grupo.adicionais.length === 0) return null;
 
     return (
-        <div className="grupo-adicionais border-b pb-4 mb-4">
+        <div className="mb-4">
             <button
-                className="w-full flex justify-between items-center p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
+                type="button"
+                className="w-full py-3 flex justify-between items-center hover:bg-gray-50 transition-colors rounded-lg"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <span className="font-semibold">{grupo.nome} (Máx: {grupo.quantidadeMaxima})</span>
-                {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                <div>
+                    <div className="font-semibold text-gray-800">{grupo.nome}</div>
+                    {grupo.quantidadeMaxima && (
+                        <div className="text-xs text-gray-500 mt-1">
+                            Escolha até {grupo.quantidadeMaxima}
+                        </div>
+                    )}
+                </div>
+                {isOpen ? 
+                    <ChevronUp size={20} className="text-gray-500" /> : 
+                    <ChevronDown size={20} className="text-gray-500" />
+                }
             </button>
 
             {isOpen && (
-                <div className="mt-3 space-y-2 pl-4">
+                <div className="mt-2 space-y-3 pl-1">
                     {grupo.adicionais.map((adicional) => (
                         <AdicionalItem
                             key={adicional.id}

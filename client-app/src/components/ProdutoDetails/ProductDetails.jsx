@@ -1,6 +1,6 @@
-﻿// src/components/ProductDetails/ProductDetails.jsx
-import React from 'react';
+﻿import React from 'react';
 import { useParams } from 'react-router-dom';
+import { ChevronLeft, Heart, Info, Clock, Star } from 'lucide-react';
 import HeaderPublic from '../HeaderPublic/HeaderPublic';
 import ProductImage from './ProductImage';
 import ProductInfo from './ProductInfo';
@@ -54,19 +54,21 @@ const ProductDetails = () => {
 
     if (loading) {
         return (
-            <FuturisticLoadingSpinner
-              message="Carregando produto..."
-              accentColor="blue"
-              secondaryColor="blue"
-              darkMode={false}
-              showBorder={false}
-              phaseMessages={[
-                "Verificando a qualidade do produto...",
-                "Preparando os detalhes exclusivos...",
-                "Ajustando as últimas informações...",
-                "Pronto para exibir! Só mais um segundo..."
-              ]}
-            />
+            <div className="flex items-center justify-center h-screen bg-gray-50">
+                <FuturisticLoadingSpinner
+                  message="Carregando produto..."
+                  accentColor="red"
+                  secondaryColor="red"
+                  darkMode={false}
+                  showBorder={false}
+                  phaseMessages={[
+                    "Verificando a qualidade do produto...",
+                    "Preparando os detalhes exclusivos...",
+                    "Ajustando as últimas informações...",
+                    "Pronto para exibir! Só mais um segundo..."
+                  ]}
+                />
+            </div>
         );
     }
 
@@ -75,57 +77,102 @@ const ProductDetails = () => {
     }
 
     return (
-         
-        <div className="fixed inset-0 bg-gradient-to-b from-gray-50 to-gray-100 overflow-y-auto">
-            <HeaderPublic />
-            <div className="max-w-2xl mx-auto pb-24 bg-white shadow-xl rounded-2xl overflow-hidden mt-24">
-                <div className="p-4">
+        <div className="bg-gray-50 min-h-screen">
+            {/* Cabeçalho fixo com sombra suave */}
+            <div className="fixed top-0 left-0 right-0 bg-white shadow-sm z-30">
+                <div className="max-w-2xl mx-auto flex items-center px-4 py-3">
+                    <button 
+                        className="p-1 rounded-full hover:bg-gray-100" 
+                        onClick={() => window.history.back()}
+                    >
+                        <ChevronLeft size={24} className="text-gray-700" />
+                    </button>
+                    <h1 className="ml-4 font-medium text-gray-800 flex-1">Detalhes do Produto</h1>
+                    <button className="p-2 rounded-full hover:bg-gray-100">
+                        <Heart size={20} className="text-gray-600" />
+                    </button>
+                </div>
+            </div>
+
+            {/* Conteúdo principal com padding superior para compensar o header fixo */}
+            <div className="max-w-2xl mx-auto pt-16 pb-28">
+                {/* Imagem do produto em destaque */}
+                <div className="w-full h-64 relative overflow-hidden">
                     <ProductImage image={product.imagemPrincipalUrl} alt={product.nome} />
+                </div>
+
+                {/* Informações do produto com design limpo */}
+                <div className="bg-white px-4 py-5">
                     <ProductInfo
                         name={product.nome}
                         price={product.precoVenda}
                         description={product.descricao}
                     />
+                </div>
+
+                {/* Linha suave de separação */}
+                <div className="h-2 bg-gray-50"></div>
+
+                {/* Seção de complementos e adicionais com design melhorado */}
+                <div className="bg-white px-4 py-2">
                     {gruposComplementos.length > 0 && (
-                        <ComplementosSection
-                            gruposComplementos={gruposComplementos}
-                            isOpen={complementosOpen}
-                            setIsOpen={setComplementosOpen}
-                            gruposOpen={gruposComplementosOpen}
-                            toggleGrupo={toggleGrupoComplemento}
-                            selectedRadioComplementos={selectedRadioComplementos}
-                            handleRadioChange={handleRadioComplementoChange}
-                            selectedExtrasQuantities={selectedExtrasQuantities}
-                            handleQuantityChange={handleQuantityChange}
-                        />
+                        <div className="py-2">
+                            <h2 className="text-lg font-semibold text-gray-800 mb-3">Escolha seus complementos</h2>
+                            <ComplementosSection
+                                gruposComplementos={gruposComplementos}
+                                isOpen={complementosOpen}
+                                setIsOpen={setComplementosOpen}
+                                gruposOpen={gruposComplementosOpen}
+                                toggleGrupo={toggleGrupoComplemento}
+                                selectedRadioComplementos={selectedRadioComplementos}
+                                handleRadioChange={handleRadioComplementoChange}
+                                selectedExtrasQuantities={selectedExtrasQuantities}
+                                handleQuantityChange={handleQuantityChange}
+                            />
+                        </div>
                     )}
 
                     {gruposAdicionais.length > 0 && (
-                        <AdicionaisSection
-                            gruposAdicionais={gruposAdicionais}
-                            isOpen={adicionaisOpen}
-                            setIsOpen={setAdicionaisOpen}
-                            gruposOpen={gruposAdicionaisOpen}
-                            toggleGrupo={toggleGrupoAdicional}
-                            selectedExtrasQuantities={selectedExtrasQuantities}
-                            handleQuantityChange={handleQuantityChange}
-                        />
+                        <div className="py-2">
+                            <h2 className="text-lg font-semibold text-gray-800 mb-3">Adicione extras</h2>
+                            <AdicionaisSection
+                                gruposAdicionais={gruposAdicionais}
+                                isOpen={adicionaisOpen}
+                                setIsOpen={setAdicionaisOpen}
+                                gruposOpen={gruposAdicionaisOpen}
+                                toggleGrupo={toggleGrupoAdicional}
+                                selectedExtrasQuantities={selectedExtrasQuantities}
+                                handleQuantityChange={handleQuantityChange}
+                            />
+                        </div>
                     )}
 
-                    <QuantitySelector
-                        quantity={quantity}
-                        onIncrement={incrementQuantity}
-                        onDecrement={decrementQuantity}
-                    />
-                </div>
-
-                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-2xl p-4 z-20">
-                    <div className="max-w-2xl mx-auto flex justify-between items-center">
-                        <TotalPrice total={calculateTotalPrice()} />
-                        <AddToCartButton onClick={handleAddToCartWithValidation} />
+                    {/* Seletor de quantidade com design moderno */}
+                    <div className="py-6">
+                        <h2 className="text-lg font-semibold text-gray-800 mb-3">Quantidade</h2>
+                        <QuantitySelector
+                            quantity={quantity}
+                            onIncrement={incrementQuantity}
+                            onDecrement={decrementQuantity}
+                        />
                     </div>
                 </div>
+
+                {/* Observações (opcional) */}
+                <div className="bg-white mt-2 px-4 py-4 flex items-center text-gray-500">
+                    <Info size={18} className="mr-2" />
+                    <span>Alguma observação? Adicione ao finalizar seu pedido.</span>
+                </div>
             </div>
+
+            {/* Rodapé fixo com botão de adicionar ao carrinho */}
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-lg z-20">
+                <div className="max-w-2xl mx-auto flex justify-between items-center p-4">
+                    <TotalPrice total={calculateTotalPrice()} />
+                    <AddToCartButton onClick={handleAddToCartWithValidation} />
+                </div>
+            </div>
+
             {showCartModal && <CartActionModal product={lastAddedItem} onClose={() => setShowCartModal(false)} />}
         </div>
     );

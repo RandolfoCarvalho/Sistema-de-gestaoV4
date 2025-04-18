@@ -1,23 +1,26 @@
 ﻿import React from 'react';
-import { Plus, Minus } from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
 
 const QuantitySelector = ({ quantity, onIncrement, onDecrement }) => {
     return (
-        <div className="flex items-center justify-center space-x-6 mt-8">
+        <div className="flex items-center">
             <button
-                type="button"
                 onClick={onDecrement}
-                className="w-12 h-12 bg-gray-100 text-gray-800 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
+                disabled={quantity <= 1}
+                className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    quantity <= 1 ? 'bg-gray-100 text-gray-400' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
             >
-                <Minus size={20} />
+                <Minus size={16} />
             </button>
-            <span className="text-2xl font-bold text-gray-800 w-12 text-center">{quantity}</span>
+            
+            <span className="mx-6 text-lg font-medium w-6 text-center">{quantity}</span>
+            
             <button
-                type="button"
                 onClick={onIncrement}
-                className="w-12 h-12 bg-gray-100 text-gray-800 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
+                className="w-10 h-10 rounded-full bg-gray-100 text-gray-700 flex items-center justify-center hover:bg-gray-200"
             >
-                <Plus size={20} />
+                <Plus size={16} />
             </button>
         </div>
     );

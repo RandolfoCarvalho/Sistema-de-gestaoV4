@@ -26,8 +26,8 @@ namespace SistemaDeGestão.Areas.Admin.Controllers
             if (user == null) return NotFound();
             return Ok(new
             {
-                Nome = user.Nome,
-                Telefone = user.Telefone
+                user.Nome,
+                user.Telefone
             });
         }
         [HttpGet("GetPedidosByUser/{numeroTelefone}/{restauranteId}")]

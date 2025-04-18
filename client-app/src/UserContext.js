@@ -14,7 +14,7 @@ export const UserProvider = ({ children }) => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/Restaurante/GetRestauranteInfo`, {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}` // Envia o token no cabeçalho
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
                 });
                 setUser(response.data); // Aqui você recebe as informações do usuário

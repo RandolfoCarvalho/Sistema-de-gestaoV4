@@ -40,8 +40,9 @@ namespace SistemaDeGestão.Controllers
             _encryptionService = encryptionService;
         }
 
-        [HttpPost("processaPagamentoPix")]
-        public async Task<IActionResult> ProcessarPagamentoPix([FromBody] PagamentoRequestPix request)
+        [HttpPost]
+        [Route("processaPagamentoPix")]
+        public async Task<IActionResult> ProcessaPagamentoPix([FromBody] PagamentoRequestPix request)
         {
             if (request?.DadosPagamento == null || request?.PedidoDTO == null)
                 return BadRequest("Dados incompletos.");
@@ -67,6 +68,16 @@ namespace SistemaDeGestão.Controllers
                 return BadRequest("Erro ao processar pagamento por cartão: " + ex.Message);
             }
         }
+
+        [HttpPost("processaReembolso")]
+        public async Task<IActionResult> ProcessaReembolso([FromBody] ReembolsoRequest request)
+        { 
+            var restauranteId = 1;
+            var accessToken = await BuscaCredenciaisAsync(restauranteId);
+            var resultado = await _paymentService.ProcessarReembolso(request, accessToken);
+            return Ok(resultado);
+        }
+
         [HttpPost("notificacaoMercadoPago")]
         public async Task<IActionResult> ReceiveMercadoPagoWebhook([FromBody] JsonElement notification)
         {
@@ -150,13 +161,15 @@ namespace SistemaDeGestão.Controllers
                 var pedidoPendente = await _context.PedidosPendentes
                     .FirstOrDefaultAsync(p => p.TransactionId == transactionId);
                 if (pedidoPendente == null) return;
-
-                _context.PedidosPendentes.Remove(pedidoPendente);
-                await _context.SaveChangesAsync();
-
                 var pedidoDTO = JsonSerializer.Deserialize<PedidoDTO>(pedidoPendente.PedidoJson);
+                pedidoDTO.Pagamento.TransactionId = transactionId;
                 await _pedidoService.CriarPedidoAsync(pedidoDTO);
                 await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoDTO);
+                _context.PedidosPendentes.Remove(pedidoPendente);
+                await _context.SaveChangesAsync();
+            } catch(Exception ex)
+            {
+                throw new Exception(ex.Message + " <- Nova mensagem de erro: ");
             }
             finally
             {
@@ -167,6 +180,11 @@ namespace SistemaDeGestão.Controllers
 
     }
 
+    public class ReembolsoRequest
+    {
+        public long TransactionId { get; set; }
+        public decimal? Amount { get; set; }
+    }
     public class PagamentoRequest
     {
         public PagamentoCartaoDTO DadosPagamento { get; set; }

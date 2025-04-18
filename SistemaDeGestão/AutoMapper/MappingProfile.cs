@@ -13,6 +13,7 @@ namespace SistemaDeGestão.AutoMapper
                 .ForMember(dest => dest.Numero, opt => opt.Ignore()) // Vamos gerar o número manualmente
                 .ForMember(dest => dest.Pagamento, opt => opt.MapFrom(src => new PedidoPagamento
                 {
+                    TransactionId = src.Pagamento.TransactionId,
                     SubTotal = src.Pagamento.SubTotal,
                     TaxaEntrega = src.Pagamento.TaxaEntrega,
                     Desconto = src.Pagamento.Desconto,

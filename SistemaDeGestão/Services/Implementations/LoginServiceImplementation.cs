@@ -15,8 +15,8 @@ namespace SistemaDeGestão.Services.Implementations
         private TokenConfiguration _configuration;
         private IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
-        private readonly ILogger<AuthController> _logger;
-        public LoginServiceImplementation(ILogger<AuthController> logger, TokenConfiguration configuration, IUserRepository userRepository, ITokenService tokenService)
+        private readonly ILogger<LoginServiceImplementation> _logger;
+        public LoginServiceImplementation(ILogger<LoginServiceImplementation> logger, TokenConfiguration configuration, IUserRepository userRepository, ITokenService tokenService)
         {
             _configuration = configuration;
             _userRepository = userRepository;

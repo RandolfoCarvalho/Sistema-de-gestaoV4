@@ -1353,6 +1353,37 @@
         }
       }
     },
+    "/api/1.0/MercadoPago/processaReembolso": {
+      "post": {
+        "tags": [
+          "MercadoPago"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReembolsoRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReembolsoRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReembolsoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/1.0/MercadoPago/notificacaoMercadoPago": {
       "post": {
         "tags": [
@@ -3047,6 +3078,10 @@
             "type": "number",
             "format": "double"
           },
+          "transactionId": {
+            "type": "string",
+            "nullable": true
+          },
           "taxaEntrega": {
             "type": "number",
             "format": "double"
@@ -3247,6 +3282,10 @@
           "subTotal": {
             "type": "number",
             "format": "double"
+          },
+          "transactionId": {
+            "type": "string",
+            "nullable": true
           },
           "taxaEntrega": {
             "type": "number",
@@ -3471,6 +3510,21 @@
           },
           "grupoComplemento": {
             "$ref": "#/components/schemas/GrupoComplemento"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReembolsoRequest": {
+        "type": "object",
+        "properties": {
+          "transactionId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
           }
         },
         "additionalProperties": false

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import HeaderPublic from '../HeaderPublic/HeaderPublic';
 import BottomNav from '../BottomNav';
 import useLojaData from './hooks/useLojaData';
-import LoadingSpinner from './LoadingSpinner';
+import FuturisticLoadingSpinner from '../ui/FuturisticLoadingSpinner';
 import CategoryFilter from './CategoryFilter';
 import FeaturedProducts from './FeaturedProducts';
 import CategorySection from './CategorySection';
@@ -15,7 +15,23 @@ const Produtos = () => {
     const { lojaInfo, produtos, categorias, loading } = useLojaData(nomeDaLoja);
     const [activeCategory, setActiveCategory] = useState("todos");
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return (
+        <FuturisticLoadingSpinner
+          message="Carregando os produtos..."
+          accentColor="blue"
+          secondaryColor="blue"
+          darkMode={false}
+          showBorder={false}
+          phaseMessages={[
+            "Aquecendo os motores...",
+            "Preparando o cardápio...",
+            "Finalizando os toques...",
+            "Só mais um segundo..."
+          ]}
+        />
+      );
+      
+      
     if (!lojaInfo) return <div>Loja não encontrada</div>;
 
     const filteredProducts = activeCategory === "todos"

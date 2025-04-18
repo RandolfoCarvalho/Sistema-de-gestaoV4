@@ -411,6 +411,18 @@
         }
       }
     },
+    "/api/1.0/Auth/validateToken": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/1.0/Auth/signin": {
       "post": {
         "tags": [

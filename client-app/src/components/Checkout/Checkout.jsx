@@ -85,10 +85,10 @@ const Checkout = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 pt-24 py-12">
-            <HeaderPublic />
-            <div className="max-w-screen-xl mx-auto px-4 md:px-8 lg:px-16">
-                <CheckoutSteps />
+        <div className="min-h-screen bg-gray-50 py-12">
+          <HeaderPublic />
+          <div className="max-w-screen-xl mx-auto px-4 md:px-8 lg:px-16 mt-24">
+            <CheckoutSteps />
                 {/* Modal de autenticação */}
                 {isAuthModalOpen && (
                     <FinalUserModal

@@ -22,6 +22,7 @@ import Autenticacao from './components/Authentication/Login';
 
 import BottomNav from "./components/BottomNav";
 import Pedidos from "./components/Pedidos/Pedidos";
+import Promocoes from "./components/Promocoes/Promocoes";
 import PedidosDetalhes from "./components/Pedidos/PedidosDetalhes";
 
 
@@ -41,6 +42,7 @@ import Sair from './components/Admin/Stats/logout';
 
 //protecao da rota admin
 import ProtectedRoute from './components/ProtectedRoute';
+import { AuthProvider } from "./services/AuthContext";
 
 // Axios Global Config
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
@@ -72,11 +74,12 @@ const App = () => {
     const toggleDarkMode = () => setDarkMode(!darkMode);
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
     return (
+
         <SignalRProvider>
             <StoreProvider>
                 <UserProvider>
                     <CartProvider>
-
+                    <AuthProvider>
                         <Router>
                             <div className={darkMode ? "dark" : ""}>
                                 <Routes>
@@ -88,10 +91,10 @@ const App = () => {
                                     <Route path="/auth/login" element={<Autenticacao />} />
                                     <Route path="/pedidos" element={<Pedidos />} />
                                     <Route path="/pedidos/:numeroPedido" element={<PedidosDetalhes />} />
-                                    <Route path="/promo" element={<div>P�gina de Promo��es</div>} />
+                                    <Route path="/promo" element={<Promocoes />} />
                                     <Route path="/carrinho" element={<div>P�gina do Carrinho</div>} />
                                     {/* Admin Routes */}
-                                    <Route element={<ProtectedRoute redirectTo="/auth/login" />}>
+                                    <Route element={<ProtectedRoute/>}>
                                         <Route path="/admin" element={
                                             <div className={`${darkMode ? 'dark' : ''} flex bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400`}>
                                                 <Sidebar isSidebarOpen={isSidebarOpen} />
@@ -123,10 +126,12 @@ const App = () => {
                                 </Routes>
                             </div>
                         </Router>
+                        </AuthProvider>
                     </CartProvider>
                 </UserProvider>
             </StoreProvider>
         </SignalRProvider>
+       
     );
 };
 

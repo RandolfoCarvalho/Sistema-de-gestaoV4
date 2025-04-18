@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import usePayment from "./hooks/usePayment";
 import { useNavigate } from "react-router-dom";
 import { initMercadoPago } from "@mercadopago/sdk-react";
-import LoadingSpinner from '../ui/loadings';
+import FuturisticLoadingSpinner from '../ui/FuturisticLoadingSpinner';
 import useSignalRPedidos from './hooks/useSignalRPedidos';
 import CardPaymentForm from "./CardPaymentForm";
 import PixPaymentSection from "./PixPaymentSection";
@@ -273,7 +273,14 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             shouldCloseOnOverlayClick={!isLoading}
             appElement={document.getElementById('root') || undefined}
         >
-            {internalLoading && <LoadingSpinner />}
+            {internalLoading && <FuturisticLoadingSpinner 
+                        message="Processando pagamento..."
+                        accentColor="blue"
+                        secondaryColor="blue" 
+                        darkMode={false}
+                        showBorder={false}
+                        phaseMessages={["Verificando pedido", "Recebendo pagamento", "Processando detalhes", "Finalizando..."]}
+                    />}
 
             <div className="space-y-4">
                 <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Detalhes de Pagamento</h2>

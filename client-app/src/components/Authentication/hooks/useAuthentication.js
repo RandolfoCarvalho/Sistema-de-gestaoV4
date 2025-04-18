@@ -8,12 +8,12 @@ const useAuthentication = () => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    useEffect(() => {
+    /* useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
             axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         }
-    }, []);
+    }, []);  */
 
     const handleSubmit = async (e) => {
         e.preventDefault();

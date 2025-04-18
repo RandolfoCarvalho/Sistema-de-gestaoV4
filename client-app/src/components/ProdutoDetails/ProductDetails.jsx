@@ -7,7 +7,7 @@ import ProductInfo from './ProductInfo';
 import QuantitySelector from './QuantitySelector';
 import TotalPrice from './TotalPrice';
 import AddToCartButton from './AddToCartButton';
-import LoadingSpinner from './LoadingSpinner';
+import FuturisticLoadingSpinner from '../ui/FuturisticLoadingSpinner';
 import ErrorDisplay from './ErrorDisplay';
 import ComplementosSection from './Complementos/ComplementosSection';
 import AdicionaisSection from './Adicionais/AdicionaisSection';
@@ -53,7 +53,21 @@ const ProductDetails = () => {
     );
 
     if (loading) {
-        return <LoadingSpinner message="Carregando produto..." />;
+        return (
+            <FuturisticLoadingSpinner
+              message="Carregando produto..."
+              accentColor="blue"
+              secondaryColor="blue"
+              darkMode={false}
+              showBorder={false}
+              phaseMessages={[
+                "Verificando a qualidade do produto...",
+                "Preparando os detalhes exclusivos...",
+                "Ajustando as últimas informações...",
+                "Pronto para exibir! Só mais um segundo..."
+              ]}
+            />
+        );
     }
 
     if (error || !product) {
@@ -62,9 +76,9 @@ const ProductDetails = () => {
 
     return (
          
-        <div className="fixed pt-[50px] inset-0 bg-gradient-to-b from-gray-50 to-gray-100 overflow-y-auto">
+        <div className="fixed inset-0 bg-gradient-to-b from-gray-50 to-gray-100 overflow-y-auto">
             <HeaderPublic />
-            <div className="max-w-2xl mx-auto pb-24 bg-white shadow-xl rounded-2xl overflow-hidden">
+            <div className="max-w-2xl mx-auto pb-24 bg-white shadow-xl rounded-2xl overflow-hidden mt-24">
                 <div className="p-4">
                     <ProductImage image={product.imagemPrincipalUrl} alt={product.nome} />
                     <ProductInfo
@@ -72,7 +86,6 @@ const ProductDetails = () => {
                         price={product.precoVenda}
                         description={product.descricao}
                     />
-
                     {gruposComplementos.length > 0 && (
                         <ComplementosSection
                             gruposComplementos={gruposComplementos}

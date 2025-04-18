@@ -279,6 +279,16 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.AuthController",
+    "Method": "ValidateToken",
+    "RelativePath": "api/1.0/Auth/validateToken",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.CategoriaController",
     "Method": "AdicionarCategoriaAProduto",
     "RelativePath": "api/1.0/Categoria/AdicionarCategoriaAProduto",

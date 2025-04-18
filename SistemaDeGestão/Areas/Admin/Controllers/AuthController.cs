@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SistemaDeGestão.Data;
 using SistemaDeGestão.Models;
 using SistemaDeGestão.Services.Interfaces;
@@ -34,6 +35,13 @@ namespace SistemaDeGestão.Areas.Admin.Controllers
                 }
             }
             return Unauthorized(new { message = "Credenciais inválidas." });
+        }
+        [HttpGet]
+        [Route("validateToken")]
+        [Authorize]
+        public IActionResult ValidateToken()
+        {
+            return Ok(new { valid = true, user = User.Identity.Name });
         }
 
         [HttpPost]

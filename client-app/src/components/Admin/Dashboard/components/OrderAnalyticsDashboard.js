@@ -8,8 +8,6 @@ import { Calendar, BarChart4, TrendingUp, PieChart as PieIcon, DollarSign } from
 const OrderAnalyticsDashboard = ({ orders }) => {
     const [timeRange, setTimeRange] = useState('week');
     const [chartType, setChartType] = useState('overview');
-    console.log("orders: ", orders)
-    // Flatten all orders from different status categories into a single array
     const allOrders = useMemo(() => {
         if (!orders) return [];
         return Object.values(orders).flat().map(order => ({
@@ -19,7 +17,6 @@ const OrderAnalyticsDashboard = ({ orders }) => {
         }));
     }, [orders]);
 
-    //Processa por data
     const processOrdersData = useMemo(() => {
         if (!allOrders.length) return { weekData: [], monthData: [], yearData: [], statusDistribution: [] };
 
@@ -29,6 +26,7 @@ const OrderAnalyticsDashboard = ({ orders }) => {
         const monthLabels = [];
         const yearLabels = [];
 
+        //semana
         for (let i = 6; i >= 0; i--) {
             const date = new Date(now);
             date.setDate(date.getDate() - i);
@@ -38,16 +36,24 @@ const OrderAnalyticsDashboard = ({ orders }) => {
                 key: date.toISOString().split('T')[0]
             });
         }
-        for (let i = 29; i >= 0; i -= 1) {
+        //mes
+        // Geração de monthLabels
+        for (let i = 30; i >= 0; i--) {
             const date = new Date(now);
             date.setDate(date.getDate() - i);
+            const startOfGroup = new Date(date);
+            startOfGroup.setDate(date.getDate() - (date.getDate() % 1)); 
+            const endOfGroup = new Date(startOfGroup);
+            endOfGroup.setDate(startOfGroup.getDate() + 2);
+        
             monthLabels.push({
-                date: new Date(date),
-                label: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
-                key: date.toISOString().split('T')[0].substring(0, 8) + Math.floor(date.getDate() / 3) * 3
+                date: startOfGroup,
+                label: `${startOfGroup.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} - ${endOfGroup.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}`,
+                key: startOfGroup.toISOString().split('T')[0],
             });
         }
 
+        //ano
         for (let i = 11; i >= 0; i--) {
             const date = new Date(now);
             date.setMonth(date.getMonth() - i);
@@ -100,7 +106,7 @@ const OrderAnalyticsDashboard = ({ orders }) => {
 
             const orderValue = order.itens.reduce((total, item) => total + item.subTotal, 0);
             const orderCostTotal = order.itens.reduce((total, item) => total + item.precoCusto, 0);
-            const orderCost = orderValue - orderCostTotal;
+            const orderCost = order.itens.reduce((total, item) => total + item.precoCusto, 0); // Soma direta dos custos
 
             //mapeando os status
             let statusKey;
@@ -132,20 +138,21 @@ const OrderAnalyticsDashboard = ({ orders }) => {
             if (weekIndex >= 0) {
                 weekData[weekIndex].orders += 1;
                 weekData[weekIndex].revenue += orderValue;
-                weekData[weekIndex].costs += orderCost;
+                weekData[weekIndex].costs += orderCost; // Corrigido
                 if (statusKey === 'cancelado') {
                     weekData[weekIndex].canceled += 1;
                 }
             }
 
-            //agrupado por 3 dias
-            const monthKey = orderDate.toISOString().split('T')[0].substring(0, 8) +
-                Math.floor(orderDate.getDate() / 3) * 3;
+            // Agrupamento mensal
+            const startOfGroup = new Date(orderDate);
+            startOfGroup.setDate(orderDate.getDate() - (orderDate.getDate() % 1));
+            const monthKey = startOfGroup.toISOString().split('T')[0];
             const monthIndex = monthData.findIndex(d => d.key === monthKey);
             if (monthIndex >= 0) {
                 monthData[monthIndex].orders += 1;
                 monthData[monthIndex].revenue += orderValue;
-                monthData[monthIndex].costs += orderCost;
+                monthData[monthIndex].costs += orderCost; 
                 if (statusKey === 'cancelado') {
                     monthData[monthIndex].canceled += 1;
                 }
@@ -154,6 +161,7 @@ const OrderAnalyticsDashboard = ({ orders }) => {
             //Por ano
             const yearKey = orderDate.toISOString().substring(0, 7);
             const yearIndex = yearData.findIndex(d => d.key === yearKey);
+            // Yearly data
             if (yearIndex >= 0) {
                 yearData[yearIndex].orders += 1;
                 yearData[yearIndex].revenue += orderValue;
@@ -180,7 +188,6 @@ const OrderAnalyticsDashboard = ({ orders }) => {
             statusDistribution
         };
     }, [allOrders]);
-
     //Seleciona os dados por base no mapeamento de data
     const getChartData = () => {
         switch (timeRange) {

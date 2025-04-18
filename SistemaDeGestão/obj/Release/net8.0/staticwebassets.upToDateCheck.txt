@@ -1,0 +1,205 @@
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.css
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.css.map
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.min.css
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.min.css.map
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.rtl.css
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.rtl.css.map
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.rtl.min.css
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.rtl.min.css.map
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.css
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.css.map
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.min.css
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.min.css.map
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.rtl.css
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.rtl.css.map
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.rtl.min.css
+C:\Users\randolfo\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.rtl.min.css.map
+wwwroot\asset-manifest.json
+wwwroot\css\Auth\main.css
+wwwroot\css\Auth\util.css
+wwwroot\css\bootstrap.css
+wwwroot\css\bootstrap-grid.css
+wwwroot\css\font-awesome.min.css
+wwwroot\css\Loja\style.css
+wwwroot\css\Produto\criarProduto.css
+wwwroot\css\responsive.css
+wwwroot\css\style.css
+wwwroot\css\style.css.map
+wwwroot\css\style.scss
+wwwroot\css\styles.css
+wwwroot\favicon.ico
+wwwroot\images\about-img.png
+wwwroot\images\Auth\icons\favicon.ico
+wwwroot\images\client1.jpg
+wwwroot\images\client2.jpg
+wwwroot\images\f1.png
+wwwroot\images\f2.png
+wwwroot\images\f3.png
+wwwroot\images\f4.png
+wwwroot\images\f5.png
+wwwroot\images\f6.png
+wwwroot\images\f7.png
+wwwroot\images\f8.png
+wwwroot\images\f9.png
+wwwroot\images\favicon.png
+wwwroot\images\hero-bg.jpg
+wwwroot\images\o1.jpg
+wwwroot\images\o2.jpg
+wwwroot\images\public\product-image.jpeg
+wwwroot\index.html
+wwwroot\js\Auth\main.js
+wwwroot\js\bootstrap.js
+wwwroot\js\custom.js
+wwwroot\js\jquery-3.4.1.min.js
+wwwroot\js\Produto\criarProduto.js
+wwwroot\js\scripts.js
+wwwroot\js\site.js
+wwwroot\lib\bootstrap\dist\css\bootstrap.css
+wwwroot\lib\bootstrap\dist\css\bootstrap.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.css
+wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.min.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.min.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css.map
+wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js
+wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map
+wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js
+wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map
+wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js
+wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js.map
+wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js
+wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js.map
+wwwroot\lib\bootstrap\dist\js\bootstrap.js
+wwwroot\lib\bootstrap\dist\js\bootstrap.js.map
+wwwroot\lib\bootstrap\dist\js\bootstrap.min.js
+wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map
+wwwroot\lib\bootstrap\LICENSE
+wwwroot\lib\jquery\dist\jquery.js
+wwwroot\lib\jquery\dist\jquery.min.js
+wwwroot\lib\jquery\dist\jquery.min.map
+wwwroot\lib\jquery\LICENSE.txt
+wwwroot\lib\jquery-validation\dist\additional-methods.js
+wwwroot\lib\jquery-validation\dist\additional-methods.min.js
+wwwroot\lib\jquery-validation\dist\jquery.validate.js
+wwwroot\lib\jquery-validation\dist\jquery.validate.min.js
+wwwroot\lib\jquery-validation\LICENSE.md
+wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js
+wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js
+wwwroot\lib\jquery-validation-unobtrusive\LICENSE.txt
+wwwroot\logo192.png
+wwwroot\logo512.png
+wwwroot\manifest.json
+wwwroot\robots.txt
+wwwroot\static\css\main.f855e6bc.css
+wwwroot\static\css\main.f855e6bc.css.map
+wwwroot\static\js\453.ad6eb26e.chunk.js
+wwwroot\static\js\453.ad6eb26e.chunk.js.map
+wwwroot\static\js\main.4adac9c0.js.LICENSE.txt
+wwwroot\static\js\main.js
+wwwroot\static\js\main.js.map
+wwwroot\static\media\logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg
+wwwroot\Uploads\Produtos\0196093d-2ca0-4d1f-a0c0-d4694ae66840_zebra.png
+wwwroot\Uploads\Produtos\03e3985c-7b40-47e9-93f6-388688bb2913_macarrao.jpg
+wwwroot\Uploads\Produtos\04252d76-4183-4146-9cdc-059c57f822c3.png
+wwwroot\Uploads\Produtos\0668a90d-0b28-4b5d-ac18-efa1532ad3fa_Acai.jpg
+wwwroot\Uploads\Produtos\07464f50-4978-4154-bf28-1ba76e444a71.png
+wwwroot\Uploads\Produtos\0a4ffd89-4333-4606-968d-6574a1b52475_imagemThe rake.jfif
+wwwroot\Uploads\Produtos\0e433c2b-3420-409f-8426-7b28e53b1053_refrigerante.jpg
+wwwroot\Uploads\Produtos\0f6eb39a-fba9-440a-8abe-d17fd802c265_piercing.jpg
+wwwroot\Uploads\Produtos\127fff00-0d83-4bad-a097-f88385efba65_refrigerante.jpg
+wwwroot\Uploads\Produtos\1856bd49-dbfa-49d4-b563-93558c2ebd10_pizza.jpg
+wwwroot\Uploads\Produtos\1c9705a7-c43c-464b-ba8b-1779d219afc2_pdf.jpg
+wwwroot\Uploads\Produtos\1fc6b593-7256-4cb0-82ec-29a66932dc62_Pizza.jpg
+wwwroot\Uploads\Produtos\26de78c2-0363-49a1-b984-b9ee11818835_prato de comida.jpg
+wwwroot\Uploads\Produtos\28297686-1e18-439b-a885-193d811ed72b_cris.jpg
+wwwroot\Uploads\Produtos\292f6f20-ac2b-4655-8c5e-03a58f79206d.jpg
+wwwroot\Uploads\Produtos\2c037fe5-b174-4e46-9ffd-56ced7d23f9c_prato de comida.jpg
+wwwroot\Uploads\Produtos\2c4ab190-f637-4a04-b430-9afaea834285_hamburguer.jpg
+wwwroot\Uploads\Produtos\2c71fb01-38fd-47c1-bf3b-1dbb73be26d3_prato de comida.jpg
+wwwroot\Uploads\Produtos\31cb04b3-a0ab-4c92-9da5-abf5fdd0c4a5_pizza.jpg
+wwwroot\Uploads\Produtos\33197078-878b-48d9-a7ef-6116e4315aa6_Sorvete de menta.jpg
+wwwroot\Uploads\Produtos\35195902-4b63-45ac-94df-7f251723817c_frente.jpg
+wwwroot\Uploads\Produtos\38afa8b5-db73-40df-9810-d58ac58c887d_sorvete chocolate.jpg
+wwwroot\Uploads\Produtos\39c2ddd5-38e1-49a3-a1a6-eec48de14377.png
+wwwroot\Uploads\Produtos\3bcacc0f-2a30-42ea-bfa7-91ea05d7bc63_macarrao.jpg
+wwwroot\Uploads\Produtos\3e5f4a14-2e68-4cb5-ad32-7a91b6661e26_gpt.jpg
+wwwroot\Uploads\Produtos\43d36f77-01f6-48c2-9ba8-6b373340ffe9_prato de comida.jpg
+wwwroot\Uploads\Produtos\4ab3c68b-9bb2-4961-a606-b8381454c729_gpt.jpg
+wwwroot\Uploads\Produtos\4c89c3d6-e152-480e-a255-88339491e8f0_Sorvete de menta.jpg
+wwwroot\Uploads\Produtos\4d1a4587-4f10-44cf-985f-3f007b2744d4_prato de comida.jpg
+wwwroot\Uploads\Produtos\4feedf3c-b0e1-4485-be50-e3df007ba64c_sorvete.jpg
+wwwroot\Uploads\Produtos\549ddc1d-c768-49ba-a86c-219398df06c8_prato de comida.jpg
+wwwroot\Uploads\Produtos\591785ab-3e61-4641-b1da-4b212b3bf609_Sorvete de menta.jpg
+wwwroot\Uploads\Produtos\60be4306-93ca-4265-a0da-392925d584de_selfie com documento.jpg
+wwwroot\Uploads\Produtos\65ac4eb9-9deb-4dea-b567-b40cb20fc8ee_girafa.png
+wwwroot\Uploads\Produtos\6a4506a3-7c2b-4099-9b93-c4475c0e20fc_foto 1.webp
+wwwroot\Uploads\Produtos\6b06aa8c-bdbc-40c1-aff3-17917a0665d9_Sorvete de menta.jpg
+wwwroot\Uploads\Produtos\6d296994-0084-4c2c-be85-1e3e8f9209fa_prato de comida.jpg
+wwwroot\Uploads\Produtos\78af0b4a-8729-43bb-b2f2-cbc78210c566.jpg
+wwwroot\Uploads\Produtos\7dac0a58-e4da-4a6e-a863-9c12babd8e2c_caso de uso deborah.jfif
+wwwroot\Uploads\Produtos\81114017-893a-447a-998f-33f359e535b2_Sorvete de menta.jpg
+wwwroot\Uploads\Produtos\81c26ec4-190e-4d22-8731-b44bb7a5c904_pizza.jpg
+wwwroot\Uploads\Produtos\8f1257d0-ed42-479c-9009-532d59ce2ce5_nearmiss.png
+wwwroot\Uploads\Produtos\9051127b-72ba-4f5e-86f6-e50b943cbf73_frente.jpg
+wwwroot\Uploads\Produtos\9503d668-30de-4b14-8905-6990d89a33fc_frente.jpg
+wwwroot\Uploads\Produtos\9ce6f489-80c2-4998-bb84-014e7ca03c58_llms.webp
+wwwroot\Uploads\Produtos\9de910d6-42c6-41ad-b411-27faa8b179e0_girafa.png
+wwwroot\Uploads\Produtos\a0cc1034-2c6b-4a62-9090-086559d733b5_refrigerante.jpg
+wwwroot\Uploads\Produtos\a4333de6-9017-4aaf-a4c5-64a2eb780ab9_verso.jpg
+wwwroot\Uploads\Produtos\a496fbcc-6aff-4235-85a7-793195919782_gpt.jpg
+wwwroot\Uploads\Produtos\a79fb51f-1c5f-4ba1-a873-eda70b34a834.png
+wwwroot\Uploads\Produtos\aa580fa5-ee60-41a3-985d-9822ba4a3183.png
+wwwroot\Uploads\Produtos\aba537fe-e90a-4085-b0ab-0dd23b0bc6ac_claude.png
+wwwroot\Uploads\Produtos\af68945d-70d0-49fa-a5da-ae320e886a55_Sem Título-3.png
+wwwroot\Uploads\Produtos\b0129d3c-080e-4254-9e20-96f9abf0292d_Sorvete de menta.jpg
+wwwroot\Uploads\Produtos\b4465ef5-c0fb-4d4f-8c0d-47d443a711c8_prato de comida.jpg
+wwwroot\Uploads\Produtos\b52c5251-a3e1-4efc-834a-80fc6a9ce9a0.png
+wwwroot\Uploads\Produtos\b81f62ed-5c78-4b0b-92ea-0bfd85973bde.png
+wwwroot\Uploads\Produtos\b92fb860-54e6-476b-8ee8-95962ea3a943_pdf.jpg
+wwwroot\Uploads\Produtos\bb514117-3943-4a1a-89a8-021f38814f31_pizza.jpg
+wwwroot\Uploads\Produtos\be490828-1c8e-4af2-96ae-6a8d654d39f2_sorvete.jpg
+wwwroot\Uploads\Produtos\c3a323bb-2163-4f5f-8254-870599aa03ac_PROCESSOU.png
+wwwroot\Uploads\Produtos\c458b8ee-cfda-40f8-aec3-2bf7d4e5c21d_Sorvete de menta.jpg
+wwwroot\Uploads\Produtos\c58d908c-9384-43b0-9544-05028d8f9d0e_prato de comida.jpg
+wwwroot\Uploads\Produtos\cfbdcb8d-47c3-4130-a6db-0efff2a37b4d_pdf.jpg
+wwwroot\Uploads\Produtos\cffd14b8-33ff-4e14-9725-a449a5606e42_refrigerante.jpg
+wwwroot\Uploads\Produtos\d066b9a3-9f9b-4e50-9c5b-64b2d5e27a3e_sistema_gestao_diagrama_final.png
+wwwroot\Uploads\Produtos\d2046746-29fe-4287-b6cc-ae6f52164045_foto 1.webp
+wwwroot\Uploads\Produtos\d2c106eb-6b69-4eb4-928f-d235bd12c20d_girafa.png
+wwwroot\Uploads\Produtos\d55104a8-807c-4456-ad84-bfd6b49c6b62_sorvete.jpg
+wwwroot\Uploads\Produtos\d5e043c9-a919-41c0-ae91-4906279e60e2_claude.png
+wwwroot\Uploads\Produtos\daa6405a-f84e-4ca0-9ddd-bf85598cf901_leao.png
+wwwroot\Uploads\Produtos\df9d9959-e371-4030-8649-379335e201de_macarrao.jpg
+wwwroot\Uploads\Produtos\e198a8a4-6bb6-4905-9faf-7bf6dd1bc1e6_metricas.png
+wwwroot\Uploads\Produtos\e3f9c9af-803e-4978-b8b9-6aac5b34e730_img2.jpg
+wwwroot\Uploads\Produtos\e67b937a-d5f0-4f77-927b-8c40a8ebda07.jpg
+wwwroot\Uploads\Produtos\ebeaf7d9-1b64-4f03-8e57-b15e86d47dce_Acai.jpg
+wwwroot\Uploads\Produtos\ef1c0f15-589d-4b7e-b089-df04ffcaca02.jpg
+wwwroot\Uploads\Produtos\f547fe14-045e-4615-94ba-718e37447099_pizza.jpg
+wwwroot\Uploads\Produtos\f5f40280-5f63-49f8-baa4-bf245dd0e944_texto.jfif
+wwwroot\Uploads\Produtos\fec72f40-9236-403e-a405-cf4e713eaa9e_Sorvete de menta.jpg

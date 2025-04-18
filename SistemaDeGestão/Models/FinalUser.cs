@@ -1,4 +1,6 @@
-﻿namespace SistemaDeGestão.Models
+﻿using System.Text.Json.Serialization;
+
+namespace SistemaDeGestão.Models
 {
     public class FinalUser
     {
@@ -6,6 +8,7 @@
         public string Telefone { get; set; }
         public string Nome { get; set; }
         public DateTime DataCriacao { get; set; }
+        [JsonIgnore]
         public ICollection<Pedido>? Pedidos { get; set; }
 
         public static implicit operator string(FinalUser v)

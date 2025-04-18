@@ -22,7 +22,8 @@ const OrderDashboard = () => {
             'pedido-recebido': 0,    // NOVO
             'pedido-em-producao': 1, // EM_PRODUCAO
             'saiu-para-entrega': 2,  // EM_ENTREGA
-            'completo': 3            // COMPLETO
+            'completo': 3,           // COMPLETO
+            'Cancelado': 4            // CANCELADO
         };
 
         const numericStatus = statusMap[newStatus];

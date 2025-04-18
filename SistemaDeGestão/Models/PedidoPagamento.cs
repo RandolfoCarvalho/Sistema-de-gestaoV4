@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace SistemaDeGestão.Models
 {
@@ -20,6 +21,8 @@ namespace SistemaDeGestão.Models
 
         public string FormaPagamento { get; set; }
         public bool PagamentoAprovado { get; set; }
+        [JsonIgnore]
+        public Pedido Pedido { get; set; }
         public DateTime? DataAprovacao { get; set; }
 
         public bool EhValido()

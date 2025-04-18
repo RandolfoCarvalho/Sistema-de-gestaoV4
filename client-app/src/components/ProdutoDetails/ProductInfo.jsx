@@ -1,14 +1,22 @@
 ﻿import React from 'react';
 
 const ProductInfo = ({ name, price, description }) => {
+    // Função para formatar o preço em reais brasileiros
+    const formatPrice = (value) => {
+        return value.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        });
+    };
+
     return (
-        <>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">{name}</h2>
-            <p className="text-2xl font-bold text-blue-600 mb-4">
-                R$ {price.toFixed(2)}
-            </p>
-            <p className="text-gray-600 mb-6 leading-relaxed">{description}</p>
-        </>
+        <div className="mb-4">
+            <h1 className="text-xl font-bold text-gray-900">{name}</h1>
+            <p className="text-lg font-semibold text-green-500 mt-1">{formatPrice(price)}</p>
+            {description && (
+                <p className="text-gray-600 text-sm mt-3 leading-relaxed">{description}</p>
+            )}
+        </div>
     );
 };
 

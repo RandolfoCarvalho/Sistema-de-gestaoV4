@@ -6,7 +6,8 @@ const useOrders = () => {
         'pedido-recebido': [],
         'pedido-em-producao': [],
         'saiu-para-entrega': [],
-        'completo': []
+        'completo': [],
+        'Cancelado': []
     });
 
     const processOrders = useCallback((data) => {
@@ -14,14 +15,16 @@ const useOrders = () => {
             'pedido-recebido': [],
             'pedido-em-producao': [],
             'saiu-para-entrega': [],
-            'completo': []
+            'completo': [],
+            'Cancelado' : []
         };
     
         const processedOrders = {
             'pedido-recebido': [],
             'pedido-em-producao': [],
             'saiu-para-entrega': [],
-            'completo': []
+            'completo': [],
+            'Cancelado': []
         };
         
         data.forEach(order => {
@@ -34,6 +37,7 @@ const useOrders = () => {
                     case "EM_PRODUCAO": statusValue = 1; break;
                     case "EM_ENTREGA": statusValue = 2; break;
                     case "COMPLETO": statusValue = 3; break;
+                    case "CANCELADO": statusValue = 4; break;
                 }
             }
             //mapeia valores numeros para o front end
@@ -49,6 +53,9 @@ const useOrders = () => {
                     break;
                 case 3: 
                     statusKey = 'completo';
+                    break;
+                case 4: 
+                    statusKey = 'Cancelado';
                     break;
                 default:
                     console.warn(`Status desconhecido: ${order.status} (${statusValue})`);

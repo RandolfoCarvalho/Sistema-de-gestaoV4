@@ -27,7 +27,7 @@ const Checkout = () => {
         isSubmitting,
         preparePedidoDTO
     } = useCheckout(cart, cartTotal, currentStore, clearCart, navigate);
-
+    console.log("Carrinho itens:" + cart)
     async function VerificarLoja() {
         const navigate = useNavigate();
 

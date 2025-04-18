@@ -753,6 +753,22 @@
   },
   {
     "ContainingType": "SistemaDeGest\u00E3o.Controllers.MercadoPagoController",
+    "Method": "GetTransactionId",
+    "RelativePath": "api/1.0/MercadoPago/buscarTransactionId/{id}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDeGest\u00E3o.Controllers.MercadoPagoController",
     "Method": "ReceiveMercadoPagoWebhook",
     "RelativePath": "api/1.0/MercadoPago/notificacaoMercadoPago",
     "HttpMethod": "POST",
@@ -983,6 +999,22 @@
       {
         "Name": "restauranteId",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.PedidoController",
+    "Method": "RegistrarCancelamento",
+    "RelativePath": "api/1.0/Pedido/registrarCancelamento",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "SistemaDeGest\u00E3o.Models.DTOs.Resquests.CancelamentoPedidoRequest",
         "IsRequired": true
       }
     ],

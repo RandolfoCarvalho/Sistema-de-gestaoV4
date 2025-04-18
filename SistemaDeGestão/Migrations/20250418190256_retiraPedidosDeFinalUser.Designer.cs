@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaDeGestão.Data;
 
@@ -11,9 +12,11 @@ using SistemaDeGestão.Data;
 namespace SistemaDeGestão.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    partial class DataBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20250418190256_retiraPedidosDeFinalUser")]
+    partial class retiraPedidosDeFinalUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -929,9 +932,8 @@ namespace SistemaDeGestão.Migrations
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SistemaDeGestão.Models.FinalUser", "FinalUser")
-                        .WithMany("Pedidos")
-                        .HasForeignKey("FinalUserId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .WithMany()
+                        .HasForeignKey("FinalUserId");
 
                     b.HasOne("SistemaDeGestão.Models.PedidoPagamento", "Pagamento")
                         .WithOne("Pedido")
@@ -1086,11 +1088,6 @@ namespace SistemaDeGestão.Migrations
             modelBuilder.Entity("SistemaDeGestão.Models.Complemento", b =>
                 {
                     b.Navigation("Produtos");
-                });
-
-            modelBuilder.Entity("SistemaDeGestão.Models.FinalUser", b =>
-                {
-                    b.Navigation("Pedidos");
                 });
 
             modelBuilder.Entity("SistemaDeGestão.Models.GrupoAdicional", b =>

@@ -39,6 +39,11 @@ namespace SistemaDeGestão.Models
         public virtual Restaurante Restaurante { get; set; }
 
         // Detalhes de pagamento
+        // FK para pagamento
+        public int? PagamentoId { get; set; }
+
+        [ForeignKey("PagamentoId")]
+
         public PedidoPagamento Pagamento { get; set; }
 
         // Itens do pedido

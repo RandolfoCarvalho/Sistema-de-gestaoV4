@@ -18,6 +18,7 @@ namespace SistemaDeGestão.Data
         public DbSet<ProdutoComplemento> ProdutoComplementos { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<PedidoPendente> PedidosPendentes { get; set; }
+        public DbSet<PedidoCancelado> PedidosCancelados { get; set; }
         public DbSet<ItemPedido> ItensPedido { get; set; }
         public DbSet<ProdutoAdicional> ProdutoAdicionais { get; set; }
         public DbSet<ProdutoGrupoComplemento> ProdutosGruposComplementos { get; set; }
@@ -35,6 +36,15 @@ namespace SistemaDeGestão.Data
                 .HasOne(r => r.CredencialMercadoPago)
                 .WithOne(c => c.Restaurante)
                 .HasForeignKey<RestauranteCredencialMercadoPago>(c => c.RestauranteId);
+
+
+            //Pedido para -> pagamento
+
+            modelBuilder.Entity<Pedido>()
+                .HasOne(p => p.Pagamento)
+                .WithOne(pag => pag.Pedido)
+                .HasForeignKey<Pedido>(p => p.PagamentoId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             //Pedido para -> endereco de entrega // relacao
 
@@ -162,7 +172,7 @@ namespace SistemaDeGestão.Data
             .HasOne(p => p.FinalUser)
             .WithMany(f => f.Pedidos)
             .HasForeignKey(p => p.FinalUserId)
-            .IsRequired(false)  // Permite que FinalUserId seja null
+            .IsRequired(false) 
             .OnDelete(DeleteBehavior.NoAction);
 
             // Configurar as propriedades do Pedido

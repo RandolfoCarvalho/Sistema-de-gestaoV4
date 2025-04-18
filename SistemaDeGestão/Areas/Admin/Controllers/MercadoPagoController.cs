@@ -72,8 +72,7 @@ namespace SistemaDeGestão.Controllers
         [HttpPost("processaReembolso")]
         public async Task<IActionResult> ProcessaReembolso([FromBody] ReembolsoRequest request)
         { 
-            var restauranteId = 1;
-            var accessToken = await BuscaCredenciaisAsync(restauranteId);
+            var accessToken = await BuscaCredenciaisAsync(request.RestauranteId);
             var resultado = await _paymentService.ProcessarReembolso(request, accessToken);
             return Ok(resultado);
         }
@@ -138,6 +137,21 @@ namespace SistemaDeGestão.Controllers
                 return StatusCode(500, $"Erro ao processar notificação: {ex.Message}");
             }
         }
+
+        [HttpPost]
+        [Route("buscarTransactionId/{id}")]
+        public async Task<IActionResult> GetTransactionId(int id)
+        {
+            var pedido = await _context.Pedidos
+                .Include(p => p.Pagamento)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (pedido == null || pedido.Pagamento == null)
+                return NotFound("Pedido ou pagamento não encontrado");
+
+            return Ok(pedido);
+        }
+
         private async Task<string> BuscaCredenciaisAsync(int restauranteId)
         {
             var credencial = await _context.RestauranteCredenciaisMercadoPago
@@ -184,6 +198,7 @@ namespace SistemaDeGestão.Controllers
     {
         public long TransactionId { get; set; }
         public decimal? Amount { get; set; }
+        public int RestauranteId { get; set; }
     }
     public class PagamentoRequest
     {

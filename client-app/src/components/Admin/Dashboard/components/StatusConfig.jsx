@@ -1,5 +1,5 @@
 ﻿import { MdError as AlertCircle, MdAutorenew as ProcessIcon, MdCheckCircle as CheckCircleIcon } from 'react-icons/md';
-import { Package, Clock, Truck, CheckCircle } from 'lucide-react';
+import { Package, Clock, Truck, CheckCircle, XIcon } from 'lucide-react';
 
 
 const statusConfig = {
@@ -34,6 +34,14 @@ const statusConfig = {
         bg: 'bg-green-50',
         border: 'border-green-200',
         headerBg: 'bg-gradient-to-r from-green-500 to-green-600'
+    },
+    'Cancelado': {
+        title: 'Cancelados',
+        icon: XIcon,
+        color: 'text-red-600',
+        bg: 'bg-red-50',
+        border: 'border-red-200',
+        headerBg: 'bg-gradient-to-r from-red-500 to-red-600'
     }
 };
 

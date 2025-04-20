@@ -3,6 +3,7 @@ C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Release\net8.
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Release\net8.0\PubTmp\Out\appsettings.json
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Release\net8.0\PubTmp\Out\package-lock.json
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Release\net8.0\PubTmp\Out\package.json
+C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Release\net8.0\PubTmp\Out\publish\SistemaDeGestão.runtimeconfig.json
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Release\net8.0\PubTmp\Out\wwwroot\js\Auth\auth.js
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Release\net8.0\PubTmp\Out\SistemaDeGestão.dll
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Release\net8.0\PubTmp\Out\SistemaDeGestão.runtimeconfig.json

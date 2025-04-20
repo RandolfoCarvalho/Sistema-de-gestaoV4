@@ -296,6 +296,6 @@ C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestao\obj\Release\net8.0
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestao\obj\Release\net8.0\linux-x64\SistemaDeGestão.pdb
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestao\obj\Release\net8.0\linux-x64\SistemaDeGestão.genruntimeconfig.cache
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestao\obj\Release\net8.0\linux-x64\ref\SistemaDeGestão.dll
+C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Release\net8.0\linux-x64\publish\SistemaDeGestão.runtimeconfig.json
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Release\net8.0\linux-x64\publish\appsettings.json
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Release\net8.0\linux-x64\publish\SistemaDeGestão.deps.json
-C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Release\net8.0\linux-x64\publish\SistemaDeGestão.runtimeconfig.json

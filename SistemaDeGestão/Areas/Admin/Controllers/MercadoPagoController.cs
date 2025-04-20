@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Core;
 using MercadoPago.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -77,7 +78,18 @@ namespace SistemaDeGestão.Controllers
             return Ok(resultado);
         }
 
-        [HttpPost("notificacaoMercadoPago")]
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("testewebhook")]
+
+        public IActionResult TesteWebhook()
+        {
+            return Ok("Webhook recebido com sucesso randolfo irado");
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("notificacaoMercadoPago")]
         public async Task<IActionResult> ReceiveMercadoPagoWebhook([FromBody] JsonElement notification)
         {
             try

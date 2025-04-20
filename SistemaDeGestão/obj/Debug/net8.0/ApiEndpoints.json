@@ -832,6 +832,16 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SistemaDeGest\u00E3o.Controllers.MercadoPagoController",
+    "Method": "TesteWebhook",
+    "RelativePath": "api/1.0/MercadoPago/testewebhook",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaDeGest\u00E3o.Areas.Admin.Controllers.PedidoController",
     "Method": "AtualizarObservacoes",
     "RelativePath": "api/1.0/Pedido/AtualizarObservacoes/{id}",

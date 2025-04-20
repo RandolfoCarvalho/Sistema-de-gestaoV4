@@ -41,7 +41,7 @@ namespace SistemaDeGestão.Services
                     transaction_amount = pagamento.Amount,
                     payment_method_id = "pix",
                     description = "Pedido via PIX",
-                    notification_url = "https://b1ea-159-65-231-169.ngrok-free.app/api/1.0/MercadoPago/notificacaoMercadoPago",
+                    notification_url = "https://api.fomedique.com.br/api/1.0/MercadoPago/notificacaoMercadoPago",
                     payer = new
                     {
                         email = pagamento.PayerEmail,
@@ -238,7 +238,7 @@ namespace SistemaDeGestão.Services
                     PaymentMethodId = paymentData.PaymentMethodId,
                     Token = cardToken,
                     ExternalReference = "1", // Usar um ID único do pedido do seu sistema
-                    NotificationUrl = "https://b1ea-159-65-231-169.ngrok-free.app/api/1.0/MercadoPago/notificacaoMercadoPago",
+                    NotificationUrl = "https://api.fomedique.com.br/api/1.0/MercadoPago/notificacaoMercadoPago",
                     Metadata = metadata,
                     Payer = paymentPayerRequest,
                     StatementDescriptor = statementDescriptor,

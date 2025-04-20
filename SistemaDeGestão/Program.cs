@@ -131,18 +131,14 @@ builder.Services.AddControllers()
     options.LoginPath = "/Auth/Login";  // Caminho para o redirecionamento de login
 }); */
 
-//Usar local
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowSpecificOrigin",
-        builder =>
-        {
-            builder
-                .SetIsOriginAllowed(_ => true) 
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials();
-        });
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowSpecificOrigin", builder => {
+        builder
+            .WithOrigins("https://fomedique.com.br", "https://sistema-de-gestao-v3.vercel.app")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
 });
 
 //Usar em prod
@@ -198,9 +194,8 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v
 app.UseDeveloperExceptionPage();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseCors("AllowFrontend");
-app.UseCors("AllowSpecificOrigin");
 app.UseRouting();
+app.UseCors("AllowSpecificOrigin");
 app.UseStaticFiles();
 app.UseCors();
 app.UseAuthentication(); // Adicione isso

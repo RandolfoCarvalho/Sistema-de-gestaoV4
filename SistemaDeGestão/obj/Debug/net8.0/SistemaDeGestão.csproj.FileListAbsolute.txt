@@ -498,7 +498,6 @@ C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.SistemaDeGestão.props
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.SistemaDeGestão.props
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\staticwebassets.pack.json
-C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\SistemaD.82700C82.Up2Date
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\SistemaDeGestão.dll
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\obj\Debug\net8.0\refint\SistemaDeGestão.dll
@@ -666,6 +665,4 @@ C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestao\obj\Debug\net8.0\r
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestao\obj\Debug\net8.0\SistemaDeGestão.pdb
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestao\obj\Debug\net8.0\SistemaDeGestão.genruntimeconfig.cache
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestao\obj\Debug\net8.0\ref\SistemaDeGestão.dll
-C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\publish\appsettings.json
-C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\publish\SistemaDeGestão.deps.json
 C:\Users\randolfo\Documents\Sistema-de-Gestao\SistemaDeGestão\bin\Debug\net8.0\publish\SistemaDeGestão.runtimeconfig.json

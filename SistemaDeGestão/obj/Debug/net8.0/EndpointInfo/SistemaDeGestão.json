@@ -1396,6 +1396,18 @@
         }
       }
     },
+    "/api/1.0/MercadoPago/testewebhook": {
+      "get": {
+        "tags": [
+          "MercadoPago"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/1.0/MercadoPago/notificacaoMercadoPago": {
       "post": {
         "tags": [

@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Attach to Remote Process",
+        "type": "coreclr",  // Para C#/.NET
+        "request": "attach",
+        "processId": "${command:pickProcess}", // Isso permite selecionar o processo remoto
+        "pipeTransport": {
+          "pipeProgram": "ssh",
+          "pipeArgs": ["user@159.65.231.169", "-T"], // Substitua "user" e "ip-da-vps" com seu SSH
+          "debuggerPath": "/root/.vsdbg/vsdbg"  // Altere para o caminho correto na VPS,  // Caminho do debugger remoto, normalmente localizado na VPS
+        },
+        "sourceFileMap": {
+          "/var/www/sistemadegestao/publish": "${workspaceFolder}" // Mapeamento de caminhos entre a VPS e seu código local
+        }
+      }
+    ]
+  }
+  

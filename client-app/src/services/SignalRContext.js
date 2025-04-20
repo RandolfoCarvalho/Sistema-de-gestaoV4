@@ -10,8 +10,8 @@ export const SignalRProvider = ({ children }) => {
 
     useEffect(() => {
         const newConnection = new signalR.HubConnectionBuilder()
-            //.withUrl("http://localhost:5049/orderHub")
-            .withUrl("https://api.fomedique.com.br/orderHub")
+            .withUrl("http://localhost:5000/orderHub")
+            //.withUrl("https://api.fomedique.com.br/orderHub")
             .withAutomaticReconnect()
             .configureLogging(signalR.LogLevel.Information)
             .build();

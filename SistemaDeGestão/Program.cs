@@ -137,7 +137,9 @@ builder.Services.AddCors(options => {
             .WithOrigins("https://fomedique.com.br", "https://sistema-de-gestao-v3.vercel.app")
             .AllowAnyMethod()
             .AllowAnyHeader()
-            .AllowCredentials();
+            .AllowCredentials()
+            .SetIsOriginAllowed(_ => true) // Para testes - remova em produção!
+            .WithExposedHeaders("Content-Disposition"); // Se necessário
     });
 });
 

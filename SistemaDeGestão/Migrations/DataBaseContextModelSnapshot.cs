@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaDeGestão.Data;
 
@@ -18,9 +17,7 @@ namespace SistemaDeGestão.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.8")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("SistemaDeGestão.Models.Adicional", b =>
                 {
@@ -28,18 +25,16 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<bool>("Ativo")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("DataCadastro")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("varchar(500)");
 
                     b.Property<int?>("EstoqueAtual")
                         .HasColumnType("int");
@@ -53,7 +48,7 @@ namespace SistemaDeGestão.Migrations
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<decimal>("PrecoBase")
                         .HasColumnType("decimal(18,2)");
@@ -71,23 +66,16 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("RestauranteId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RestauranteId1")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RestauranteId");
-
-                    b.HasIndex("RestauranteId1");
 
                     b.ToTable("Categorias");
                 });
@@ -98,18 +86,16 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<bool>("Ativo")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("DataCadastro")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("varchar(500)");
 
                     b.Property<int?>("EstoqueAtual")
                         .HasColumnType("int");
@@ -123,7 +109,7 @@ namespace SistemaDeGestão.Migrations
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(18,2)");
@@ -141,28 +127,26 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<bool>("Domingo")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("Quarta")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("Quinta")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("Sabado")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("Segunda")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("Sexta")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("Terca")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 
@@ -175,46 +159,44 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("Bairro")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("CNPJ")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("CPF")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Cep")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Cidade")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("DiasFuncionamentoId")
                         .HasColumnType("int");
 
                     b.Property<string>("Endereco")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Estado")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<TimeSpan>("HorarioAbertura")
-                        .HasColumnType("time");
+                        .HasColumnType("time(6)");
 
                     b.Property<TimeSpan>("HorarioFechamento")
-                        .HasColumnType("time");
+                        .HasColumnType("time(6)");
 
                     b.Property<string>("NomeFantasia")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Observacoes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("RazaoSocial")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("RestauranteId")
                         .HasColumnType("int");
@@ -235,31 +217,29 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("Bairro")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("CEP")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Cidade")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Complemento")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Logradouro")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Numero")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -270,21 +250,19 @@ namespace SistemaDeGestão.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(450)
+                        .HasMaxLength(255)
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Telefone")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -297,10 +275,8 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<bool>("Ativo")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int?>("LimiteSelecao")
                         .HasColumnType("int");
@@ -308,7 +284,7 @@ namespace SistemaDeGestão.Migrations
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int>("RestauranteId")
                         .HasColumnType("int");
@@ -326,22 +302,20 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<bool>("Ativo")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<bool>("Obrigatorio")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int?>("QuantidadeMaxima")
                         .HasColumnType("int");
@@ -365,15 +339,13 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("NomeProduto")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Observacoes")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("PedidoId")
                         .HasColumnType("int");
@@ -408,14 +380,12 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("ItemPedidoId")
                         .HasColumnType("int");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("PrecoUnitario")
                         .HasColumnType("decimal(18,2)");
@@ -442,39 +412,37 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<DateTime>("DataPedido")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("EnderecoEntregaId")
                         .HasColumnType("int");
 
                     b.Property<int?>("FinalUserId")
-                        .HasMaxLength(450)
+                        .HasMaxLength(255)
                         .HasColumnType("int");
 
                     b.Property<string>("FinalUserName")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("FinalUserTelefone")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("NomeDaLoja")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Numero")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Observacoes")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int?>("PagamentoId")
                         .HasColumnType("int");
@@ -492,8 +460,7 @@ namespace SistemaDeGestão.Migrations
                     b.HasIndex("FinalUserId");
 
                     b.HasIndex("PagamentoId")
-                        .IsUnique()
-                        .HasFilter("[PagamentoId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("RestauranteId");
 
@@ -506,34 +473,32 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("CodigoReembolso")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("DataCancelamento")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("EstaReembolsado")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("FinalUserId")
                         .HasColumnType("int");
 
                     b.Property<string>("MotivoCancelamento")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("PedidoId")
                         .HasColumnType("int");
 
                     b.Property<string>("TransacaoReembolsoId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("ValorReembolsado")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.HasKey("Id");
 
@@ -550,20 +515,18 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<DateTime?>("DataAprovacao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("Desconto")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("FormaPagamento")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("PagamentoAprovado")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<decimal>("SubTotal")
                         .HasColumnType("decimal(18,2)");
@@ -573,7 +536,7 @@ namespace SistemaDeGestão.Migrations
 
                     b.Property<string>("TransactionId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("ValorTotal")
                         .HasColumnType("decimal(18,2)");
@@ -589,18 +552,16 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("PedidoJson")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("TransactionId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -613,20 +574,18 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<bool>("Ativo")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("CategoriaId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DataCadastro")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Descricao")
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("varchar(500)");
 
                     b.Property<int>("EstoqueAtual")
                         .HasColumnType("int");
@@ -635,7 +594,7 @@ namespace SistemaDeGestão.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ImagemPrincipalUrl")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("LojaId")
                         .HasColumnType("int");
@@ -643,7 +602,7 @@ namespace SistemaDeGestão.Migrations
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<decimal>("PrecoCusto")
                         .HasColumnType("decimal(18,2)");
@@ -652,7 +611,7 @@ namespace SistemaDeGestão.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("UnidadeMedida")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -678,7 +637,7 @@ namespace SistemaDeGestão.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("PrecoAdicional")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.HasKey("ProdutoId", "AdicionalId");
 
@@ -702,7 +661,7 @@ namespace SistemaDeGestão.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("Obrigatorio")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("ProdutoId", "ComplementoId");
 
@@ -747,31 +706,29 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("EmailAddress")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("NomeDaLoja")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("refreshToken")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("refreshTokenExpiryTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -784,29 +741,27 @@ namespace SistemaDeGestão.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("AccessToken")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("Ativo")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ClientSecret")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("DataCadastro")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("PublicKey")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("RestauranteId")
                         .HasColumnType("int");
@@ -823,20 +778,17 @@ namespace SistemaDeGestão.Migrations
                 {
                     b.HasOne("SistemaDeGestão.Models.GrupoAdicional", null)
                         .WithMany("Adicionais")
-                        .HasForeignKey("GrupoAdicionalId");
+                        .HasForeignKey("GrupoAdicionalId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("SistemaDeGestão.Models.Categoria", b =>
                 {
                     b.HasOne("SistemaDeGestão.Models.Restaurante", "Restaurante")
-                        .WithMany()
-                        .HasForeignKey("RestauranteId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("SistemaDeGestão.Models.Restaurante", null)
                         .WithMany("Categorias")
-                        .HasForeignKey("RestauranteId1");
+                        .HasForeignKey("RestauranteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Restaurante");
                 });
@@ -845,7 +797,8 @@ namespace SistemaDeGestão.Migrations
                 {
                     b.HasOne("SistemaDeGestão.Models.GrupoComplemento", "GrupoComplemento")
                         .WithMany("Complementos")
-                        .HasForeignKey("GrupoComplementoId");
+                        .HasForeignKey("GrupoComplementoId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("GrupoComplemento");
                 });
@@ -896,13 +849,13 @@ namespace SistemaDeGestão.Migrations
                     b.HasOne("SistemaDeGestão.Models.Pedido", "Pedido")
                         .WithMany("Itens")
                         .HasForeignKey("PedidoId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SistemaDeGestão.Models.Produto", "Produto")
                         .WithMany()
                         .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Pedido");
@@ -915,7 +868,7 @@ namespace SistemaDeGestão.Migrations
                     b.HasOne("SistemaDeGestão.Models.ItemPedido", "ItemPedido")
                         .WithMany("OpcoesExtras")
                         .HasForeignKey("ItemPedidoId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ItemPedido");
@@ -926,12 +879,12 @@ namespace SistemaDeGestão.Migrations
                     b.HasOne("SistemaDeGestão.Models.EnderecoEntrega", "EnderecoEntrega")
                         .WithMany()
                         .HasForeignKey("EnderecoEntregaId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SistemaDeGestão.Models.FinalUser", "FinalUser")
                         .WithMany("Pedidos")
                         .HasForeignKey("FinalUserId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SistemaDeGestão.Models.PedidoPagamento", "Pagamento")
                         .WithOne("Pedido")
@@ -941,7 +894,7 @@ namespace SistemaDeGestão.Migrations
                     b.HasOne("SistemaDeGestão.Models.Restaurante", "Restaurante")
                         .WithMany()
                         .HasForeignKey("RestauranteId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("EnderecoEntrega");
@@ -983,7 +936,7 @@ namespace SistemaDeGestão.Migrations
                     b.HasOne("SistemaDeGestão.Models.Restaurante", "Restaurante")
                         .WithMany("Produtos")
                         .HasForeignKey("LojaId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Categoria");
@@ -996,13 +949,13 @@ namespace SistemaDeGestão.Migrations
                     b.HasOne("SistemaDeGestão.Models.Adicional", "Adicional")
                         .WithMany("Produtos")
                         .HasForeignKey("AdicionalId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SistemaDeGestão.Models.Produto", "Produto")
                         .WithMany("Adicionais")
                         .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Adicional");
@@ -1015,13 +968,13 @@ namespace SistemaDeGestão.Migrations
                     b.HasOne("SistemaDeGestão.Models.Complemento", "Complemento")
                         .WithMany("Produtos")
                         .HasForeignKey("ComplementoId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SistemaDeGestão.Models.Produto", "Produto")
                         .WithMany("Complementos")
                         .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Complemento");
@@ -1034,13 +987,13 @@ namespace SistemaDeGestão.Migrations
                     b.HasOne("SistemaDeGestão.Models.GrupoAdicional", "GrupoAdicional")
                         .WithMany("ProdutosGruposAdicionais")
                         .HasForeignKey("GrupoAdicionalId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SistemaDeGestão.Models.Produto", "Produto")
                         .WithMany("ProdutosGruposAdicionais")
                         .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("GrupoAdicional");
@@ -1053,13 +1006,13 @@ namespace SistemaDeGestão.Migrations
                     b.HasOne("SistemaDeGestão.Models.GrupoComplemento", "GrupoComplemento")
                         .WithMany("ProdutosGruposComplementos")
                         .HasForeignKey("GrupoComplementoId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SistemaDeGestão.Models.Produto", "Produto")
                         .WithMany("ProdutosGruposComplementos")
                         .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("GrupoComplemento");

@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using SistemaDeGestão.Migrations;
 
 namespace SistemaDeGestão.Services
 {

@@ -28,15 +28,15 @@ builder.Services.AddControllersWithViews();
 //db connection 
 
 //Mysql Prod
-/*var connection = builder.Configuration["ConnectionStrings:DefaultConnection"];
+var connection = builder.Configuration["ConnectionStrings:DefaultConnection"];
 builder.Services.AddDbContext<DataBaseContext>(options => options.UseMySql(connection,
     new MySqlServerVersion(
-        new Version(8, 0, 0)))); */
+        new Version(8, 0, 0)))); 
 
 //sqlServer Prod
-var connection = builder.Configuration["ConnectionStrings:DefaultConnection"];
+/*var connection = builder.Configuration["ConnectionStrings:DefaultConnection"];
 builder.Services.AddDbContext<DataBaseContext>(options =>
-    options.UseSqlServer(connection));
+    options.UseSqlServer(connection));*/
 
 //Seguranca
 var tokenConfigurations = new TokenConfiguration();
@@ -198,6 +198,7 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v
 app.UseDeveloperExceptionPage();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseCors("AllowFrontend");
 app.UseCors("AllowSpecificOrigin");
 app.UseRouting();
 app.UseStaticFiles();

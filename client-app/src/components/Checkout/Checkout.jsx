@@ -36,7 +36,7 @@ const Checkout = () => {
             const restauranteId = restauranteIdResponse.data;
 
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/restaurante/isLojaOpen/${restauranteId}`);
-            if (!response.data.isOpen) {
+            /*if (!response.data.isOpen) {
                 Swal.fire({
                     title: "Loja Fechada",
                     text: "A loja está fechada no momento. Por favor, volte mais tarde!",
@@ -45,7 +45,7 @@ const Checkout = () => {
                     confirmButtonColor: "#ff5733"
                 });
                 navigate(`/loja/${currentStore}`);
-            } else if (cartTotal <= 0) {
+            } else*/ if (cartTotal <= 0) {
                 Swal.fire({
                     title: "Carrinho vazio",
                     text: "Adicione produtos ao seu carrinho primeiro!",

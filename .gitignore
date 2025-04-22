@@ -1,0 +1,66 @@
+# Build results
+bin/
+obj/
+*.exe
+*.dll
+*.app
+*.log
+*.tmp
+*.pdb
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+.vscode/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Backup & temp files
+*.bak
+*.swp
+*.tmp
+*.old
+*.orig
+*.sdf
+*.dbmdl
+
+# IIS Express
+.vs/config/applicationhost.config
+
+# Rider / JetBrains IDEs
+.idea/
+
+# Copilot e AI indices
+**/CopilotIndices/
+**/FileContentIndex/
+*.db
+*.db-shm
+*.db-wal
+
+# Logs
+*.log
+Logs/
+
+# Publish output
+publish/
+Release/
+Debug/
+
+# Others
+TestResults/
+*.ncrunch*
+*.coverage
+*.coveragexml
+*.testsettings
+*.vsmdi
+*.psess
+*.vsp
+*.vspscc
+*.vssscc
+_ReSharper*/

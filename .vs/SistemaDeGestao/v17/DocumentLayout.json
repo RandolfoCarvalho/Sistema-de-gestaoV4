@@ -1,7 +1,28 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV3\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestaov3\\sistemadegest\u00E3o\\models\\complemento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|solutionrelative:sistemadegest\u00E3o\\models\\complemento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestaov3\\sistemadegest\u00E3o\\models\\diasfuncionamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|solutionrelative:sistemadegest\u00E3o\\models\\diasfuncionamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestaov3\\sistemadegest\u00E3o\\models\\empresa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|solutionrelative:sistemadegest\u00E3o\\models\\empresa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestaov3\\sistemadegest\u00E3o\\models\\enderecoentrega.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|solutionrelative:sistemadegest\u00E3o\\models\\enderecoentrega.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestaov3\\sistemadegest\u00E3o\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|solutionrelative:sistemadegest\u00E3o\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +30,76 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Complemento.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV3\\SistemaDeGest\u00E3o\\Models\\Complemento.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\Complemento.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV3\\SistemaDeGest\u00E3o\\Models\\Complemento.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\Complemento.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T19:50:36.152Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DiasFuncionamento.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV3\\SistemaDeGest\u00E3o\\Models\\DiasFuncionamento.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DiasFuncionamento.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV3\\SistemaDeGest\u00E3o\\Models\\DiasFuncionamento.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DiasFuncionamento.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T19:50:34.556Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Empresa.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV3\\SistemaDeGest\u00E3o\\Models\\Empresa.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\Empresa.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV3\\SistemaDeGest\u00E3o\\Models\\Empresa.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\Empresa.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T19:50:32.691Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "EnderecoEntrega.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV3\\SistemaDeGest\u00E3o\\Models\\EnderecoEntrega.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\EnderecoEntrega.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV3\\SistemaDeGest\u00E3o\\Models\\EnderecoEntrega.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\EnderecoEntrega.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T19:50:20.455Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV3\\SistemaDeGest\u00E3o\\Program.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Program.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV3\\SistemaDeGest\u00E3o\\Program.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Program.cs",
+              "ViewState": "AgIAAMYAAAAAAAAAAAAAANIAAABJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T19:46:43.113Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",

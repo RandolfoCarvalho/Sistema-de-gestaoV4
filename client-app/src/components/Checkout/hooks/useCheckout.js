@@ -7,7 +7,7 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
         FinalUserName: 'Randolfo',
         FinalUserTelefone: localStorage.getItem("FinalUserTelefone"),
         FinalUserId: localStorage.getItem('userId') || null,
-        RestauranteId: localStorage.getItem('restauranteId') || 4,
+        RestauranteId: localStorage.getItem('restauranteId') || 4, //todo mudar para o id do restaurante selecionado
         observacoes: '',
         endereco: {
             Logradouro: '',

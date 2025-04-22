@@ -7,7 +7,7 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
         FinalUserName: 'Randolfo',
         FinalUserTelefone: localStorage.getItem("FinalUserTelefone"),
         FinalUserId: localStorage.getItem('userId') || null,
-        RestauranteId: localStorage.getItem('restauranteId') || 1,
+        RestauranteId: localStorage.getItem('restauranteId') || 4,
         observacoes: '',
         endereco: {
             Logradouro: '',

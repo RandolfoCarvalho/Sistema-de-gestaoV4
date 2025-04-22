@@ -1,0 +1,30 @@
+services:
+  webapp:
+    build:
+      context: ./SistemaDeGestão
+    ports:
+      - "5000:80"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=server=mysql-container;port=3306;database=db_lai;user=root;password=root;
+      - TokenConfigurations__Secret=A_LONG_RANDOM_SECRET_STRING_BASE64_ENCODED==
+      - TokenConfigurations__Issuer=ExampleIssuer
+      - TokenConfigurations__Audience=ExampleAudience
+      - TokenConfigurations__Minutes=60
+      - TokenConfigurations__DaysToExpiry=7
+
+
+  db:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_lai
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:

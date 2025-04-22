@@ -1,0 +1,10 @@
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace SistemaDeGestao.Services.Interfaces
+{
+    public interface IEncryptionService
+    {
+        string Encrypt(string plainText);
+        string Decrypt(string cipherText);
+    }
+}

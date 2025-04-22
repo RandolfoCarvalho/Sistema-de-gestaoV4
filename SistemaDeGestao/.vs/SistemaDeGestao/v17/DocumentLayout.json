@@ -1,0 +1,244 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegestao\\areas\\admin\\controllers\\mercadopagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:areas\\admin\\controllers\\mercadopagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegestao\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegestao\\data\\databasecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:data\\databasecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegestao\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegestao\\sistemadegestao.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:sistemadegestao.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegestao\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegestao\\services\\encryptionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:services\\encryptionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegestao\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegestao\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegestao\\webhook_error_log.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:webhook_error_log.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegestao\\repository\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:repository\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegestao\\repository\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:repository\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MercadoPagoController.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\MercadoPagoController.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
+              "RelativeToolTip": "Areas\\Admin\\Controllers\\MercadoPagoController.cs",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAAAFIAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T01:27:02.339Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DataBaseContext.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Data\\DataBaseContext.cs",
+              "RelativeDocumentMoniker": "Data\\DataBaseContext.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Data\\DataBaseContext.cs",
+              "RelativeToolTip": "Data\\DataBaseContext.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAmwAkAAABdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T00:58:52.208Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "EncryptionService.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Services\\EncryptionService.cs",
+              "RelativeDocumentMoniker": "Services\\EncryptionService.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Services\\EncryptionService.cs",
+              "RelativeToolTip": "Services\\EncryptionService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T19:23:27.682Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Dockerfile",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Dockerfile",
+              "RelativeDocumentMoniker": "Dockerfile",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Dockerfile",
+              "RelativeToolTip": "Dockerfile",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-04-21T18:43:36.222Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "package.json",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\package.json",
+              "RelativeDocumentMoniker": "package.json",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\package.json",
+              "RelativeToolTip": "package.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-21T17:49:37.669Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Properties\\launchSettings.json",
+              "RelativeToolTip": "Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-21T17:49:32.356Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-21T17:42:07.233Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "webhook_error_log.txt",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\webhook_error_log.txt",
+              "RelativeDocumentMoniker": "webhook_error_log.txt",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\webhook_error_log.txt",
+              "RelativeToolTip": "webhook_error_log.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2025-04-21T17:23:12.337Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "UserRepository.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Repository\\UserRepository.cs",
+              "RelativeDocumentMoniker": "Repository\\UserRepository.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Repository\\UserRepository.cs",
+              "RelativeToolTip": "Repository\\UserRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T17:19:29.592Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "IUserRepository.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Repository\\IUserRepository.cs",
+              "RelativeDocumentMoniker": "Repository\\IUserRepository.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Repository\\IUserRepository.cs",
+              "RelativeToolTip": "Repository\\IUserRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T17:19:27.663Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAALkAAAAAAAAAAADwv9MAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T17:17:30.956Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "SistemaDeGestao.csproj",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\SistemaDeGestao.csproj",
+              "RelativeDocumentMoniker": "SistemaDeGestao.csproj",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\SistemaDeGestao.csproj",
+              "RelativeToolTip": "SistemaDeGestao.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-04-21T17:19:36.482Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 164,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{74946827-37a0-11d2-a273-00c04f8ef4ff}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

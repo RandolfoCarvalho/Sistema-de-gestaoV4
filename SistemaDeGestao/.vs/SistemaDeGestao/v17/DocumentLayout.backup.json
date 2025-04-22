@@ -7,6 +7,14 @@
       "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegestao\\areas\\admin\\controllers\\mercadopagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:areas\\admin\\controllers\\mercadopagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegestao\\data\\databasecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:data\\databasecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestao\\sistemadegestao\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B7073E6C-2FFB-2C9D-69BF-27B19D9AB740}|SistemaDeGestao.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -50,19 +58,41 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MercadoPagoController.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\MercadoPagoController.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
+              "RelativeToolTip": "Areas\\Admin\\Controllers\\MercadoPagoController.cs",
+              "ViewState": "AgIAAO8AAAAAAAAAAAAAACQAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T01:27:02.339Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
+              "Title": "DataBaseContext.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Data\\DataBaseContext.cs",
+              "RelativeDocumentMoniker": "Data\\DataBaseContext.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Data\\DataBaseContext.cs",
+              "RelativeToolTip": "Data\\DataBaseContext.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAmwAkAAABdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T00:58:52.208Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "EncryptionService.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Services\\EncryptionService.cs",
               "RelativeDocumentMoniker": "Services\\EncryptionService.cs",
@@ -74,7 +104,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Dockerfile",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Dockerfile",
               "RelativeDocumentMoniker": "Dockerfile",
@@ -82,12 +112,11 @@
               "RelativeToolTip": "Dockerfile",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-04-21T18:43:36.222Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-21T18:43:36.222Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "package.json",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\package.json",
               "RelativeDocumentMoniker": "package.json",
@@ -99,7 +128,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "Properties\\launchSettings.json",
@@ -117,14 +146,14 @@
               "RelativeDocumentMoniker": "appsettings.json",
               "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\appsettings.json",
               "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAPAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-04-21T17:42:07.233Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "webhook_error_log.txt",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\webhook_error_log.txt",
               "RelativeDocumentMoniker": "webhook_error_log.txt",
@@ -136,7 +165,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "UserRepository.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Repository\\UserRepository.cs",
               "RelativeDocumentMoniker": "Repository\\UserRepository.cs",
@@ -148,7 +177,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "IUserRepository.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Repository\\IUserRepository.cs",
               "RelativeDocumentMoniker": "Repository\\IUserRepository.cs",
@@ -160,7 +189,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -168,12 +197,11 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAALkAAAAAAAAAAADwv9MAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-21T17:17:30.956Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-21T17:17:30.956Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "SistemaDeGestao.csproj",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-Gestao\\SistemaDeGestao\\SistemaDeGestao.csproj",
               "RelativeDocumentMoniker": "SistemaDeGestao.csproj",
@@ -181,8 +209,11 @@
               "RelativeToolTip": "SistemaDeGestao.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-04-21T17:19:36.482Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-21T17:19:36.482Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             }
           ]
         },

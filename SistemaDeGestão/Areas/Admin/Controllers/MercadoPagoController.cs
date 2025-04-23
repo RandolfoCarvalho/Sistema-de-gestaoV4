@@ -89,89 +89,90 @@ namespace SistemaDeGestao.Controllers
             return Ok("Webhook recebido com sucesso randolfo irado");
         }
 
-        [AllowAnonymous]
         [HttpPost]
         [Route("notificacaoMercadoPago")]
-        public async Task<IActionResult> ReceiveMercadoPagoWebhook([FromBody] JsonElement notification)
+        public async Task<IActionResult> ReceiveMercadoPagoWebhook([FromBody] JsonElement notification, [FromQuery] string id, [FromQuery] string topic, [FromQuery] string type)
         {
             try
             {
-                _logger.LogInformation("Recebido webhook do Mercado Pago: {Notification}", notification.ToString());
+                string transactionId = null;
 
-                using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3));
-
-                if (!notification.TryGetProperty("data", out var data) ||
-                    !data.TryGetProperty("id", out var paymentIdElement))
+                // Tenta obter o ID das diferentes formas possíveis
+                if (!string.IsNullOrEmpty(id))
                 {
-                    _logger.LogWarning("Webhook recebido sem ID de pagamento.");
+                    // Formato ?id=109197247752&topic=payment
+                    transactionId = id;
+                }
+                else if (notification.TryGetProperty("data", out var data) && data.TryGetProperty("id", out var paymentIdElement))
+                {
+                    // Formato no corpo JSON: {"data":{"id":"109197247752"}}
+                    transactionId = paymentIdElement.GetString();
+                }
+                else if (type == "payment" && Request.Query.TryGetValue("data.id", out var dataIdValues))
+                {
+                    // Formato ?data.id=109197247752&type=payment
+                    transactionId = dataIdValues.FirstOrDefault();
+                }
+
+                if (string.IsNullOrEmpty(transactionId))
+                {
                     return BadRequest("ID de pagamento não encontrado.");
                 }
 
-                string transactionId = paymentIdElement.GetString();
-                _logger.LogInformation("Transaction ID recebido: {TransactionId}", transactionId);
+                _logger.LogInformation($"Processando notificação do Mercado Pago. TransactionId: {transactionId}");
 
-                using var command = _context.Database.GetDbConnection().CreateCommand();
-                command.CommandTimeout = 180;
+                PedidoPendente? pedidoPendente = null;
+                for (int i = 0; i < 5; i++)
+                {
+                    pedidoPendente = await _context.PedidosPendentes
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(p => p.TransactionId == transactionId);
 
-                var pedidoPendente = await _context.PedidosPendentes
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(p => p.TransactionId == transactionId, cts.Token);
+                    if (pedidoPendente != null)
+                        break;
+
+                    await Task.Delay(200); // aguarda antes de tentar de novo
+                }
 
                 if (pedidoPendente == null)
                 {
-                    _logger.LogWarning("Pedido pendente não encontrado para transactionId: {TransactionId}", transactionId);
+                    _logger.LogWarning($"Pedido pendente não encontrado para TransactionId: {transactionId}");
                     return NotFound("Pedido pendente não encontrado.");
                 }
 
+                //Dados estejam serializados como JSON e contenham o restauranteId
                 var dados = JsonSerializer.Deserialize<PedidoDTO>(pedidoPendente.PedidoJson);
                 var restauranteId = dados?.RestauranteId ?? 0;
-
-                if (restauranteId == 0)
-                {
-                    _logger.LogWarning("RestauranteId não encontrado no PedidoDTO.");
-                    return BadRequest("RestauranteId não encontrado.");
-                }
-
+                if (restauranteId == 0) return BadRequest("RestauranteId não encontrado.");
                 var accessToken = await BuscaCredenciaisAsync(restauranteId);
-
                 using var client = new HttpClient();
-                client.Timeout = TimeSpan.FromMinutes(2);
-
                 string url = $"https://api.mercadopago.com/v1/payments/{transactionId}?access_token={accessToken}";
-                _logger.LogInformation("Consultando Mercado Pago com URL: {Url}", url);
 
-                var response = await client.GetAsync(url, cts.Token);
-
+                var response = await client.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {
-                    _logger.LogError("Erro ao buscar informações de pagamento. StatusCode: {StatusCode}", response.StatusCode);
                     return StatusCode((int)response.StatusCode, "Erro ao buscar informações de pagamento.");
                 }
 
-                var responseContent = await response.Content.ReadAsStringAsync(cts.Token);
+                var responseContent = await response.Content.ReadAsStringAsync();
                 var paymentData = JsonDocument.Parse(responseContent).RootElement;
 
                 if (!paymentData.TryGetProperty("status", out var statusElement))
                 {
-                    _logger.LogWarning("Status de pagamento não encontrado na resposta.");
                     return BadRequest("Status de pagamento não encontrado.");
                 }
 
                 string status = statusElement.GetString();
-                _logger.LogInformation("Status do pagamento: {Status}", status);
-
                 if (status == "approved")
                 {
-                    _logger.LogInformation("Pagamento aprovado. Iniciando processamento.");
                     await ProcessarPagamentoAprovadoAsync(transactionId);
                 }
-
                 return Ok();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao processar webhook do Mercado Pago.");
-                return StatusCode(500, $"Erro no processamento: {ex.Message}");
+                _logger.LogError(ex, "Erro ao processar notificação do Mercado Pago");
+                return StatusCode(500, $"Erro ao processar notificação: {ex.Message}");
             }
         }
 

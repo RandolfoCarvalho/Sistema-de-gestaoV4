@@ -21,13 +21,16 @@ const Checkout = () => {
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState('dinheiro');
     const [isPaymentModalOpen, setPaymentModalOpen] = useState(false);
+    const [showFinalUserModal, setShowFinalUserModal] = useState(false);
     const {
         formData,
         setFormData,
         isSubmitting,
+        handleUserModalSuccess,
         preparePedidoDTO
     } = useCheckout(cart, cartTotal, currentStore, clearCart, navigate);
-    console.log("Carrinho itens:" + cart)
+    console.log("FinalUserTelefone:", localStorage.getItem("FinalUserTelefone"));
+    console.log("userId:", localStorage.getItem("userId"));
     async function VerificarLoja() {
         const navigate = useNavigate();
 
@@ -139,6 +142,16 @@ const Checkout = () => {
                         {isSubmitting ? "Processando..." : "Finalizar Pedido"}
                     </button>
                 </form>
+
+                {/* Caso a validacao dos campos do finalUser esteja faltando algo mostra o modal */}
+                {showFinalUserModal && (
+                    <FinalUserModal
+                        isOpen={showFinalUserModal}
+                        onClose={() => setShowFinalUserModal(false)}
+                        onSuccess={handleUserModalSuccess}
+                    />
+                )}
+
             </div>
         </div>
     );

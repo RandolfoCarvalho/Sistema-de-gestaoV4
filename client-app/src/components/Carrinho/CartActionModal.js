@@ -64,7 +64,7 @@ const CartActionModal = ({ onClose, lastAddedItem }) => {
                                 navigate('/checkout');
                                 onClose();
                             }}
-                            className="w-full flex items-center justify-center space-x-2 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                            className="w-full flex items-center justify-center space-x-2 bg-blue-600 text-white py-3 rounded-full hover:bg-blue-700 transition-colors"
                         >
                             <span>Finalizar Compra</span>
                             <ArrowRight className="w-4 h-4" />

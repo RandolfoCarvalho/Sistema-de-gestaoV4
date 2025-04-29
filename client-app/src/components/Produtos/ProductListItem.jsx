@@ -20,7 +20,7 @@ const ProductListItem = ({ produto }) => {
         </div>
       </div>
       
-      <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+      <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
         <img
           src={imagemPrincipalUrl || "/api/placeholder/100/100"}
           alt={nome}

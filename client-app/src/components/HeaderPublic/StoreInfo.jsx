@@ -55,17 +55,17 @@ const StoreInfo = () => {
                     </div>
                 </div>
             </div>
-
             {/* Exibe a mensagem de "Loja fechada" apenas se a loja estiver fechada */}
             {!lojaEstaAberta() && (
-                <div className="fixed top-28 w-full bg-red-50 z-30">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="py-2 text-center text-sm text-red-500">
-                            Loja fechada, abre às {horarioAbertura}
-                        </div>
+            <div className="fixed top-28 w-full bg-red-50 z-30">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="py-2 text-center text-sm text-red-500">
+                        Loja fechada, abre às {horarioAbertura}
                     </div>
                 </div>
-            )}
+            </div>
+        )}
+            
         </>
     );
 };

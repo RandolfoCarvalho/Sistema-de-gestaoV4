@@ -64,3 +64,41 @@ TestResults/
 *.vspscc
 *.vssscc
 _ReSharper*/
+
+
+
+
+
+# Ignore pasta do Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Cache de banco de dados temporário (tipo do Copilot ou da IDE)
+**/CopilotIndices/
+*.db
+
+# Arquivos de layout de IDE
+*.backup.json
+*.json (Se for só os que são de layout, pode ser específico tipo: DocumentLayout.json)
+
+# Outras pastas comuns de build
+bin/
+obj/
+
+# Cache do Node.js, se estiver usando React, Next.js, etc
+node_modules/
+
+# Arquivos de log
+*.log
+
+# Ambiente local
+.env
+.env.*
+
+# Ignore coisas do sistema operacional
+.DS_Store
+Thumbs.db
+

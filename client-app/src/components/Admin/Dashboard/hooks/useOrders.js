@@ -79,7 +79,6 @@ const useOrders = () => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/Restaurante/ObterRestauranteIdDoUsuarioAutenticado/`);
             const restauranteId = response.data;
-            console.log(`Restaurante ID: ${restauranteId}`);
             await connection.invoke("RequestAllOrders", restauranteId);
 
         } catch (error) {

@@ -29,8 +29,6 @@ const Checkout = () => {
         handleUserModalSuccess,
         preparePedidoDTO
     } = useCheckout(cart, cartTotal, currentStore, clearCart, navigate);
-    console.log("FinalUserTelefone:", localStorage.getItem("FinalUserTelefone"));
-    console.log("userId:", localStorage.getItem("userId"));
     async function VerificarLoja() {
         const navigate = useNavigate();
 
@@ -38,6 +36,9 @@ const Checkout = () => {
             const restauranteIdResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/restaurante/BuscarRestauranteIdPorNome/${currentStore}`);
             const restauranteId = restauranteIdResponse.data;
 
+            //seta restauranteId no localStorage
+            localStorage.setItem('restauranteId', restauranteId);
+            
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/restaurante/isLojaOpen/${restauranteId}`);
             /*if (!response.data.isOpen) {
                 Swal.fire({

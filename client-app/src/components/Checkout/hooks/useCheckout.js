@@ -58,7 +58,9 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
             FinalUserTelefone: formData.FinalUserTelefone,
             FinalUserId: formData.FinalUserId || null,
             NomeDaLoja: currentStore,
-            RestauranteId: formData.RestauranteId,
+            RestauranteId: !isNaN(formData.RestauranteId) 
+                ? formData.RestauranteId 
+                : Number(localStorage.getItem('restauranteId')),
             Observacoes: formData.observacoes || '',
 
             // Objeto de endereço

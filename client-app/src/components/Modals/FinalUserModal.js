@@ -45,11 +45,12 @@ const FinalUserModal = ({ isOpen, onClose, onSuccess }) => {
             if (response.data) {
                 localStorage.setItem("userId", response.data.id);
                 localStorage.setItem("isAuthenticated", "true");
-                localStorage.setItem("FinalUserTelefone", formData.telefone);
+                localStorage.setItem("FinalUserTelefone", response.data.telefone);
+                console.log(response.data);
                 onSuccess({
                     ...response.data,
-                    FinalUserName: formData.nome,
-                    FinalUserTelefone: formData.telefone
+                    FinalUserName: response.data.nome,
+                    FinalUserTelefone: response.data.telefone
                 });
             } else {
                 setError('Erro ao cadastrar usuário. Tente novamente.');

@@ -19,6 +19,14 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             _finalUserService = finalUserService;
         }
 
+        [HttpGet("UserExists/{telefone}")]
+        public async Task<IActionResult> UserExists(string telefone)
+        {
+            var user = await _context.FinalUsers.FirstOrDefaultAsync(u => u.Telefone == telefone);
+            if (user == null) return NotFound();
+            return Ok(user);
+        }
+
         [HttpGet("getUserInfoById/{id}")]
         public async Task<IActionResult> GetUserInfoById(int id)
         {

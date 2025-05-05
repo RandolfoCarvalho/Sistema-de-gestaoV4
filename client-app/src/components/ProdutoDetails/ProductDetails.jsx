@@ -88,9 +88,9 @@ const ProductDetails = () => {
                         <ChevronLeft size={24} className="text-gray-700" />
                     </button>
                     <h1 className="ml-4 font-medium text-gray-800 flex-1">Detalhes do Produto</h1>
-                    <button className="p-2 rounded-full hover:bg-gray-100">
+                    { /*<button className="p-2 rounded-full hover:bg-gray-100">
                         <Heart size={20} className="text-gray-600" />
-                    </button>
+                    </button> */}
                 </div>
             </div>
 

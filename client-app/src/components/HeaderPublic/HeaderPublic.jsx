@@ -11,7 +11,8 @@ const HeaderPublic = () => {
     const location = useLocation();
     const { currentStore } = useStore();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
-
+    const { storeInfo } = useStore();
+    const logoUrl = storeInfo?.imagemUrl;
     const handleStoreClick = () => {
         if (!currentStore) return;
         const storePath = `/loja/${encodeURIComponent(currentStore)}`;
@@ -19,7 +20,8 @@ const HeaderPublic = () => {
             navigate(storePath, { state: { storeName: currentStore } });
         }
     };
-
+    console.log("Logo URL: ", logoUrl);
+    console.log("Store Info: ", storeInfo);
     return (
         <div className="w-full pb-13">
             <header className="fixed top-0 w-full z-50 bg-blue-500 h-16 ">
@@ -27,7 +29,11 @@ const HeaderPublic = () => {
                     <div className="flex items-center justify-between h-16">
                         <div className="flex items-center space-x-3 cursor-pointer" onClick={handleStoreClick}>
                             <div className="w-8 h-8 bg-white rounded-full overflow-hidden">
-                                <img src="/api/placeholder/32/32" alt="Logo da loja" className="w-full h-full object-cover" />
+                            <img
+                                src={logoUrl || "/api/placeholder/32/32"}
+                                alt="Logo da loja"
+                                className="w-full h-full object-cover"
+                                />
                             </div>
                             <h1 className="text-xl font-bold text-white">{currentStore || "Loja nao encontrada"}</h1>
                         </div>

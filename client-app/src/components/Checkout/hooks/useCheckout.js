@@ -44,14 +44,6 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
 
     // Preparar o pedidoDTO para enviar ao processamento de pagamento
     const preparePedidoDTO = () => {
-        // Validação dos dados
-        /* if (!formData.FinalUserName || !formData.FinalUserTelefone || !currentStore) {
-            console.error('Dados do usuário ou loja faltando');
-            return null;
-        } */
-
-
-        
         // Estrutura do DTO
         return {
             FinalUserName: formData.FinalUserName,

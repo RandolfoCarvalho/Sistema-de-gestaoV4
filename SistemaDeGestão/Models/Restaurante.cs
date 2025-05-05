@@ -10,6 +10,7 @@
         public string Password { get; set; }
         public string? refreshToken { get; set; }
         public DateTime refreshTokenExpiryTime { get; set; }
+        public string? ImagemUrl { get; set; }
 
         public virtual Empresa Empresa { get; set; }
         public virtual ICollection<Produto> Produtos { get; set; }

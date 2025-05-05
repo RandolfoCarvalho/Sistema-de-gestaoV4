@@ -7,15 +7,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using Amazon.S3.Model;
+using Amazon.S3.Transfer;
+using Amazon.S3;
 
 namespace SistemaDeGestao.Services
 {
     public class RestauranteService
     {
         private readonly DataBaseContext _context;
-        public RestauranteService(DataBaseContext dataBaseContext)
+        private readonly IAmazonS3 _s3Client;
+        public RestauranteService(DataBaseContext dataBaseContext, IAmazonS3 s3Client)
         {
             _context = dataBaseContext;
+            _s3Client = s3Client;
         }
 
         public async Task<Restaurante> CriarUsuarioAsync(Restaurante restaurante)
@@ -85,11 +90,46 @@ namespace SistemaDeGestao.Services
                     empresa.DiasFuncionamento.Sexta = updatedRestaurante.Empresa.DiasFuncionamento.Sexta;
                     empresa.DiasFuncionamento.Sabado = updatedRestaurante.Empresa.DiasFuncionamento.Sabado;
                 }
-                //atualiza as credenciais
             }
 
             await _context.SaveChangesAsync();
             return true;
+        }
+        public async Task<string> UploadImagemParaS3(IFormFile imagem, string NomeDaLoja, string? imagemAnteriorUrl)
+        {
+            var fileTransferUtility = new TransferUtility(_s3Client);
+
+            //Se houver uma URL da imagem anterior, excluímos a imagem do S3
+            if (!string.IsNullOrEmpty(imagemAnteriorUrl))
+            {
+                var imagemAnteriorKey = imagemAnteriorUrl?.Replace("https://sistemadegestao.s3.us-east-1.amazonaws.com/", "");
+
+                if (!string.IsNullOrEmpty(imagemAnteriorKey))
+                {
+                    var deleteRequest = new DeleteObjectRequest
+                    {
+                        BucketName = "sistemadegestao",
+                        Key = imagemAnteriorKey
+                    };
+                    await _s3Client.DeleteObjectAsync(deleteRequest);
+                }
+            }
+
+            using (var newMemoryStream = new MemoryStream())
+            {
+                imagem.CopyTo(newMemoryStream);
+                var currentDate = DateTime.Now.ToString("yyyyMMdd-HHmmss");
+                var imageFileName = $"Imagem_{currentDate}-" + Path.GetExtension(imagem.FileName);
+                var key = $"lojas/{NomeDaLoja}/{imageFileName}";
+                var uploadRequest = new TransferUtilityUploadRequest
+                {
+                    InputStream = newMemoryStream,
+                    Key = key,
+                    BucketName = "sistemadegestao",
+                };
+                await fileTransferUtility.UploadAsync(uploadRequest);
+                return $"https://sistemadegestao.s3.us-east-1.amazonaws.com/{key}";
+            }
         }
 
         public bool IsLojaOpen(Empresa empresa)

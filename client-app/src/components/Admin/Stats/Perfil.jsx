@@ -9,6 +9,7 @@ const Perfil = () => {
     const [mostrarSenha, setMostrarSenha] = useState(false);
     const [mensagemErro, setMensagemErro] = useState("");
     const [mostrarAccessToken, setMostrarAccessToken] = useState(false);
+    const [imagemPreview, setImagemPreview] = useState(null);
     const [restaurante, setRestaurante] = useState({
         id: 0,
         userName: '',
@@ -59,7 +60,7 @@ const Perfil = () => {
                 setLoading(true);
                 const response = await api.get('/api/1.0/Restaurante/GetRestauranteInfo');
                 const restauranteData = response.data.restaurante;
-
+                
                 console.log("resposta", response);
                 console.log("response.data.restaurante", response.data.restaurante);
                 console.log("restauranteData.empresa", restauranteData.empresa);
@@ -83,7 +84,7 @@ const Perfil = () => {
                     sexta: true,
                     sabado: false
                 };
-    
+                setImagemPreview(response.data.restaurante.imagemUrl);
                 setRestaurante({
                     ...restauranteData,
                     empresa: {
@@ -150,6 +151,14 @@ const Perfil = () => {
         }));
     };
 
+    const handleImagemLojaChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setRestaurante(prev => ({ ...prev, imagemLoja: file }));
+            setImagemPreview(URL.createObjectURL(file)); // Gera preview
+        }
+    };
+
     // Handler para os checkboxes de dias de funcionamento
     const handleDiaFuncionamentoChange = (e) => {
         const { name, checked } = e.target;
@@ -168,7 +177,7 @@ const Perfil = () => {
     // Salvar alterações
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        const formData = new FormData();
         // Validação de senha
         if (senha && senha !== confirmarSenha) {
             setMensagemErro("As senhas não conferem.");
@@ -201,6 +210,20 @@ const Perfil = () => {
                     ...(restaurante.empresa.observacoes && { observacoes: restaurante.empresa.observacoes })
                 }
             }
+            
+
+            if (restaurante.imagemLoja) {
+                formData.append("imagemLoja", restaurante.imagemLoja);
+                formData.append("restauranteJson", JSON.stringify(dadosParaEnviar));
+            
+                await api.put('/api/1.0/Restaurante/UpdateProfileComImagem', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+            } 
+
+
             const CredenciaisDePagamento = {
                 PublicKey: restaurante.mercadoPago?.publicKey || '',
                 AccessToken: restaurante.mercadoPago?.accessToken || '',
@@ -209,7 +232,11 @@ const Perfil = () => {
                 Ativo: restaurante.mercadoPago?.ativo || false
             };
             
-
+            await api.put('/api/1.0/Restaurante/UpdateProfileComImagem', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
             await api.post('/api/1.0/CredenciaisMercadoPago/CreateCredential', CredenciaisDePagamento);
             await api.put('/api/1.0/Restaurante/UpdateProfile', dadosParaEnviar);
 
@@ -342,6 +369,25 @@ const Perfil = () => {
             case 'dados-restaurante':
                 return (
                     <div style={styles.formGrid}>
+                        <div style={styles.formGroup}>
+                            <label style={styles.label} htmlFor="imagemLoja">Imagem da Loja</label>
+                            <input
+                                style={styles.input}
+                                id="imagemLoja"
+                                name="imagemLoja"
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImagemLojaChange}
+                            />
+
+                            {(imagemPreview || restaurante.imagemUrl) && (
+                                <img
+                                    src={imagemPreview || restaurante.imagemUrl}
+                                    alt="Imagem da loja"
+                                    style={{ marginTop: '10px', maxWidth: '100%', maxHeight: '200px', borderRadius: '8px' }}
+                                />
+                            )}
+                        </div>
                         <div style={styles.formGroup}>
                             <label style={styles.label} htmlFor="userName">Nome de Usuário</label>
                             <input

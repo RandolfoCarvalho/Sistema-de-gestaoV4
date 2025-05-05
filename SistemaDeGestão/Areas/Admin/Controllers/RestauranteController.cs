@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Amazon.S3;
+using Amazon.S3.Model;
+using Amazon.S3.Transfer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SistemaDeGestao.Data;
 using SistemaDeGestao.Models;
 using SistemaDeGestao.Models.DTOs.Resquests;
@@ -16,7 +20,7 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
         private readonly RestauranteService _restauranteService;
         private readonly IEncryptionService _encryptionService;
         public RestauranteController(DataBaseContext context, RestauranteService restauranteService,
-            IEncryptionService encryptionService)
+            IEncryptionService encryptionService, IAmazonS3 s3Client)
         {
             _context = context;
             _restauranteService = restauranteService;
@@ -132,6 +136,26 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             return Ok("Perfil atualizado com sucesso");
         }
 
+        [HttpPut("UpdateProfileComImagem")]
+        public async Task<IActionResult> UpdateProfileComImagem([FromForm] IFormFile imagemLoja, [FromForm] string restauranteJson)
+        {
+            var updatedRestaurante = JsonConvert.DeserializeObject<Restaurante>(restauranteJson);
+            if (updatedRestaurante == null)
+                return BadRequest("Dados inválidos.");
+            var restauranteExistente = await _context.Restaurantes
+                .Include(r => r.Empresa)
+                .FirstOrDefaultAsync(r => r.Id == updatedRestaurante.Id);
+            if (restauranteExistente == null)
+                return NotFound("Restaurante não encontrado.");
+            if (imagemLoja != null)
+            {
+                var novaImagemUrl = await _restauranteService.UploadImagemParaS3(imagemLoja, updatedRestaurante.NomeDaLoja, restauranteExistente.ImagemUrl);
+                restauranteExistente.ImagemUrl = novaImagemUrl;
+            }
+            await _restauranteService.UpdateProfileAsync(restauranteExistente, updatedRestaurante);
+            return Ok();
+        }
+       
         [HttpGet]
         [Route("ObterRestauranteIdDoUsuarioAutenticado")]
         public IActionResult ObterRestauranteIdDoUsuarioAutenticado()

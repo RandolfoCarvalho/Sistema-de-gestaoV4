@@ -9,6 +9,7 @@ import CardPaymentForm from "./CardPaymentForm";
 import PixPaymentSection from "./PixPaymentSection";
 import DinheiroPaymentForm from "./DinheiroPaymentForm";
 import PixForm from "./PixForm";
+import axios from "axios";
 import MercadoPagoWalletButton from "./MercadoPagoWalletButton";
 
 const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSuccess, preparePedidoDTO }) => {
@@ -21,6 +22,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     const [internalLoading, setInternalLoading] = useState(false);
     const [internalError, setInternalError] = useState(null);
     const [pixData, setPixData] = useState(null);
+    const [transactionId, setTransactionId] = useState(null);
     const PUBLIC_KEY = "APP_USR-9d429645-4c80-4f72-aa71-b303ee60755f";
     
     useEffect(() => {
@@ -32,7 +34,26 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             locale: 'pt-BR'
         });
     }, []);
-
+    useEffect(() => {
+        if (pixData && transactionId) {
+            const interval = setInterval(async () => {
+                try {
+                    const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/statusPagamento`, {
+                        params: { transactionId }
+                    });
+                    if (res.data.status === "aprovado") {
+                        clearInterval(interval);
+                        alert("Pagamento aprovado com sucesso!");
+                        navigate("/pedidos");
+                    }
+                } catch (err) {
+                    console.error("Erro ao verificar status do pagamento:", err);
+                }
+            }, 5000);
+    
+            return () => clearInterval(interval);
+        }
+    }, [pixData, transactionId]);
     useEffect(() => {
         setPreferenceId(null);
         setInternalError(null);
@@ -205,12 +226,10 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     };
 
     //Pagamento PIX
-    //Pagamento PIX
     const handlePixSubmit = async (formData) => {
         setInternalLoading(true);
         setInternalError(null);
         setPixData(null);
-
         const paymentData = {
             FormaPagamento: "pix",
             Amount: parseFloat(formData.amount),
@@ -218,7 +237,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             PayerLastName: formData.payerLastName,
             PayerEmail: formData.payerEmail
         };
-
         const pedidoDTO = preparePedidoDTO();
         console.log("PedidoDTO: ", pedidoDTO); 
         if (!pedidoDTO) {
@@ -227,9 +245,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             setInternalLoading(false);
             return;
         }
-
-        console.log(`Enviando para processPayment (pix):`, paymentData, "com DTO:", pedidoDTO);
-
         try {
             const response = await processPaymentPix(paymentData, pedidoDTO);
 
@@ -241,6 +256,8 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                         qrCodeBase64: response.data.qrCodeBase64,
                         qrCodeCopyPaste: response.data.qrCodeString
                     });
+                    setTransactionId(response.data.idPagamento);
+                    console.log("Dados do PIX: ", response.data);
                 } else {
                     console.error("Resposta do backend para PIX inválida:", response);
                     setInternalError("Não foi possível obter os dados do PIX. Tente novamente.");
@@ -256,8 +273,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             setInternalLoading(false);
         }
     };
-
-    
 
     const isLoading = paymentLoading || internalLoading;
     const displayError = paymentError || internalError;

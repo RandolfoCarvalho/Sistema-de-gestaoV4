@@ -176,6 +176,15 @@ namespace SistemaDeGestao.Controllers
             }
         }
 
+        [HttpGet("statusPagamento")]
+        public async Task<IActionResult> VerificarStatusPagamento([FromQuery] string transactionId)
+        {
+            var pedido = await _context.Pedidos.FirstOrDefaultAsync(p => p.Pagamento.TransactionId == transactionId);
+            if (pedido == null) return NotFound("Pedido não encontrado.");
+
+            return Ok(new { status = pedido.Status });
+        }
+
         [HttpPost]
         [Route("buscarTransactionId/{id}")]
         public async Task<IActionResult> GetTransactionId(int id)

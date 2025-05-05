@@ -34,6 +34,10 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             locale: 'pt-BR'
         });
     }, []);
+
+    //TODO - Verificar se o pagamento foi aprovado ou não pelo polling fazendo uma chamada a cada 5 segundos
+    // e se o pagamento foi aprovado, redirecionar para a página de pedidos
+    //Verificar o transactonId do pagamento corretamente 
     useEffect(() => {
         if (pixData && transactionId) {
             const interval = setInterval(async () => {
@@ -296,7 +300,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                         darkMode={false}
                         showBorder={false}
                         phaseMessages={["Verificando pedido", "Recebendo pagamento", "Processando detalhes", "Finalizando..."]}
-                    />}
+                />}
 
             <div className="space-y-4">
                 <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Detalhes de Pagamento</h2>

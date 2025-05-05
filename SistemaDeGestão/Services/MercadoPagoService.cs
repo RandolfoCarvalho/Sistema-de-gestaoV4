@@ -79,7 +79,14 @@ namespace SistemaDeGestao.Services
 
                 var id = doc.RootElement.GetProperty("id").GetInt64();
                 var valor = doc.RootElement.GetProperty("transaction_amount").GetDecimal();
-
+                string transactionId = null;
+                if (doc.RootElement.TryGetProperty("transaction_details", out var transactionDetails))
+                {
+                    if (transactionDetails.TryGetProperty("transaction_id", out var tIdElement))
+                    {
+                        transactionId = tIdElement.GetString();
+                    }
+                }
                 var pedidoPendente = new PedidoPendente
                 {
                     TransactionId = id.ToString(),
@@ -95,7 +102,8 @@ namespace SistemaDeGestao.Services
                     IdPagamento = id.ToString(),
                     QrCodeBase64 = qrCodeBase64,
                     QrCodeString = qrCode,
-                    ValorTotal = valor
+                    ValorTotal = valor,
+                    TransactionId = transactionId
                 };
             }
         }

@@ -6,5 +6,6 @@
         public string QrCodeString { get; set; }
         public string IdPagamento { get; set; }
         public decimal ValorTotal { get; set; }
+        public string? TransactionId { get; set; }
     }
 }

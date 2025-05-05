@@ -19,7 +19,6 @@ const usePayment = () => {
                     PedidoDTO: pedidoDTO
                 }
             );
-            
             setLoading(false);
             return { ok: true, data: response.data };
         } catch (err) {

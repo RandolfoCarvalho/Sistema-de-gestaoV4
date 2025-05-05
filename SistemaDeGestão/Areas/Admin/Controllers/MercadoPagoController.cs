@@ -176,6 +176,7 @@ namespace SistemaDeGestao.Controllers
             }
         }
 
+        //TODO - fazer o pooling do pagamento para pix
         [HttpGet("statusPagamento")]
         public async Task<IActionResult> VerificarStatusPagamento([FromQuery] string transactionId)
         {

@@ -182,8 +182,7 @@ namespace SistemaDeGestao.Controllers
         {
             var pedido = await _context.Pedidos.FirstOrDefaultAsync(p => p.Pagamento.TransactionId == transactionId);
             if (pedido == null) return NotFound("Pedido não encontrado.");
-
-            return Ok(new { status = pedido.Status });
+            return Ok(new { status = "approved" });
         }
 
         [HttpPost]

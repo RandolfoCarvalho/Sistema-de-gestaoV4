@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import usePayment from "./hooks/usePayment";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { initMercadoPago } from "@mercadopago/sdk-react";
 import FuturisticLoadingSpinner from '../ui/FuturisticLoadingSpinner';
 import useSignalRPedidos from './hooks/useSignalRPedidos';
@@ -23,6 +23,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     const [internalError, setInternalError] = useState(null);
     const [pixData, setPixData] = useState(null);
     const [transactionId, setTransactionId] = useState(null);
+    const [mensagem, setMensagem] = useState("");
     const PUBLIC_KEY = "APP_USR-9d429645-4c80-4f72-aa71-b303ee60755f";
     
     useEffect(() => {
@@ -45,10 +46,13 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/statusPagamento`, {
                         params: { transactionId }
                     });
-                    if (res.data.status === "aprovado") {
+                    console.log("response data: " + res.data)
+                    if (res.data.status === "approved") {
                         clearInterval(interval);
-                        alert("Pagamento aprovado com sucesso!");
-                        navigate("/pedidos");
+                        setMensagem("✅ Pagamento aprovado com sucesso!");
+
+                        // Redireciona após 3 segundos
+                        setTimeout(() => navigate("/pedidos"), 3000);
                     }
                 } catch (err) {
                     console.error("Erro ao verificar status do pagamento:", err);
@@ -356,7 +360,15 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     </p>
                 )}
             </div>
+            <div> 
+            {mensagem && (
+                <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-100 text-green-800 px-6 py-3 rounded-lg shadow-lg transition-all">
+                    {mensagem}
+                </div>
+            )}
+            </div>
         </Modal>
+       
     );
 };
 

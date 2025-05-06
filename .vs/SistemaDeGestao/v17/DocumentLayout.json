@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestaov4\\sistemadegest\u00E3o\\services\\mercadopagoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|solutionrelative:sistemadegest\u00E3o\\services\\mercadopagoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestaov4\\sistemadegest\u00E3o\\areas\\admin\\controllers\\mercadopagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\mercadopagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestaov4\\sistemadegest\u00E3o\\services\\mercadopagoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|solutionrelative:sistemadegest\u00E3o\\services\\mercadopagoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestaov4\\sistemadegest\u00E3o\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -94,7 +94,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -114,31 +114,29 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T02:37:09.702Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-05T02:37:09.702Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "MercadoPagoService.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
               "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAAACIAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAAADEAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T02:35:34.496Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-05T02:35:34.496Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "MercadoPagoController.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
               "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
-              "ViewState": "AgIAACUAAAAAAAAAAAAAADUAAABDAAAAAAAAAA==",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAqwDgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-05T01:59:46.372Z",
               "EditorCaption": ""
@@ -165,8 +163,7 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Program.cs",
               "ViewState": "AgIAAIgAAAAAAAAAAAASwJIAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-22T19:46:43.113Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-22T19:46:43.113Z"
             },
             {
               "$type": "Document",
@@ -178,8 +175,7 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\RestauranteService.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAASwBMAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T23:15:13.286Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T23:15:13.286Z"
             },
             {
               "$type": "Document",
@@ -191,8 +187,7 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Enums\\OrderStatus.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAuwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T15:22:19.193Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-05T15:22:19.193Z"
             },
             {
               "$type": "Document",

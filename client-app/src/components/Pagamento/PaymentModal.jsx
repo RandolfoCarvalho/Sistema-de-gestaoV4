@@ -70,7 +70,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             const generatePreference = async () => {
                 setInternalLoading(true);
                 setInternalError(null);
-                console.log("Preparando Pedido DTO para gerar preferência...");
                 const pedidoDTO = preparePedidoDTO();
 
                 if (!pedidoDTO) {
@@ -104,27 +103,28 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     const handleCardPaymentSubmit = async (formData, additionalData) => {
         setInternalLoading(true);
         setInternalError(null);
-
+    
         const fullName = additionalData.cardholderName?.trim() || "";
         const nameParts = fullName.split(/\s+/);
-
+    
         let firstName = "";
         let lastName = "";
-
+    
         if (nameParts.length === 1) {
             firstName = nameParts[0];
         } else {
             lastName = nameParts.pop(); 
             firstName = nameParts.join(" "); 
         }
-
+    
         const pedidoDTO = preparePedidoDTO();
         if (!pedidoDTO) {
             console.error("Falha ao preparar PedidoDTO para pagamento com cartão.");
-            setInternalError("Não foi possível preparar os dados do pedido.");
+            setInternalError("❌ Não foi possível preparar os dados do pedido.");
             setInternalLoading(false);
             return;
         }
+    
         const paymentData = {
             FormaPagamento: "cartao",
             Amount: parseFloat(formData.transaction_amount),
@@ -140,38 +140,29 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             StatusCode: 0,
             Message: ""
         };
-        
+    
         try {
             const response = await processPayment(paymentData, pedidoDTO);
     
             if (response?.ok || response?.status === 'approved') {
-                alert("Pagamento com cartão bem-sucedido:", response);
+                setMensagem("✅ Pagamento aprovado com sucesso!");
                 if (onPaymentSuccess) onPaymentSuccess();
                 navigate("/pedidos");
                 onClose();
             } else {
-                alert("Erro no pagamento com cartão", response);
+                setMensagem("❌ Pagamento não aprovado. Por favor, tente novamente.");
                 console.error("Erro no pagamento com cartão (resposta backend):", response);
                 setInternalError(response?.error || response?.message || "Pagamento com cartão falhou.");
             }
         } catch (error) {
-            alert("Erro no pagamento com cartão", error);
+            setMensagem("❌ Erro inesperado no pagamento com cartão.");
             console.error("Catch: Erro ao processar pagamento com cartão:", error);
             setInternalError(error.message || "Ocorreu um erro inesperado no pagamento com cartão.");
         } finally {
             setInternalLoading(false);
         }
     };
-
-    const handlePedidoConfirmado = React.useCallback((pedidoDTO) => {
-        if (pixData && paymentMethod === 'pix') {
-            alert("✅ Pagamento confirmado! Pedido realizado com sucesso.");
-            onClose?.();
-        }
-    }, [pixData, paymentMethod, onClose]);
-
-    useSignalRPedidos(handlePedidoConfirmado);
-
+    
     const handleDinheiroSubmit = async (e) => {
         e.preventDefault();
         setInternalLoading(true);

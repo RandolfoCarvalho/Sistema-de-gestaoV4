@@ -244,9 +244,10 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             setInternalLoading(false);
             return;
         }
+        console.log(`Enviando para processPaymentPix: `, paymentData, "com DTO: ", pedidoDTO);
         try {
             const response = await processPaymentPix(paymentData, pedidoDTO);
-
+            console.log("Resposta do backend para pagamento com pix: ", response.data);
             if (response?.ok) {
                 console.log(`Resposta do backend para pix:`, response);
 

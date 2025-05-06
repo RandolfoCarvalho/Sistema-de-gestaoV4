@@ -140,7 +140,7 @@ namespace SistemaDeGestao.Controllers
                     return NotFound("Pedido pendente não encontrado.");
                 }
 
-                //Dados estejam serializados como JSON e contenham o restauranteId
+                //Caso dados estejam serializados como JSON e contenham o restauranteId
                 var dados = JsonSerializer.Deserialize<PedidoDTO>(pedidoPendente.PedidoJson);
                 var restauranteId = dados?.RestauranteId ?? 0;
                 if (restauranteId == 0) return BadRequest("RestauranteId não encontrado.");

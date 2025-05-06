@@ -70,8 +70,7 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
                 SubTotal: cartTotal,
                 TaxaEntrega: formData.pagamento?.TaxaEntrega || 0,
                 Desconto: formData.pagamento?.Desconto || 0,
-                ValorTotal: cartTotal + (formData.pagamento?.TaxaEntrega || 0) - (formData.pagamento?.Desconto || 0),
-                FormaPagamento: selectedPaymentMethod
+                ValorTotal: cartTotal + (formData.pagamento?.TaxaEntrega || 0) - (formData.pagamento?.Desconto || 0)
             },
 
             // Itens do pedido

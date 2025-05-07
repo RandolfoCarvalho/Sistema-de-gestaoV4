@@ -58,14 +58,12 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     
                     const status1 = res1?.data?.status;
                     const status2 = res2?.data?.status;
-    
-                    const isApproved = status1 === "approved" || status2 === "approved";
+                    const isPedidoExistente = res2?.data === "Pedido ja existe";
+                    const isApproved = status1 === "approved" || status2 === "approved" || isPedidoExistente;
     
                     if (isApproved) {
                         clearInterval(interval);
                         setMensagem("✅ Pagamento aprovado com sucesso!");
-    
-                        // Redireciona após 3 segundos
                         setTimeout(() => navigate("/pedidos"), 3000);
                     } else if (attempts >= maxAttempts) {
                         clearInterval(interval);

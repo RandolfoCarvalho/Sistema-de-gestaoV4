@@ -178,7 +178,12 @@ namespace SistemaDeGestao.Controllers
                     _logger.LogWarning($"Pedido pendente não encontrado para TransactionId: {transactionId}");
                     return NotFound("Pedido pendente não encontrado.");
                 }
-
+                var pedido = await _context.Pedidos.FirstOrDefaultAsync(p => p.Pagamento.TransactionId == transactionId);
+                if (pedido != null) 
+                {
+                    _logger.LogInformation($"Pedido com TransactionId {transactionId} já existe.");
+                    return Ok("Pedido já existe");
+                }
                 //Caso dados estejam serializados como JSON e contenham o restauranteId
                 var dados = JsonSerializer.Deserialize<PedidoDTO>(pedidoPendente.PedidoJson);
                 var restauranteId = dados?.RestauranteId ?? 0;

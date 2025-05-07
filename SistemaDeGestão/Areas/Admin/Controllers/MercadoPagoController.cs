@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Amazon.Runtime.Internal;
 using Azure.Core;
 using MercadoPago.Http;
+using MercadoPago.Resource.Payment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -30,7 +33,6 @@ namespace SistemaDeGestao.Controllers
         private readonly IEncryptionService _encryptionService;
         private static readonly ConcurrentDictionary<string, SemaphoreSlim> _locks = new();
         private readonly ILogger<MercadoPagoController> _logger;
-
         public MercadoPagoController(MercadoPagoService paymentService, IConfiguration configuration,
             DataBaseContext context, PedidoService pedidoService, IHubContext<OrderHub> hubContext, IEncryptionService encryptionService, ILogger<MercadoPagoController> logger)
         {
@@ -82,11 +84,48 @@ namespace SistemaDeGestao.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("testewebhook")]
+        [Route("ObterPagamentoAsync/{pagamentoId}/{restauranteId}")]
 
-        public IActionResult TesteWebhook()
+        public async Task<IActionResult> ObterPagamentoAsync(long pagamentoId, int restauranteId)
         {
-            return Ok("Webhook recebido com sucesso randolfo irado");
+            try
+            {
+                HttpClient httpClient = new HttpClient();
+                var accessToken = await BuscaCredenciaisAsync(restauranteId);
+                httpClient.BaseAddress = new Uri("https://api.mercadopago.com/v1/payments/");
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var response = await httpClient.GetAsync(pagamentoId.ToString());
+                response.EnsureSuccessStatusCode();
+                var content = await response.Content.ReadAsStringAsync();
+                var paymentData = JsonDocument.Parse(content).RootElement;
+                if (!paymentData.TryGetProperty("status", out var statusElement))
+                {
+                    return BadRequest("Status de pagamento não encontrado.");
+                }
+                string status = statusElement.GetString();
+                if(status == "approved")
+                {
+                    var pedido = await _context.Pedidos.FirstOrDefaultAsync(p => p.Pagamento.TransactionId == pagamentoId.ToString());
+                    if (pedido != null) return Ok("Pedido ja existe");
+
+                    var pedidoPendente = await _context.PedidosPendentes
+                        .FirstOrDefaultAsync(p => p.TransactionId == pagamentoId.ToString());
+                    if (pedidoPendente == null) return NotFound("Pedido pendente não encontrado.");
+                    var pedidoDTO = JsonSerializer.Deserialize<PedidoDTO>(pedidoPendente.PedidoJson);
+                    pedidoDTO.Pagamento.TransactionId = pagamentoId.ToString();
+                    await _pedidoService.CriarPedidoAsync(pedidoDTO);
+                    await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoDTO);
+                    _context.PedidosPendentes.Remove(pedidoPendente);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { status = "approved" });
+                }
+                return Ok(new { status });
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"Erro na requisição: {ex.Message}");
+            }
         }
 
         [HttpPost]

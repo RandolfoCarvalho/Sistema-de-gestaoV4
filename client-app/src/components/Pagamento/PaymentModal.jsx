@@ -24,6 +24,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     const [pixData, setPixData] = useState(null);
     const [transactionId, setTransactionId] = useState(null);
     const [mensagem, setMensagem] = useState("");
+    const restauranteId = localStorage.getItem("restauranteId");
     const PUBLIC_KEY = "APP_USR-9d429645-4c80-4f72-aa71-b303ee60755f";
     
     useEffect(() => {
@@ -40,20 +41,38 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     // e se o pagamento foi aprovado, redirecionar para a página de pedidos
     //Verificar o transactonId do pagamento corretamente 
     useEffect(() => {
-        if (pixData && transactionId) {
+        if (pixData && transactionId && restauranteId) {
+            let attempts = 0;
+            const maxAttempts = 60; // 60 x 5s = 5 minutos
+    
             const interval = setInterval(async () => {
                 try {
-                    const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/statusPagamento`, {
-                        params: { transactionId }
-                    });
-                    console.log("response data: " + res.data)
-                    if (res.data.status === "approved") {
+                    attempts++;
+    
+                    const [res1, res2] = await Promise.all([
+                        axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/statusPagamento`, {
+                            params: { transactionId }
+                        }),
+                        axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/ObterPagamentoAsync/${transactionId}/${restauranteId}`)
+                    ]);
+    
+                    const status1 = res1?.data?.status;
+                    const status2 = res2?.data?.status;
+    
+                    const isApproved = status1 === "approved" || status2 === "approved";
+    
+                    if (isApproved) {
                         clearInterval(interval);
                         setMensagem("✅ Pagamento aprovado com sucesso!");
-
+    
                         // Redireciona após 3 segundos
                         setTimeout(() => navigate("/pedidos"), 3000);
+                    } else if (attempts >= maxAttempts) {
+                        clearInterval(interval);
+                        console.warn("⏳ Tempo de espera pelo pagamento expirou.");
+                        setMensagem("⏳ Tempo de espera expirado. Tente novamente.");
                     }
+    
                 } catch (err) {
                     console.error("Erro ao verificar status do pagamento:", err);
                 }
@@ -61,7 +80,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     
             return () => clearInterval(interval);
         }
-    }, [pixData, transactionId]);
+    }, [pixData, transactionId, restauranteId, navigate]);
     useEffect(() => {
         setPreferenceId(null);
         setInternalError(null);

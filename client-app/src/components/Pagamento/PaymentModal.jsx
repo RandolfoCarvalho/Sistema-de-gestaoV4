@@ -37,9 +37,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         });
     }, []);
 
-    //TODO - Verificar se o pagamento foi aprovado ou não pelo polling fazendo uma chamada a cada 5 segundos
-    // e se o pagamento foi aprovado, redirecionar para a página de pedidos
-    //Verificar o transactonId do pagamento corretamente 
     useEffect(() => {
         if (pixData && transactionId && restauranteId) {
             let attempts = 0;

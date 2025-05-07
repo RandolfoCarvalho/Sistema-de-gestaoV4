@@ -42,41 +42,48 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
         }));
     }, [cartTotal]);
 
-    const preparePedidoDTO = async () => {
-        let finalUserId = formData.FinalUserId;
-        let finalUserTelefone = formData.FinalUserTelefone;
+    useEffect(() => {
+        const verificarOuCriarUsuario = async () => {
+            const telefone = formData.FinalUserTelefone;
+            const nome = formData.FinalUserName;
     
-        try {
-            const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/VerificarTelefone`,
-                {
-                    Telefone: finalUserTelefone,
-                    Nome: formData.FinalUserName 
+            if (!telefone || !nome) return;
+    
+            try {
+                const response = await axios.post(
+                    `${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/VerificarTelefone`,
+                    { Telefone: telefone, Nome: nome }
+                );
+    
+                if (response.data?.id) {
+                    const id = response.data.id;
+                    localStorage.setItem("userId", id);
+                    setFormData(prev => ({ ...prev, FinalUserId: id }));
+                } else {
+                    console.warn("Resposta inesperada da API.");
                 }
-            );
-    
-            if (response.data?.id) {
-                finalUserId = response.data.id;
-                localStorage.setItem("userId", finalUserId);
-                setFormData(prev => ({ ...prev, FinalUserId: finalUserId }));
-            } else {
-                throw new Error("Resposta inesperada da API.");
+            } catch (error) {
+                console.error("Erro ao verificar/criar usuário:", error);
             }
-        } catch (error) {
-            console.error("Erro ao validar/criar usuário:", error);
-            throw new Error("Não foi possível verificar ou criar o usuário.");
-        }
+        };
     
+        verificarOuCriarUsuario();
+    }, [formData.FinalUserTelefone, formData.FinalUserName]);
+    
+    // Preparar o pedidoDTO para enviar ao processamento de pagamento
+    const preparePedidoDTO = () => {
+        // Estrutura do DTO
         return {
             FinalUserName: formData.FinalUserName,
-            FinalUserTelefone: finalUserTelefone,
-            FinalUserId: finalUserId,
+            FinalUserTelefone: formData.FinalUserTelefone,
+            FinalUserId: formData.FinalUserId || null,
             NomeDaLoja: currentStore,
-            RestauranteId: !isNaN(formData.RestauranteId)
-                ? formData.RestauranteId
+            RestauranteId: !isNaN(formData.RestauranteId) 
+                ? formData.RestauranteId 
                 : Number(localStorage.getItem('restauranteId')),
             Observacoes: formData.observacoes || '',
-    
+
+            // Objeto de endereço
             Endereco: {
                 Logradouro: formData.endereco?.Logradouro || '',
                 Numero: formData.endereco?.Numero || '',
@@ -85,15 +92,18 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
                 Cidade: formData.endereco?.Cidade || '',
                 CEP: formData.endereco?.CEP || ''
             },
-    
+
+            // Objeto de pagamento
             Pagamento: {
                 SubTotal: cartTotal,
                 TaxaEntrega: formData.pagamento?.TaxaEntrega || 0,
                 Desconto: formData.pagamento?.Desconto || 0,
                 ValorTotal: cartTotal + (formData.pagamento?.TaxaEntrega || 0) - (formData.pagamento?.Desconto || 0),
+                //TODO selecionar o metodo de pagamento correto
                 FormaPagamento: selectedPaymentMethod
             },
-    
+
+            // Itens do pedido
             Itens: cart.map(item => ({
                 ProdutoId: item.id,
                 NomeProduto: item.nome || item.title || '',
@@ -114,7 +124,7 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
             }))
         };
     };
-    
+
     // Função para iniciar o processo de pagamento
     const handleProceedToPayment = (paymentMethod) => {
         setSelectedPaymentMethod(paymentMethod);

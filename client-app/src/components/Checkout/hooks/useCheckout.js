@@ -3,6 +3,7 @@ import axios from 'axios';
 
 // Hook personalizado para gerenciar o estado e lógica do checkout
 export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) => {
+    const [userId, setUserId] = useState(localStorage.getItem('userId') || null);
     const [formData, setFormData] = useState({
         FinalUserName: 'Randolfo',
         FinalUserTelefone: localStorage.getItem("FinalUserTelefone"),
@@ -57,8 +58,8 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
     
                 if (response.data?.id) {
                     const id = response.data.id;
+                    setUserId(id); // Atualiza o estado
                     localStorage.setItem("userId", id);
-                    setFormData(prev => ({ ...prev, FinalUserId: id }));
                 } else {
                     console.warn("Resposta inesperada da API.");
                 }
@@ -70,13 +71,18 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
         verificarOuCriarUsuario();
     }, [formData.FinalUserTelefone, formData.FinalUserName]);
     
+    if (!userId) {
+        alert("Aguardando confirmação do usuário...");
+        return;
+    }
+    
     // Preparar o pedidoDTO para enviar ao processamento de pagamento
     const preparePedidoDTO = () => {
         // Estrutura do DTO
         return {
             FinalUserName: formData.FinalUserName,
             FinalUserTelefone: formData.FinalUserTelefone,
-            FinalUserId: formData.FinalUserId || null,
+            FinalUserId: userId,
             NomeDaLoja: currentStore,
             RestauranteId: !isNaN(formData.RestauranteId) 
                 ? formData.RestauranteId 

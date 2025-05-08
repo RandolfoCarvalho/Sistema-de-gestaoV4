@@ -21,7 +21,7 @@ const Header = ({ isSidebarOpen, toggleSidebar, darkMode, toggleDarkMode }) => {
                             <MdSpaceDashboard className="h-8 me-3 text-xl text-violet-500"/> 
                             <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap
                             dark:text-white">
-                                PedeJá - Gestão
+                                Gestão
                             </span>
                         </a>
                     </div>

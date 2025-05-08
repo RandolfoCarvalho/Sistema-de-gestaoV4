@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestaov4\\sistemadegest\u00E3o\\areas\\admin\\controllers\\finaluserauthcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\finaluserauthcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestaov4\\sistemadegest\u00E3o\\areas\\admin\\controllers\\finalusercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\finalusercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestaov4\\sistemadegest\u00E3o\\areas\\admin\\controllers\\mercadopagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\mercadopagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -59,14 +67,6 @@
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\complementocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestaov4\\sistemadegest\u00E3o\\areas\\admin\\controllers\\finaluserauthcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\finaluserauthcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestaov4\\sistemadegest\u00E3o\\areas\\admin\\controllers\\finalusercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|solutionrelative:sistemadegest\u00E3o\\areas\\admin\\controllers\\finalusercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|c:\\users\\randolfo\\documents\\sistema-de-gestaov4\\sistemadegest\u00E3o\\models\\complemento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BCF3A9C8-5201-4DB4-B83B-5A5B29DCD9C0}|SistemaDeGest\u00E3o\\SistemaDeGestao.csproj|solutionrelative:sistemadegest\u00E3o\\models\\complemento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -94,7 +94,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -102,16 +102,100 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "MercadoPagoController.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
               "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
-              "ViewState": "AgIAAKUAAAAAAAAAAAAmwK4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACABAAAAAAAAAAAwwC4BAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T01:59:46.372Z",
+              "WhenOpened": "2025-05-05T01:59:46.372Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ProdutoController.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ProdutoController.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ProdutoController.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ProdutoController.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ProdutoController.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAAAHwAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T23:18:01.887Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "RestauranteController.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\RestauranteController.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\RestauranteController.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\RestauranteController.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\RestauranteController.cs",
+              "ViewState": "AgIAAIIAAAAAAAAAAAArwIQAAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T23:10:04.94Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MercadoPagoService.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAAADEAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-05T02:35:34.496Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PagamentoPixResponse.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-05T02:37:09.702Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FinalUserController.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAQwCQAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T16:35:38.406Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FinalUserAuthController.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAAABoAAABPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T16:50:16.539Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Program.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Program.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Program.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Program.cs",
+              "ViewState": "AgIAAIgAAAAAAAAAAAASwJIAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T19:46:43.113Z"
             },
             {
               "$type": "Document",
@@ -127,67 +211,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Program.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Program.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Program.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Program.cs",
-              "ViewState": "AgIAAIgAAAAAAAAAAAASwJIAAAAlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-22T19:46:43.113Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ProdutoController.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ProdutoController.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ProdutoController.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ProdutoController.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ProdutoController.cs",
-              "ViewState": "AgIAACMAAAAAAAAAAAAAAHwAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T23:18:01.887Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "RestauranteController.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\RestauranteController.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\RestauranteController.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\RestauranteController.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\RestauranteController.cs",
-              "ViewState": "AgIAAIIAAAAAAAAAAAArwIQAAABHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T23:10:04.94Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MercadoPagoService.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAAADEAAAAVAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T02:35:34.496Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "PagamentoPixResponse.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Models\\DTOs\\Responses\\PagamentoPixResponse.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T02:37:09.702Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "RestauranteService.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\RestauranteService.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\RestauranteService.cs",
@@ -199,7 +223,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "OrderStatus.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Enums\\OrderStatus.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Enums\\OrderStatus.cs",
@@ -211,7 +235,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "CredenciaisMercadoPagoController.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\CredenciaisMercadoPagoController.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\CredenciaisMercadoPagoController.cs",
@@ -223,7 +247,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "ComplementoService.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\ComplementoService.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\ComplementoService.cs",
@@ -235,7 +259,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "ImageUploadService.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\ImageUploadService.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\ImageUploadService.cs",
@@ -247,7 +271,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "ComplementoController.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ComplementoController.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\ComplementoController.cs",
@@ -259,7 +283,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "ProdutoService.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\ProdutoService.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\ProdutoService.cs",
@@ -271,7 +295,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "Restaurante.cs",
               "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Models\\Restaurante.cs",
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Models\\Restaurante.cs",
@@ -280,30 +304,6 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-04T23:14:49.807Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "FinalUserAuthController.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserAuthController.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAWwCgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T16:50:16.539Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "FinalUserController.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\FinalUserController.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAgwBwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T16:35:38.406Z"
             },
             {
               "$type": "Document",

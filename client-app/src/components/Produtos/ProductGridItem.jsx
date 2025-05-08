@@ -10,7 +10,9 @@ const ProductGridItem = ({ produto }) => (
             />
             <div className="p-2">
                 <h3 className="text-sm font-medium text-gray-900 truncate">{produto.nome}</h3>
-                <p className="text-blue-600 font-bold mt-1">R$ {produto.precoVenda.toFixed(2)}</p>
+                <p className="text-blue-600 font-bold mt-1">
+                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(produto.precoVenda)}
+                    </p>
             </div>
         </div>
     </Link>

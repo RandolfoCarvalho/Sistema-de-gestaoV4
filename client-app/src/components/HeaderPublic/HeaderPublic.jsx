@@ -20,15 +20,13 @@ const HeaderPublic = () => {
             navigate(storePath, { state: { storeName: currentStore } });
         }
     };
-    console.log("Logo URL: ", logoUrl);
-    console.log("Store Info: ", storeInfo);
     return (
         <div className="w-full pb-13">
-            <header className="fixed top-0 w-full z-50 bg-blue-500 h-16 ">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-16">
+            <header className="fixed top-0 w-full z-50 bg-blue-500 h-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-16">
                         <div className="flex items-center space-x-3 cursor-pointer" onClick={handleStoreClick}>
-                            <div className="w-8 h-8 bg-white rounded-full overflow-hidden">
+                            <div className="w-10 h-10 bg-white rounded-full overflow-hidden">
                             <img
                                 src={logoUrl || "/api/placeholder/32/32"}
                                 alt="Logo da loja"

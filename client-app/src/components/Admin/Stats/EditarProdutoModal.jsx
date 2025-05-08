@@ -317,10 +317,11 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
                                             <div style={styles.formGroup}>
                                                 <label style={styles.label}>Preço de Venda (R$):</label>
                                                 <input
-                                                    type="number"
-                                                    step="0.01"
+                                                    type="text"
                                                     value={produtoEditando.precoVenda || ''}
-                                                    onChange={(e) => setProdutoEditando({ ...produtoEditando, precoVenda: parseFloat(e.target.value) })}
+                                                    onChange={(e) =>
+                                                        setProdutoEditando({ ...produtoEditando, precoVenda: e.target.value })
+                                                    }
                                                     style={styles.input}
                                                 />
                                             </div>

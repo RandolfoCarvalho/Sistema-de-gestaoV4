@@ -14,8 +14,10 @@ const OrderModal = ({ order, onClose }) => {
             currency: 'BRL'
         }).format(value);
     };
-    console.log("order.status: ", order.status)
+    
+    console.log("order.status: ", order.status);
     console.log("Pedido: ", JSON.stringify(order, null, 2));
+    
     const handleCancelOrder = async () => {
         if (!motivoCancelamento.trim()) {
             setError('Por favor, informe o motivo do cancelamento.');
@@ -25,23 +27,23 @@ const OrderModal = ({ order, onClose }) => {
             setLoading(true);
             const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/buscarTransactionId/${order.id}`);
             const pedido = res.data;
-            const transactionId = pedido.pagamento?.transactionId || '';
+            const transactionId = pedido.pagamento?.transactionId || order.pagamento?.transactionId || '';
             console.log("Pedidos: " + JSON.stringify(pedido, null, 2));
             // Reembolso
             const reembolsoResult = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/processaReembolso`, {
                 transactionId: transactionId,
-                Amount: order.valorTotal,
-                RestauranteId: pedido.restauranteId,
+                Amount: order.pagamento?.valorTotal || 0,
+                RestauranteId: pedido.restauranteId || order.restauranteId,
             });
             // Cancelamento
             await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/Pedido/registrarCancelamento`, {
                 pedidoId: pedido.id,
                 motivoCancelamento: motivoCancelamento,
                 codigoReembolso: reembolsoResult.data.id || '',
-                valorReembolsado: order.valorTotal,
+                valorReembolsado: order.pagamento?.valorTotal || 0,
                 transacaoReembolsoId: transactionId,
                 estaReembolsado: true,
-                FinalUserId : pedido.finalUserId,
+                FinalUserId: pedido.finalUserId,
                 FinalUserName: pedido.finalUserName,
             });
             // Notificação de sucesso
@@ -64,25 +66,49 @@ const OrderModal = ({ order, onClose }) => {
             setLoading(false);
         }
     };
+    
     // Status do pedido com cores correspondentes
     const getStatusColor = (status) => {
+        const statusMap = {
+            'NOVO': 'Pendente',
+            'CONFIRMADO': 'Confirmado',
+            'EM_PREPARACAO': 'Em Preparação',
+            'EM_ENTREGA': 'Em Entrega',
+            'ENTREGUE': 'Entregue',
+            'CANCELADO': 'Cancelado'
+        };
+        
         const statusColors = {
             'Pendente': 'bg-yellow-100 text-yellow-800',
             'Confirmado': 'bg-blue-100 text-blue-800',
             'Em Preparação': 'bg-purple-100 text-purple-800',
             'Em Entrega': 'bg-indigo-100 text-indigo-800',
             'Entregue': 'bg-green-100 text-green-800',
-            'Cancelado': 'bg-red-100 text-red-800'
+            'Cancelado': 'bg-red-100 text-red-800',
+            'NOVO': 'bg-yellow-100 text-yellow-800'
         };
         
         return statusColors[status] || 'bg-gray-100 text-gray-800';
     };
+    
+    // Função para formatar a data do pedido
+    const formatDate = (dateString) => {
+        if (!dateString) return 'Data não disponível';
+        return new Date(dateString).toLocaleDateString('pt-BR', { 
+            day: '2-digit', 
+            month: '2-digit', 
+            year: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        });
+    };
+    
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
             <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full m-4 max-h-[90vh] flex flex-col">
                 {/* Header */}
                 <div className="p-4 border-b flex justify-between items-center bg-gray-50 rounded-t-lg">
-                    <h2 className="text-xl font-semibold">Pedido #{order.id}</h2>
+                    <h2 className="text-xl font-semibold">Pedido #{order.id} - {order.numero}</h2>
                     <div className="flex items-center space-x-2">
                         <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
                             {order.status}
@@ -103,12 +129,6 @@ const OrderModal = ({ order, onClose }) => {
                         Detalhes
                     </button>
                     <button 
-                        className={`px-4 py-2 font-medium ${activeTab === 'cliente' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-blue-500'}`}
-                        onClick={() => setActiveTab('cliente')}
-                    >
-                        Cliente
-                    </button>
-                    <button 
                         className={`px-4 py-2 font-medium ${activeTab === 'entrega' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-blue-500'}`}
                         onClick={() => setActiveTab('entrega')}
                     >
@@ -126,52 +146,34 @@ const OrderModal = ({ order, onClose }) => {
                     {activeTab === 'detalhes' && (
                         <div>
                             <div className="flex justify-between items-center mb-4">
-                                <p className="text-gray-500">Data: {new Date(order.dataPedido).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
-                                <p className="font-medium text-lg">{formatCurrency(order.valorTotal)}</p>
+                                <p className="text-gray-500">Data: {formatDate(order.dataPedido)}</p>
+                                <p className="font-medium text-lg">{formatCurrency(order.pagamento?.valorTotal || 0)}</p>
                             </div>
+                            
+                            {order.observacoes && (
+                                <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+                                    <h3 className="font-semibold mb-1 text-gray-800">Observações do Pedido</h3>
+                                    <p className="text-gray-600">{order.observacoes}</p>
+                                </div>
+                            )}
                             
                             <h3 className="font-semibold mb-2 text-gray-800">Itens do Pedido</h3>
                             <div className="bg-gray-50 rounded-lg p-3 mb-4">
-                                {order.itens.map((item) => (
-                                    <div key={item.id} className="flex justify-between py-2 border-b border-gray-200 last:border-0">
+                                {order.itens && order.itens.map((item, index) => (
+                                    <div key={item.id || index} className="flex justify-between py-2 border-b border-gray-200 last:border-0">
                                         <div className="flex-1">
-                                            <p className="font-medium">{item.produto?.nome}</p>
-                                            {item.observacao && <p className="text-sm text-gray-500">Obs: {item.observacao}</p>}
+                                            <p className="font-medium">Item #{item.produtoId}</p>
+                                            {item.observacoes && <p className="text-sm text-gray-500">Obs: {item.observacoes}</p>}
                                         </div>
                                         <div className="text-right">
                                             <p>{item.quantidade} x {formatCurrency(item.precoUnitario)}</p>
-                                            <p className="font-medium">{formatCurrency(item.quantidade * item.precoUnitario)}</p>
+                                            <p className="font-medium">{formatCurrency(item.subTotal)}</p>
                                         </div>
                                     </div>
                                 ))}
                                 <div className="flex justify-between pt-3 font-semibold">
                                     <p>Total</p>
-                                    <p>{formatCurrency(order.valorTotal)}</p>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                    {activeTab === 'cliente' && (
-                        <div className="space-y-3">
-                            <div className="bg-gray-50 rounded-lg p-4">
-                                <h3 className="font-semibold mb-2 text-gray-800">Informações do Cliente</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <p className="text-sm text-gray-500">Nome</p>
-                                        <p className="font-medium">{order.finalUser?.nome || 'Não informado'}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500">Email</p>
-                                        <p className="font-medium">{order.finalUser?.email || 'Não informado'}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500">Telefone</p>
-                                        <p className="font-medium">{order.finalUser?.telefone || 'Não informado'}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500">ID do Usuário</p>
-                                        <p className="font-medium">{order.finalUser?.id || 'Não informado'}</p>
-                                    </div>
+                                    <p>{formatCurrency(order.pagamento?.valorTotal || 0)}</p>
                                 </div>
                             </div>
                         </div>
@@ -182,8 +184,8 @@ const OrderModal = ({ order, onClose }) => {
                                 <h3 className="font-semibold mb-2 text-gray-800">Endereço de Entrega</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <p className="text-sm text-gray-500">Rua</p>
-                                        <p className="font-medium">{order.enderecoEntrega?.rua || 'Não informado'}</p>
+                                        <p className="text-sm text-gray-500">Logradouro</p>
+                                        <p className="font-medium">{order.enderecoEntrega?.logradouro || 'Não informado'}</p>
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-500">Número</p>
@@ -222,11 +224,9 @@ const OrderModal = ({ order, onClose }) => {
                                         <p className="text-sm text-gray-500">Status</p>
                                         <div className="mt-1">
                                             <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                                order.pagamento?.status === 'Aprovado' ? 'bg-green-100 text-green-800' : 
-                                                order.pagamento?.status === 'Pendente' ? 'bg-yellow-100 text-yellow-800' : 
-                                                'bg-red-100 text-red-800'
+                                                order.pagamento?.pagamentoAprovado ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                                             }`}>
-                                                {order.pagamento?.status || 'Não informado'}
+                                                {order.pagamento?.pagamentoAprovado ? 'Aprovado' : 'Pendente'}
                                             </span>
                                         </div>
                                     </div>
@@ -234,6 +234,28 @@ const OrderModal = ({ order, onClose }) => {
                                         <div>
                                             <p className="text-sm text-gray-500">ID da Transação</p>
                                             <p className="font-medium font-mono text-sm">{order.pagamento.transactionId}</p>
+                                        </div>
+                                    )}
+                                    <div>
+                                        <p className="text-sm text-gray-500">Subtotal</p>
+                                        <p className="font-medium">{formatCurrency(order.pagamento?.subTotal || 0)}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-500">Taxa de Entrega</p>
+                                        <p className="font-medium">{formatCurrency(order.pagamento?.taxaEntrega || 0)}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-500">Desconto</p>
+                                        <p className="font-medium">{formatCurrency(order.pagamento?.desconto || 0)}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-500">Valor Total</p>
+                                        <p className="font-medium">{formatCurrency(order.pagamento?.valorTotal || 0)}</p>
+                                    </div>
+                                    {order.pagamento?.dataAprovacao && (
+                                        <div>
+                                            <p className="text-sm text-gray-500">Data de Aprovação</p>
+                                            <p className="font-medium">{formatDate(order.pagamento.dataAprovacao)}</p>
                                         </div>
                                     )}
                                 </div>
@@ -252,7 +274,7 @@ const OrderModal = ({ order, onClose }) => {
                         </svg>
                         Imprimir NF
                     </button>
-                    {order.status !== 'cancelado' && (
+                    {order.status !== 'CANCELADO' && (
                         <button
                             onClick={() => setShowConfirm(true)}
                             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 flex items-center"
@@ -281,7 +303,7 @@ const OrderModal = ({ order, onClose }) => {
                                 <h3 className="text-lg font-semibold">Cancelar e Reembolsar Pedido</h3>
                             </div>
                             
-                            <p className="mb-4 text-gray-600">Este pedido será cancelado e o valor de {formatCurrency(order.valorTotal)} será reembolsado ao cliente. Esta ação não pode ser desfeita.</p>
+                            <p className="mb-4 text-gray-600">Este pedido será cancelado e o valor de {formatCurrency(order.pagamento?.valorTotal || 0)} será reembolsado ao cliente. Esta ação não pode ser desfeita.</p>
                             
                             <div className="mb-4">
                                 <label className="block text-sm font-medium mb-1 text-gray-700">

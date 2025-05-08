@@ -130,87 +130,49 @@ namespace SistemaDeGestao.Controllers
 
         [HttpPost]
         [Route("notificacaoMercadoPago")]
-        public async Task<IActionResult> ReceiveMercadoPagoWebhook([FromBody] JsonElement notification, [FromQuery] string id, [FromQuery] string topic, [FromQuery] string type)
+        public async Task<IActionResult> ReceiveMercadoPagoWebhook(
+         [FromBody] JsonElement notification,
+         [FromQuery] string id,
+         [FromQuery] string topic,
+         [FromQuery] string type)
         {
             try
             {
-                string transactionId = null;
-
-                // Tenta obter o ID das diferentes formas possíveis
-                if (!string.IsNullOrEmpty(id))
-                {
-                    // Formato ?id=109197247752&topic=payment
-                    transactionId = id;
-                }
-                else if (notification.TryGetProperty("data", out var data) && data.TryGetProperty("id", out var paymentIdElement))
-                {
-                    // Formato no corpo JSON: {"data":{"id":"109197247752"}}
-                    transactionId = paymentIdElement.GetString();
-                }
-                else if (type == "payment" && Request.Query.TryGetValue("data.id", out var dataIdValues))
-                {
-                    // Formato ?data.id=109197247752&type=payment
-                    transactionId = dataIdValues.FirstOrDefault();
-                }
-
+                var transactionId = ObterTransactionId(notification, id, type);
                 if (string.IsNullOrEmpty(transactionId))
-                {
                     return BadRequest("ID de pagamento não encontrado.");
-                }
 
-                _logger.LogInformation($"Processando notificação do Mercado Pago. TransactionId: {transactionId}");
+                _logger.LogInformation("Processando notificação do Mercado Pago. TransactionId: {TransactionId}", transactionId);
 
-                PedidoPendente? pedidoPendente = null;
-                for (int i = 0; i < 5; i++)
-                {
-                    pedidoPendente = await _context.PedidosPendentes
-                        .AsNoTracking()
-                        .FirstOrDefaultAsync(p => p.TransactionId == transactionId);
-
-                    if (pedidoPendente != null)
-                        break;
-
-                    await Task.Delay(200); // aguarda antes de tentar de novo
-                }
-
+                var pedidoPendente = await TentarObterPedidoPendenteAsync(transactionId, maxTentativas: 15, delayMs: 200);
                 if (pedidoPendente == null)
                 {
-                    _logger.LogWarning($"Pedido pendente não encontrado para TransactionId: {transactionId}");
+                    _logger.LogWarning("Pedido pendente não encontrado para TransactionId: {TransactionId}", transactionId);
                     return NotFound("Pedido pendente não encontrado.");
                 }
-                var pedido = await _context.Pedidos.FirstOrDefaultAsync(p => p.Pagamento.TransactionId == transactionId);
-                if (pedido != null) 
+
+                var pedidoExistente = await _context.Pedidos
+                    .AsNoTracking()
+                    .AnyAsync(p => p.Pagamento.TransactionId == transactionId);
+
+                if (pedidoExistente)
                 {
-                    _logger.LogInformation($"Pedido com TransactionId {transactionId} já existe.");
+                    _logger.LogInformation("Pedido com TransactionId {TransactionId} já existe.", transactionId);
                     return Ok("Pedido já existe");
                 }
-                //Caso dados estejam serializados como JSON e contenham o restauranteId
+
                 var dados = JsonSerializer.Deserialize<PedidoDTO>(pedidoPendente.PedidoJson);
-                var restauranteId = dados?.RestauranteId ?? 0;
-                if (restauranteId == 0) return BadRequest("RestauranteId não encontrado.");
-                var accessToken = await BuscaCredenciaisAsync(restauranteId);
-                using var client = new HttpClient();
-                string url = $"https://api.mercadopago.com/v1/payments/{transactionId}?access_token={accessToken}";
+                if (dados?.RestauranteId is null or 0)
+                    return BadRequest("RestauranteId não encontrado.");
 
-                var response = await client.GetAsync(url);
-                if (!response.IsSuccessStatusCode)
-                {
-                    return StatusCode((int)response.StatusCode, "Erro ao buscar informações de pagamento.");
-                }
+                var accessToken = await BuscaCredenciaisAsync(dados.RestauranteId);
+                var statusPagamento = await ObterStatusPagamentoAsync(transactionId, accessToken);
 
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var paymentData = JsonDocument.Parse(responseContent).RootElement;
-
-                if (!paymentData.TryGetProperty("status", out var statusElement))
-                {
-                    return BadRequest("Status de pagamento não encontrado.");
-                }
-
-                string status = statusElement.GetString();
-                if (status == "approved")
+                if (statusPagamento == "approved")
                 {
                     await ProcessarPagamentoAprovadoAsync(transactionId);
                 }
+
                 return Ok();
             }
             catch (Exception ex)
@@ -282,8 +244,60 @@ namespace SistemaDeGestao.Controllers
                 _ = Task.Delay(4000).ContinueWith(t => _locks.TryRemove(transactionId, out _));
             }
         }
+        private string? ObterTransactionId(JsonElement notification, string id, string type)
+        {
+            if (!string.IsNullOrEmpty(id))
+                return id;
+
+            if (notification.TryGetProperty("data", out var data) &&
+                data.TryGetProperty("id", out var idElement))
+                return idElement.GetString();
+
+            if (type == "payment" && Request.Query.TryGetValue("data.id", out var dataIdValues))
+                return dataIdValues.FirstOrDefault();
+
+            return null;
+        }
+
+        private async Task<PedidoPendente?> TentarObterPedidoPendenteAsync(string transactionId, int maxTentativas, int delayMs)
+        {
+            for (int tentativa = 0; tentativa < maxTentativas; tentativa++)
+            {
+                var pedido = await _context.PedidosPendentes
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.TransactionId == transactionId);
+
+                if (pedido != null)
+                    return pedido;
+
+                await Task.Delay(delayMs);
+            }
+            return null;
+        }
+
+        private async Task<string?> ObterStatusPagamentoAsync(string transactionId, string accessToken)
+        {
+            var url = $"https://api.mercadopago.com/v1/payments/{transactionId}?access_token={accessToken}";
+            using var client = new HttpClient();
+
+            var response = await client.GetAsync(url);
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogWarning("Falha ao obter status do pagamento para {TransactionId}. StatusCode: {StatusCode}", transactionId, response.StatusCode);
+                return null;
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var doc = JsonDocument.Parse(json);
+
+            if (doc.RootElement.TryGetProperty("status", out var statusElement))
+                return statusElement.GetString();
+
+            return null;
+        }
 
     }
+
 
     public class ReembolsoRequest
     {

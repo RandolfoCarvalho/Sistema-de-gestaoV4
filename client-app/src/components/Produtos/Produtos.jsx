@@ -76,6 +76,7 @@ const Produtos = () => {
   );
 
   return (
+    
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <HeaderPublic />
       
@@ -91,15 +92,6 @@ const Produtos = () => {
               />
             </div>
           )}
-          
-          {/* Informações da loja (opcional) */}
-          <div className="mb-6">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{lojaInfo.nome}</h1>
-            {lojaInfo.descricao && (
-              <p className="text-gray-600 mt-1">{lojaInfo.descricao}</p>
-            )}
-          </div>
-        
           {/* Filtro de categorias */}
           <div className="sticky top-0 z-10 bg-gray-50 py-2 -mx-4 px-4 md:-mx-6 md:px-6 lg:-mx-8 lg:px-8 shadow-sm">
             <CategoryFilter 
@@ -108,7 +100,6 @@ const Produtos = () => {
               setActiveCategory={setActiveCategory} 
             />
           </div>
-          
           {/* Produtos em destaque */}
           <div className="mt-6">
             <FeaturedProducts products={produtos} />

@@ -39,6 +39,7 @@ import CriarGrupoAdicionais from './components/Admin/Stats/CreateAddGroup';
 import CriarComplemento from './components/Admin/Stats/CreateComplement';
 import MeusProdutos from './components/Admin/Stats/Products';
 import Perfil from './components/Admin/Stats/Perfil';
+import WhatsappBOT from './components/Admin/Stats/WhatsappBOT/whatsappBOT';
 import Sair from './components/Admin/Stats/logout';
 
 //protecao da rota admin
@@ -122,6 +123,7 @@ const App = () => {
                                             <Route path="CriarComplemento" element={<CriarComplemento />} />
                                             <Route path="MeusProdutos" element={<MeusProdutos />} />
                                             <Route path="Perfil" element={<Perfil />} />
+                                            <Route path="WhatsappBOT" element={<WhatsappBOT />} />
                                             <Route path="Sair" element={<Sair />} />
                                         </Route>
                                     </Route>

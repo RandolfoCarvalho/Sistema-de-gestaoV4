@@ -17,6 +17,7 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
         private readonly ILogger<PedidoService> _logger;
         private readonly DataBaseContext _context;
         private readonly IHubContext<OrderHub> _hubContext;
+        
 
         public PedidoController(PedidoService pedidoService, ILogger<PedidoService> logger, DataBaseContext context, 
             IHubContext<OrderHub> hubContext)

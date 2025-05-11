@@ -60,13 +60,7 @@ const Perfil = () => {
                 setLoading(true);
                 const response = await api.get('/api/1.0/Restaurante/GetRestauranteInfo');
                 const restauranteData = response.data.restaurante;
-                
-                console.log("resposta", response);
-                console.log("response.data.restaurante", response.data.restaurante);
-                console.log("restauranteData.empresa", restauranteData.empresa);
-
                 const empresa = restauranteData.empresa;
-    
                 const horarioAbertura = empresa.horarioAbertura
                     ? new Date(`2000-01-01T${empresa.horarioAbertura}`).toTimeString().slice(0, 5)
                     : '08:00';

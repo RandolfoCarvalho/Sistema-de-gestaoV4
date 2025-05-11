@@ -27,6 +27,7 @@ namespace SistemaDeGestao.Data
         public DbSet<Empresa> Empresas { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<FinalUser> FinalUsers { get; set; }
+        public DbSet<ModeloMensagem> ModelosMensagem { get; set; }
         public DbSet<RestauranteCredencialMercadoPago> RestauranteCredenciaisMercadoPago { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

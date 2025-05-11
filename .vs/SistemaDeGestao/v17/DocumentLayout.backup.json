@@ -192,7 +192,7 @@
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\WhatsAppBotService.cs",
               "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\WhatsAppBotService.cs",
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\WhatsAppBotService.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAgwDUAAAA2AAAAAAAAAA==",
+              "ViewState": "AgIAABoAAAAAAAAAAAAcwCsAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-08T15:05:15.475Z",
               "EditorCaption": ""
@@ -243,7 +243,8 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\ProdutoService.cs",
               "ViewState": "AgIAAOAAAAAAAAAAAAAWwPcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T23:13:56.053Z"
+              "WhenOpened": "2025-05-04T23:13:56.053Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -339,7 +340,8 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
               "ViewState": "AgIAABIBAAAAAAAAAAAIwCYBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T01:59:46.372Z"
+              "WhenOpened": "2025-05-05T01:59:46.372Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",

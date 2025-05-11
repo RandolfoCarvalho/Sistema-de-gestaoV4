@@ -32,7 +32,7 @@ const LoginSection = ({ onSessionConnected }) => {
 
   const checkSessionStatus = async () => {
     try {
-      const res = await axios.get(`http://localhost:3001/status/${sessionName}`);
+      const res = await axios.get(`${process.env.REACT_WHATSAPPBOT_VPS}/status/${sessionName}`);
       if (res.data.status === 'connected') {
         setSessionStatus('connected');
         onSessionConnected();
@@ -46,7 +46,7 @@ const LoginSection = ({ onSessionConnected }) => {
     setLoading(true);
     setQrCode(null);
     try {
-      await axios.post('http://localhost:3001/start-session', {
+      await axios.post(`${process.env.REACT_WHATSAPPBOT_VPS}/start-session`, {
         session: sessionName
       });
 
@@ -55,7 +55,7 @@ const LoginSection = ({ onSessionConnected }) => {
       const maxTentativas = 15;
       const intervalo = setInterval(async () => {
         try {
-          const res = await axios.get(`http://localhost:3001/qrcode/${sessionName}`);
+          const res = await axios.get(`${process.env.REACT_WHATSAPPBOT_VPS}/qrcode/${sessionName}`);
           
           if (res.data.qrCode) {
             clearInterval(intervalo);
@@ -73,7 +73,7 @@ const LoginSection = ({ onSessionConnected }) => {
             // Verificar status após escanear o QR code
             const statusCheck = setInterval(async () => {
               try {
-                const statusRes = await axios.get(`http://localhost:3001/status/${sessionName}`);
+                const statusRes = await axios.get(`${process.env.REACT_WHATSAPPBOT_VPS}/status/${sessionName}`);
                 if (statusRes.data.status === 'connected') {
                   setSessionStatus('connected');
                   clearInterval(statusCheck);

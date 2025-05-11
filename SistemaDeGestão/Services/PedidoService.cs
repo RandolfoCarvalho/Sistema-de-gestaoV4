@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using SistemaDeGestao.Data;
+using SistemaDeGestao.Migrations;
 using SistemaDeGestao.Models;
 using System.Numerics;
 
@@ -15,14 +16,16 @@ namespace SistemaDeGestao.Services
         private readonly IHubContext<OrderHub> _hubContext;
         private readonly RestauranteService _restauranteService;
         private readonly IMapper _mapper;
+        private readonly WhatsAppBotService _whatsAppBot;
         public PedidoService(DataBaseContext context, ILogger<PedidoService> logger, 
-            IHubContext<OrderHub> hubContext, RestauranteService restauranteService, IMapper mapper)
+            IHubContext<OrderHub> hubContext, RestauranteService restauranteService, IMapper mapper, WhatsAppBotService whatsAppBot)
         {
             _context = context;
             _logger = logger;
             _hubContext = hubContext;
             _restauranteService = restauranteService;
             _mapper = mapper;
+            _whatsAppBot = whatsAppBot;
         }
 
         public async Task<IEnumerable<Pedido>> ListarPedidos()
@@ -99,14 +102,17 @@ namespace SistemaDeGestao.Services
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
+        /// <summary>
+        /// Cria um novo pedido e envia notificação ao cliente.
+        /// </summary>
+        /// <param name="pedidoDTO">Dados do pedido enviado pelo cliente.</param>
+        /// <returns>O pedido criado com os dados persistidos.</returns>
         public async Task<Pedido> CriarPedidoAsync(PedidoDTO pedidoDTO)
         {
             if (pedidoDTO == null || !pedidoDTO.Itens.Any())
                 throw new ArgumentException("O pedido deve conter pelo menos um item.");
-
             var empresa = await _context.Empresas.FirstOrDefaultAsync(e => e.RestauranteId == pedidoDTO.RestauranteId);
             if (empresa == null || !_restauranteService.IsLojaOpen(empresa)) return null;
-            // Gerar um número único baseado no GUID
             BigInteger pedidoNumber = new BigInteger(Guid.NewGuid().ToByteArray().Take(4).ToArray());
             pedidoNumber = BigInteger.Abs(pedidoNumber) % 999999; 
             string numeroPedido = $"PED: {pedidoNumber:D5}";
@@ -116,10 +122,12 @@ namespace SistemaDeGestao.Services
 
             _context.Pedidos.Add(pedido);
             await _context.SaveChangesAsync();
+
+            var result = await _whatsAppBot.MontarMensagemAsync(pedido);
+            if (!result) return null;
             await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoDTO);
             return pedido;
         }
-
 
         /*public async Task<ItemPedido> AdicionarItemAoPedido(ItemPedido item)
         {

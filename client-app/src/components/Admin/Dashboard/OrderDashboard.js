@@ -20,7 +20,7 @@ const OrderDashboard = () => {
         // Mapear o status do frontend para o valor numérico do backend
         const statusMap = {
             'pedido-recebido': 0,    // NOVO
-            'pedido-em-producao': 1, // EM_PRODUCAO
+            'pedido-em-producao': 1, // 
             'saiu-para-entrega': 2,  // EM_ENTREGA
             'completo': 3,           // COMPLETO
             'Cancelado': 4            // CANCELADO

@@ -14,12 +14,14 @@ public class OrderHub : Hub
 {
     private readonly ILogger<OrderHub> _logger;
     private readonly PedidoService _orderService;
+    private readonly WhatsAppBotService _whatsappBot;
     private static readonly ConcurrentDictionary<string, string> _connectionGroups = new();
 
-    public OrderHub(ILogger<OrderHub> logger, PedidoService orderService)
+    public OrderHub(ILogger<OrderHub> logger, PedidoService orderService, WhatsAppBotService whatsappBot)
     {
         _logger = logger;
         _orderService = orderService;
+        _whatsappBot = whatsappBot;
     }
     public async Task NewOrderNotification(PedidoDTO pedidoDTO)
     {
@@ -127,6 +129,7 @@ public class OrderHub : Hub
                 OrderNumber = pedidoAtual.Numero
             };
             await Clients.All.SendAsync("ReceiveOrderUpdate", pedidoAtual);
+            await _whatsappBot.MontarMensagemAsync(pedidoAtual);
             _logger.LogInformation($"Successfully updated status for order {orderId} from {oldStatus} to {newStatus}");
         }
         catch (Exception ex)

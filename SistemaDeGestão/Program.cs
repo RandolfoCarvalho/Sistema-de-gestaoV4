@@ -104,6 +104,7 @@ builder.Services.AddScoped<PedidoService>();
 builder.Services.AddScoped<IFinalUserService, FinalUserService>();
 builder.Services.AddScoped<FinalUserService>();
 builder.Services.AddScoped<MercadoPagoService>();
+builder.Services.AddHttpClient<WhatsAppBotService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IEncryptionService, EncryptionService>();
 builder.Services.AddHttpClient();

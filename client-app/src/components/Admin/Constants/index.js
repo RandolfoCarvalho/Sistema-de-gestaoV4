@@ -40,6 +40,11 @@ export const links = [
         text: "Perfil",
     },
     {
+        href: "/admin/WhatsappBOT",
+        icon: FaBox,
+        text: "WhatsappBOT",
+    },
+    {
         href: "/admin/Sair",
         icon: FaSignOutAlt, 
         text: "Sair",

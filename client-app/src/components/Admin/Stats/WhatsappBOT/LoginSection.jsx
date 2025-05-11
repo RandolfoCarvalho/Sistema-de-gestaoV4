@@ -8,7 +8,7 @@ const LoginSection = ({ onSessionConnected }) => {
   const [loading, setLoading] = useState(false);
   const [sessionStatus, setSessionStatus] = useState('disconnected');
   const [sessionName, setSessionName]= useState(localStorage.getItem('restaurantName'));;
-
+  const baseUrl = process.env.REACT_APP_WHATSAPPBOT_VPS;
   // Verificar status da sessão ao carregar o componente
   useEffect(() => {
   const setupSession = async () => {
@@ -32,7 +32,7 @@ const LoginSection = ({ onSessionConnected }) => {
 
   const checkSessionStatus = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_WHATSAPPBOT_VPS}/status/${sessionName}`);
+      const res = await axios.get(`${baseUrl}/status/${sessionName}`);
       if (res.data.status === 'connected') {
         setSessionStatus('connected');
         onSessionConnected();
@@ -46,7 +46,7 @@ const LoginSection = ({ onSessionConnected }) => {
     setLoading(true);
     setQrCode(null);
     try {
-      await axios.post(`${process.env.REACT_WHATSAPPBOT_VPS}/start-session`, {
+      await axios.post(`${baseUrl}/start-session`, {
         session: sessionName
       });
 
@@ -55,7 +55,7 @@ const LoginSection = ({ onSessionConnected }) => {
       const maxTentativas = 15;
       const intervalo = setInterval(async () => {
         try {
-          const res = await axios.get(`${process.env.REACT_WHATSAPPBOT_VPS}/qrcode/${sessionName}`);
+          const res = await axios.get(`${baseUrl}/qrcode/${sessionName}`);
           
           if (res.data.qrCode) {
             clearInterval(intervalo);
@@ -73,7 +73,7 @@ const LoginSection = ({ onSessionConnected }) => {
             // Verificar status após escanear o QR code
             const statusCheck = setInterval(async () => {
               try {
-                const statusRes = await axios.get(`${process.env.REACT_WHATSAPPBOT_VPS}/status/${sessionName}`);
+                const statusRes = await axios.get(`${baseUrl}/status/${sessionName}`);
                 if (statusRes.data.status === 'connected') {
                   setSessionStatus('connected');
                   clearInterval(statusCheck);

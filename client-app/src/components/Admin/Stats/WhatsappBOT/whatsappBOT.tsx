@@ -1,28 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Phone, CheckCircle, AlertCircle, Send, Loader, AlertTriangle } from 'lucide-react';
+import { Phone, CheckCircle, Send, Loader } from 'lucide-react';
 import MessageTemplate from './MessageTemplate';
 import LoginSection from './LoginSection';
 
-// Componente Principal
-const WhatsappBOT = () => {
+const WhatsappBOT: React.FC = () => {
   const [isConnected, setIsConnected] = useState(false);
-  const [activeTab, setActiveTab] = useState('connection');
+  const [activeTab, setActiveTab] = useState<'connection' | 'templates'>('connection');
   
   const handleSessionConnected = () => {
     setIsConnected(true);
     setActiveTab('templates');
   };
 
+  const handleSessionDisconnected = () => {
+    setIsConnected(false);
+    setActiveTab('connection');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="max-w-4xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">WhatsApp Bot - Gestão de Mensagens</h1>
-          <p className="text-gray-600">Configure e envie notificações automáticas para seus clientes</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">WhatsApp Bot - Message Management</h1>
+          <p className="text-gray-600">Configure and send automatic notifications to your customers</p>
         </div>
         
-        {/* Tabs de navegação */}
+        {/* Navigation Tabs */}
         <div className="flex border-b mb-6">
           <button 
             onClick={() => setActiveTab('connection')}
@@ -32,7 +36,7 @@ const WhatsappBOT = () => {
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
-            Conexão
+            Connection
           </button>
           <button 
             onClick={() => setActiveTab('templates')}
@@ -45,25 +49,19 @@ const WhatsappBOT = () => {
                   : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
-            Modelos de Mensagem
+            Message Templates
           </button>
         </div>
-       {activeTab === 'connection' && (
-          <div>
-            {isConnected && (
-              <div className="text-green-600 font-medium mb-4">
-                Sessão conectada com sucesso. Você pode desconectar abaixo ou alternar de aba.
-              </div>
-            )}
-            
-            <LoginSection onSessionConnected={handleSessionConnected} />
-          </div>
+
+        {activeTab === 'connection' && (
+          <LoginSection 
+            onSessionConnected={handleSessionConnected} 
+            onSessionDisconnected={handleSessionDisconnected}
+          />
         )}
+
         {isConnected && activeTab === 'templates' && (
-          <div>
-              <MessageTemplate 
-              />
-          </div>
+          <MessageTemplate />
         )}
       </div>
     </div>

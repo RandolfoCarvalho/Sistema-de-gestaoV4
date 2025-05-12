@@ -119,8 +119,6 @@ const LoginSection = ({ onSessionConnected }) => {
   }
 };
 
-
-
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-6">
       <div className="flex items-center mb-4">
@@ -167,13 +165,11 @@ const LoginSection = ({ onSessionConnected }) => {
 
             <button 
               onClick={desconectarSessao} 
-              disabled={sessionStatus !== 'connected' || loading}
+              disabled={loading} // só desabilita se estiver carregando
               className={`px-4 py-2 rounded-md font-medium flex items-center justify-center w-full md:w-auto
-                ${sessionStatus !== 'connected' 
-                  ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
-                  : loading 
-                    ? 'bg-red-400 text-white cursor-wait' 
-                    : 'bg-red-600 hover:bg-red-700 text-white'}`}
+                ${loading 
+                  ? 'bg-red-400 text-white cursor-wait' 
+                  : 'bg-red-600 hover:bg-red-700 text-white'}`}
             >
               {loading ? (
                 <>
@@ -188,10 +184,10 @@ const LoginSection = ({ onSessionConnected }) => {
               ) : (
                 <>
                   <Slash className="mr-2" size={18} />
-                  Desconectado
+                  Forçar Desconexão
                 </>
               )}
-            </button>
+          </button>
         </div>
       </div>
 

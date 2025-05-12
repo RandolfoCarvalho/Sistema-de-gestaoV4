@@ -51,9 +51,16 @@ const WhatsappBOT = () => {
         
         {/* Conteúdo da Tab ativa */}
         {activeTab === 'connection' && (
-          <LoginSection onSessionConnected={handleSessionConnected} />
-        )}
-        
+            <div>
+              {isConnected ? (
+                <div className="text-green-600 font-medium">
+                  Sessão conectada com sucesso. Você pode desconectar abaixo ou alternar de aba.
+                </div>
+              ) : (
+                <LoginSection onSessionConnected={handleSessionConnected} />
+              )}
+            </div>
+          )}
         {isConnected && activeTab === 'templates' && (
           <div>
               <MessageTemplate 

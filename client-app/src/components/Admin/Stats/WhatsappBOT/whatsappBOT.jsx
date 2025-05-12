@@ -11,7 +11,7 @@ const WhatsappBOT = () => {
   
   const handleSessionConnected = () => {
     setIsConnected(true);
-    setActiveTab('templates');
+    //setActiveTab('templates');
   };
 
   return (

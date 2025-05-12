@@ -22,8 +22,8 @@ const WhatsappBOT: React.FC = () => {
     <div className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="max-w-4xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">WhatsApp Bot - Message Management</h1>
-          <p className="text-gray-600">Configure and send automatic notifications to your customers</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">WhatsApp Bot - Gestão de Mensagens</h1>
+          <p className="text-gray-600">Configure e envie notificações automáticas para seus clientes</p>
         </div>
         
         {/* Navigation Tabs */}
@@ -36,7 +36,7 @@ const WhatsappBOT: React.FC = () => {
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
-            Connection
+            Conexão
           </button>
           <button 
             onClick={() => setActiveTab('templates')}
@@ -49,7 +49,7 @@ const WhatsappBOT: React.FC = () => {
                   : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
-            Message Templates
+            Modelos de Mensagem
           </button>
         </div>
 

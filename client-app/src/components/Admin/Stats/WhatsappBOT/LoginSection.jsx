@@ -106,22 +106,29 @@ const LoginSection = ({ onSessionConnected }) => {
     }
   };
 
-  const desconectarSessao = async () => {
-    if (sessionStatus !== 'connected') return;
+const desconectarSessao = async () => {
+  if (sessionStatus !== 'connected') return;
 
-    setLoading(true);
-    try {
-      await axios.get(`${baseUrl}/logout/${sessionName}`);
-      if (isMounted.current) {
-        setSessionStatus('disconnected');
-        setQrCode(null);
-      }
-    } catch (error) {
-      console.error('Erro ao desconectar:', error);
-    } finally {
-      if (isMounted.current) setLoading(false);
+  setLoading(true);
+  try {
+    const response = await axios.get(`${baseUrl}/logout/${sessionName}`);
+
+    // Aqui verificamos se a sessão já estava desconectada
+    if (response.data.message === 'Sessão já desconectada ou não encontrada.') {
+      setSessionStatus('disconnected'); // Atualiza o status no frontend
+      setQrCode(null); // Limpa o QR Code
+    } else {
+      setSessionStatus('disconnected'); // Caso contrário, desconectou com sucesso
+      setQrCode(null); // Limpa o QR Code
     }
-  };
+  } catch (error) {
+    console.error('Erro ao desconectar:', error);
+    alert('Erro ao tentar desconectar.');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-6">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Phone, CheckCircle, AlertCircle, Send, Loader, AlertTriangle } from 'lucide-react';
+import { Phone, CheckCircle, PhoneOff, Slash, AlertCircle, Send, Loader, AlertTriangle } from 'lucide-react';
 
 // Componente de Login e QR Code
 const LoginSection = ({ onSessionConnected }) => {
@@ -102,6 +102,25 @@ const LoginSection = ({ onSessionConnected }) => {
     }
   };
 
+
+  const desconectarSessao = async () => {
+  setLoading(true);
+  try {
+    const response = await axios.get(`${baseUrl}/logout/${sessionName}`);
+    console.log('Desconectado com sucesso:', response.data);
+
+    setSessionStatus('disconnected');
+    setQrCode(null);
+  } catch (error) {
+    console.error('Erro ao desconectar:', error);
+    // Aqui você pode setar erro para exibir no UI, se quiser
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-6">
       <div className="flex items-center mb-4">
@@ -117,33 +136,63 @@ const LoginSection = ({ onSessionConnected }) => {
           </span>
         </p>
         
-        <button 
-          onClick={iniciarSessao} 
-          disabled={sessionStatus === 'connected' || loading}
-          className={`px-4 py-2 rounded-md font-medium flex items-center justify-center w-full md:w-auto
-            ${sessionStatus === 'connected' 
-              ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
-              : loading 
-                ? 'bg-blue-400 text-white cursor-wait' 
-                : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
-        >
-          {loading ? (
-            <>
-              <Loader className="animate-spin mr-2" size={18} />
-              Conectando...
-            </>
-          ) : sessionStatus === 'connected' ? (
-            <>
-              <CheckCircle className="mr-2" size={18} />
-              Conectado
-            </>
-          ) : (
-            <>
-              <Phone className="mr-2" size={18} />
-              Conectar WhatsApp
-            </>
-          )}
-        </button>
+          <div className="flex space-x-4">
+            <button 
+              onClick={iniciarSessao} 
+              disabled={sessionStatus === 'connected' || loading}
+              className={`px-4 py-2 rounded-md font-medium flex items-center justify-center w-full md:w-auto
+                ${sessionStatus === 'connected' 
+                  ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
+                  : loading 
+                    ? 'bg-blue-400 text-white cursor-wait' 
+                    : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
+            >
+              {loading ? (
+                <>
+                  <Loader className="animate-spin mr-2" size={18} />
+                  Conectando...
+                </>
+              ) : sessionStatus === 'connected' ? (
+                <>
+                  <CheckCircle className="mr-2" size={18} />
+                  Conectado
+                </>
+              ) : (
+                <>
+                  <Phone className="mr-2" size={18} />
+                  Conectar WhatsApp
+                </>
+              )}
+            </button>
+
+            <button 
+              onClick={desconectarSessao} 
+              disabled={sessionStatus !== 'connected' || loading}
+              className={`px-4 py-2 rounded-md font-medium flex items-center justify-center w-full md:w-auto
+                ${sessionStatus !== 'connected' 
+                  ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
+                  : loading 
+                    ? 'bg-red-400 text-white cursor-wait' 
+                    : 'bg-red-600 hover:bg-red-700 text-white'}`}
+            >
+              {loading ? (
+                <>
+                  <Loader className="animate-spin mr-2" size={18} />
+                  Desconectando...
+                </>
+              ) : sessionStatus === 'connected' ? (
+                <>
+                  <PhoneOff className="mr-2" size={18} />
+                  Desconectar
+                </>
+              ) : (
+                <>
+                  <Slash className="mr-2" size={18} />
+                  Desconectado
+                </>
+              )}
+            </button>
+        </div>
       </div>
 
       {loading && (

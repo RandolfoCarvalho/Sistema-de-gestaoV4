@@ -23,6 +23,7 @@ const LoginSection = ({ onSessionConnected }) => {
       console.error('Erro ao buscar o nome do restaurante:', error);
       return;
     }
+    // Agora que temos o nome, verificamos o status da sessão
     await checkSessionStatus(name);
   };
 

@@ -10,7 +10,7 @@ const WhatsappBOT: React.FC = () => {
   
   const handleSessionConnected = () => {
     setIsConnected(true);
-    setActiveTab('templates');
+    //setActiveTab('templates');
   };
 
   const handleSessionDisconnected = () => {

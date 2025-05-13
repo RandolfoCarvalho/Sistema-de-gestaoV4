@@ -77,9 +77,11 @@ const LoginSection = ({ onSessionStatusChange, currentStatus }) => {
       await axios.post(`${baseUrl}/start-session`, { session: sessionName });
 
       let tentativas = 0;
-      const maxTentativas = 15;
+      const maxTentativas = 60; // Aumentando bastante o tempo de espera para garantir que o Venom gere o QR
+      
+      console.log('Aguardando geração do QR Code pelo Venom...');
 
-      // Pooling para obter o QR Code
+      // Pooling para obter o QR Code com tempo adicional
       const intervalo = setInterval(async () => {
         if (!isMounted.current) {
           clearInterval(intervalo);
@@ -88,55 +90,63 @@ const LoginSection = ({ onSessionStatusChange, currentStatus }) => {
         
         try {
           const res = await axios.get(`${baseUrl}/qrcode/${sessionName}`);
-          if (res.data.qrCode) {
-            clearInterval(intervalo);
-
-            // Formata o QR code adequadamente
-            const qrData = res.data.qrCode.startsWith('data:image')
-              ? res.data.qrCode
-              : `data:image/png;base64,${res.data.qrCode}`;
-
+          
+          // Verificando se obtivemos uma resposta válida do servidor
+          if (res.data && res.data.qrCode) {
+            // Usar exatamente o QR code que veio do servidor Venom, sem manipulação
             if (isMounted.current) {
-              setQrCode(qrData);
+              console.log('QR Code do Venom recebido!');
+              // Definir QR code exatamente como retornado pelo servidor
+              setQrCode(res.data.qrCode);
               setLoading(false);
-            }
-
-            // Verificação contínua do status após QR code gerado
-            const statusCheck = setInterval(async () => {
-              if (!isMounted.current) {
-                clearInterval(statusCheck);
-                return;
-              }
+              clearInterval(intervalo);
               
-              try {
-                const statusRes = await axios.get(`${baseUrl}/status/${sessionName}`);
-                if (statusRes.data.status === 'connected') {
+              // Inicia verificação contínua do status após o QR code ser exibido
+              const statusCheck = setInterval(async () => {
+                if (!isMounted.current) {
                   clearInterval(statusCheck);
-                  if (isMounted.current) {
-                    onSessionStatusChange('connected', sessionName);
-                  }
+                  return;
                 }
-              } catch (err) {
-                console.log('Aguardando conexão...');
-              }
-            }, 3000);
+                
+                try {
+                  const statusRes = await axios.get(`${baseUrl}/status/${sessionName}`);
+                  if (statusRes.data.status === 'connected') {
+                    clearInterval(statusCheck);
+                    if (isMounted.current) {
+                      console.log('Sessão conectada com sucesso!');
+                      onSessionStatusChange('connected', sessionName);
+                    }
+                  }
+                } catch (err) {
+                  console.log('Aguardando conexão do WhatsApp...');
+                }
+              }, 3000);
+            } else {
+              clearInterval(intervalo);
+            }
+          } else {
+            // QR code ainda não disponível
+            console.log(`Tentativa ${tentativas + 1}/${maxTentativas}: QR Code ainda não disponível`);
+            tentativas++;
           }
         } catch (err) {
+          console.log(`Tentativa ${tentativas + 1}/${maxTentativas} de obter QR Code...`);
           tentativas++;
+          
           if (tentativas >= maxTentativas) {
             clearInterval(intervalo);
             if (isMounted.current) {
               setLoading(false);
               onSessionStatusChange('disconnected');
-              alert('QR Code não foi carregado após várias tentativas.');
+              alert('O QR Code não foi gerado pelo servidor Venom após várias tentativas. Verifique se o servidor está funcionando corretamente.');
             }
           }
         }
-      }, 2000);
+      }, 3000); // Aumentando o intervalo para 3 segundos para dar mais tempo ao servidor
     } catch (error) {
       console.error('Erro ao iniciar sessão:', error);
       if (isMounted.current) {
-        alert('Erro ao iniciar sessão.');
+        alert('Erro ao iniciar sessão: ' + (error.response?.data?.message || error.message));
         setLoading(false);
         onSessionStatusChange('disconnected');
       }
@@ -244,21 +254,40 @@ const LoginSection = ({ onSessionStatusChange, currentStatus }) => {
       </div>
 
       {loading && !qrCode && currentStatus !== 'connected' && (
-        <div className="flex flex-col items-center justify-center p-4">
-          <Loader className="animate-spin text-blue-500 mb-2" size={32} />
-          <p className="text-gray-600">Gerando QR Code, aguarde...</p>
+        <div className="flex flex-col items-center justify-center p-4 border rounded-lg">
+          <Loader className="animate-spin text-blue-500 mb-3" size={36} />
+          <p className="text-gray-700 font-medium">Gerando QR Code pelo Venom, aguarde...</p>
+          <p className="text-gray-500 text-sm mt-2">Este processo pode levar até 1 minuto</p>
         </div>
       )}
 
       {qrCode && currentStatus !== 'connected' && (
-        <div className="flex flex-col items-center p-4 border rounded-lg">
-          <h4 className="text-lg font-medium mb-3">Escaneie o QR Code:</h4>
-          <div className="bg-white p-3 border rounded-lg mb-3">
-            <img src={qrCode} alt="QR Code para WhatsApp" className="max-w-xs" />
+        <div className="flex flex-col items-center p-6 border rounded-lg bg-blue-50">
+          <h4 className="text-lg font-medium mb-4 text-blue-800">Escaneie este QR Code:</h4>
+          <div className="bg-white p-4 border-2 border-blue-300 rounded-lg mb-4 shadow-md">
+            {/* Usar o QR code exatamente como fornecido pelo servidor, sem manipulação */}
+            <img 
+              src={qrCode} 
+              alt="QR Code WhatsApp" 
+              className="max-w-xs" 
+              onError={(e) => {
+                console.error("Erro ao carregar QR code");
+                e.target.style.display = 'none';
+                alert("Erro ao exibir o QR Code. Tente reiniciar a conexão.");
+              }}
+            />
           </div>
-          <p className="text-sm text-gray-500 text-center">
-            Abra o WhatsApp no seu celular, vá em <b>Configurações &gt; Dispositivos conectados &gt; Conectar um dispositivo</b>
-          </p>
+          <div className="text-sm text-gray-700 text-center max-w-sm">
+            <p className="mb-2 font-medium">Instruções:</p>
+            <ol className="list-decimal text-left pl-5 space-y-1">
+              <li>Abra o WhatsApp no seu celular</li>
+              <li>Toque em <b>Configurações</b></li>
+              <li>Selecione <b>Dispositivos conectados</b></li>
+              <li>Toque em <b>Conectar um dispositivo</b></li>
+              <li>Posicione a câmera para escanear o QR Code acima</li>
+            </ol>
+            <p className="mt-3 text-xs text-blue-600">O QR Code expira após alguns minutos. Se expirar, reinicie o processo.</p>
+          </div>
         </div>
       )}
     </div>

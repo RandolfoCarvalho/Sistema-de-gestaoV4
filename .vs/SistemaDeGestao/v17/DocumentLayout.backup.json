@@ -142,11 +142,15 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             },
             {
               "$type": "Document",
@@ -195,7 +199,8 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\ProdutoService.cs",
               "ViewState": "AgIAAOAAAAAAAAAAAAAWwPcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T23:13:56.053Z"
+              "WhenOpened": "2025-05-04T23:13:56.053Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -279,7 +284,8 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Hubs\\OrderHub.cs",
               "ViewState": "AgIAAGgAAAAAAAAAAAAjwIMAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-11T16:06:01.398Z"
+              "WhenOpened": "2025-05-11T16:06:01.398Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -339,7 +345,8 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
               "ViewState": "AgIAABIBAAAAAAAAAAAIwCYBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T01:59:46.372Z"
+              "WhenOpened": "2025-05-05T01:59:46.372Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -544,10 +551,6 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-22T19:50:32.691Z"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             }
           ]
         },

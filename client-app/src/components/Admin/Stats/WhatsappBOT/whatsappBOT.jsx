@@ -1,18 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Phone, CheckCircle } from 'lucide-react';
 import MessageTemplate from './MessageTemplate';
 import LoginSection from './LoginSection';
+import axios from 'axios';
+
+const baseUrl = process.env.REACT_APP_WHATSAPPBOT_VPS; // Ajuste conforme necessário
 
 const WhatsappBOT = () => {
   const [sessionStatus, setSessionStatus] = useState('disconnected');
   const [activeTab, setActiveTab] = useState('connection');
   const [sessionName, setSessionName] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const isMounted = useRef(true);
 
   const handleSessionStatusChange = (status, name) => {
     setSessionStatus(status);
     if (name) setSessionName(name);
     if (status === 'connected') {
       setActiveTab('templates');
+    }
+  };
+
+  const desconectarSessao = async () => {
+    if (sessionStatus !== 'connected') return;
+
+    setLoading(true);
+    try {
+      await axios.get(`${baseUrl}/logout/${sessionName}`);
+      if (isMounted.current) {
+        handleSessionStatusChange('disconnected');
+      }
+    } catch (error) {
+      console.error('Erro ao desconectar:', error);
+      alert('Erro ao tentar desconectar.');
+    } finally {
+      if (isMounted.current) {
+        setLoading(false);
+      }
     }
   };
 
@@ -27,11 +52,20 @@ const WhatsappBOT = () => {
         </div>
 
         {sessionStatus === 'connected' && (
-          <div className="mb-4 p-3 bg-green-100 border border-green-200 rounded-md flex items-center">
-            <CheckCircle className="text-green-600 mr-2" size={18} />
-            <span className="text-green-800">
-              Conectado como <strong>{sessionName}</strong>
-            </span>
+          <div className="mb-4 p-3 bg-green-100 border border-green-200 rounded-md flex items-center justify-between">
+            <div className="flex items-center">
+              <CheckCircle className="text-green-600 mr-2" size={18} />
+              <span className="text-green-800">
+                Conectado como <strong>{sessionName}</strong>
+              </span>
+            </div>
+            <button
+              onClick={desconectarSessao}
+              className="text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+              disabled={loading}
+            >
+              {loading ? 'Desconectando...' : 'Desconectar'}
+            </button>
           </div>
         )}
 

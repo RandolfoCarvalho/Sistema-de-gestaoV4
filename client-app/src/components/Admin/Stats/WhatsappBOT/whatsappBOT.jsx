@@ -1,6 +1,5 @@
-// WhatsappBOT.jsx
-import React, { useState, useEffect } from 'react';
-import { Phone, CheckCircle, Send, Loader } from 'lucide-react';
+import React, { useState } from 'react';
+import { Phone, CheckCircle } from 'lucide-react';
 import MessageTemplate from './MessageTemplate';
 import LoginSection from './LoginSection';
 
@@ -8,13 +7,10 @@ const WhatsappBOT = () => {
   const [sessionStatus, setSessionStatus] = useState('disconnected');
   const [activeTab, setActiveTab] = useState('connection');
   const [sessionName, setSessionName] = useState('');
-  
-  // Quando o componente LoginSection conectar, esta função será chamada
+
   const handleSessionStatusChange = (status, name) => {
     setSessionStatus(status);
     if (name) setSessionName(name);
-    
-    // Se conectado, automaticamente muda para a aba de templates
     if (status === 'connected') {
       setActiveTab('templates');
     }
@@ -29,8 +25,7 @@ const WhatsappBOT = () => {
           </h1>
           <p className="text-gray-600">Configure e envie notificações automáticas para seus clientes</p>
         </div>
-        
-        {/* Status Banner */}
+
         {sessionStatus === 'connected' && (
           <div className="mb-4 p-3 bg-green-100 border border-green-200 rounded-md flex items-center">
             <CheckCircle className="text-green-600 mr-2" size={18} />
@@ -39,8 +34,7 @@ const WhatsappBOT = () => {
             </span>
           </div>
         )}
-        
-        {/* Tabs de navegação */}
+
         <div className="flex border-b mb-6">
           <button
             onClick={() => setActiveTab('connection')}
@@ -66,17 +60,16 @@ const WhatsappBOT = () => {
             Modelos de Mensagem
           </button>
         </div>
-        
-        {/* Conteúdo das abas */}
+
         {activeTab === 'connection' && (
-          <LoginSection 
-            onSessionStatusChange={handleSessionStatusChange} 
+          <LoginSection
+            onSessionStatusChange={handleSessionStatusChange}
             currentStatus={sessionStatus}
           />
         )}
-        
+
         {activeTab === 'templates' && (
-          <MessageTemplate 
+          <MessageTemplate
             sessionName={sessionName}
             sessionStatus={sessionStatus}
           />

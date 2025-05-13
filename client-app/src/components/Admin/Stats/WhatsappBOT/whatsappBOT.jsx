@@ -24,13 +24,11 @@ const WhatsappBOT = () => {
 
   const desconectarSessao = async () => {
     if (sessionStatus !== 'connected') return;
-
+    handleSessionStatusChange('disconnected');
     setLoading(true);
     try {
       await axios.get(`${baseUrl}/logout/${sessionName}`);
-      if (isMounted.current) {
-        handleSessionStatusChange('disconnected');
-      }
+      
     } catch (error) {
       console.error('Erro ao desconectar:', error);
       alert('Erro ao tentar desconectar.');

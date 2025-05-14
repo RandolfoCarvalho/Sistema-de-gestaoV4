@@ -39,7 +39,7 @@ const ProtectedRoute = ({ redirectTo = "/auth/login" }) => {
                 />
         );
     }
-    if (!currentStore) {
+    /* if (!currentStore) {
             return (
                 <div className="flex items-center justify-center h-screen bg-gray-100">
                     <div className="bg-white p-6 rounded-lg shadow text-center">
@@ -54,7 +54,7 @@ const ProtectedRoute = ({ redirectTo = "/auth/login" }) => {
                     </div>
                 </div>
             );
-        }
+        } */
 
     return <Outlet />;
 };

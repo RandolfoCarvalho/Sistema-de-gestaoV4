@@ -21,7 +21,7 @@ const LoginSection = ({ onSessionStatusChange, currentStatus }) => {
         if (isMounted.current) {
           localStorage.setItem('restaurantName', name);
           setSessionName(name);
-          //await checkSessionStatus(name);
+          await checkSessionStatus(name);
         }
       } catch (error) {
         console.error('Erro ao buscar nome do restaurante:', error);

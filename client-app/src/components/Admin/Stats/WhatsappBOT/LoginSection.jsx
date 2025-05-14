@@ -68,7 +68,7 @@ const LoginSection = ({ onSessionStatusChange, currentStatus }) => {
       await axios.post(`${baseUrl}/start-session`, { session: sessionName });
 
       let tentativas = 0;
-      const maxTentativas = 30; // Reduzido para evitar espera excessiva
+      const maxTentativas = 50;
       const intervalo = setInterval(async () => {
         if (!isMounted.current) {
           clearInterval(intervalo);

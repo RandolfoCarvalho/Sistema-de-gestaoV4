@@ -2,6 +2,15 @@
 import { Clock } from 'lucide-react';
 import api from '../../../axiosConfig';
 import LojaFuncionamento from '../../Pedidos/LojaFuncionamento'; // Importando o novo componente
+import {
+  Eye,
+  EyeOff,
+  Store,
+  Building,
+  CalendarDays,
+  CreditCard,
+  Save
+} from 'lucide-react';
 
 const Perfil = () => {
     const [senha, setSenha] = useState("");
@@ -205,10 +214,12 @@ const Perfil = () => {
                 }
             }
             
+            //isso tem que ficar de fora do if para conseguir atualizar no back
+            formData.append("restauranteJson", JSON.stringify(dadosParaEnviar));
 
             if (restaurante.imagemLoja) {
                 formData.append("imagemLoja", restaurante.imagemLoja);
-                formData.append("restauranteJson", JSON.stringify(dadosParaEnviar));
+                
             
                 await api.put('/api/1.0/Restaurante/UpdateProfileComImagem', formData, {
                     headers: {
@@ -246,624 +257,610 @@ const Perfil = () => {
         }
     };
 
-    // Estilos inline para o componente
-    const styles = {
-        container: {
-            maxWidth: '1200px',
-            margin: '0 auto',
-            padding: '20px'
-        },
-        card: {
-            border: '1px solid #ddd',
-            borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            background: '#fff'
-        },
-        cardHeader: {
-            padding: '16px',
-            borderBottom: '1px solid #eee'
-        },
-        cardTitle: {
-            fontSize: '1.5rem',
-            fontWeight: 'bold',
-            margin: 0
-        },
-        cardContent: {
-            padding: '16px'
-        },
-        message: {
-            padding: '12px',
-            borderRadius: '4px',
-            marginBottom: '16px'
-        },
-        successMessage: {
-            backgroundColor: '#d4edda',
-            color: '#155724',
-            border: '1px solid #c3e6cb'
-        },
-        errorMessage: {
-            backgroundColor: '#f8d7da',
-            color: '#721c24',
-            border: '1px solid #f5c6cb'
-        },
-        tabList: {
-            display: 'flex',
-            borderBottom: '1px solid #dee2e6',
-            marginBottom: '16px'
-        },
-        tab: {
-            padding: '8px 16px',
-            cursor: 'pointer',
-            border: 'none',
-            background: 'none',
-            fontWeight: 500
-        },
-        activeTab: {
-            borderBottom: '2px solid #007bff',
-            color: '#007bff'
-        },
-        formGrid: {
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-            gap: '16px'
-        },
-        fullWidth: {
-            gridColumn: '1 / -1'
-        },
-        formGroup: {
-            marginBottom: '16px'
-        },
-        label: {
-            display: 'block',
-            marginBottom: '8px',
-            fontWeight: 500
-        },
-        input: {
-            width: '100%',
-            padding: '8px 12px',
-            borderRadius: '4px',
-            border: '1px solid #ced4da',
-            fontSize: '16px'
-        },
-        textarea: {
-            width: '100%',
-            padding: '8px 12px',
-            borderRadius: '4px',
-            border: '1px solid #ced4da',
-            fontSize: '16px',
-            minHeight: '100px'
-        },
-        button: {
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            padding: '10px 16px',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '16px'
-        },
-        buttonDisabled: {
-            backgroundColor: '#6c757d',
-            cursor: 'not-allowed'
-        },
-        buttonContainer: {
-            display: 'flex',
-            justifyContent: 'flex-end',
-            marginTop: '24px'
-        },
-        inlineIcon: {
-            marginRight: '8px',
-            verticalAlign: 'middle'
-        }
-    };
-
-    // Renderiza o conteúdo da aba de acordo com a aba ativa
-    const renderTabContent = () => {
-        switch (activeTab) {
-            case 'dados-restaurante':
-                return (
-                    <div style={styles.formGrid}>
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="imagemLoja">Imagem da Loja</label>
-                            <input
-                                style={styles.input}
-                                id="imagemLoja"
-                                name="imagemLoja"
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImagemLojaChange}
-                            />
-
-                            {(imagemPreview || restaurante.imagemUrl) && (
-                                <img
-                                    src={imagemPreview || restaurante.imagemUrl}
-                                    alt="Imagem da loja"
-                                    style={{ marginTop: '10px', maxWidth: '100%', maxHeight: '200px', borderRadius: '8px' }}
-                                />
-                            )}
-                        </div>
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="userName">Nome de Usuário</label>
-                            <input
-                                style={styles.input}
-                                id="userName"
-                                name="userName"
-                                value={restaurante.userName}
-                                onChange={handleRestauranteChange}
-                                required
-                            />
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="nomeDaLoja">Nome da Loja</label>
-                            <input
-                                style={styles.input}
-                                id="nomeDaLoja"
-                                name="nomeDaLoja"
-                                value={restaurante.nomeDaLoja || ''}
-                                onChange={handleRestauranteChange}
-                            />
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="emailAddress">Email</label>
-                            <input
-                                style={styles.input}
-                                id="emailAddress"
-                                name="emailAddress"
-                                type="email"
-                                value={restaurante.emailAddress || ''}
-                                onChange={handleRestauranteChange}
-                            />
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="phoneNumber">Telefone</label>
-                            <input
-                                style={styles.input}
-                                id="phoneNumber"
-                                name="phoneNumber"
-                                value={restaurante.phoneNumber || ''}
-                                onChange={handleRestauranteChange}
-                            />
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="password">
-                                Nova Senha (deixe em branco para manter a atual)
-                            </label>
-                            <div style={{ position: 'relative' }}>
-                                <input
-                                    style={styles.input}
-                                    id="password"
-                                    name="password"
-                                    type={mostrarSenha ? "text" : "password"}
-                                    value={senha}
-                                    onChange={(e) => setSenha(e.target.value)}
-                                    placeholder="Digite para alterar a senha"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={toggleMostrarSenha}
-                                    style={{
-                                        position: 'absolute',
-                                        right: '8px',
-                                        top: '50%',
-                                        transform: 'translateY(-50%)',
-                                        background: 'none',
-                                        border: 'none',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    {mostrarSenha ? "Ocultar" : "Mostrar"}
-                                </button>
-                            </div>
-                        </div>
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="confirmarSenha">
-                                Confirmar Nova Senha
-                            </label>
-                            <input
-                                style={styles.input}
-                                id="confirmarSenha"
-                                name="confirmarSenha"
-                                type={mostrarSenha ? "text" : "password"}
-                                value={confirmarSenha}
-                                onChange={(e) => setConfirmarSenha(e.target.value)}
-                                placeholder="Confirme a nova senha"
-                            />
-                            {senha !== confirmarSenha && confirmarSenha !== "" && (
-                                <div style={{ color: 'red', fontSize: '12px', marginTop: '4px' }}>
-                                    As senhas não conferem
-                                </div>
-                            )}
-                        </div>
-
-                        {mensagemErro && <p style={styles.error}>{mensagemErro}</p>}
-
-                    </div>
-                );
-
-            case 'dados-empresa':
-                return (
-                    <div style={styles.formGrid}>
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="cnpj">CNPJ</label>
-                            <input
-                                style={styles.input}
-                                id="cnpj"
-                                name="cnpj"
-                                value={restaurante.empresa.cnpj || ''}
-                                onChange={handleEmpresaChange}
-                            />
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="cpf">CPF</label>
-                            <input
-                                style={styles.input}
-                                id="cpf"
-                                name="cpf"
-                                value={restaurante.empresa.cpf || ''}
-                                onChange={handleEmpresaChange}
-                            />
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="razaoSocial">Razão Social</label>
-                            <input
-                                style={styles.input}
-                                id="razaoSocial"
-                                name="razaoSocial"
-                                value={restaurante.empresa.razaoSocial || ''}
-                                onChange={handleEmpresaChange}
-                            />
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="nomeFantasia">Nome Fantasia</label>
-                            <input
-                                style={styles.input}
-                                id="nomeFantasia"
-                                name="nomeFantasia"
-                                value={restaurante.empresa.nomeFantasia || ''}
-                                onChange={handleEmpresaChange}
-                            />
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="endereco">Endereço</label>
-                            <input
-                                style={styles.input}
-                                id="endereco"
-                                name="endereco"
-                                value={restaurante.empresa.endereco || ''}
-                                onChange={handleEmpresaChange}
-                            />
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="bairro">Bairro</label>
-                            <input
-                                style={styles.input}
-                                id="bairro"
-                                name="bairro"
-                                value={restaurante.empresa.bairro || ''}
-                                onChange={handleEmpresaChange}
-                            />
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="cidade">Cidade</label>
-                            <input
-                                style={styles.input}
-                                id="cidade"
-                                name="cidade"
-                                value={restaurante.empresa.cidade || ''}
-                                onChange={handleEmpresaChange}
-                            />
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="estado">Estado</label>
-                            <input
-                                style={styles.input}
-                                id="estado"
-                                name="estado"
-                                value={restaurante.empresa.estado || ''}
-                                onChange={handleEmpresaChange}
-                            />
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="cep">CEP</label>
-                            <input
-                                style={styles.input}
-                                id="cep"
-                                name="cep"
-                                value={restaurante.empresa.cep || ''}
-                                onChange={handleEmpresaChange}
-                            />
-                        </div>
-                    </div>
-                );
-
-            case 'horarios':
-                return (
-                    <div style={styles.formGrid}>
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="horarioAbertura">Horário de Abertura</label>
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                {typeof Clock === 'function' && <Clock size={16} style={styles.inlineIcon} />}
-                                <input
-                                    style={styles.input}
-                                    id="horarioAbertura"
-                                    name="horarioAbertura"
-                                    type="time"
-                                    value={restaurante.empresa.horarioAbertura}
-                                    onChange={handleEmpresaChange}
-                                />
-                            </div>
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label} htmlFor="horarioFechamento">Horário de Fechamento</label>
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                {typeof Clock === 'function' && <Clock size={16} style={styles.inlineIcon} />}
-                                <input
-                                    style={styles.input}
-                                    id="horarioFechamento"
-                                    name="horarioFechamento"
-                                    type="time"
-                                    value={restaurante.empresa.horarioFechamento}
-                                    onChange={handleEmpresaChange}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Dias de funcionamento */}
-                        <div style={{ ...styles.formGroup, ...styles.fullWidth }}>
-                            <label style={styles.label}>Dias de Funcionamento</label>
-                            <div style={styles.checkboxGrid}>
-                                <div style={styles.checkboxContainer}>
-                                    <input
-                                        type="checkbox"
-                                        id="domingo"
-                                        name="domingo"
-                                        checked={restaurante.empresa.diasFuncionamento.domingo}
-                                        onChange={handleDiaFuncionamentoChange}
-                                        style={styles.checkbox}
-                                    />
-                                    <label htmlFor="domingo" style={styles.checkboxLabel}>Domingo</label>
-                                </div>
-                                <div style={styles.checkboxContainer}>
-                                    <input
-                                        type="checkbox"
-                                        id="segunda"
-                                        name="segunda"
-                                        checked={restaurante.empresa.diasFuncionamento.segunda}
-                                        onChange={handleDiaFuncionamentoChange}
-                                        style={styles.checkbox}
-                                    />
-                                    <label htmlFor="segunda" style={styles.checkboxLabel}>Segunda-feira</label>
-                                </div>
-                                <div style={styles.checkboxContainer}>
-                                    <input
-                                        type="checkbox"
-                                        id="terca"
-                                        name="terca"
-                                        checked={restaurante.empresa.diasFuncionamento.terca}
-                                        onChange={handleDiaFuncionamentoChange}
-                                        style={styles.checkbox}
-                                    />
-                                    <label htmlFor="terca" style={styles.checkboxLabel}>Terça-feira</label>
-                                </div>
-                                <div style={styles.checkboxContainer}>
-                                    <input
-                                        type="checkbox"
-                                        id="quarta"
-                                        name="quarta"
-                                        checked={restaurante.empresa.diasFuncionamento.quarta}
-                                        onChange={handleDiaFuncionamentoChange}
-                                        style={styles.checkbox}
-                                    />
-                                    <label htmlFor="quarta" style={styles.checkboxLabel}>Quarta-feira</label>
-                                </div>
-                                <div style={styles.checkboxContainer}>
-                                    <input
-                                        type="checkbox"
-                                        id="quinta"
-                                        name="quinta"
-                                        checked={restaurante.empresa.diasFuncionamento.quinta}
-                                        onChange={handleDiaFuncionamentoChange}
-                                        style={styles.checkbox}
-                                    />
-                                    <label htmlFor="quinta" style={styles.checkboxLabel}>Quinta-feira</label>
-                                </div>
-                                <div style={styles.checkboxContainer}>
-                                    <input
-                                        type="checkbox"
-                                        id="sexta"
-                                        name="sexta"
-                                        checked={restaurante.empresa.diasFuncionamento.sexta}
-                                        onChange={handleDiaFuncionamentoChange}
-                                        style={styles.checkbox}
-                                    />
-                                    <label htmlFor="sexta" style={styles.checkboxLabel}>Sexta-feira</label>
-                                </div>
-                                <div style={styles.checkboxContainer}>
-                                    <input
-                                        type="checkbox"
-                                        id="sabado"
-                                        name="sabado"
-                                        checked={restaurante.empresa.diasFuncionamento.sabado}
-                                        onChange={handleDiaFuncionamentoChange}
-                                        style={styles.checkbox}
-                                    />
-                                    <label htmlFor="sabado" style={styles.checkboxLabel}>Sábado</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style={{ ...styles.formGroup, ...styles.fullWidth }}>
-                            <label style={styles.label} htmlFor="observacoes">Observações</label>
-                            <textarea
-                                style={styles.textarea}
-                                id="observacoes"
-                                name="observacoes"
-                                rows={4}
-                                value={restaurante.empresa.observacoes || ''}
-                                onChange={handleEmpresaChange}
-                                placeholder="Informações adicionais, como regras, etc."
-                            />
-                        </div>
-                    </div>
-                );
-                case 'dados-mercado-pago':
-                    return (
-                        <div style={styles.formGrid}>
-                            <div style={styles.formGroup}>
-                                <label style={styles.label} htmlFor="publicKey">Public Key</label>
-                                <input
-                                    style={styles.input}
-                                    id="publicKey"
-                                    name="publicKey"
-                                    value={restaurante.mercadoPago?.publicKey || ''}
-                                    onChange={handleMercadoPagoChange}
-                                    placeholder="Sua chave pública do Mercado Pago"
-                                />
-                            </div>
-
-                            <div style={styles.formGroup}>
-                                <label style={styles.label} htmlFor="accessToken">Access Token</label>
-                                <input
-                                    style={styles.input}
-                                    id="accessToken"
-                                    name="accessToken"
-                                    type={mostrarAccessToken ? "text" : "password"}
-                                    value={restaurante.mercadoPago?.accessToken || ''}
-                                    onChange={handleMercadoPagoChange}
-                                    placeholder="Sua chave privada do Mercado Pago"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setMostrarAccessToken(!mostrarAccessToken)}
-                                    style={{
-                                        marginTop: '5px',
-                                        background: 'none',
-                                        border: 'none',
-                                        color: 'blue',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    {mostrarAccessToken ? 'Ocultar' : 'Mostrar'} chave
-                                </button>
-                            </div>
-
-                            <div style={styles.formGroup}>
-                                <label style={styles.label} htmlFor="clientId">Client ID</label>
-                                <input
-                                    style={styles.input}
-                                    id="clientId"
-                                    name="clientId"
-                                    value={restaurante.mercadoPago?.clientId || ''}
-                                    onChange={handleMercadoPagoChange}
-                                    placeholder="Client ID"
-                                />
-                            </div>
-
-                            <div style={styles.formGroup}>
-                                <label style={styles.label} htmlFor="clientSecret">Client Secret</label>
-                                <input
-                                    style={styles.input}
-                                    id="clientSecret"
-                                    name="clientSecret"
-                                    value={restaurante.mercadoPago?.clientSecret || ''}
-                                    onChange={handleMercadoPagoChange}
-                                    placeholder="Client Secret"
-                                />
-                            </div>
-
-                            <div style={styles.formGroup}>
-                                <label style={styles.label}>
-                                    <input
-                                        type="checkbox"
-                                        name="ativo"
-                                        checked={restaurante.mercadoPago?.ativo || false}
-                                        onChange={handleMercadoPagoChange}
-                                    />
-                                    {' '}Ativo
-                                </label>
-                            </div>
-                        </div>
-                    );
-
-
-            default:
-                return null;
-        }
-    };
-
-    return (
-        <div style={styles.container}>
-            <div style={styles.card}>
-                <div style={styles.cardHeader}>
-                    <h2 style={styles.cardTitle}>Perfil do Restaurante</h2>
+     const renderTabContent = () => {
+    switch (activeTab) {
+      case 'dados-restaurante':
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="imagemLoja">
+                Imagem da Loja
+              </label>
+              <div className="flex items-center gap-4">
+                <div className="flex-1">
+                  <input
+                    className="w-full px-3 py-2 text-gray-700  rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    id="imagemLoja"
+                    name="imagemLoja"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImagemLojaChange}
+                  />
                 </div>
-                <div style={styles.cardContent}>
-                    {message.text && (
-                        <div style={{
-                            ...styles.message,
-                            ...(message.type === 'success' ? styles.successMessage : styles.errorMessage)
-                        }}>
-                            {message.text}
-                        </div>
-                    )}
-
-                    <div style={styles.tabList}>
-                        <button
-                            style={{ ...styles.tab, ...(activeTab === 'dados-restaurante' ? styles.activeTab : {}) }}
-                            onClick={() => setActiveTab('dados-restaurante')}
-                        >
-                            Dados do Restaurante
-                        </button>
-                        <button
-                            style={{ ...styles.tab, ...(activeTab === 'dados-empresa' ? styles.activeTab : {}) }}
-                            onClick={() => setActiveTab('dados-empresa')}
-                        >
-                            Dados da Empresa
-                        </button>
-                        <button
-                            style={{ ...styles.tab, ...(activeTab === 'horarios' ? styles.activeTab : {}) }}
-                            onClick={() => setActiveTab('horarios')}
-                        >
-                            Horários e Observações
-                        </button>
-                        <button
-                            style={{ ...styles.tab, ...(activeTab === 'dados-mercado-pago' ? styles.activeTab : {}) }}
-                            onClick={() => setActiveTab('dados-mercado-pago')}
-                        >
-                            Credenciais de recebimento
-                        </button>
-                    </div>
-
-                    <form onSubmit={handleSubmit}>
-                        {renderTabContent()}
-
-                        <div style={styles.buttonContainer}>
-                            <button
-                                type="submit"
-                                style={{ ...styles.button, ...(loading ? styles.buttonDisabled : {}) }}
-                                disabled={loading}
-                            >
-                                {loading ? 'Salvando...' : 'Salvar Alterações'}
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                {(imagemPreview || restaurante.imagemUrl) && (
+                  <div className="w-24 h-24 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                    <img
+                      src={imagemPreview || restaurante.imagemUrl}
+                      alt="Imagem da loja"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="userName">
+                Nome de Usuário
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="userName"
+                name="userName"
+                value={restaurante.userName || ''}
+                onChange={handleRestauranteChange}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="nomeDaLoja">
+                Nome da Loja
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="nomeDaLoja"
+                name="nomeDaLoja"
+                value={restaurante.nomeDaLoja || ''}
+                onChange={handleRestauranteChange}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="emailAddress">
+                Email
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="emailAddress"
+                name="emailAddress"
+                type="email"
+                value={restaurante.emailAddress || ''}
+                onChange={handleRestauranteChange}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="phoneNumber">
+                Telefone
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="phoneNumber"
+                name="phoneNumber"
+                value={restaurante.phoneNumber || ''}
+                onChange={handleRestauranteChange}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="password">
+                Nova Senha (deixe em branco para manter a atual)
+              </label>
+              <div className="relative">
+                <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                  id="password"
+                  name="password"
+                  type={mostrarSenha ? "text" : "password"}
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
+                  placeholder="Digite para alterar a senha"
+                />
+                <button
+                  type="button"
+                  onClick={toggleMostrarSenha}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {mostrarSenha ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="confirmarSenha">
+                Confirmar Nova Senha
+              </label>
+              <div className="relative">
+                <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                  id="confirmarSenha"
+                  name="confirmarSenha"
+                  type={mostrarSenha ? "text" : "password"}
+                  value={confirmarSenha}
+                  onChange={(e) => setConfirmarSenha(e.target.value)}
+                  placeholder="Confirme a nova senha"
+                />
+                {senha !== confirmarSenha && confirmarSenha !== "" && (
+                  <div className="text-red-500 text-xs mt-1">
+                    As senhas não conferem
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'dados-empresa':
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="cnpj">
+                CNPJ
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="cnpj"
+                name="cnpj"
+                value={restaurante.empresa?.cnpj || ''}
+                onChange={handleEmpresaChange}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="cpf">
+                CPF
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="cpf"
+                name="cpf"
+                value={restaurante.empresa?.cpf || ''}
+                onChange={handleEmpresaChange}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="razaoSocial">
+                Razão Social
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="razaoSocial"
+                name="razaoSocial"
+                value={restaurante.empresa?.razaoSocial || ''}
+                onChange={handleEmpresaChange}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="nomeFantasia">
+                Nome Fantasia
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="nomeFantasia"
+                name="nomeFantasia"
+                value={restaurante.empresa?.nomeFantasia || ''}
+                onChange={handleEmpresaChange}
+              />
+            </div>
+
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="endereco">
+                Endereço
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="endereco"
+                name="endereco"
+                value={restaurante.empresa?.endereco || ''}
+                onChange={handleEmpresaChange}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="bairro">
+                Bairro
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="bairro"
+                name="bairro"
+                value={restaurante.empresa?.bairro || ''}
+                onChange={handleEmpresaChange}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="cidade">
+                Cidade
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="cidade"
+                name="cidade"
+                value={restaurante.empresa?.cidade || ''}
+                onChange={handleEmpresaChange}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="estado">
+                Estado
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="estado"
+                name="estado"
+                value={restaurante.empresa?.estado || ''}
+                onChange={handleEmpresaChange}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="cep">
+                CEP
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="cep"
+                name="cep"
+                value={restaurante.empresa?.cep || ''}
+                onChange={handleEmpresaChange}
+              />
+            </div>
+          </div>
+        );
+
+      case 'horarios':
+        return (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="horarioAbertura">
+                  Horário de Abertura
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
+                    <Clock size={16} />
+                  </div>
+                  <input
+                    className="w-full pl-10 px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    id="horarioAbertura"
+                    name="horarioAbertura"
+                    type="time"
+                    value={restaurante.empresa?.horarioAbertura || ''}
+                    onChange={handleEmpresaChange}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="horarioFechamento">
+                  Horário de Fechamento
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
+                    <Clock size={16} />
+                  </div>
+                  <input
+                    className="w-full pl-10 px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    id="horarioFechamento"
+                    name="horarioFechamento"
+                    type="time"
+                    value={restaurante.empresa?.horarioFechamento || ''}
+                    onChange={handleEmpresaChange}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Dias de Funcionamento
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="flex items-center">
+                  <input
+                    id="domingo"
+                    name="domingo"
+                    type="checkbox"
+                    checked={restaurante.empresa?.diasFuncionamento?.domingo || false}
+                    onChange={handleDiaFuncionamentoChange}
+                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="domingo" className="ml-2 text-sm text-gray-700">
+                    Domingo
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    id="segunda"
+                    name="segunda"
+                    type="checkbox"
+                    checked={restaurante.empresa?.diasFuncionamento?.segunda || false}
+                    onChange={handleDiaFuncionamentoChange}
+                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="segunda" className="ml-2 text-sm text-gray-700">
+                    Segunda-feira
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    id="terca"
+                    name="terca"
+                    type="checkbox"
+                    checked={restaurante.empresa?.diasFuncionamento?.terca || false}
+                    onChange={handleDiaFuncionamentoChange}
+                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="terca" className="ml-2 text-sm text-gray-700">
+                    Terça-feira
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    id="quarta"
+                    name="quarta"
+                    type="checkbox"
+                    checked={restaurante.empresa?.diasFuncionamento?.quarta || false}
+                    onChange={handleDiaFuncionamentoChange}
+                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="quarta" className="ml-2 text-sm text-gray-700">
+                    Quarta-feira
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    id="quinta"
+                    name="quinta"
+                    type="checkbox"
+                    checked={restaurante.empresa?.diasFuncionamento?.quinta || false}
+                    onChange={handleDiaFuncionamentoChange}
+                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="quinta" className="ml-2 text-sm text-gray-700">
+                    Quinta-feira
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    id="sexta"
+                    name="sexta"
+                    type="checkbox"
+                    checked={restaurante.empresa?.diasFuncionamento?.sexta || false}
+                    onChange={handleDiaFuncionamentoChange}
+                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="sexta" className="ml-2 text-sm text-gray-700">
+                    Sexta-feira
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    id="sabado"
+                    name="sabado"
+                    type="checkbox"
+                    checked={restaurante.empresa?.diasFuncionamento?.sabado || false}
+                    onChange={handleDiaFuncionamentoChange}
+                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="sabado" className="ml-2 text-sm text-gray-700">
+                    Sábado
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="observacoes">
+                Observações
+              </label>
+              <textarea
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="observacoes"
+                name="observacoes"
+                rows={4}
+                value={restaurante.empresa?.observacoes || ''}
+                onChange={handleEmpresaChange}
+                placeholder="Informações adicionais, como regras, etc."
+              />
+            </div>
+          </div>
+        );
+
+      case 'dados-mercado-pago':
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="publicKey">
+                Public Key
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="publicKey"
+                name="publicKey"
+                value={restaurante.mercadoPago?.publicKey || ''}
+                onChange={handleMercadoPagoChange}
+                placeholder="Sua chave pública do Mercado Pago"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="accessToken">
+                Access Token
+              </label>
+              <div className="relative">
+                <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                  id="accessToken"
+                  name="accessToken"
+                  type={mostrarAccessToken ? "text" : "password"}
+                  value={restaurante.mercadoPago?.accessToken || ''}
+                  onChange={handleMercadoPagoChange}
+                  placeholder="Sua chave privada do Mercado Pago"
+                />
+                <button
+                  type="button"
+                  onClick={() => setMostrarAccessToken(!mostrarAccessToken)}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {mostrarAccessToken ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="clientId">
+                Client ID
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="clientId"
+                name="clientId"
+                value={restaurante.mercadoPago?.clientId || ''}
+                onChange={handleMercadoPagoChange}
+                placeholder="Client ID"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="clientSecret">
+                Client Secret
+              </label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="clientSecret"
+                name="clientSecret"
+                value={restaurante.mercadoPago?.clientSecret || ''}
+                onChange={handleMercadoPagoChange}
+                placeholder="Client Secret"
+              />
+            </div>
+
+            <div className="col-span-1 md:col-span-2">
+              <div className="flex items-center">
+                <input
+                  id="mp-ativo"
+                  name="ativo"
+                  type="checkbox"
+                  checked={restaurante.mercadoPago?.ativo || false}
+                  onChange={handleMercadoPagoChange}
+                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <label htmlFor="mp-ativo" className="ml-2 text-sm text-gray-700">
+                  Ativo
+                </label>
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  // Ícones para as abas
+  const getTabIcon = (tab) => {
+    switch (tab) {
+      case 'dados-restaurante':
+        return <Store size={18} />;
+      case 'dados-empresa':
+        return <Building size={18} />;
+      case 'horarios':
+        return <CalendarDays size={18} />;
+      case 'dados-mercado-pago':
+        return <CreditCard size={18} />;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className=" mx-auto w-full p-4 md:p-6">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-100">
+          <h2 className="text-xl font-semibold text-gray-800">Perfil do Restaurante</h2>
         </div>
-    );
+        <div className="p-6">
+          {message.text && (
+            <div className={`mb-6 p-4 rounded-lg ${
+              message.type === 'success' 
+                ? 'bg-green-50 text-green-800 border border-green-200' 
+                : 'bg-red-50 text-red-800 border border-red-200'
+            }`}>
+              {message.text}
+            </div>
+          )}
+
+          <div className="flex flex-wrap border-b border-gray-200 mb-6 overflow-x-auto">
+            {[
+              { id: 'dados-restaurante', label: 'Dados do Restaurante' },
+              { id: 'dados-empresa', label: 'Dados da Empresa' },
+              { id: 'horarios', label: 'Horários e Observações' },
+              { id: 'dados-mercado-pago', label: 'Credenciais de recebimento' }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center px-4 py-3 text-sm font-medium transition-colors 
+                  ${activeTab === tab.id
+                    ? 'text-blue-600 border-b-2 border-blue-500'
+                    : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
+                  }`}
+              >
+                <span className="mr-2">{getTabIcon(tab.id)}</span>
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            {renderTabContent()}
+
+            <div className="flex justify-end mt-8">
+              <button
+                type="submit"
+                disabled={loading}
+                className={`flex items-center px-5 py-2 text-white rounded-lg transition-colors 
+                  ${loading 
+                    ? 'bg-gray-400 cursor-not-allowed' 
+                    : 'bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                  }`}
+              >
+                <Save size={18} className="mr-2" />
+                {loading ? 'Salvando...' : 'Salvar Alterações'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Perfil;

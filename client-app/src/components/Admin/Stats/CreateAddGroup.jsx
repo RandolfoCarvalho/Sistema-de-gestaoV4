@@ -661,7 +661,7 @@ const GerenciamentoAdicionais = () => {
         );
     };
     return (
-        <div className="container mx-auto p-2">
+        <div className="p-2">
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
                 <div className="p-4 border-b">
                     <div className="flex justify-between items-center">

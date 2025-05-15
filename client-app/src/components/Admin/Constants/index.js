@@ -1,53 +1,56 @@
-import { FaChartBar, FaPlusSquare, FaLayerGroup, FaPuzzlePiece, FaBox, FaSignOutAlt } from "react-icons/fa";
+import { 
+  BarChart3, 
+  PlusCircle, 
+  LayersIcon, 
+  PuzzleIcon, 
+  PackageSearch, 
+  UserCircle, 
+  MessageSquareText, 
+  LogOut 
+} from "lucide-react";
 
 export const links = [
     {
         href: "/admin/dashboard",
-        icon: FaChartBar,
+        icon: BarChart3,
         text: "Dashboard",
     },
     {
         href: "/admin/CriarProduto",
-        icon: FaPlusSquare,
+        icon: PlusCircle,
         text: "Criar produto",
         badge: {
-            color: "bg-gray-100 text-gray-800",
-            darkColor: "dark:bg-gray-700 dark:text-gray-300",
+            text: "Novo"
         },
     },
     {
         href: "/admin/CriarGrupoAdicionais",
-        icon: FaLayerGroup,
-        text: "Criar Grupo adicionais",
-        badge: {
-            color: "bg-blue-100 text-blue-800",
-            darkColor: "dark:bg-blue-900 dark:text-blue-300",
-        },
+        icon: LayersIcon,
+        text: "Criar adicionais",
     },
     {
         href: "/admin/CriarComplemento",
-        icon: FaPuzzlePiece,
-        text: "Criar complemento",
+        icon: PuzzleIcon,
+        text: "Criar complementos",
     },
     {
         href: "/admin/MeusProdutos",
-        icon: FaBox, 
+        icon: PackageSearch,
         text: "Meus Produtos",
     },
     {
         href: "/admin/Perfil",
-        icon: FaBox,
+        icon: UserCircle,
         text: "Perfil",
     },
     {
         href: "/admin/WhatsappBOT",
-        icon: FaBox,
+        icon: MessageSquareText,
         text: "WhatsappBOT",
     },
     {
         href: "/admin/Sair",
-        icon: FaSignOutAlt, 
+        icon: LogOut,
         text: "Sair",
     },
-
 ];

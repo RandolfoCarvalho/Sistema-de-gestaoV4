@@ -76,7 +76,6 @@ const App = () => {
     const toggleDarkMode = () => setDarkMode(!darkMode);
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
     return (
-
         <SignalRProvider>
             <StoreProvider>
                 <UserProvider>
@@ -135,7 +134,6 @@ const App = () => {
                 </UserProvider>
             </StoreProvider>
         </SignalRProvider>
-       
     );
 };
 

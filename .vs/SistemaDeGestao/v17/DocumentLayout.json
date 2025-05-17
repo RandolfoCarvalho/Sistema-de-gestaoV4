@@ -142,28 +142,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 10,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "MercadoPagoService.cs",
-              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
-              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
-              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
-              "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
-              "ViewState": "AgIAAJkAAAAAAAAAAAAtwLEAAAA5AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T02:35:34.496Z",
-              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -211,8 +194,7 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
               "ViewState": "AgIAADIAAAAAAAAAAAAswEIAAABKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T01:59:46.372Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-05T01:59:46.372Z"
             },
             {
               "$type": "Document",
@@ -236,8 +218,7 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\RestauranteController.cs",
               "ViewState": "AgIAAIIAAAAAAAAAAAAEwJwAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T23:10:04.94Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T23:10:04.94Z"
             },
             {
               "$type": "Document",
@@ -259,10 +240,22 @@
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\ProdutoService.cs",
               "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\ProdutoService.cs",
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\ProdutoService.cs",
-              "ViewState": "AgIAADUAAAAAAAAAAAAwwEQAAAAQAAAAAAAAAA==",
+              "ViewState": "AgIAADUAAAAAAAAAAAAwwEcAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-04T23:13:56.053Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MercadoPagoService.cs",
+              "DocumentMoniker": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
+              "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
+              "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
+              "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
+              "ViewState": "AgIAAJkAAAAAAAAAAAAtwLEAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-05T02:35:34.496Z"
             },
             {
               "$type": "Document",
@@ -310,8 +303,7 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Hubs\\OrderHub.cs",
               "ViewState": "AgIAAGgAAAAAAAAAAAAjwIMAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-11T16:06:01.398Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-11T16:06:01.398Z"
             },
             {
               "$type": "Document",
@@ -552,6 +544,10 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-22T19:50:32.691Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             }
           ]
         },

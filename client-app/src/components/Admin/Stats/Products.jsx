@@ -145,12 +145,6 @@ const GestaoComponent = () => {
                                         </p>
                                         <div style={styles.buttonGroup}>
                                             <button
-                                                onClick={() => handleSimularPedido(produto.id)}
-                                                style={styles.button}
-                                            >
-                                                Simular Pedido
-                                            </button>
-                                            <button
                                                 onClick={() => handleEdit(produto)}
                                                 style={styles.button}
                                             >

@@ -71,11 +71,6 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
         verificarOuCriarUsuario();
     }, [formData.FinalUserTelefone, formData.FinalUserName]);
     
-    if (!userId) {
-        alert("Aguardando confirmação do usuário...");
-        return;
-    }
-    
     // Preparar o pedidoDTO para enviar ao processamento de pagamento
     const preparePedidoDTO = () => {
         // Estrutura do DTO

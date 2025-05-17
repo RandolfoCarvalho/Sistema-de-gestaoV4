@@ -190,7 +190,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         }
         
         const paymentData = {
-            FormaPagamento: "dinheiro",
+            FormaPagamento: paymentMethod, // Use the payment method passed as prop
             Amount: parseFloat(amount),
             trocoPara: troco ? parseFloat(troco) : null,
         };

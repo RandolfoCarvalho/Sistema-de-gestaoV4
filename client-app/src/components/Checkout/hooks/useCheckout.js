@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 // Hook personalizado para gerenciar o estado e lógica do checkout
@@ -100,8 +100,8 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
                 TaxaEntrega: formData.pagamento?.TaxaEntrega || 0,
                 Desconto: formData.pagamento?.Desconto || 0,
                 ValorTotal: cartTotal + (formData.pagamento?.TaxaEntrega || 0) - (formData.pagamento?.Desconto || 0),
-                //TODO selecionar o metodo de pagamento correto
-                FormaPagamento: selectedPaymentMethod
+                // Use formData.pagamento.FormaPagamento instead of selectedPaymentMethod
+                FormaPagamento: formData.pagamento?.FormaPagamento || 'dinheiro'
             },
 
             // Itens do pedido

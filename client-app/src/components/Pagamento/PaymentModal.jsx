@@ -41,40 +41,52 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         if (pixData && transactionId && restauranteId) {
             let attempts = 0;
             const maxAttempts = 60; // 60 x 5s = 5 minutos
+            setMensagem("⏳ Aguardando confirmação do pagamento...");
+            
+            console.log(`Iniciando verificação de pagamento. TransactionId: ${transactionId}, RestauranteId: ${restauranteId}`);
     
             const interval = setInterval(async () => {
                 try {
                     attempts++;
+                    console.log(`Tentativa ${attempts} de verificação do pagamento`);
     
-                    const [res1, res2] = await Promise.all([
-                        axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/statusPagamento`, {
-                            params: { transactionId }
-                        }),
-                        axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/ObterPagamentoAsync/${transactionId}/${restauranteId}`)
-                    ]);
-    
-                    const status1 = res1?.data?.status;
-                    const status2 = res2?.data?.status;
-                    const isPedidoExistente = 
-                        res2?.data === "Pedido ja existe" || 
-                        res2?.data?.message?.includes("Pedido já") || 
-                        res2?.data?.message?.includes("Pedido já");
-                    const isApproved = status1 === "approved" || status2 === "approved" || isPedidoExistente;
-    
+                    // Simplificando para usar apenas um endpoint prioritário
+                    // O ObterPagamentoAsync não só verifica o status como também processa o pagamento se aprovado
+                    const response = await axios.get(
+                        `${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/ObterPagamentoAsync/${transactionId}/${restauranteId}`
+                    );
+                    
+                    console.log(`Resposta do servidor:`, response.data);
+                    
+                    // Verificação unificada de status aprovado
+                    const isApproved = 
+                        response.data?.status === "approved" || 
+                        (response.data?.message && response.data.message.includes("Pedido já"));
+                    
                     if (isApproved) {
+                        console.log("✅ Pagamento aprovado detectado!");
                         clearInterval(interval);
                         setMensagem("✅ Pagamento aprovado com sucesso!");
                         setTimeout(() => navigate("/pedidos"), 3000);
                     } else if (attempts >= maxAttempts) {
-                        clearInterval(interval);
                         console.warn("⏳ Tempo de espera pelo pagamento expirou.");
-                        setMensagem("⏳ Tempo de espera expirado. Tente novamente.");
+                        clearInterval(interval);
+                        setMensagem("⏳ Tempo de espera expirado. Verifique o status do seu pedido na tela de pedidos.");
+                        setTimeout(() => navigate("/pedidos"), 5000);
+                    } else if (attempts % 12 === 0) { // A cada 1 minuto (12 * 5s)
+                        // Atualização de mensagem periódica para feedback ao usuário
+                        setMensagem(`⏳ Aguardando confirmação do pagamento... (${Math.round(attempts/12)} min)`);
                     }
-    
                 } catch (err) {
                     console.error("Erro ao verificar status do pagamento:", err);
+                    // Não interromper a verificação por erro pontual
+                    if (attempts >= maxAttempts) {
+                        clearInterval(interval);
+                        setMensagem("⚠️ Não foi possível confirmar o pagamento. Verifique na tela de pedidos.");
+                        setTimeout(() => navigate("/pedidos"), 5000);
+                    }
                 }
-            }, 5000);
+            }, 5000); // Verificar a cada 5 segundos
     
             return () => clearInterval(interval);
         }

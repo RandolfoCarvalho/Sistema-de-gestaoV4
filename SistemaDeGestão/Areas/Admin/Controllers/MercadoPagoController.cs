@@ -49,13 +49,31 @@ namespace SistemaDeGestao.Controllers
         [Route("processaPagamentoPix")]
         public async Task<IActionResult> ProcessaPagamentoPix([FromBody] PagamentoRequestPix request)
         {
-            if (request?.DadosPagamento == null || request?.PedidoDTO == null)
-                return BadRequest("Dados incompletos.");
+            try
+            {
+                if (request?.DadosPagamento == null || request?.PedidoDTO == null)
+                    return BadRequest("Dados incompletos.");
 
-            var accessToken = await BuscaCredenciaisAsync(request.PedidoDTO.RestauranteId);
-            var resultado = await _paymentService.ProcessarPixAsync(request.DadosPagamento, request.PedidoDTO, accessToken.ToString());
-            return Ok(resultado);
+                _logger.LogInformation($"Iniciando processamento de pagamento PIX para restaurante: {request.PedidoDTO.RestauranteId}");
+                
+                // Validação adicional para garantir dados essenciais
+                if (request.PedidoDTO.RestauranteId <= 0)
+                    return BadRequest("ID do restaurante inválido.");
+
+                var accessToken = await BuscaCredenciaisAsync(request.PedidoDTO.RestauranteId);
+                var resultado = await _paymentService.ProcessarPixAsync(request.DadosPagamento, request.PedidoDTO, accessToken);
+                
+                _logger.LogInformation($"Pagamento PIX iniciado com sucesso. TransactionId: {resultado.TransactionId}");
+                
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao processar pagamento PIX");
+                return StatusCode(500, $"Erro ao processar pagamento: {ex.Message}");
+            }
         }
+
 
         [HttpPost]
         [Route("processaPagamento")]
@@ -91,10 +109,13 @@ namespace SistemaDeGestao.Controllers
             
             try
             {
-                // Verifica se o pedido já existe para evitar duplicação
+                string transactionId = pagamentoId.ToString();
+                
+                // Verificar se já existe um pedido para este pagamento
                 var pedidoExistente = await _context.Pedidos
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(p => p.Pagamento != null && p.Pagamento.TransactionId == pagamentoId.ToString());
+                    .Include(p => p.Pagamento)
+                    .FirstOrDefaultAsync(p => p.Pagamento != null && p.Pagamento.TransactionId == transactionId);
                 
                 if (pedidoExistente != null)
                 {
@@ -105,92 +126,42 @@ namespace SistemaDeGestao.Controllers
                 // Consultar status do pagamento na API do Mercado Pago
                 string accessToken = await BuscaCredenciaisAsync(restauranteId);
                 
-                using (var httpClient = new HttpClient())
+                // Obter status do pagamento
+                var statusPagamento = await ObterStatusPagamentoAsync(transactionId, accessToken);
+                _logger.LogInformation($"Status do pagamento {pagamentoId}: {statusPagamento}");
+                
+                if (statusPagamento == "approved")
                 {
-                    httpClient.BaseAddress = new Uri("https://api.mercadopago.com/v1/payments/");
-                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    
-                    var response = await httpClient.GetAsync(pagamentoId.ToString());
-                    
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        string errorMessage = await response.Content.ReadAsStringAsync();
-                        _logger.LogError($"Erro ao consultar Mercado Pago: {errorMessage}");
-                        return BadRequest($"Erro ao consultar pagamento: {response.StatusCode}");
-                    }
-                    
-                    var content = await response.Content.ReadAsStringAsync();
-                    var paymentData = JsonDocument.Parse(content).RootElement;
-                    
-                    if (!paymentData.TryGetProperty("status", out var statusElement))
-                    {
-                        _logger.LogError("Status de pagamento não encontrado na resposta");
-                        return BadRequest("Status de pagamento não encontrado.");
-                    }
-                    
-                    string status = statusElement.GetString();
-                    _logger.LogInformation($"Status do pagamento {pagamentoId}: {status}");
-                    
-                    if (status == "approved")
-                    {
-                        // Buscar pedido pendente
-                        var pedidoPendente = await _context.PedidosPendentes
-                            .FirstOrDefaultAsync(p => p.TransactionId == pagamentoId.ToString());
-                            
-                        if (pedidoPendente == null)
-                        {
-                            _logger.LogInformation($"Pedido pendente não encontrado para pagamento aprovado {pagamentoId}. Verificando se o pedido já foi processado.");
-                            
-                            // Verificar se o pedido já foi processado e existe como pedido real
-                            var pedidoProcessado = await _context.Pedidos
-                                .Include(p => p.Pagamento)
-                                .AsNoTracking()
-                                .FirstOrDefaultAsync(p => p.Pagamento != null && p.Pagamento.TransactionId == pagamentoId.ToString());
-                                
-                            if (pedidoProcessado != null)
-                            {
-                                _logger.LogInformation($"Pedido já processado anteriormente para o pagamento {pagamentoId}");
-                                return Ok(new { status = "approved", message = "Pedido já foi processado anteriormente" });
-                            }
-                            
-                            _logger.LogWarning($"Nenhum pedido encontrado (pendente ou processado) para pagamento {pagamentoId}");
-                            return NotFound("Pedido pendente não encontrado.");
-                        }
+                    // Verificar se existe um pedido pendente
+                    var pedidoPendente = await _context.PedidosPendentes
+                        .FirstOrDefaultAsync(p => p.TransactionId == transactionId);
                         
-                        try
-                        {
-                            // Desserializar com tratamento de erros
-                            var pedidoDTO = JsonSerializer.Deserialize<PedidoDTO>(pedidoPendente.PedidoJson);
-                            pedidoDTO.Pagamento.TransactionId = pagamentoId.ToString();
-                            
-                            // Criar pedido
-                            await _pedidoService.CriarPedidoAsync(pedidoDTO);
-                            _logger.LogInformation($"Pedido criado com sucesso para pagamento {pagamentoId}");
-                            
-                            // Notificar clientes
-                            await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoDTO);
-                            
-                            // Remover pedido pendente
-                            _context.PedidosPendentes.Remove(pedidoPendente);
-                            await _context.SaveChangesAsync();
-                            
-                            return Ok(new { status = "approved", message = "Pedido criado com sucesso" });
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.LogError(ex, $"Erro ao processar pedido pendente para pagamento {pagamentoId}");
-                            return StatusCode(500, $"Erro ao processar pedido: {ex.Message}");
-                        }
+                    if (pedidoPendente == null)
+                    {
+                        _logger.LogWarning($"Pedido pendente não encontrado para pagamento aprovado {pagamentoId}");
+                        return NotFound(new { status = statusPagamento, message = "Pedido pendente não encontrado" });
                     }
                     
-                    // Se não for aprovado, retorna o status atual
-                    return Ok(new { status });
+                    try
+                    {
+                        // Processar o pagamento aprovado
+                        await ProcessarPagamentoAprovadoAsync(transactionId);
+                        return Ok(new { status = "approved", message = "Pedido criado com sucesso" });
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, $"Erro ao processar pedido pendente para pagamento {pagamentoId}");
+                        return StatusCode(500, new { status = "error", message = $"Erro ao processar pedido: {ex.Message}" });
+                    }
                 }
+                
+                // Se não for aprovado, retorna o status atual
+                return Ok(new { status = statusPagamento });
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
-                throw new Exception($"Erro na requisição: {ex.Message}");
+                _logger.LogError(ex, $"Erro ao obter pagamento {pagamentoId}");
+                return StatusCode(500, new { status = "error", message = ex.Message });
             }
         }
 
@@ -282,12 +253,67 @@ namespace SistemaDeGestao.Controllers
         }
 
         //TODO - fazer o pooling do pagamento para pix
-        [HttpGet("statusPagamento")]
+        [HttpGet]
+        [Route("statusPagamento")]
+        [AllowAnonymous]
         public async Task<IActionResult> VerificarStatusPagamento([FromQuery] string transactionId)
         {
-            var pedido = await _context.Pedidos.FirstOrDefaultAsync(p => p.Pagamento.TransactionId == transactionId);
-            if (pedido == null) return NotFound("Pedido não encontrado.");
-            return Ok(new { status = "approved" });
+            try
+            {
+                _logger.LogInformation($"Verificando status do pagamento: {transactionId}");
+                
+                // Primeiro verificar se já existe pedido para esta transação
+                var pedidoExistente = await _context.Pedidos
+                    .AsNoTracking()
+                    .Include(p => p.Pagamento)
+                    .FirstOrDefaultAsync(p => p.Pagamento != null && p.Pagamento.TransactionId == transactionId);
+                    
+                if (pedidoExistente != null)
+                {
+                    _logger.LogInformation($"Pedido já existe para transação {transactionId}");
+                    return Ok(new { status = "approved", message = "Pedido já processado" });
+                }
+                    
+                // Verificar se existe um pedido pendente
+                var pedidoPendente = await _context.PedidosPendentes
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.TransactionId == transactionId);
+                    
+                if (pedidoPendente == null)
+                {
+                    _logger.LogWarning($"Pedido pendente não encontrado para transação {transactionId}");
+                    return NotFound(new { status = "not_found", message = "Pedido pendente não encontrado" });
+                }
+                    
+                // Buscar dados do restaurante para acessar API do Mercado Pago
+                var pedidoDTO = JsonSerializer.Deserialize<PedidoDTO>(pedidoPendente.PedidoJson);
+                if (pedidoDTO?.RestauranteId == null || pedidoDTO.RestauranteId <= 0)
+                {
+                    _logger.LogError($"Dados do restaurante inválidos para transação {transactionId}");
+                    return BadRequest(new { status = "error", message = "Dados do restaurante inválidos" });
+                }
+                    
+                // Consultar status na API do Mercado Pago
+                var accessToken = await BuscaCredenciaisAsync(pedidoDTO.RestauranteId);
+                var statusMercadoPago = await ObterStatusPagamentoAsync(transactionId, accessToken);
+                    
+                _logger.LogInformation($"Status do Mercado Pago para transação {transactionId}: {statusMercadoPago}");
+                    
+                // Se aprovado, processar o pedido
+                if (statusMercadoPago == "approved")
+                {
+                    await ProcessarPagamentoAprovadoAsync(transactionId);
+                    return Ok(new { status = "approved", message = "Pagamento aprovado e pedido processado" });
+                }
+                    
+                // Senão, retornar o status atual
+                return Ok(new { status = statusMercadoPago });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Erro ao verificar status do pagamento {transactionId}");
+                return StatusCode(500, new { status = "error", message = ex.Message });
+            }
         }
 
         [HttpPost]
@@ -328,6 +354,7 @@ namespace SistemaDeGestao.Controllers
                 // Verificar se já existe um pedido para este pagamento para evitar duplicação
                 var pedidoExistente = await _context.Pedidos
                     .AsNoTracking()
+                    .Include(p => p.Pagamento)
                     .AnyAsync(p => p.Pagamento != null && p.Pagamento.TransactionId == transactionId);
 
                 if (pedidoExistente)
@@ -343,7 +370,7 @@ namespace SistemaDeGestao.Controllers
                 if (pedidoPendente == null)
                 {
                     _logger.LogWarning($"Pedido pendente com ID de transação {transactionId} não encontrado");
-                    return;
+                    throw new Exception($"Pedido pendente não encontrado para pagamento {transactionId}");
                 }
 
                 try
@@ -385,11 +412,6 @@ namespace SistemaDeGestao.Controllers
                     throw new Exception($"Erro ao processar pedido: {ex.Message}");
                 }
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Erro não tratado ao processar pagamento {transactionId}");
-                throw;
-            }
             finally
             {
                 semaphore.Release();
@@ -428,25 +450,34 @@ namespace SistemaDeGestao.Controllers
             return null;
         }
 
-        private async Task<string?> ObterStatusPagamentoAsync(string transactionId, string accessToken)
+        private async Task<string> ObterStatusPagamentoAsync(string pagamentoId, string accessToken)
         {
-            var url = $"https://api.mercadopago.com/v1/payments/{transactionId}?access_token={accessToken}";
-            using var client = new HttpClient();
-
-            var response = await client.GetAsync(url);
-            if (!response.IsSuccessStatusCode)
+            using (var httpClient = new HttpClient())
             {
-                _logger.LogWarning("Falha ao obter status do pagamento para {TransactionId}. StatusCode: {StatusCode}", transactionId, response.StatusCode);
-                return null;
-            }
-
-            var json = await response.Content.ReadAsStringAsync();
-            var doc = JsonDocument.Parse(json);
-
-            if (doc.RootElement.TryGetProperty("status", out var statusElement))
+                httpClient.BaseAddress = new Uri("https://api.mercadopago.com/v1/payments/");
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                
+                var response = await httpClient.GetAsync(pagamentoId);
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    string errorMessage = await response.Content.ReadAsStringAsync();
+                    _logger.LogError($"Erro ao consultar Mercado Pago: {errorMessage}");
+                    throw new Exception($"Erro ao consultar pagamento: {response.StatusCode}");
+                }
+                
+                var content = await response.Content.ReadAsStringAsync();
+                var paymentData = JsonDocument.Parse(content).RootElement;
+                
+                if (!paymentData.TryGetProperty("status", out var statusElement))
+                {
+                    _logger.LogError("Status de pagamento não encontrado na resposta");
+                    throw new Exception("Status de pagamento não encontrado.");
+                }
+                
                 return statusElement.GetString();
-
-            return null;
+            }
         }
 
     }

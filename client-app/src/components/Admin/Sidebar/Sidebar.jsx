@@ -1,8 +1,17 @@
 import { links } from "../Constants";
 import LinkItem from "./LinkItem";
 import { Store, Clock3 } from "lucide-react";
+import { useStore } from '../../Context/StoreContext';
+import { useNavigate } from 'react-router-dom';
+
 
 const Sidebar = ({ isSidebarOpen }) => {
+    const { storeInfo } = useStore();
+    const navigate = useNavigate();
+    const logoUrl = storeInfo?.imagemUrl;
+
+
+
     return (
         <aside
             className={`
@@ -45,15 +54,20 @@ const Sidebar = ({ isSidebarOpen }) => {
                         <span className="text-xs text-gray-500 dark:text-gray-400">Hoje, 13:45</span>
                     </div>
                     
-                    <div className="flex items-center mb-4 px-2">
-                        <div className="flex-shrink-0">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center">
-                                <span className="text-xs font-medium text-white">MP</span>
-                            </div>
+                    <div 
+                        className="flex items-center mb-4 px-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-2 transition"
+                        onClick={() => navigate('/admin/Perfil')}
+                    >
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+                            <img
+                                src={logoUrl || "/api/placeholder/32/32"}
+                                alt="Logo da loja"
+                                className="w-full h-full object-cover"
+                            />
                         </div>
                         <div className="ml-3">
                             <p className="text-sm font-medium text-gray-900 dark:text-white">Meu Perfil</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">Ver configurações</p>
+                            <p className="text-xs text-blue-600 dark:text-blue-400 underline">Ver configurações</p>
                         </div>
                     </div>
                 </div>

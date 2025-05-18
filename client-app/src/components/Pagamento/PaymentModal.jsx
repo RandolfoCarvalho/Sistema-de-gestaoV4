@@ -25,6 +25,8 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     const [transactionId, setTransactionId] = useState(null);
     const [mensagem, setMensagem] = useState("");
     const restauranteId = localStorage.getItem("restauranteId");
+    const [countdown, setCountdown] = useState(300); // 5 minutos = 300 segundos
+
     const PUBLIC_KEY = "APP_USR-9d429645-4c80-4f72-aa71-b303ee60755f";
     
     useEffect(() => {
@@ -253,6 +255,40 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         
     };
 
+
+    const verificarPagamento = async () => {
+        try {
+            const response = await axios.get(
+                `${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/ObterPagamentoAsync/${transactionId}/${restauranteId}`
+            );
+
+            const isApproved =
+                response.data?.status === "approved" ||
+                (response.data?.message && response.data.message.includes("Pedido já"));
+
+            if (isApproved) {
+                setMensagem("✅ Pagamento aprovado com sucesso!");
+                setTimeout(() => navigate("/pedidos"), 3000);
+            } else {
+                setMensagem("⏳ Pagamento ainda não confirmado.");
+            }
+        } catch (error) {
+            console.error("Erro ao verificar status do pagamento manual:", error);
+            setMensagem("⚠️ Erro ao verificar pagamento. Tente novamente.");
+        }
+    };
+
+
+
+    // Inicia o contador de 5 minutos
+    useEffect(() => {
+    if (countdown <= 0) return;
+    const timer = setInterval(() => {
+        setCountdown(prev => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+    }, [countdown]);
+
     //Pagamento PIX
     const handlePixSubmit = async (formData) => {
         setInternalLoading(true);
@@ -286,6 +322,8 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                         qrCodeCopyPaste: response.data.qrCodeString
                     });
                     setTransactionId(response.data.idPagamento);
+                    setTransactionId(response.data.idPagamento);
+                    setCountdown(300);
                     console.log("Dados do PIX: ", response.data);
                 } else {
                     console.error("Resposta do backend para PIX inválida:", response);
@@ -353,6 +391,9 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                         pixData={pixData}
                         onCopyPixCode={handleCopyPixCode}
                         onClose={onClose}
+                        countdown={countdown}
+                        onVerificarPagamento={verificarPagamento}
+                        mensagem={mensagem}
                     />
                 )}
 

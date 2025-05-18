@@ -150,11 +150,15 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             },
             {
               "$type": "Document",
@@ -166,8 +170,7 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\MercadoPagoService.cs",
               "ViewState": "AgIAABsAAAAAAAAAAAAowCsAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T02:35:34.496Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-05T02:35:34.496Z"
             },
             {
               "$type": "Document",
@@ -177,7 +180,7 @@
               "RelativeDocumentMoniker": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
               "ToolTip": "C:\\Users\\randolfo\\Documents\\Sistema-de-GestaoV4\\SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Areas\\Admin\\Controllers\\MercadoPagoController.cs",
-              "ViewState": "AgIAACQAAAAAAAAAAAAjwD0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAjwDkAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-05T01:59:46.372Z",
               "EditorCaption": ""
@@ -216,8 +219,7 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Program.cs",
               "ViewState": "AgIAADsAAAAAAAAAAAAjwFUAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-22T19:46:43.113Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-22T19:46:43.113Z"
             },
             {
               "$type": "Document",
@@ -253,8 +255,7 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Services\\RestauranteService.cs",
               "ViewState": "AgIAAHkAAAAAAAAAAAAwwJEAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T23:15:13.286Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T23:15:13.286Z"
             },
             {
               "$type": "Document",
@@ -374,7 +375,8 @@
               "RelativeToolTip": "SistemaDeGest\u00E3o\\Hubs\\OrderHub.cs",
               "ViewState": "AgIAAGgAAAAAAAAAAAAjwIMAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-11T16:06:01.398Z"
+              "WhenOpened": "2025-05-11T16:06:01.398Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -579,10 +581,6 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-22T19:50:34.556Z"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             }
           ]
         },

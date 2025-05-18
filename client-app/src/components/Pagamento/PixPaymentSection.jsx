@@ -1,10 +1,12 @@
-import React from "react";
+const PixPaymentSection = ({ pixData, onCopyPixCode, onClose, countdown, onVerificarPagamento, mensagem }) => {
+    const minutos = Math.floor(countdown / 60);
+    const segundos = String(countdown % 60).padStart(2, '0');
 
-const PixPaymentSection = ({ pixData, onCopyPixCode, onClose }) => {
     return (
         <div className="text-center space-y-4 my-4">
             <p className="font-medium">Pague com PIX para confirmar seu pedido!</p>
             <p className="text-sm text-gray-600">Escaneie o QR Code abaixo com o app do seu banco:</p>
+
             <img
                 src={`data:image/png;base64,${pixData.qrCodeBase64}`}
                 alt="QR Code PIX"
@@ -29,7 +31,23 @@ const PixPaymentSection = ({ pixData, onCopyPixCode, onClose }) => {
                     </svg>
                 </button>
             </div>
+
             <p className="text-xs text-gray-500 mt-2">Após o pagamento, o status do seu pedido será atualizado automaticamente.</p>
+
+            {/* ⏱️ Timer e botão */}
+            <div className="mt-4 space-y-2">
+                <div className="text-sm text-gray-700">
+                    Tempo restante: {minutos}:{segundos}
+                </div>
+                <button
+                    onClick={onVerificarPagamento}
+                    className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 transition duration-200"
+                >
+                    Verificar pagamento
+                </button>
+                {mensagem && <div className="text-sm text-gray-600">{mensagem}</div>}
+            </div>
+
             <button
                 onClick={onClose}
                 type="button"
@@ -40,5 +58,6 @@ const PixPaymentSection = ({ pixData, onCopyPixCode, onClose }) => {
         </div>
     );
 };
+
 
 export default PixPaymentSection;

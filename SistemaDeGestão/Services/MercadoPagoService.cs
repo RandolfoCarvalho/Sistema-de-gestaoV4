@@ -23,12 +23,13 @@ namespace SistemaDeGestao.Services
     public class MercadoPagoService
     {
         private readonly DataBaseContext _context;
-        private readonly string _accessToken = "APP_USR-4929793273828266-031923-dd42ca24161f10acffd4785370c0358b-482914930";
         private readonly IConfiguration _configuration;
-        public MercadoPagoService(DataBaseContext dataBaseContext, IConfiguration configuration)
+        private readonly ILogger<MercadoPagoService> _logger;
+        public MercadoPagoService(DataBaseContext dataBaseContext, IConfiguration configuration, ILogger<MercadoPagoService> logger)
         {
             _context = dataBaseContext;
             _configuration = configuration;
+            _logger = logger;
         }
 
         public async Task<PagamentoPixResponse> ProcessarPixAsync(PagamentoPixDTO pagamento, PedidoDTO pedidoDTO, string accessToken)
@@ -41,7 +42,8 @@ namespace SistemaDeGestao.Services
                     transaction_amount = pagamento.Amount,
                     payment_method_id = "pix",
                     description = "Pedido via PIX",
-                    notification_url = "https://api.fomedique.com.br/api/1.0/MercadoPago/notificacaoMercadoPago",
+                    // URL de notificação completa e correta
+                    //notification_url = "https://api.fomedique.com.br/api/1.0/MercadoPago/notificacaoMercadoPago",
                     payer = new
                     {
                         email = pagamento.PayerEmail,
@@ -50,7 +52,6 @@ namespace SistemaDeGestao.Services
                     }
                 };
 
-                // Serialize once
                 var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -61,11 +62,16 @@ namespace SistemaDeGestao.Services
                 if (!response.IsSuccessStatusCode)
                 {
                     var errContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogError($"Erro ao processar pagamento PIX: {errContent}");
                     throw new Exception($"Erro ao processar pagamento: {errContent}");
                 }
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var doc = JsonDocument.Parse(responseContent);
+
+                // Obtém o ID do pagamento - esta é a referência principal
+                var paymentId = doc.RootElement.GetProperty("id").GetInt64().ToString();
+                var valor = doc.RootElement.GetProperty("transaction_amount").GetDecimal();
 
                 var qrCodeBase64 = doc.RootElement
                     .GetProperty("point_of_interaction")
@@ -77,69 +83,35 @@ namespace SistemaDeGestao.Services
                     .GetProperty("transaction_data")
                     .GetProperty("qr_code").GetString();
 
-                var id = doc.RootElement.GetProperty("id").GetInt64();
-                var valor = doc.RootElement.GetProperty("transaction_amount").GetDecimal();
-                string transactionId = null;
-                if (doc.RootElement.TryGetProperty("transaction_details", out var transactionDetails))
-                {
-                    if (transactionDetails.TryGetProperty("transaction_id", out var tIdElement))
-                    {
-                        transactionId = tIdElement.GetString();
-                    }
-                }
+                // Importante: Sempre usar o ID do pagamento como TransactionId para consistência
+                pedidoDTO.Pagamento.TransactionId = paymentId;
+
+                // Salva o pedido pendente com o ID do pagamento
                 var pedidoPendente = new PedidoPendente
                 {
-                    TransactionId = id.ToString(),
+                    TransactionId = paymentId,
                     PedidoJson = JsonConvert.SerializeObject(pedidoDTO),
                     DataCriacao = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow,
                             TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))
                 };
+
+                _logger.LogInformation($"Salvando pedido pendente para pagamento PIX. TransactionId: {paymentId}");
                 _context.PedidosPendentes.Add(pedidoPendente);
                 await _context.SaveChangesAsync();
 
                 return new PagamentoPixResponse
                 {
-                    IdPagamento = id.ToString(),
+                    IdPagamento = paymentId,
                     QrCodeBase64 = qrCodeBase64,
                     QrCodeString = qrCode,
                     ValorTotal = valor,
-                    TransactionId = transactionId
+                    // Usar sempre o mesmo ID para evitar confusão
+                    TransactionId = paymentId
                 };
             }
         }
 
-        public async Task<ReembolsoResponseDTO> ProcessarReembolso(ReembolsoRequest request, string accessToken)
-        {
-            var httpClient = new HttpClient();
-            var url = $"https://api.mercadopago.com/v1/payments/{request.TransactionId}/refunds";
-            var reembolsoData = new
-            {
-                amount = request.Amount
-            };
-            var json = System.Text.Json.JsonSerializer.Serialize(reembolsoData);
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
-            {
-                Content = new StringContent(json, Encoding.UTF8, "application/json")
-            };
-            // Cabeçalhos 
-            httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            httpRequest.Headers.Add("X-Idempotency-Key", Guid.NewGuid().ToString()); // Gera uma chave única para evitar duplicidade 
-            var response = await httpClient.SendAsync(httpRequest);
-            if (!response.IsSuccessStatusCode)
-            {
-                var erro = await response.Content.ReadAsStringAsync();
-                throw new Exception($"Erro ao processar reembolso: {erro}");
-            }
-            var responseBody = await response.Content.ReadAsStringAsync();
-            var jsonResponse = JsonDocument.Parse(responseBody).RootElement;
-            var reembolsoResponse = new ReembolsoResponseDTO
-            {
-                TransactionId = (long)jsonResponse.GetProperty("payment_id").GetInt64(),
-                Amount = jsonResponse.GetProperty("amount").GetDecimal(),
-                Status = jsonResponse.GetProperty("status").GetString()
-            };
-            return reembolsoResponse;
-        }
+
 
         public async Task<PaymentResponseDTO> ProcessPayment(PagamentoCartaoDTO paymentData, PedidoDTO pedidoDTO, string accessToken)
         {
@@ -469,6 +441,38 @@ namespace SistemaDeGestao.Services
             {
                 Console.WriteLine("==================== FIM DO PROCESSAMENTO DE PAGAMENTO ====================");
             }
+        }
+        public async Task<ReembolsoResponseDTO> ProcessarReembolso(ReembolsoRequest request, string accessToken)
+        {
+            var httpClient = new HttpClient();
+            var url = $"https://api.mercadopago.com/v1/payments/{request.TransactionId}/refunds";
+            var reembolsoData = new
+            {
+                amount = request.Amount
+            };
+            var json = System.Text.Json.JsonSerializer.Serialize(reembolsoData);
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+            // Cabeçalhos 
+            httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            httpRequest.Headers.Add("X-Idempotency-Key", Guid.NewGuid().ToString()); // Gera uma chave única para evitar duplicidade 
+            var response = await httpClient.SendAsync(httpRequest);
+            if (!response.IsSuccessStatusCode)
+            {
+                var erro = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Erro ao processar reembolso: {erro}");
+            }
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var jsonResponse = JsonDocument.Parse(responseBody).RootElement;
+            var reembolsoResponse = new ReembolsoResponseDTO
+            {
+                TransactionId = (long)jsonResponse.GetProperty("payment_id").GetInt64(),
+                Amount = jsonResponse.GetProperty("amount").GetDecimal(),
+                Status = jsonResponse.GetProperty("status").GetString()
+            };
+            return reembolsoResponse;
         }
 
     }

@@ -207,11 +207,11 @@ if (!app.Environment.IsDevelopment())
 }
 
 
-using (var scope = app.Services.CreateScope())
+/*using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<DataBaseContext>();
     db.Database.Migrate(); // Isso roda as migrações pendentes
-}
+}*/
 
 //swagger
 app.UseSwagger();

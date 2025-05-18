@@ -55,7 +55,10 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     
                     const status1 = res1?.data?.status;
                     const status2 = res2?.data?.status;
-                    const isPedidoExistente = res2?.data === "Pedido ja existe";
+                    const isPedidoExistente = 
+                        res2?.data === "Pedido ja existe" || 
+                        res2?.data?.message?.includes("Pedido já") || 
+                        res2?.data?.message?.includes("Pedido já");
                     const isApproved = status1 === "approved" || status2 === "approved" || isPedidoExistente;
     
                     if (isApproved) {
@@ -190,7 +193,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         }
         
         const paymentData = {
-            FormaPagamento: paymentMethod, // Use the payment method passed as prop
+            FormaPagamento: "dinheiro",
             Amount: parseFloat(amount),
             trocoPara: troco ? parseFloat(troco) : null,
         };

@@ -383,8 +383,8 @@ namespace SistemaDeGestao.Controllers
                     
                     // Criar o pedido
                     _logger.LogInformation($"Criando pedido para pagamento {transactionId}");
-                    await _pedidoService.CriarPedidoAsync(pedidoDTO);
-                    
+                    var result = await _pedidoService.CriarPedidoAsync(pedidoDTO);
+                    if (result == null) throw new Exception("Pedido não criado pelo CriarPedidoAsync");
                     // Notificar os clientes
                     _logger.LogInformation($"Enviando notificação para pagamento {transactionId}");
                     await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoDTO);

@@ -137,9 +137,21 @@ namespace SistemaDeGestao.Services
             if (empresa == null) return false;
 
             TimeSpan horarioAtual = DateTime.Now.TimeOfDay;
+            TimeSpan abertura = empresa.HorarioAbertura;
+            TimeSpan fechamento = empresa.HorarioFechamento;
 
-            return horarioAtual >= empresa.HorarioAbertura && horarioAtual <= empresa.HorarioFechamento;
+            // Se abertura for antes do fechamento (mesmo dia)
+            if (abertura <= fechamento)
+            {
+                return horarioAtual >= abertura && horarioAtual <= fechamento;
+            }
+            else
+            {
+                // Caso o horário de funcionamento cruze a meia-noite (ex: 22:00 até 02:00)
+                return horarioAtual >= abertura || horarioAtual <= fechamento;
+            }
         }
+
         public async Task<Restaurante?> GetRestauranteByUserIdAsync(ClaimsPrincipal user)
         {
             var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);

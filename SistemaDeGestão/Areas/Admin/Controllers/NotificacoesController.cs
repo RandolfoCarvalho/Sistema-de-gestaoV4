@@ -4,7 +4,10 @@ using Microsoft.EntityFrameworkCore.Storage;
 using SistemaDeGestao.Data;
 using SistemaDeGestao.Models;
 using SistemaDeGestao.Services;
+using System.Globalization;
 using System.Security.Claims;
+using System.Text;
+using System.Globalization;
 
 namespace SistemaDeGestao.Areas.Admin.Controllers
 {
@@ -19,6 +22,61 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             _whatsAppBot = whatsAppBot;
             _context = context;
         }
+
+        [HttpGet("cliente/{telefone}")]
+        public async Task<IActionResult> ObterPedidoPorTelefone(string telefone)
+        {
+            var pedido = await _context.Pedidos
+                .Where(p => p.FinalUserTelefone.Contains(telefone))
+                .OrderByDescending(p => p.DataPedido)
+                .FirstOrDefaultAsync();
+
+            if (pedido == null)
+                return NotFound();
+
+            return Ok(new
+            {
+                nome = pedido.FinalUserName,
+                numero = pedido.Numero,
+                status = pedido.Status.ToString(),
+                RestauranteId = pedido.RestauranteId,
+                data = pedido.DataPedido,
+                valor = pedido.Pagamento.ValorTotal 
+            });
+        }
+        //todo fazer a mensagem retornar, tratar acentos e espacos para buscar o modelo no banco
+        [Route("templates/{restauranteId}/{status}")]
+        [HttpGet]
+        public async Task<IActionResult> ObterTemplateMensagem(int restauranteId, string status)
+        {
+            string Normalize(string input)
+            {
+                return new string(input
+                    .Normalize(NormalizationForm.FormD)
+                    .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                    .ToArray()
+                ).ToLowerInvariant();
+            }
+
+            var statusNormalizado = Normalize(status);
+
+            // Busca todos os templates do restaurante na memória e filtra normalizando
+            var templates = await _context.ModelosMensagem
+                .Where(t => t.RestauranteId == restauranteId)
+                .ToListAsync(); // Corrige o problema ao garantir que a execução ocorre no banco antes de filtrar na memória
+
+            var template = templates.FirstOrDefault(t => Normalize(t.Etapa) == statusNormalizado);
+
+            if (template == null)
+                return NotFound();
+
+            return Ok(new
+            {
+                titulo = template.Titulo,
+                texto = template.Texto
+            });
+        }
+
 
         [HttpGet]
         [Route("ListarMensagens")]

@@ -54,8 +54,10 @@ namespace SistemaDeGestao.Services
             // Buscar o modelo de mensagem da etapa correspondente
             var modeloMensagem = await _context.ModelosMensagem
                 .FirstOrDefaultAsync(m => m.RestauranteId == pedido.RestauranteId && m.Etapa == etapa);
+            
             if (modeloMensagem != null)
             {
+                if (modeloMensagem.Etapa == "Pedido Recebido") return false;
                 var clienteNome = pedido.FinalUserName ?? "Cliente";
                 var numeroDoPedido = pedido.Numero;
                 var valor = pedido.Itens.Sum(i => i.PrecoUnitario * i.Quantidade).ToString("C");
@@ -87,7 +89,8 @@ namespace SistemaDeGestao.Services
                 message = mensagem
             };
             var content = new StringContent(JsonSerializer.Serialize(jsonBody), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync("https://bot.fomedique.com.br/send-message", content);
+            //var response = await httpClient.PostAsync("https://bot.fomedique.com.br/send-message", content);
+            var response = await httpClient.PostAsync("http://localhost:3001/send-message", content);
             return response.IsSuccessStatusCode;
         }
     }

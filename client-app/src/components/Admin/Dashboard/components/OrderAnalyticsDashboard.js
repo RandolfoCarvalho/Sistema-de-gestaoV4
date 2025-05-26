@@ -8,6 +8,9 @@ import { Calendar, BarChart4, TrendingUp, PieChart as PieIcon, DollarSign } from
 const OrderAnalyticsDashboard = ({ orders }) => {
     const [timeRange, setTimeRange] = useState('week');
     const [chartType, setChartType] = useState('overview');
+    //controla a visibilidade do grafico de pedidos
+    const [isChartVisible, setIsChartVisible] = useState(true);
+
     const allOrders = useMemo(() => {
         if (!orders) return [];
         return Object.values(orders).flat().map(order => ({
@@ -377,6 +380,15 @@ const OrderAnalyticsDashboard = ({ orders }) => {
 
     return (
         <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-800">Análise Detalhada</h3>
+                <button
+                    onClick={() => setIsChartVisible(!isChartVisible)}
+                    className="text-sm text-blue-600 hover:underline"
+                >
+                    {isChartVisible ? 'Minimizar ▲' : 'Expandir ▼'}
+                </button>
+            </div>
             <div className="flex flex-col md:flex-row justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-gray-800 mb-3 md:mb-0">Análise de Pedidos</h2>
 
@@ -469,43 +481,47 @@ const OrderAnalyticsDashboard = ({ orders }) => {
                 </div>
             </div>
 
-            {/* Chart */}
-            <div className="bg-gray-50 p-4 rounded-lg">
-                {renderChart()}
-            </div>
+            {isChartVisible && (
+                <>
+                {/* Chart */}
+                <div className="bg-gray-50 p-4 rounded-lg">
+                    {renderChart()}
+                </div>
 
-            {/* Insights section */}
-            <div className="mt-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">Insights</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                        <h4 className="font-medium text-blue-700">Períodos de Pico</h4>
-                        <p className="text-gray-600 mt-1">
-                            {data.length > 0
-                                ? `Dia com mais pedidos: ${data.reduce((max, item) => item.orders > max.orders ? item : max, data[0]).name} (${data.reduce((max, item) => item.orders > max.orders ? item : max, data[0]).orders} pedidos)`
-                                : 'Sem dados suficientes para análise de pico'}
-                        </p>
-                    </div>
-                    <div className="bg-green-50 p-4 rounded-lg">
-                        <h4 className="font-medium text-green-700">Margem de Lucro</h4>
-                        <p className="text-gray-600 mt-1">
-                            Sua margem de lucro média é de {profitMargin}%, {Number(profitMargin) > 30 ? 'acima' : 'abaixo'} da média do setor.
-                        </p>
-                    </div>
-                    <div className="bg-purple-50 p-4 rounded-lg">
-                        <h4 className="font-medium text-purple-700">Taxa de Cancelamento</h4>
-                        <p className="text-gray-600 mt-1">
-                            Sua taxa de cancelamento é de {cancellationRate}%, {Number(cancellationRate) < 5 ? 'menor' : 'maior'} que a média do setor.
-                        </p>
-                    </div>
-                    <div className="bg-amber-50 p-4 rounded-lg">
-                        <h4 className="font-medium text-amber-700">Valor Médio do Pedido</h4>
-                        <p className="text-gray-600 mt-1">
-                            O valor médio por pedido é R$ {averageOrderValue}.
-                        </p>
+                {/* Insights section */}
+                <div className="mt-6">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Insights</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="bg-blue-50 p-4 rounded-lg">
+                            <h4 className="font-medium text-blue-700">Períodos de Pico</h4>
+                            <p className="text-gray-600 mt-1">
+                                {data.length > 0
+                                    ? `Dia com mais pedidos: ${data.reduce((max, item) => item.orders > max.orders ? item : max, data[0]).name} (${data.reduce((max, item) => item.orders > max.orders ? item : max, data[0]).orders} pedidos)`
+                                    : 'Sem dados suficientes para análise de pico'}
+                            </p>
+                        </div>
+                        <div className="bg-green-50 p-4 rounded-lg">
+                            <h4 className="font-medium text-green-700">Margem de Lucro</h4>
+                            <p className="text-gray-600 mt-1">
+                                Sua margem de lucro média é de {profitMargin}%, {Number(profitMargin) > 30 ? 'acima' : 'abaixo'} da média do setor.
+                            </p>
+                        </div>
+                        <div className="bg-purple-50 p-4 rounded-lg">
+                            <h4 className="font-medium text-purple-700">Taxa de Cancelamento</h4>
+                            <p className="text-gray-600 mt-1">
+                                Sua taxa de cancelamento é de {cancellationRate}%, {Number(cancellationRate) < 5 ? 'menor' : 'maior'} que a média do setor.
+                            </p>
+                        </div>
+                        <div className="bg-amber-50 p-4 rounded-lg">
+                            <h4 className="font-medium text-amber-700">Valor Médio do Pedido</h4>
+                            <p className="text-gray-600 mt-1">
+                                O valor médio por pedido é R$ {averageOrderValue}.
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </>
+        )}
         </div>
     );
 };

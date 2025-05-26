@@ -12,6 +12,7 @@ const OrderHistory = () => {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [userPhone, setUserPhone] = useState(localStorage.getItem("FinalUserTelefone"));
+    const { storeInfo } = useStore();
 
     useEffect(() => {
         if (userPhone) {
@@ -158,16 +159,28 @@ const OrderHistory = () => {
                                 <div className="grid grid-cols-2 gap-3">
                                     <button
                                         onClick={() => viewOrderDetails(order)}
-                                        className="border border-blue-500 text-blue-500 py-3 rounded-lg font-medium"
+                                        className="border border-blue-500 text-blue-500 py-3 rounded-lg font-medium flex items-center justify-center gap-2"
                                     >
                                         Detalhes
                                     </button>
-                                    <button
-                                        onClick={() => repeatOrder(order.id)}
-                                        className="bg-blue-500 text-white py-3 rounded-lg font-medium"
-                                    >
-                                        Repetir pedido
-                                    </button>
+                                    
+                                    {storeInfo?.phoneNumber && (
+                                        <a
+                                            href={`https://wa.me/55${storeInfo.phoneNumber}?text=Acompanhar pedido número ${orderNumber}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="bg-green-500 text-white py-3 rounded-lg font-medium flex items-center justify-center gap-2"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                <path strokeLinecap="round" strokeLinejoin="round"
+                                                    d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                <path strokeLinecap="round" strokeLinejoin="round"
+                                                    d="M9.172 9.172a4 4 0 105.656 5.656M15 12a3 3 0 01-3 3"/>
+                                            </svg>
+                                            Acompanhar pedido
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                         );

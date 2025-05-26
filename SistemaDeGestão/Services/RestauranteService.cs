@@ -136,18 +136,22 @@ namespace SistemaDeGestao.Services
         {
             if (empresa == null) return false;
 
-            TimeSpan horarioAtual = DateTime.Now.TimeOfDay;
+            // Define o fuso horário do Brasil (Horário de Brasília)
+            TimeZoneInfo brasilTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+            DateTime dataHoraBrasil = TimeZoneInfo.ConvertTime(DateTime.UtcNow, brasilTimeZone);
+
+            TimeSpan horarioAtual = dataHoraBrasil.TimeOfDay;
             TimeSpan abertura = empresa.HorarioAbertura;
             TimeSpan fechamento = empresa.HorarioFechamento;
 
-            // Se abertura for antes do fechamento (mesmo dia)
+            // Caso o horário de funcionamento seja no mesmo dia
             if (abertura <= fechamento)
             {
                 return horarioAtual >= abertura && horarioAtual <= fechamento;
             }
             else
             {
-                // Caso o horário de funcionamento cruze a meia-noite (ex: 22:00 até 02:00)
+                // Horário cruza a meia-noite (ex: 22:00 até 02:00)
                 return horarioAtual >= abertura || horarioAtual <= fechamento;
             }
         }

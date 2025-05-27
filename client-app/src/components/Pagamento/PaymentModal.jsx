@@ -4,7 +4,6 @@ import usePayment from "./hooks/usePayment";
 import { redirect, useNavigate } from "react-router-dom";
 import { initMercadoPago } from "@mercadopago/sdk-react";
 import FuturisticLoadingSpinner from '../ui/FuturisticLoadingSpinner';
-import useSignalRPedidos from './hooks/useSignalRPedidos';
 import CardPaymentForm from "./CardPaymentForm";
 import PixPaymentSection from "./PixPaymentSection";
 import DinheiroPaymentForm from "./DinheiroPaymentForm";
@@ -15,7 +14,6 @@ import MercadoPagoWalletButton from "./MercadoPagoWalletButton";
 const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSuccess, preparePedidoDTO }) => {
     const { processPayment, processPaymentPix, loading: paymentLoading, error: paymentError } = usePayment();
     const [amount, setAmount] = useState(cartTotal);
-    const [pixKey, setPixKey] = useState("");
     const [troco, setTroco] = useState("");
     const navigate = useNavigate();
     const [preferenceId, setPreferenceId] = useState(null);
@@ -27,7 +25,73 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     const restauranteId = localStorage.getItem("restauranteId");
     const [countdown, setCountdown] = useState(300); // 5 minutos = 300 segundos
 
+    // ESTADO PARA CONTROLAR A INICIALIZAÇÃO DO MERCADOPAGO
+    const [mpInitialized, setMpInitialized] = useState(false);
+    const [mpError, setMpError] = useState(null);
     const PUBLIC_KEY = "APP_USR-9d429645-4c80-4f72-aa71-b303ee60755f";
+    
+    useEffect(() => {
+            setAmount(cartTotal);
+            console.log("Set amount: " + amount);
+        }, [cartTotal]);
+
+    // INICIALIZAÇÃO CORRIGIDA DO MERCADOPAGO
+    useEffect(() => {
+        let initTimeout;
+        
+        const initializeMercadoPago = async () => {
+            console.log("=== INICIALIZAÇÃO MERCADOPAGO ===");
+            console.log("PUBLIC_KEY:", PUBLIC_KEY);
+            
+            try {
+                setMpInitialized(false);
+                setMpError(null);
+                
+                // Limpar qualquer inicialização anterior
+                if (window.MercadoPago) {
+                    console.log("Limpando inicialização anterior...");
+                }
+                
+                // Inicializar com configurações mais robustas
+                await initMercadoPago(PUBLIC_KEY, {
+                    locale: 'pt-BR',
+                    advancedFraudPrevention: false, // Desabilitar para teste
+                });
+                
+                console.log("MercadoPago inicializado, aguardando estabilização...");
+                
+                // Aguardar tempo suficiente para estabilização
+                initTimeout = setTimeout(() => {
+                    // Verificar se a inicialização foi bem-sucedida
+                    if (window.MercadoPago) {
+                        console.log("✅ MercadoPago pronto!");
+                        console.log("window.MercadoPago:", !!window.MercadoPago);
+                        setMpInitialized(true);
+                    } else {
+                        console.error("❌ MercadoPago não foi inicializado corretamente");
+                        setMpError("Erro na inicialização do sistema de pagamento");
+                    }
+                }, 2000); // Aumentar para 2 segundos
+                
+            } catch (error) {
+                console.error("❌ Erro ao inicializar MercadoPago:", error);
+                setMpError("Falha ao inicializar sistema de pagamento: " + error.message);
+                setMpInitialized(false);
+            }
+        };
+        
+        // Só inicializar quando o modal estiver aberto
+        if (isOpen) {
+            initializeMercadoPago();
+        }
+        
+        return () => {
+            if (initTimeout) {
+                clearTimeout(initTimeout);
+            }
+        };
+    }, [isOpen]);
+
     
     useEffect(() => {
         setAmount(cartTotal);
@@ -97,7 +161,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         setPreferenceId(null);
         setInternalError(null);
 
-        if (isOpen && paymentMethod === "mercadopago") {
+        if (isOpen && paymentMethod === "mercadopago" && mpInitialized) {
             const generatePreference = async () => {
                 setInternalLoading(true);
                 setInternalError(null);
@@ -129,7 +193,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             };
             generatePreference();
         }
-    }, [isOpen, paymentMethod, amount, processPayment, preparePedidoDTO]);
+    }, [isOpen, paymentMethod, amount, processPayment, preparePedidoDTO, mpInitialized]); // Adicionar mpInitialized
 
     const handleCardPaymentSubmit = async (formData, additionalData) => {
         setInternalLoading(true);
@@ -155,7 +219,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             setInternalLoading(false);
             return;
         }
-    
         const paymentData = {
             FormaPagamento: "cartao",
             Amount: parseFloat(formData.transaction_amount),
@@ -171,7 +234,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             StatusCode: 0,
             Message: ""
         };
-    
+        console.log("paymentData: " + paymentData);
         try {
             const response = await processPayment(paymentData, pedidoDTO);
     
@@ -368,13 +431,37 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             <div className="space-y-4">
                 <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Detalhes de Pagamento</h2>
 
+                {/* RENDERIZAÇÃO CONDICIONAL BASEADA NA INICIALIZAÇÃO */}
                 {paymentMethod === "cartao" && (
-                    <CardPaymentForm 
-                        amount={amount}
-                        onSubmit={handleCardPaymentSubmit}
-                        onClose={onClose}
-                        isLoading={isLoading}
-                    />
+                    <>
+                        {!mpInitialized && !mpError && (
+                            <div className="text-center p-4">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+                                <p className="text-gray-600">⏳ Carregando sistema de pagamento...</p>
+                            </div>
+                        )}
+                        
+                        {mpError && (
+                            <div className="p-4 bg-red-50 border border-red-200 rounded">
+                                <p className="text-red-800">❌ {mpError}</p>
+                                <button 
+                                    onClick={() => window.location.reload()} 
+                                    className="mt-2 text-sm text-red-600 underline"
+                                >
+                                    Tentar novamente
+                                </button>
+                            </div>
+                        )}
+                        
+                        {mpInitialized && !mpError && (
+                            <CardPaymentForm 
+                                amount={amount}
+                                onSubmit={handleCardPaymentSubmit}
+                                onClose={onClose}
+                                isLoading={isLoading}
+                            />
+                        )}
+                    </>
                 )}
 
                 {paymentMethod === "pix" && !pixData && (
@@ -409,13 +496,23 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                 )}
 
                 {paymentMethod === "mercadopago" && (
-                    <MercadoPagoWalletButton 
-                        preferenceId={preferenceId}
-                        isLoading={isLoading}
-                        onClose={onClose}
-                    />
+                    <>
+                        {!mpInitialized && !mpError && (
+                            <div className="text-center p-4">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+                                <p className="text-gray-600">⏳ Preparando Mercado Pago...</p>
+                            </div>
+                        )}
+                        
+                        {mpInitialized && (
+                            <MercadoPagoWalletButton 
+                                preferenceId={preferenceId}
+                                isLoading={isLoading}
+                                onClose={onClose}
+                            />
+                        )}
+                    </>
                 )}
-
                 {displayError && (
                     <p className="text-red-600 text-center mt-4 bg-red-100 p-3 rounded border border-red-300 text-sm">
                         {displayError}

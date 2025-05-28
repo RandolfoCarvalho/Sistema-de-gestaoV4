@@ -26,6 +26,37 @@ namespace SistemaDeGestao.Services
             _webHostEnvironment = webHostEnvironment;
             _s3Client = s3Client;
         }
+
+        public async Task<List<Produto>> ObterProdutosMaisVendidos(int restauranteId)
+        {
+            var produtosMaisVendidos = await _context.Pedidos
+                .Where(p => p.RestauranteId == restauranteId)
+                .SelectMany(p => p.Itens)
+                .Where(ip => ip.Produto.LojaId == restauranteId)
+                .GroupBy(ip => ip.ProdutoId)
+                .Select(g => new
+                {
+                    ProdutoId = g.Key,
+                    QuantidadeVendida = g.Sum(ip => ip.Quantidade)
+                })
+                .OrderByDescending(x => x.QuantidadeVendida)
+                .Take(10)
+                .ToListAsync();
+
+            var produtoIds = produtosMaisVendidos.Select(x => x.ProdutoId).ToList();
+
+            var produtos = await _context.Produtos
+                .Where(p => produtoIds.Contains(p.Id))
+                .ToListAsync();
+
+            // Ordena os produtos na mesma ordem da quantidade vendida
+            produtos = produtos
+                .OrderByDescending(p => produtosMaisVendidos.First(x => x.ProdutoId == p.Id).QuantidadeVendida)
+                .ToList();
+
+            return produtos;
+        }
+
         public async Task<List<Produto>> ListarProdutos(int lojaId)
         {
             var produtos = await _context.Produtos

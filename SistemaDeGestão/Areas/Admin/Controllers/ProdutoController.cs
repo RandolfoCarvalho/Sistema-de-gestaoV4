@@ -34,6 +34,20 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Route("ListarMaisVendidosPorLoja/{nomeDaLoja}")]
+        public async Task<IActionResult> ListarMaisVendidosPorLoja(string nomeDaLoja)
+        {
+            var restaurante = await _context.Restaurantes
+                .FirstOrDefaultAsync(r => r.NomeDaLoja == nomeDaLoja);
+
+            if (restaurante == null)
+                return NotFound("Restaurante não encontrado.");
+
+            var produtos = await _produtoService.ObterProdutosMaisVendidos(restaurante.Id);
+            return Ok(produtos);
+        }
+
+        [HttpGet]
         [Route("ListarProdutos")]
         public async Task<IActionResult> ListarProdutos()
         {

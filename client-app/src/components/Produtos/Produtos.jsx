@@ -22,6 +22,27 @@ const Produtos = () => {
   const { lojaInfo, produtos, categorias, loading } = useLojaData(nomeDaLoja);
   const [activeCategory, setActiveCategory] = useState("todos");
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [maisVendidos, setMaisVendidos] = useState([]);
+
+  useEffect(() => {
+  const fetchMaisVendidos = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/1.0/produto/ListarMaisVendidosPorLoja/${nomeDaLoja}`);
+      if (response.ok) {
+        const data = await response.json();
+        setMaisVendidos(data);
+      } else {
+        console.error("Erro ao buscar produtos mais vendidos.");
+      }
+    } catch (error) {
+      console.error("Erro ao buscar produtos mais vendidos:", error);
+    }
+  };
+
+  if (nomeDaLoja) {
+    fetchMaisVendidos();
+  }
+}, [nomeDaLoja]);
 
   // Controla a visibilidade do botão "Voltar ao topo"
   useEffect(() => {
@@ -102,7 +123,7 @@ const Produtos = () => {
           </div>
           {/* Produtos em destaque */}
           <div className="mt-6">
-            <FeaturedProducts products={produtos} />
+            <FeaturedProducts products={maisVendidos} />
           </div>
           
           {/* Seções de categorias */}

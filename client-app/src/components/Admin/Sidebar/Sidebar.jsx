@@ -1,76 +1,34 @@
-import { links } from "../Constants";
-import LinkItem from "./LinkItem";
-import { Store, Clock3 } from "lucide-react";
-import { useStore } from '../../Context/StoreContext';
-import { useNavigate } from 'react-router-dom';
+import { useStore } from '../../Context/StoreContext'; 
 
+// Importando os subcomponentes
+import SidebarHeader from './SidebarHeader';
+import NavigationLinks from './NavigationLinks';
+import SidebarFooter from './SidebarFooter';
+
+// Definindo constantes para classes pode ajudar na legibilidade se forem muito complexas ou condicionais
+const BASE_SIDEBAR_CLASSES = `
+    fixed top-0 left-0 z-40 w-64 h-screen
+    bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900
+    border-r border-gray-200 dark:border-gray-700
+    pt-20 pb-4 
+    transition-transform duration-300 ease-in-out
+`;
 
 const Sidebar = ({ isSidebarOpen }) => {
     const { storeInfo } = useStore();
-    const navigate = useNavigate();
     const logoUrl = storeInfo?.imagemUrl;
 
-
+    const sidebarVisibilityClass = isSidebarOpen ? "translate-x-0" : "-translate-x-full";
 
     return (
-        <aside
-            className={`
-                fixed top-0 left-0 z-40 w-64 h-screen
-                bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900
-                border-r border-gray-200 dark:border-gray-700
-                pt-20 pb-4
-                transition-transform duration-300 ease-in-out
-                ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-            `}
+        <aside 
+            className={`${BASE_SIDEBAR_CLASSES} ${sidebarVisibilityClass}`}
+            aria-label="Menu lateral principal"
         >
-            <div className="h-full overflow-y-auto overflow-x-hidden px-4">
-                <div className="mb-6 px-2">
-                    <div className="flex items-center justify-between bg-blue-50 dark:bg-blue-900/30 p-3 rounded-lg">
-                        <div className="flex items-center">
-                            <Store className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                            <span className="ml-2 text-sm font-medium text-blue-700 dark:text-blue-300">Loja Online</span>
-                        </div>
-                        <div className="flex items-center bg-green-100 dark:bg-green-900/40 py-1 px-2 rounded-full">
-                            <div className="h-2 w-2 rounded-full bg-green-500 mr-1.5"></div>
-                            <span className="text-xs font-medium text-green-700 dark:text-green-400">Ativo</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <nav className="space-y-1">
-                    <ul>
-                        {links.map((link, index) => (
-                            <LinkItem key={index} {...link} />
-                        ))}
-                    </ul>
-                </nav>
-                
-                <div className="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center justify-between px-2 mb-4">
-                        <div className="flex items-center">
-                            <Clock3 className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                            <span className="ml-2 text-xs font-medium text-gray-700 dark:text-gray-300">Última atualização</span>
-                        </div>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">Hoje, 13:45</span>
-                    </div>
-                    
-                    <div 
-                        className="flex items-center mb-4 px-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-2 transition"
-                        onClick={() => navigate('/admin/Perfil')}
-                    >
-                        <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
-                            <img
-                                src={logoUrl || "/api/placeholder/32/32"}
-                                alt="Logo da loja"
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-                        <div className="ml-3">
-                            <p className="text-sm font-medium text-gray-900 dark:text-white">Meu Perfil</p>
-                            <p className="text-xs text-blue-600 dark:text-blue-400 underline">Ver configurações</p>
-                        </div>
-                    </div>
-                </div>
+            <div className="h-full overflow-y-auto overflow-x-hidden px-4 flex flex-col">
+                <SidebarHeader />
+                <NavigationLinks />
+                <SidebarFooter logoUrl={logoUrl} />
             </div>
         </aside>
     );

@@ -304,12 +304,12 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         setPixData(null); 
         setMensagem("");   
 
-        if (parseFloat(formData.amount) < 0.50) {
+        /* if (parseFloat(formData.amount) < 0.50) {
             console.error("Valor do PIX (" + formData.amount + ") é muito baixo.");
             setInternalError("O valor para pagamento com PIX é muito baixo.");
             setInternalLoading(false);
             return;
-        }
+        } */
 
         const paymentData = {
             FormaPagamento: "pix",

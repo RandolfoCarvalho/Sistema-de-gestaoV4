@@ -2,7 +2,7 @@
 
 const FeaturedProducts = ({ products }) => {
   if (!products?.length) return null;
-  
+
   return (
     <section className="my-8">
       <div className="flex items-center justify-between mb-4">
@@ -10,7 +10,7 @@ const FeaturedProducts = ({ products }) => {
       </div>
       
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-        {products.slice(0, 6).map((produto) => (
+        {products.map((produto) => (
           <ProductGridItem key={produto.id} produto={produto} />
         ))}
       </div>

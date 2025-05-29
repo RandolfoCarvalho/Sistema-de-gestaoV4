@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo, useEffect } from 'react';
 import {
     LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area,
     XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
@@ -14,137 +14,189 @@ const STATUS_MAP = {
     default: { key: 'desconhecido', label: 'Desconhecido', color: '#6B7280' }
 };
 
-const OrderAnalyticsDashboard = ({ orders }) => {
+const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
     const [timeRange, setTimeRange] = useState('week');
     const [chartType, setChartType] = useState('overview');
     const [isChartVisible, setIsChartVisible] = useState(true);
 
+    //filtro de pedido:
+    const [searchTerm, setSearchTerm] = useState('');
+    const [startDate, setStartDate] = useState(null); // Para a data de início do filtro
+    const [endDate, setEndDate] = useState(null);   // Para a data de fim do filtro
+
+     // Este useEffect comunica as mudanças dos filtros para o pai (OrderDashboard)
+    useEffect(() => {
+        if (onFiltersChange) {
+            onFiltersChange({ searchTerm, startDate, endDate });
+        }
+    }, [searchTerm, startDate, endDate, onFiltersChange]);
+
     const allOrders = useMemo(() => {
         if (!orders) return [];
-        // Assumindo que 'orders' é um objeto como { key1: [order,...], key2: [order,...] }
-        // Se 'orders' for um array direto [order1, order2,...], mude para:
-        // return orders.map(order => ({ ...order, createdAt: order.dataPedido }));
         return Object.values(orders).flat().map(order => ({
             ...order,
-            createdAt: order.dataPedido, // Usar a data original do pedido
+            createdAt: order.dataPedido, 
         }));
     }, [orders]);
 
-    const processOrdersData = useMemo(() => {
-        if (!allOrders.length) return { weekData: [], monthData: [], yearData: [], statusDistribution: [] };
 
+    //filtro de pedido:
+    const filteredOrders = useMemo(() => {
+    let ordersToFilter = [...allOrders];
+
+    // Filtrar por termo de pesquisa
+    if (searchTerm.trim() !== '') {
+        ordersToFilter = ordersToFilter.filter(order =>
+            (order.finalUserName?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (order.numero?.toString().toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+    }
+    
+    // Filtrar por data de início (usando o estado interno 'startDate')
+    if (startDate) {
+            const filterStartDate = new Date(startDate);
+            const startYear = filterStartDate.getUTCFullYear();
+            const startMonth = filterStartDate.getUTCMonth();
+            const startDay = filterStartDate.getUTCDate();
+
+            ordersToFilter = ordersToFilter.filter(order => {
+                if (!order.createdAt) return false;
+                const orderDateTime = new Date(order.createdAt);
+                const orderYear = orderDateTime.getUTCFullYear();
+                const orderMonth = orderDateTime.getUTCMonth();
+                const orderDay = orderDateTime.getUTCDate();
+
+                if (orderYear > startYear) return true;
+                if (orderYear === startYear && orderMonth > startMonth) return true;
+                if (orderYear === startYear && orderMonth === startMonth && orderDay >= startDay) return true;
+                return false;
+            });
+        }
+
+        if (endDate) {
+            const filterEndDate = new Date(endDate);
+            const endYear = filterEndDate.getUTCFullYear();
+            const endMonth = filterEndDate.getUTCMonth();
+            const endDay = filterEndDate.getUTCDate();
+
+            ordersToFilter = ordersToFilter.filter(order => {
+                if (!order.createdAt) return false;
+                const orderDateTime = new Date(order.createdAt);
+                const orderYear = orderDateTime.getUTCFullYear();
+                const orderMonth = orderDateTime.getUTCMonth();
+                const orderDay = orderDateTime.getUTCDate();
+
+                if (orderYear < endYear) return true;
+                if (orderYear === endYear && orderMonth < endMonth) return true;
+                if (orderYear === endYear && orderMonth === endMonth && orderDay <= endDay) return true;
+                return false;
+            });
+        }
+    return ordersToFilter;
+}, [allOrders, searchTerm, startDate, endDate]);
+
+    //filtro de pedido:
+    const processOrdersData = useMemo(() => {
+        // Alterar a condição de guarda e a iteração para usar filteredOrders
+        if (!filteredOrders || filteredOrders.length === 0) { // MODIFICADO
+            // Retorna uma estrutura de dados vazia mas com os labels para os gráficos não quebrarem
+            // ou para mostrar "sem dados". A sua lógica atual de retornar [] para weekData etc.
+            // pode ser mantida, mas os labels precisam ser gerados para os eixos.
+            // Para simplificar, vamos manter a lógica de labels e zerar os dados.
+            
+            const nowForEmpty = new Date(); // Precisa de 'now' para gerar labels mesmo vazios
+            const createEmptyLabels = (period) => {
+                const labels = [];
+                if (period === 'week') {
+                    for (let i = 6; i >= 0; i--) { const d = new Date(nowForEmpty); d.setDate(nowForEmpty.getDate() - i); labels.push({ label: d.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit' }), key: d.toISOString().split('T')[0]});}
+                } else if (period === 'month') {
+                    for (let i = 29; i >= 0; i--) { const d = new Date(nowForEmpty); d.setDate(nowForEmpty.getDate() - i); labels.push({ label: d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }), key: d.toISOString().split('T')[0]});}
+                } else if (period === 'year') {
+                    for (let i = 11; i >= 0; i--) { const d = new Date(nowForEmpty.getFullYear(), nowForEmpty.getMonth() - i, 1); labels.push({ label: d.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }), key: d.toISOString().substring(0, 7) });}
+                }
+                return labels.map(item => ({ name: item.label, key: item.key, orders: 0, revenue: 0, canceled: 0, costs: 0, profit: 0 }));
+            };
+
+            return {
+                weekData: createEmptyLabels('week'),
+                monthData: createEmptyLabels('month'),
+                yearData: createEmptyLabels('year'),
+                statusDistribution: Object.values(STATUS_MAP)
+                    .map(sInfo => ({ name: sInfo.label, value: 0, color: sInfo.color, key: sInfo.key }))
+                    .filter(item => item.key !== STATUS_MAP.default.key)
+            };
+        }
+
+        // A lógica de geração de labels (weekLabels, monthLabels, yearLabels) e createInitialData permanece AQUI DENTRO como está.
         const now = new Date();
         const weekLabels = [];
-        const monthLabels = []; // Para os últimos 30 dias individualmente
-        const yearLabels = []; // Para os últimos 12 meses
+        // ... (código original para weekLabels)
+        for (let i = 6; i >= 0; i--) { const date = new Date(now); date.setDate(now.getDate() - i); date.setHours(0,0,0,0); weekLabels.push({date: date, label: date.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit' }), key: date.toISOString().split('T')[0] }); }
 
-        // Geração de labels para a semana (últimos 7 dias)
-        for (let i = 6; i >= 0; i--) {
-            const date = new Date(now);
-            date.setDate(now.getDate() - i);
-            date.setHours(0, 0, 0, 0); // Normalizar para o início do dia
-            weekLabels.push({
-                date: date,
-                label: date.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit' }),
-                key: date.toISOString().split('T')[0]
-            });
-        }
-
-        // Geração de labels para o mês (últimos 30 dias individualmente)
-        for (let i = 29; i >= 0; i--) {
-            const date = new Date(now);
-            date.setDate(now.getDate() - i);
-            date.setHours(0, 0, 0, 0); // Normalizar
-            monthLabels.push({
-                date: date,
-                label: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
-                key: date.toISOString().split('T')[0]
-            });
-        }
+        const monthLabels = [];
+        // ... (código original para monthLabels)
+        for (let i = 29; i >= 0; i--) { const date = new Date(now); date.setDate(now.getDate() - i); date.setHours(0,0,0,0); monthLabels.push({date: date, label: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }), key: date.toISOString().split('T')[0] }); }
         
-        // Geração de labels para o ano (últimos 12 meses)
-        for (let i = 11; i >= 0; i--) {
-            const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-            date.setHours(0, 0, 0, 0); // Normalizar para o início do mês
-            yearLabels.push({
-                date: date,
-                label: date.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }),
-                key: date.toISOString().substring(0, 7) // YYYY-MM
-            });
-        }
+        const yearLabels = [];
+        // ... (código original para yearLabels)
+        for (let i = 11; i >= 0; i--) { const date = new Date(now.getFullYear(), now.getMonth() - i, 1); date.setHours(0,0,0,0); yearLabels.push({date: date, label: date.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }), key: date.toISOString().substring(0,7) }); }
+
 
         const createInitialData = (labels) => labels.map(item => ({
-            name: item.label,
-            key: item.key,
-            orders: 0,
-            revenue: 0,
-            canceled: 0,
-            costs: 0
+            name: item.label, key: item.key, orders: 0, revenue: 0, canceled: 0, costs: 0
         }));
 
         const weekData = createInitialData(weekLabels);
         const monthData = createInitialData(monthLabels);
         const yearData = createInitialData(yearLabels);
 
+        // O statusCounter é reinicializado aqui, o que é correto.
         const statusCounter = Object.fromEntries(Object.values(STATUS_MAP).map(s => [s.key, 0]));
 
-        allOrders.forEach(order => {
+        filteredOrders.forEach(order => { // MODIFICADO: itera sobre filteredOrders
+            // TODA A LÓGICA INTERNA DE PROCESSAMENTO DE `order` PERMANECE A MESMA
             if (!order.createdAt || !order.itens || !Array.isArray(order.itens)) return;
-            
             const orderDate = new Date(order.createdAt);
             if (isNaN(orderDate.getTime())) return;
-            orderDate.setHours(0,0,0,0); // Normalizar data do pedido para comparações
+            orderDate.setHours(0,0,0,0);
 
             const orderValue = order.itens.reduce((total, item) => total + (item.subTotal || 0), 0);
             const orderCost = order.itens.reduce((total, item) => total + (item.precoCusto || 0), 0);
-
             const statusInfo = STATUS_MAP[order.status] || STATUS_MAP.default;
             const statusKey = statusInfo.key;
             statusCounter[statusKey]++;
 
-            // Dados da Semana
             const weekKey = orderDate.toISOString().split('T')[0];
             const weekIndex = weekData.findIndex(d => d.key === weekKey);
-            if (weekIndex >= 0) {
+            if (weekIndex >= 0) { /* ... (lógica original) ... */ 
                 weekData[weekIndex].orders += 1;
                 weekData[weekIndex].revenue += orderValue;
                 weekData[weekIndex].costs += orderCost;
-                if (statusKey === STATUS_MAP[4].key) { // 'cancelado'
-                    weekData[weekIndex].canceled += 1;
-                }
+                if (statusKey === STATUS_MAP[4].key) weekData[weekIndex].canceled += 1;
             }
 
-            // Dados do Mês (últimos 30 dias)
             const monthKey = orderDate.toISOString().split('T')[0];
             const monthIndex = monthData.findIndex(d => d.key === monthKey);
-            if (monthIndex >= 0) {
+            if (monthIndex >= 0) { /* ... (lógica original) ... */ 
                 monthData[monthIndex].orders += 1;
                 monthData[monthIndex].revenue += orderValue;
                 monthData[monthIndex].costs += orderCost;
-                if (statusKey === STATUS_MAP[4].key) { // 'cancelado'
-                    monthData[monthIndex].canceled += 1;
-                }
+                if (statusKey === STATUS_MAP[4].key) monthData[monthIndex].canceled += 1;
             }
 
-            // Dados do Ano (agrupado por mês YYYY-MM)
             const yearKey = orderDate.toISOString().substring(0, 7);
             const yearIndex = yearData.findIndex(d => d.key === yearKey);
-            if (yearIndex >= 0) {
+            if (yearIndex >= 0) { /* ... (lógica original) ... */ 
                 yearData[yearIndex].orders += 1;
                 yearData[yearIndex].revenue += orderValue;
                 yearData[yearIndex].costs += orderCost;
-                if (statusKey === STATUS_MAP[4].key) { // 'cancelado'
-                    yearData[yearIndex].canceled += 1;
-                }
+                if (statusKey === STATUS_MAP[4].key) yearData[yearIndex].canceled += 1;
             }
         });
 
         const finalStatusDistribution = Object.values(STATUS_MAP)
             .map(sInfo => ({
-                name: sInfo.label,
-                value: statusCounter[sInfo.key] || 0,
-                color: sInfo.color,
-                key: sInfo.key
+                name: sInfo.label, value: statusCounter[sInfo.key] || 0, color: sInfo.color, key: sInfo.key
             }))
             .filter(item => item.value > 0 && item.key !== STATUS_MAP.default.key);
 
@@ -154,7 +206,7 @@ const OrderAnalyticsDashboard = ({ orders }) => {
             yearData: yearData.map(d => ({ ...d, profit: d.revenue - d.costs })),
             statusDistribution: finalStatusDistribution
         };
-    }, [allOrders]);
+    }, [filteredOrders]); // MODIFICADO: depende de filteredOrders
 
     const getChartData = () => {
         switch (timeRange) {
@@ -380,6 +432,48 @@ const OrderAnalyticsDashboard = ({ orders }) => {
                     {isChartVisible ? 'Minimizar Gráficos ▲' : 'Expandir Gráficos ▼'}
                 </button>
             </div>
+            {/* SEÇÃO DE FILTROS ADICIONADA */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 border border-gray-200 rounded-lg">
+                    <div>
+                        <label htmlFor="searchTerm" className="block text-sm font-medium text-gray-700 mb-1">
+                            Pesquisar Pedido
+                        </label>
+                        <input
+                            type="text"
+                            id="searchTerm"
+                            placeholder="Nº pedido..."
+                            className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">
+                            Data Início
+                        </label>
+                        <input
+                            type="date"
+                            id="startDate"
+                            className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            value={startDate || ''} // Controlado e permite limpar
+                            onChange={(e) => setStartDate(e.target.value)}
+                            max={endDate || ''} // Não pode ser depois da data final
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">
+                            Data Fim
+                        </label>
+                        <input
+                            type="date"
+                            id="endDate"
+                            className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            value={endDate || ''} // Controlado e permite limpar
+                            onChange={(e) => setEndDate(e.target.value)}
+                            min={startDate || ''} // Não pode ser antes da data inicial
+                        />
+                    </div>
+                </div>
             <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                 {/* Chart type selector */}
                 <div className="flex flex-wrap justify-center md:justify-start space-x-1 sm:space-x-2 mb-4 md:mb-0">
@@ -421,6 +515,8 @@ const OrderAnalyticsDashboard = ({ orders }) => {
                     ))}
                 </div>
             </div>
+             
+            
 
             {/* Summary cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">

@@ -52,7 +52,9 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
         [HttpGet("isLojaOpen/{restauranteId}")]
         public IActionResult IsLojaOpen(int restauranteId)
         {
-            var empresa = _context.Empresas.FirstOrDefault(e => e.RestauranteId == restauranteId);
+            var empresa = _context.Empresas
+                .Include(e => e.DiasFuncionamento)
+                .FirstOrDefault(e => e.RestauranteId == restauranteId);
             if (empresa == null) return NotFound(new { message = "Empresa não encontrada" });
 
             bool isOpen = _restauranteService.IsLojaOpen(empresa);
@@ -144,6 +146,7 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
                 return BadRequest("Dados inválidos.");
             var restauranteExistente = await _context.Restaurantes
                 .Include(r => r.Empresa)
+                .ThenInclude(e => e.DiasFuncionamento)
                 .FirstOrDefaultAsync(r => r.Id == updatedRestaurante.Id);
             if (restauranteExistente == null)
                 return NotFound("Restaurante não encontrado.");

@@ -48,51 +48,84 @@ namespace SistemaDeGestao.Services
             }
         }
 
-        public async Task<bool> UpdateProfileAsync(Restaurante restaurante, Restaurante updatedRestaurante)
+        public async Task<bool> UpdateProfileAsync(Restaurante restauranteExistente, Restaurante restauranteAtualizado)
         {
-            if (restaurante == null) return false;
+            if (restauranteExistente == null) return false;
 
-            restaurante.UserName = updatedRestaurante.UserName ?? restaurante.UserName;
-            restaurante.PhoneNumber = updatedRestaurante.PhoneNumber ?? restaurante.PhoneNumber;
-            restaurante.EmailAddress = updatedRestaurante.EmailAddress ?? restaurante.EmailAddress;
-            restaurante.NomeDaLoja = updatedRestaurante.NomeDaLoja ?? restaurante.NomeDaLoja;
+            // Atualiza propriedades do Restaurante
+            restauranteExistente.UserName = restauranteAtualizado.UserName ?? restauranteExistente.UserName;
+            restauranteExistente.PhoneNumber = restauranteAtualizado.PhoneNumber ?? restauranteExistente.PhoneNumber;
+            restauranteExistente.EmailAddress = restauranteAtualizado.EmailAddress ?? restauranteExistente.EmailAddress;
+            restauranteExistente.NomeDaLoja = restauranteAtualizado.NomeDaLoja ?? restauranteExistente.NomeDaLoja;
 
-            if (!string.IsNullOrEmpty(updatedRestaurante.Password))
-                restaurante.Password = ComputeSha256Hash(updatedRestaurante.Password);
-
-            if (updatedRestaurante.Empresa != null && restaurante.Empresa != null)
+            if (!string.IsNullOrEmpty(restauranteAtualizado.Password))
             {
-                var empresa = restaurante.Empresa;
-                empresa.CNPJ = updatedRestaurante.Empresa.CNPJ ?? empresa.CNPJ;
-                empresa.CPF = updatedRestaurante.Empresa.CPF ?? empresa.CPF;
-                empresa.RazaoSocial = updatedRestaurante.Empresa.RazaoSocial ?? empresa.RazaoSocial;
-                empresa.NomeFantasia = updatedRestaurante.Empresa.NomeFantasia ?? empresa.NomeFantasia;
-                empresa.Endereco = updatedRestaurante.Empresa.Endereco ?? empresa.Endereco;
-                empresa.Bairro = updatedRestaurante.Empresa.Bairro ?? empresa.Bairro;
-                empresa.Cidade = updatedRestaurante.Empresa.Cidade ?? empresa.Cidade;
-                empresa.Estado = updatedRestaurante.Empresa.Estado ?? empresa.Estado;
-                empresa.Cep = updatedRestaurante.Empresa.Cep ?? empresa.Cep;
-                empresa.Observacoes = updatedRestaurante.Empresa.Observacoes ?? empresa.Observacoes;
+                restauranteExistente.Password = ComputeSha256Hash(restauranteAtualizado.Password);
+            }
 
-                if (updatedRestaurante.Empresa.HorarioAbertura != TimeSpan.Zero)
-                    empresa.HorarioAbertura = updatedRestaurante.Empresa.HorarioAbertura;
-                if (updatedRestaurante.Empresa.HorarioFechamento != TimeSpan.Zero)
-                    empresa.HorarioFechamento = updatedRestaurante.Empresa.HorarioFechamento;
-
-                // Atualiza os dias de funcionamento, se fornecidos
-                if (updatedRestaurante.Empresa.DiasFuncionamento != null)
+            // Atualiza propriedades da Empresa, incluindo DiasFuncionamento
+            if (restauranteAtualizado.Empresa != null)
+            {
+                if (restauranteExistente.Empresa == null)
                 {
-                    empresa.DiasFuncionamento.Domingo = updatedRestaurante.Empresa.DiasFuncionamento.Domingo;
-                    empresa.DiasFuncionamento.Segunda = updatedRestaurante.Empresa.DiasFuncionamento.Segunda;
-                    empresa.DiasFuncionamento.Terca = updatedRestaurante.Empresa.DiasFuncionamento.Terca;
-                    empresa.DiasFuncionamento.Quarta = updatedRestaurante.Empresa.DiasFuncionamento.Quarta;
-                    empresa.DiasFuncionamento.Quinta = updatedRestaurante.Empresa.DiasFuncionamento.Quinta;
-                    empresa.DiasFuncionamento.Sexta = updatedRestaurante.Empresa.DiasFuncionamento.Sexta;
-                    empresa.DiasFuncionamento.Sabado = updatedRestaurante.Empresa.DiasFuncionamento.Sabado;
+                    // Se a empresa não existir, cria uma nova.
+                    // Isso pode depender da sua lógica de negócios (se uma empresa sempre deve existir ou pode ser criada aqui).
+                    restauranteExistente.Empresa = new Empresa { RestauranteId = restauranteExistente.Id };
+                    _context.Empresas.Add(restauranteExistente.Empresa); // Adiciona ao contexto se for nova
+                }
+
+                var empresaExistente = restauranteExistente.Empresa;
+                var empresaAtualizada = restauranteAtualizado.Empresa;
+
+                empresaExistente.CNPJ = empresaAtualizada.CNPJ ?? empresaExistente.CNPJ;
+                empresaExistente.CPF = empresaAtualizada.CPF ?? empresaExistente.CPF;
+                empresaExistente.RazaoSocial = empresaAtualizada.RazaoSocial ?? empresaExistente.RazaoSocial;
+                empresaExistente.NomeFantasia = empresaAtualizada.NomeFantasia ?? empresaExistente.NomeFantasia;
+                empresaExistente.Endereco = empresaAtualizada.Endereco ?? empresaExistente.Endereco;
+                empresaExistente.Bairro = empresaAtualizada.Bairro ?? empresaExistente.Bairro;
+                empresaExistente.Cidade = empresaAtualizada.Cidade ?? empresaExistente.Cidade;
+                empresaExistente.Estado = empresaAtualizada.Estado ?? empresaExistente.Estado;
+                empresaExistente.Cep = empresaAtualizada.Cep ?? empresaExistente.Cep;
+                empresaExistente.Observacoes = empresaAtualizada.Observacoes ?? empresaExistente.Observacoes;
+
+                if (empresaAtualizada.HorarioAbertura != TimeSpan.Zero)
+                    empresaExistente.HorarioAbertura = empresaAtualizada.HorarioAbertura;
+                if (empresaAtualizada.HorarioFechamento != TimeSpan.Zero)
+                    empresaExistente.HorarioFechamento = empresaAtualizada.HorarioFechamento;
+
+                // Atualiza os dias de funcionamento
+                if (empresaAtualizada.DiasFuncionamento != null)
+                {
+                    if (empresaExistente.DiasFuncionamento == null)
+                    {
+                        empresaExistente.DiasFuncionamento = new DiasFuncionamento();
+                    }
+                    empresaExistente.DiasFuncionamento.Domingo = empresaAtualizada.DiasFuncionamento.Domingo;
+                    empresaExistente.DiasFuncionamento.Segunda = empresaAtualizada.DiasFuncionamento.Segunda;
+                    empresaExistente.DiasFuncionamento.Terca = empresaAtualizada.DiasFuncionamento.Terca;
+                    empresaExistente.DiasFuncionamento.Quarta = empresaAtualizada.DiasFuncionamento.Quarta;
+                    empresaExistente.DiasFuncionamento.Quinta = empresaAtualizada.DiasFuncionamento.Quinta;
+                    empresaExistente.DiasFuncionamento.Sexta = empresaAtualizada.DiasFuncionamento.Sexta;
+                    empresaExistente.DiasFuncionamento.Sabado = empresaAtualizada.DiasFuncionamento.Sabado;
                 }
             }
 
-            await _context.SaveChangesAsync();
+            // Marca a entidade Restaurante como modificada (se não estiver usando tracking padrão ou para ser explícito)
+            _context.Entry(restauranteExistente).State = EntityState.Modified;
+            if (restauranteExistente.Empresa != null)
+            {
+                _context.Entry(restauranteExistente.Empresa).State = EntityState.Modified;
+                // Se DiasFuncionamento for uma entidade separada, marque-a também.
+                // Se for um Owned Type, o EF Core geralmente lida com isso ao marcar a entidade proprietária (Empresa).
+                if (restauranteExistente.Empresa.DiasFuncionamento != null && !(_context.Entry(restauranteExistente.Empresa.DiasFuncionamento).State == EntityState.Unchanged))
+                {
+                    // Se DiasFuncionamento for uma entidade rastreada separadamente e não for um tipo aninhado (owned type)
+                    // _context.Entry(restauranteExistente.Empresa.DiasFuncionamento).State = EntityState.Modified;
+                }
+            }
+
+
+            await _context.SaveChangesAsync(); // Salva todas as alterações no banco
             return true;
         }
         public async Task<string> UploadImagemParaS3(IFormFile imagem, string NomeDaLoja, string? imagemAnteriorUrl)
@@ -134,24 +167,74 @@ namespace SistemaDeGestao.Services
 
         public bool IsLojaOpen(Empresa empresa)
         {
-            if (empresa == null) return false;
+            // Verifica se a empresa ou os dias de funcionamento são nulos
+            if (empresa == null || empresa.DiasFuncionamento == null) return false;
 
             // Define o fuso horário do Brasil (Horário de Brasília)
-            TimeZoneInfo brasilTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
-            DateTime dataHoraBrasil = TimeZoneInfo.ConvertTime(DateTime.UtcNow, brasilTimeZone);
+            // "E. South America Standard Time" é para Windows. Para Linux/macOS, pode ser "America/Sao_Paulo".
+            // É mais robusto usar TimeZoneConverter para compatibilidade multiplataforma se necessário.
+            // TimeZoneInfo brasilTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+            // Para maior portabilidade:
+            TimeZoneInfo brasilTimeZone;
+            try
+            {
+                brasilTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo"); // Padrão IANA para Linux/macOS
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                brasilTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"); // Fallback para Windows
+            }
 
+            DateTime dataHoraBrasil = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, brasilTimeZone);
+            DayOfWeek diaDaSemanaAtual = dataHoraBrasil.DayOfWeek;
             TimeSpan horarioAtual = dataHoraBrasil.TimeOfDay;
+
+            bool abertoNoDiaDeHoje = false;
+
+            // Verifica se o restaurante está configurado para abrir no dia atual da semana
+            switch (diaDaSemanaAtual)
+            {
+                case DayOfWeek.Sunday:
+                    abertoNoDiaDeHoje = empresa.DiasFuncionamento.Domingo;
+                    break;
+                case DayOfWeek.Monday:
+                    abertoNoDiaDeHoje = empresa.DiasFuncionamento.Segunda;
+                    break;
+                case DayOfWeek.Tuesday:
+                    abertoNoDiaDeHoje = empresa.DiasFuncionamento.Terca;
+                    break;
+                case DayOfWeek.Wednesday:
+                    abertoNoDiaDeHoje = empresa.DiasFuncionamento.Quarta;
+                    break;
+                case DayOfWeek.Thursday:
+                    abertoNoDiaDeHoje = empresa.DiasFuncionamento.Quinta;
+                    break;
+                case DayOfWeek.Friday:
+                    abertoNoDiaDeHoje = empresa.DiasFuncionamento.Sexta;
+                    break;
+                case DayOfWeek.Saturday:
+                    abertoNoDiaDeHoje = empresa.DiasFuncionamento.Sabado;
+                    break;
+            }
+
+            if (!abertoNoDiaDeHoje)
+            {
+                return false; // Se não está configurado para abrir hoje, retorna fechado.
+            }
+
+            // Se está configurado para abrir hoje, então verifica o horário.
             TimeSpan abertura = empresa.HorarioAbertura;
             TimeSpan fechamento = empresa.HorarioFechamento;
 
-            // Caso o horário de funcionamento seja no mesmo dia
+            // Lógica para verificar se está dentro do horário de funcionamento
             if (abertura <= fechamento)
             {
+                // Horário de funcionamento no mesmo dia (ex: 08:00 - 18:00)
                 return horarioAtual >= abertura && horarioAtual <= fechamento;
             }
             else
             {
-                // Horário cruza a meia-noite (ex: 22:00 até 02:00)
+                // Horário de funcionamento cruza a meia-noite (ex: 22:00 - 02:00)
                 return horarioAtual >= abertura || horarioAtual <= fechamento;
             }
         }

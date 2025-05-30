@@ -104,8 +104,8 @@ const CreateProductForm = () => {
             formDataToSend.append('nome', formData.nome);
             formDataToSend.append('descricao', formData.descricao || '');
             formDataToSend.append('categoriaId', formData.categoriaId);
-            formDataToSend.append('precoCusto', parseFloat(formData.precoCusto).toFixed(2).replace('.', ','));
-            formDataToSend.append('precoVenda', parseFloat(formData.precoVenda).toFixed(2).replace('.', ','));
+            formDataToSend.append('precoCusto', parseFloat(formData.precoCusto).toFixed(2));
+            formDataToSend.append('precoVenda', parseFloat(formData.precoVenda).toFixed(2));
             formDataToSend.append('estoqueAtual', formData.estoqueAtual);
             formDataToSend.append('estoqueMinimo', formData.estoqueMinimo);
             formDataToSend.append('unidadeMedida', formData.unidadeMedida || '');

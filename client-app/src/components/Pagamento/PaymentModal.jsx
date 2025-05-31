@@ -23,29 +23,37 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     const [transactionId, setTransactionId] = useState(null);
     const [mensagem, setMensagem] = useState("");
     const restauranteId = localStorage.getItem("restauranteId");
-    const PUBLIC_KEY = "APP_USR-9d429645-4c80-4f72-aa71-b303ee60755f";
-
     // Estado do PIX do segundo arquivo
     const [countdown, setCountdown] = useState(300); // 5 minutos = 300 segundos para o PIX
-
     useEffect(() => {
         const safeTotal = parseFloat(cartTotal) || 0;
         setAmount(safeTotal);
     }, [cartTotal]);
 
-    // Inicialização do MercadoPago SDK (como no PRIMEIRO arquivo)
+    // Inicialização do MercadoPago SDK
     useEffect(() => {
-        if (PUBLIC_KEY) { // Garante que a chave pública exista antes de inicializar
-            initMercadoPago(PUBLIC_KEY, {
-                locale: 'pt-BR'
-            });
-            console.log("MercadoPago SDK inicializado (estilo original).");
-        } else {
-            console.error("PUBLIC_KEY do MercadoPago não definida. Não foi possível inicializar o SDK.");
-            // Poderia setar um erro aqui para o usuário se a chave for crucial para todos os pagamentos
-        }
-    }, [PUBLIC_KEY]); // Adicionado PUBLIC_KEY como dependência
+        const restauranteId = localStorage.getItem("restauranteId");
 
+        if (!restauranteId) {
+            console.error("RestauranteId não encontrado no localStorage");
+            return;
+        }
+
+        fetch(`${process.env.REACT_APP_API_URL}/api/1.0/CredenciaisMercadoPago/GetCredentialByRestauranteId/${restauranteId}`)
+        .then(res => {
+            if (!res.ok) throw new Error("Erro ao buscar credencial");
+            return res.json();
+        })
+        .then(data => {
+            if (data.publicKey) {
+            initMercadoPago(data.publicKey, { locale: 'pt-BR' });
+            console.log("MercadoPago SDK carregado com chave do restaurante", data.publicKey);
+            }
+        })
+        .catch(err => {
+            console.error("Erro ao buscar credencial do restaurante:", err);
+        });
+    }, []);
     // useEffect para verificação de status de pagamento PIX (do SEGUNDO arquivo, melhorado)
     useEffect(() => {
         if (pixData && transactionId && restauranteId) {
@@ -307,14 +315,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         setInternalError(null);
         setPixData(null); 
         setMensagem("");   
-
-        /* if (parseFloat(formData.amount) < 0.50) {
-            console.error("Valor do PIX (" + formData.amount + ") é muito baixo.");
-            setInternalError("O valor para pagamento com PIX é muito baixo.");
-            setInternalLoading(false);
-            return;
-        } */
-
         const paymentData = {
             FormaPagamento: "pix",
             Amount: parseFloat(formData.amount),
@@ -330,11 +330,8 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             setInternalLoading(false);
             return;
         }
-        console.log(`Enviando para processPaymentPix: `, paymentData, "com DTO: ", pedidoDTO);
         try {
             const response = await processPaymentPix(paymentData, pedidoDTO);
-            console.log("Resposta do backend para pagamento com PIX: ", response);
-
             if (response?.ok && response.data?.qrCodeBase64 && response.data?.idPagamento) { 
                 console.log(`Dados do PIX recebidos:`, response.data);
                 setPixData({

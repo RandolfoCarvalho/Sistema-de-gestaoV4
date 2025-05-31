@@ -202,8 +202,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     
         try {
             const response = await processPayment(paymentData, pedidoDTO);
-            console.log("Resposta do backend (cartão):", response);
-    
+            const status = response?.data?.status;
             if (response?.ok && status === "approved") {
                 setMensagem("✅ Pagamento com cartão aprovado com sucesso!");
                 if (onPaymentSuccess) onPaymentSuccess(response);

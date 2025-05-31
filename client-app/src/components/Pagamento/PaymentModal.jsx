@@ -204,7 +204,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             const response = await processPayment(paymentData, pedidoDTO);
             console.log("Resposta do backend (cartão):", response);
     
-            if (response?.ok || response?.status === 'approved' || (response?.id && response?.status)) {
+            if (response?.ok && status === "approved") {
                 setMensagem("✅ Pagamento com cartão aprovado com sucesso!");
                 if (onPaymentSuccess) onPaymentSuccess(response);
                 setTimeout(() => {
@@ -212,7 +212,12 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     navigate("/pedidos");
                 }, 3000);
             } else {
-                const errorMessage = response?.error?.message || response?.message || response?.error || "Pagamento com cartão falhou.";
+                const errorMessage =
+                    response?.data?.message ||
+                    response?.message ||
+                    response?.error?.message ||
+                    response?.error ||
+                    "Pagamento com cartão falhou.";
                 console.error("Erro no pagamento com cartão (resposta backend):", response);
                 setInternalError(`❌ ${errorMessage}`);
                 setMensagem(`❌ ${errorMessage}`);

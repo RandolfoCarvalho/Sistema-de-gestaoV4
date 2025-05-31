@@ -1,11 +1,11 @@
 import React from "react";
 import { CardPayment } from "@mercadopago/sdk-react";
 
-const CardPaymentForm = ({ amount, onSubmit, onClose, isLoading }) => {
+const CardPaymentForm = ({ amount, onSubmit, onClose, isLoading, ErrorMessage }) => {
     const cardPaymentInitialization = {
         amount: parseFloat(amount) || 0,
     };
-
+    
     //Customizar campos, caso eu queira no depois
     const cardPaymentCustomization = {
         visual: {
@@ -29,6 +29,12 @@ const CardPaymentForm = ({ amount, onSubmit, onClose, isLoading }) => {
     //Form do mp cuida dos campos
     return (
         <div className="mb-4">
+            {/* ✅ Exibe a mensagem de erro se for do tipo "❌" */}
+            {ErrorMessage && ErrorMessage.includes("❌") && (
+                <div className="bg-red-100 text-red-700 border border-red-300 p-3 rounded mb-4 text-sm text-center">
+                    {ErrorMessage}
+                </div>
+            )}
             <p className="text-gray-700 text-center mb-4">Insira os dados do cartão:</p>
             <CardPayment
                 initialization={cardPaymentInitialization}

@@ -476,6 +476,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                         onSubmit={handleCardPaymentSubmit}
                         onClose={onClose}
                         isLoading={isLoading}
+                        ErrorMessage={mensagem}
                     />
                 )}
 

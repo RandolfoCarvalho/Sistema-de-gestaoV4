@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+import { confirmAction, showSuccess, showError } from '@utils/alerts';
 import api from '../../../axiosConfig';
+
 const GerenciamentoComplementos = () => {
     // Estados para o modo atual (criar ou editar)
     const [modo, setModo] = useState('listar'); // 'listar', 'criar', 'editar'
@@ -204,7 +204,7 @@ const GerenciamentoComplementos = () => {
                 QuantidadeMinima: quantidadeMinima === '' ? null : parseInt(quantidadeMinima),
                 QuantidadeMaxima: quantidadeMaxima === '' ? null : parseInt(quantidadeMaxima),
                 Complementos: complementos.map(complemento => ({
-                    Id: complemento.id || 0, // Se for um novo complemento, Id será 0
+                    Id: complemento.id || 0,
                     Nome: complemento.nome?.trim() || "Complemento sem nome",
                     Descricao: complemento.descricao?.trim() || "Sem descrição",
                     Preco: complemento.preco ? parseFloat(complemento.preco) : 0,
@@ -214,98 +214,63 @@ const GerenciamentoComplementos = () => {
                 }))
             };
 
-
             let response;
 
             if (modo === 'criar') {
-                const response = await api.post('/api/1.0/Complemento/CriarGrupoComplemento', payload
-                );
+                response = await api.post('/api/1.0/Complemento/CriarGrupoComplemento', payload);
 
                 if (response.status === 200) {
-                    Swal.fire({
-                        title: 'Sucesso!',
-                        text: 'Grupo e complementos criados com sucesso!',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        voltarParaLista();
-                        buscarGruposComplementos();
-                    });
+                    await showSuccess('Sucesso!', 'Grupo e complementos criados com sucesso!');
+                    voltarParaLista();
+                    buscarGruposComplementos();
                 }
             } else if (modo === 'editar' && grupoAtual) {
                 payload.Id = grupoAtual.id;
 
                 response = await api.put('/api/1.0/Complemento/AtualizarGrupoComplemento', payload);
-        
+
                 if (response.status === 200) {
-                    Swal.fire({
-                        title: 'Sucesso!',
-                        text: 'Grupo e complementos atualizados com sucesso!',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        voltarParaLista();
-                        buscarGruposComplementos();
-                    });
+                    await showSuccess('Sucesso!', 'Grupo e complementos atualizados com sucesso!');
+                    voltarParaLista();
+                    buscarGruposComplementos();
                 }
             }
         } catch (error) {
             console.error('Erro ao salvar grupo de complementos:', error.response?.data || error.message);
-            setErro(error.response?.data || 'Erro ao salvar grupo de complementos. Por favor, tente novamente.');
-
-            Swal.fire({
-                title: 'Erro!',
-                text: error.response?.data || 'Erro ao salvar grupo de complementos. Por favor, tente novamente.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
+            const errorMsg = error.response?.data || 'Erro ao salvar grupo de complementos. Por favor, tente novamente.';
+            setErro(errorMsg);
+            showError('Erro!', errorMsg);
         } finally {
             setCarregando(false);
         }
     };
 
     const excluirGrupo = async (id) => {
-        Swal.fire({
-            title: "Tem certeza?",
-            text: "Esta ação não pode ser desfeita!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
-            confirmButtonText: "Sim, excluir!",
-            cancelButtonText: "Cancelar"
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                setCarregando(true);
-                setErro('');
+        const result = await confirmAction(
+            "Tem certeza?",
+            "Esta ação não pode ser desfeita!"
+        );
 
-                try {
-                    const response = await api.delete(`/api/1.0/Complemento/DeletarGrupoComplemento/${id}`);
+        if (result.isConfirmed) {
+            setCarregando(true);
+            setErro('');
 
-                    if (response.status === 200) {
-                        Swal.fire({
-                            title: "Excluído!",
-                            text: "Grupo de complementos excluído com sucesso!",
-                            icon: "success",
-                            confirmButtonText: "OK"
-                        });
-                    }
+            try {
+                const response = await api.delete(`/api/1.0/Complemento/DeletarGrupoComplemento/${id}`);
+
+                if (response.status === 200) {
+                    await showSuccess("Excluído!", "Grupo de complementos excluído com sucesso!");
                     buscarGruposComplementos();
-                } catch (error) {
-                    console.error('Erro ao excluir grupo de complementos:', error.response?.data || error.message);
-                    setErro(error.response?.data || 'Erro ao excluir grupo de complementos. Por favor, tente novamente.');
-
-                    Swal.fire({
-                        title: "Erro!",
-                        text: error.response?.data || "Erro ao excluir grupo de complementos. Por favor, tente novamente.",
-                        icon: "error",
-                        confirmButtonText: "OK"
-                    });
-                } finally {
-                    setCarregando(false);
                 }
+            } catch (error) {
+                console.error('Erro ao excluir grupo de complementos:', error.response?.data || error.message);
+                const errorMsg = error.response?.data || 'Erro ao excluir grupo de complementos. Por favor, tente novamente.';
+                setErro(errorMsg);
+                showError("Erro!", errorMsg);
+            } finally {
+                setCarregando(false);
             }
-        });
+        }
     };
 
     // Função para excluir um complemento específico (apenas na edição)

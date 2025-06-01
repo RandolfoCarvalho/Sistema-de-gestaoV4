@@ -1,8 +1,8 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
-import Swal from 'sweetalert2';
 import EditarProdutoModal from './EditarProdutoModal';
 import api from '../../../axiosConfig';
+import { confirmAction, showError, showSuccess } from "@utils/alerts";
 
 const GestaoComponent = () => {
     const [produtos, setProdutos] = useState([]);
@@ -15,104 +15,109 @@ const GestaoComponent = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
+            setError(null);
             try {
                 const [produtosResponse, categoriasResponse] = await Promise.all([
                     api.get('/api/1.0/Produto/ListarProdutos'),
                     api.get('/api/1.0/Categoria/ListarCategorias')
                 ]);
-
-                setProdutos(produtosResponse.data);
-                setCategorias(categoriasResponse.data);
-                setLoading(false);
-            } catch (error) {
-                console.error('Erro ao buscar dados:', error);
-                setError('Ocorreu um erro ao carregar os dados. Por favor, tente novamente mais tarde.');
+                setProdutos(produtosResponse.data || []);
+                setCategorias(categoriasResponse.data || []);
+            } catch (err) {
+                console.error('Erro ao buscar dados:', err);
+                setError('Ocorreu um erro ao carregar os dados. Tente novamente.');
+            } finally {
                 setLoading(false);
             }
         };
-
         fetchData();
     }, []);
 
-    const produtosFiltrados = categoriaSelecionada === 'todas'
-        ? produtos
-        : produtos.filter(produto => produto.categoriaId === parseInt(categoriaSelecionada));
+    const produtosFiltrados = useMemo(() => {
+        if (categoriaSelecionada === 'todas') return produtos;
+        return produtos.filter(produto => produto.categoriaId === parseInt(categoriaSelecionada));
+    }, [produtos, categoriaSelecionada]);
 
-    const produtosPorCategoria = categoriaSelecionada === 'todas'
-        ? categorias.reduce((acc, categoria) => {
-            acc[categoria.id] = produtos.filter(produto => produto.categoriaId === categoria.id);
-            return acc;
-        }, {})
-        : { [categoriaSelecionada]: produtosFiltrados };
+    const produtosPorCategoria = useMemo(() => {
+        if (!categorias.length) return {};
+        const agrupados = categoriaSelecionada === 'todas'
+            ? categorias.reduce((acc, categoria) => {
+                const produtosDaCategoria = produtos.filter(produto => produto.categoriaId === categoria.id);
+                if (produtosDaCategoria.length > 0) acc[categoria.id] = produtosDaCategoria;
+                return acc;
+            }, {})
+            : { [categoriaSelecionada]: produtosFiltrados.filter(p => p.categoriaId === parseInt(categoriaSelecionada)) };
+        
+        if (categoriaSelecionada !== 'todas' && (!agrupados[categoriaSelecionada] || agrupados[categoriaSelecionada].length === 0)) {
+            return {};
+        }
+        return agrupados;
+    }, [produtos, categorias, categoriaSelecionada, produtosFiltrados]);
 
-    const handleDelete = async (id) => {
-        const result = await Swal.fire({
-            title: 'Você tem certeza?',
-            text: 'Esse produto será excluído!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, excluir!',
-            cancelButtonText: 'Cancelar'
-        });
-
+    const handleDelete = useCallback(async (id) => {
+        const result = await confirmAction("Você tem certeza?", "Esse produto será excluído!");
         if (result.isConfirmed) {
             try {
                 await axios.delete(`${process.env.REACT_APP_API_URL}/api/1.0/Produto/DeletarProduto/${id}`);
-                setProdutos(produtos.filter(produto => produto.id !== id));
-
-                Swal.fire({
-                    title: 'Produto excluído!',
-                    text: 'O produto foi excluído com sucesso.',
-                    icon: 'success',
-                    confirmButtonText: 'Ok'
-                });
-            } catch (error) {
-                console.error('Erro ao excluir produto:', error);
-
-                Swal.fire({
-                    title: 'Erro!',
-                    text: 'Ocorreu um erro ao excluir o produto. Por favor, tente novamente.',
-                    icon: 'error',
-                    confirmButtonText: 'Ok'
-                });
+                setProdutos(prevProdutos => prevProdutos.filter(produto => produto.id !== id));
+                showSuccess("Produto excluído!", "O produto foi excluído com sucesso.");
+            } catch (err) {
+                console.error("Erro ao excluir produto:", err);
+                showError("Erro!", "Ocorreu um erro ao excluir o produto.");
             }
         }
-    };
+    }, []);
 
-    const handleEdit = (produto) => {
-        console.log("Produto a ser editado:", produto);
+    const handleEdit = useCallback((produto) => {
         setProdutoEditando(produto);
         setModalAberto(true);
-    };
+    }, []);
 
-    const handleSaveEdit = (produtoAtualizado) => {
-        setProdutos(produtos.map(p =>
-            p.id === produtoAtualizado.id ? produtoAtualizado : p
-        ));
+    const handleSaveEdit = useCallback((produtoAtualizado) => {
+        setProdutos(prevProdutos =>
+            prevProdutos.map(p => (p.id === produtoAtualizado.id ? produtoAtualizado : p))
+        );
         setModalAberto(false);
-    };
-
-    const handleSimularPedido = (id) => {
-        console.log('Simular pedido para produto:', id);
-    };
+        showSuccess("Produto atualizado!", "As alterações foram salvas.");
+    }, []);
 
     if (loading) {
-        return <div style={styles.loading}>Carregando...</div>;
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-slate-50">
+                <p className="text-xl font-medium text-slate-600">Carregando produtos...</p>
+            </div>
+        );
     }
-    if (error) {
-        return <div style={styles.error}>{error}</div>;
-    }
-    return (
-        <div style={styles.container}>
-            <h1 style={styles.title}>Gestão de Produtos</h1>
 
-            <div style={styles.filterContainer}>
+    if (error) {
+        return (
+            <div className="min-h-screen bg-slate-50 p-4 sm:p-8 flex items-center justify-center">
+                <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-6 rounded-md shadow-md max-w-lg text-center">
+                    <h3 className="font-bold text-lg mb-2">Ocorreu um Erro</h3>
+                    <p>{error}</p>
+                </div>
+            </div>
+        );
+    }
+
+    const categoriasVisiveis = Object.keys(produtosPorCategoria);
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-100 to-sky-100 p-4 sm:p-6 md:p-8 font-sans">
+            <header className="mb-8 sm:mb-10 text-center"> {/* Reduzida margem inferior */}
+                <h1 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-indigo-600 py-2"> {/* Reduzido tamanho da fonte */}
+                    Gestão de Produtos
+                </h1>
+            </header>
+
+            <div className="mb-8 sm:mb-10 flex justify-center"> {/* Reduzida margem inferior */}
                 <select
                     value={categoriaSelecionada}
                     onChange={(e) => setCategoriaSelecionada(e.target.value)}
-                    style={styles.select}
+                    className="w-full max-w-md p-2.5 text-sm text-slate-700 bg-white border border-slate-300 rounded-lg shadow-sm
+                               focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-shadow" // Reduzido padding e fonte
+                    aria-label="Selecionar categoria de produtos"
                 >
                     <option value="todas">Todas as Categorias</option>
                     {categorias.map(categoria => (
@@ -122,183 +127,106 @@ const GestaoComponent = () => {
                     ))}
                 </select>
             </div>
-            {Object.entries(produtosPorCategoria).map(([categoriaId, produtos]) => {
-                const categoria = categorias.find(cat => cat.id === parseInt(categoriaId));
-                if (!produtos || produtos.length === 0) return null;
 
-                return (
-                    <div key={categoriaId} style={styles.categorySection}>
-                        <h2 style={styles.categoryTitle}>{categoria?.nome || 'Sem Categoria'}</h2>
-                        <div style={styles.grid}>
-                            {produtos.map(produto => (
-                                <div key={produto.id} style={styles.card}>
-                                    <img
-                                        src={produto.imagemPrincipalUrl || '/api/placeholder/400/300'}
-                                        alt={produto.nome}
-                                        style={styles.image}
-                                    />
-                                    <div style={styles.cardContent}>
-                                        <h2 style={styles.productName}>{produto.nome}</h2>
-                                        <p style={styles.productDescription}>{produto.descricao}</p>
-                                        <p style={styles.productPrice}>
-                                            R$ {produto.precoVenda?.toFixed(2) || '0.00'}
-                                        </p>
-                                        <div style={styles.buttonGroup}>
-                                            <button
-                                                onClick={() => handleEdit(produto)}
-                                                style={styles.button}
-                                            >
-                                                Editar
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(produto.id)}
-                                                style={{ ...styles.button, ...styles.deleteButton }}
-                                            >
-                                                Excluir
-                                            </button>
+            {categoriasVisiveis.length > 0 ? (
+                categoriasVisiveis.map(categoriaId => {
+                    const categoria = categorias.find(cat => cat.id === parseInt(categoriaId));
+                    const produtosDaCategoria = produtosPorCategoria[categoriaId];
+
+                    if (!produtosDaCategoria || produtosDaCategoria.length === 0) return null;
+
+                    return (
+                        <section key={categoriaId} className="mb-10 sm:mb-12" aria-labelledby={`category-title-${categoriaId}`}> {/* Reduzida margem inferior */}
+                            <h2 id={`category-title-${categoriaId}`}
+                                className="text-xl sm:text-2xl font-semibold text-slate-700 mb-5 pb-2 border-b-2 border-sky-200"> {/* Reduzido tamanho da fonte e margem inferior */}
+                                {categoria?.nome || 'Categoria Desconhecida'}
+                            </h2>
+                            {/* Ajustado o gap do grid */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                                {produtosDaCategoria.map(produto => (
+                                    <article key={produto.id}
+                                        className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col group
+                                                   transition-all duration-300 ease-in-out hover:shadow-2xl hover:scale-[1.02]"
+                                        aria-labelledby={`product-name-${produto.id}`}
+                                    >
+                                        {/* Altura da imagem reduzida */}
+                                        <div className="relative overflow-hidden h-44"> {/* Era h-52 */}
+                                            <img
+                                                src={produto.imagemPrincipalUrl || `https://via.placeholder.com/300x200.png?text=${encodeURIComponent(produto.nome || 'Produto')}`}
+                                                alt={produto.nome || 'Imagem do produto'}
+                                                className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+                                            />
+                                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity duration-300"></div>
                                         </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                );
-            })}
-
-            {!Object.values(produtosPorCategoria).flat().length && (
-                <p style={styles.emptyMessage}>Nenhum produto encontrado.</p>
+                                        
+                                        {/* Padding interno do card reduzido */}
+                                        <div className="p-4 flex flex-col flex-grow"> {/* Era p-5 */}
+                                            <h3 id={`product-name-${produto.id}`}
+                                                // Fonte e margem do nome do produto reduzidos
+                                                className="text-base font-semibold text-slate-800 mb-1 truncate group-hover:text-sky-600 transition-colors"> {/* Era text-lg */}
+                                                {produto.nome || 'Produto sem nome'}
+                                            </h3>
+                                            {/* Fonte da descrição e margem reduzidas, line-clamp pode ser ajustado se necessário */}
+                                            <p className="text-xs text-slate-600 mb-2 flex-grow line-clamp-3 leading-relaxed"> {/* Era text-sm mb-3 */}
+                                                {produto.descricao || 'Sem descrição disponível.'}
+                                            </p>
+                                            {/* Fonte e margem do preço reduzidos */}
+                                            <p className="text-lg font-bold text-sky-600 mb-3"> {/* Era text-xl mb-4 */}
+                                                R$ {produto.precoVenda?.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0,00'}
+                                            </p>
+                                            {/* Gap e padding dos botões ajustados */}
+                                            <div className="mt-auto flex flex-col sm:flex-row gap-2"> {/* Era gap-3 */}
+                                                <button
+                                                    onClick={() => handleEdit(produto)}
+                                                    // Padding e fonte dos botões reduzidos
+                                                    className="w-full sm:flex-1 py-2 px-3 bg-sky-500 text-white text-xs font-medium rounded-md shadow-sm
+                                                               hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 
+                                                               transition-all duration-150 ease-in-out transform hover:scale-105" // Era py-2.5 px-4 text-sm
+                                                    aria-label={`Editar ${produto.nome}`}
+                                                >
+                                                    Editar
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(produto.id)}
+                                                    className="w-full sm:flex-1 py-2 px-3 bg-rose-500 text-white text-xs font-medium rounded-md shadow-sm
+                                                               hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2
+                                                               transition-all duration-150 ease-in-out transform hover:scale-105" // Era py-2.5 px-4 text-sm
+                                                    aria-label={`Excluir ${produto.nome}`}
+                                                >
+                                                    Excluir
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </article>
+                                ))}
+                            </div>
+                        </section>
+                    );
+                })
+            ) : (
+                <div className="text-center py-10 sm:py-12"> {/* Reduzido padding vertical */}
+                    <svg className="mx-auto h-12 w-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"> {/* Reduzido tamanho do ícone */}
+                        <path vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 className="mt-2 text-base sm:text-lg font-medium text-slate-800">Nenhum produto encontrado</h3> {/* Reduzido tamanho da fonte */}
+                    <p className="mt-1 text-xs sm:text-sm text-slate-500"> {/* Reduzido tamanho da fonte */}
+                        {categoriaSelecionada === 'todas' && produtos.length === 0
+                            ? 'Parece que ainda não há produtos cadastrados.'
+                            : 'Tente selecionar outra categoria ou verifique os filtros.'}
+                    </p>
+                </div>
             )}
 
-            {/* Integração do EditarProdutoModal */}
-            <EditarProdutoModal
-                produto={produtoEditando}
-                modalAberto={modalAberto}
-                setModalAberto={setModalAberto}
-                onSave={handleSaveEdit}
-            />
+            {produtoEditando && (
+                <EditarProdutoModal
+                    produto={produtoEditando}
+                    modalAberto={modalAberto}
+                    setModalAberto={setModalAberto}
+                    onSave={handleSaveEdit}
+                />
+            )}
         </div>
     );
-};
-
-const styles = {
-    container: {
-        maxWidth: '1400px',
-        margin: '0 auto',
-        padding: '20px',
-        fontFamily: 'Arial, sans-serif',
-    },
-    filterContainer: {
-        marginBottom: '20px',
-        display: 'flex',
-        justifyContent: 'flex-end',
-    },
-    select: {
-        padding: '8px 12px',
-        fontSize: '16px',
-        borderRadius: '4px',
-        border: '1px solid #ddd',
-        backgroundColor: '#fff',
-        cursor: 'pointer',
-        minWidth: '200px',
-    },
-    categorySection: {
-        marginBottom: '40px',
-    },
-    categoryTitle: {
-        fontSize: '24px',
-        fontWeight: 'bold',
-        color: '#333',
-        marginBottom: '20px',
-        borderBottom: '2px solid #4a90e2',
-        paddingBottom: '10px',
-    },
-    title: {
-        fontSize: '28px',
-        fontWeight: 'bold',
-        color: '#333',
-        marginBottom: '20px',
-        textAlign: 'center',
-    },
-    grid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
-        gap: '20px',
-        margin: '0 auto',
-    },
-    card: {
-        backgroundColor: '#fff',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        overflow: 'hidden',
-        width: '100%',
-    },
-    image: {
-        width: '100%',
-        height: '180px',
-        objectFit: 'cover',
-    },
-    cardContent: {
-        padding: '15px',
-    },
-    productName: {
-        fontSize: '16px',
-        fontWeight: 'bold',
-        marginBottom: '8px',
-        color: '#333',
-    },
-    productDescription: {
-        fontSize: '13px',
-        color: '#666',
-        marginBottom: '8px',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        display: '-webkit-box',
-        '-webkit-line-clamp': '2',
-        '-webkit-box-orient': 'vertical',
-    },
-    productPrice: {
-        fontSize: '15px',
-        fontWeight: 'bold',
-        color: '#4CAF50',
-        marginBottom: '12px',
-    },
-    buttonGroup: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        gap: '5px',
-    },
-    button: {
-        padding: '6px 8px',
-        backgroundColor: '#4a90e2',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        fontSize: '12px',
-        flex: '1',
-        whiteSpace: 'nowrap',
-    },
-    deleteButton: {
-        backgroundColor: '#ff4d4d',
-    },
-    emptyMessage: {
-        textAlign: 'center',
-        fontSize: '18px',
-        color: '#666',
-        marginTop: '40px',
-    },
-    loading: {
-        textAlign: 'center',
-        fontSize: '18px',
-        color: '#333',
-        marginTop: '40px',
-    },
-    error: {
-        textAlign: 'center',
-        fontSize: '18px',
-        color: '#ff4d4d',
-        marginTop: '40px',
-    },
 };
 
 export default GestaoComponent;

@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Swal from 'sweetalert2';
+import { showSuccess, showError } from "@utils/alerts";
+import { formatPriceToInvariantBackend } from "@utils/formatters";
 
 const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) => {
     const [produtoEditando, setProdutoEditando] = useState(null);
@@ -8,7 +9,6 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
     const [gruposAdicional, setGruposAdicional] = useState([]);
     const [complementosSelecionados, setComplementosSelecionados] = useState([]);
     const [adicionaisSelecionados, setAdicionaisSelecionados] = useState([]);
-    const [salvarMudancas, setSalvarMudancas] = useState(false);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('info');
 
@@ -24,28 +24,23 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
                 setGruposComplemento(gruposComplementoRes.data);
                 setGruposAdicional(gruposAdicionalRes.data);
 
-                // Se o produto tem complementos e adicionais, busque os detalhes
                 if (produto) {
                     const [complementosProdutoRes, adicionaisProdutoRes] = await Promise.all([
                         axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/Complemento/ObterComplementos/${produto.id}`),
                         axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/Adicional/ObterAdicionais/${produto.id}`)
                     ]);
 
-                    // Certifique-se de obter arrays válidos, mesmo que vazios
                     const complementos = complementosProdutoRes.data || [];
                     const adicionais = adicionaisProdutoRes.data || [];
 
-                    // Limpe os estados antes de definir novos valores
                     setComplementosSelecionados([]);
                     setAdicionaisSelecionados([]);
 
-                    // Atribua os novos valores aos estados
                     setTimeout(() => {
                         setComplementosSelecionados(complementos);
                         setAdicionaisSelecionados(adicionais);
                     }, 0);
 
-                    // Inicializa o estado do produto com todos os valores, incluindo o Ativo
                     setProdutoEditando({
                         ...produto,
                         ativo: produto.ativo
@@ -55,12 +50,7 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
                 setLoading(false);
             } catch (error) {
                 console.error('Erro ao buscar dados:', error);
-                Swal.fire({
-                    title: 'Erro!',
-                    text: 'Ocorreu um erro ao carregar os dados. Por favor, tente novamente.',
-                    icon: 'error',
-                    confirmButtonText: 'Ok'
-                });
+                showError("Erro!", "Ocorreu um erro ao carregar os dados. Por favor, tente novamente.");
                 setLoading(false);
             }
         };
@@ -68,7 +58,6 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
         if (modalAberto && produto) {
             fetchData();
         } else {
-            // Limpar estados quando o modal for fechado
             setComplementosSelecionados([]);
             setAdicionaisSelecionados([]);
         }
@@ -83,14 +72,14 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
             // Adiciona as propriedades básicas do produto
             formData.append("Id", produtoEditando.id);
             formData.append("Nome", produtoEditando.nome);
-            formData.append("PrecoVenda", produtoEditando.precoVenda);
+            formData.append("PrecoVenda", formatPriceToInvariantBackend(produtoEditando.precoVenda));
+            formData.append("PrecoCusto", formatPriceToInvariantBackend(produtoEditando.precoCusto));
             formData.append("Descricao", produtoEditando.descricao || '');
             formData.append("CategoriaId", produtoEditando.categoriaId);
             formData.append("Ativo", produtoEditando.ativo.toString());
             formData.append("EstoqueAtual", produtoEditando.estoqueAtual);
             formData.append("EstoqueMinimo", produtoEditando.estoqueMinimo || 0);
             formData.append("UnidadeMedida", produtoEditando.unidadeMedida || '');
-            formData.append("PrecoCusto", produtoEditando.precoCusto || 0);
 
             // Se houver uma nova imagem, adicione-a ao FormData
             if (produtoEditando.novaImagem) {
@@ -121,140 +110,26 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
             const response = await axios.put(
                 `${process.env.REACT_APP_API_URL}/api/1.0/Produto/AtualizarProdutoV2`,
                 formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                }
+                { headers: { "Content-Type": "multipart/form-data" } }
             );
 
             setLoading(false);
             setModalAberto(false);
             if (onSave) {
-                onSave(response.data);
+            onSave(response.data);
             }
 
-            Swal.fire({
-                title: "Sucesso!",
-                text: "Produto atualizado com sucesso!",
-                icon: "success",
-                confirmButtonText: "Ok",
-            });
-
+            showSuccess("Sucesso!", "Produto atualizado com sucesso!");
         } catch (error) {
             setLoading(false);
             console.error("Erro ao atualizar produto:", error);
+            const errorMessage =
+            error.response?.data?.message ||
+            "Ocorreu um erro ao atualizar o produto. Por favor, verifique os dados e tente novamente.";
 
-            const errorMessage = error.response?.data?.message ||
-                "Ocorreu um erro ao atualizar o produto. Por favor, verifique os dados e tente novamente.";
-
-            Swal.fire({
-                title: "Erro!",
-                text: errorMessage,
-                icon: "error",
-                confirmButtonText: "Ok",
-            });
+            showError("Erro!", errorMessage);
         }
     };
-
-
-
-    /*async function toggleAdicional1(adicionalId) {
-        try {
-            const response = await axios.put(
-                `${process.env.REACT_APP_API_URL}/api/1.0/Adicional/toggle/${adicionalId}`,
-                null,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-            if (response.status === 200) {
-                setAdicionaisSelecionados(prevState => {
-                   
-                    const isSelected = prevState.some(a => a.id === adicionalId);
-                    if (isSelected) {
-                        return prevState.filter(a => a.id !== adicionalId);
-                    } else {
-                        return [...prevState, { id: adicionalId }];
-                    }
-                });
-            } else {
-                throw new Error("Erro ao atualizar o adicional");
-            }
-        } catch (error) {
-            console.error(error);
-            alert("Falha ao atualizar o adicional.");
-        }
-    }
-
-    async function toggleAdicional1(adicionalId) {
-        try {
-            const response = await axios.put(
-                `${process.env.REACT_APP_API_URL}/api/1.0/Adicional/toggle/${adicionalId}`,
-                null,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-            if (response.status === 200) {
-                setAdicionaisSelecionados(prevState => {
-
-                    const isSelected = prevState.some(a => a.id === adicionalId);
-                    if (isSelected) {
-                        return prevState.filter(a => a.id !== adicionalId);
-                    } else {
-                        return [...prevState, { id: adicionalId }];
-                    }
-                });
-            } else {
-                throw new Error("Erro ao atualizar o adicional");
-            }
-        } catch (error) {
-            console.error(error);
-            alert("Falha ao atualizar o adicional.");
-        }
-    }
-
-    async function toggleComplemento(complementoId) {
-        try {
-            const response = await axios.put(
-                `${process.env.REACT_APP_API_URL}/api/1.0/Complemento/toggle/${complementoId}`,
-                null,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-            if (response.status === 200) {
-                setComplementosSelecionados(prevState => {
-
-                    const isSelected = prevState.some(a => a.id === complementoId);
-                    if (isSelected) {
-                        return prevState.filter(a => a.id !== complementoId);
-                    } else {
-                        return [...prevState, { id: complementoId }];
-                    }
-                });
-            } else {
-                throw new Error("Erro ao atualizar o complemento");
-            }
-        } catch (error) {
-            console.error(error);
-            alert("Falha ao atualizar o complemento.");
-        }
-    }*/
-
-
-    const isComplementoSelecionado = (complementoId) => {
-        return complementosSelecionados.some(c => c.id === complementoId);
-    };
-
-   
 
     if (!modalAberto || !produtoEditando) {
         return null;
@@ -330,10 +205,10 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
                                             <div style={styles.formGroup}>
                                                 <label style={styles.label}>Preço de Custo (R$):</label>
                                                 <input
-                                                    type="number"
+                                                    type="text"
                                                     step="0.01"
                                                     value={produtoEditando.precoCusto || ''}
-                                                    onChange={(e) => setProdutoEditando({ ...produtoEditando, precoCusto: parseFloat(e.target.value) })}
+                                                    onChange={(e) => setProdutoEditando({ ...produtoEditando, precoCusto: e.target.value })}
                                                     style={styles.input}
                                                 />
                                             </div>
@@ -419,108 +294,6 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
                                     </div>
                                 </>
                             )}
-
-                        {/*activeTab === 'complementos' && (
-                            <div>
-                                <h3 style={styles.sectionTitle}>Grupos de Complementos</h3>
-                                {gruposComplemento.length === 0 ? (
-                                    <p style={styles.emptyMessage}>Nenhum grupo de complementos disponível.</p>
-                                ) : (
-                                    gruposComplemento.map(grupo => (
-                                        <div key={grupo.id} style={styles.grupoCard}>
-                                            <div style={styles.grupoHeader}>
-                                                <h4>{grupo.nome}</h4>
-                                                <p style={styles.grupoMeta}>
-                                                    {grupo.obrigatorio ? 'Obrigatório' : 'Opcional'} •
-                                                    Min: {grupo.quantidadeMinima || 0} •
-                                                    Max: {grupo.quantidadeMaxima || 'Ilimitado'}
-                                                </p>
-                                            </div>
-                                            <div style={styles.itemsList}>
-                                                {grupo.complementos?.map(complemento => (
-                                                    <div
-                                                        key={complemento.id}
-                                                        style={{
-                                                            ...styles.itemCheck,
-                                                            ...(complementosSelecionados.some(c => c.id === complemento.id) ? styles.itemSelected : {}),
-                                                            ...(complemento.ativo === false ? { opacity: 0.5 } : {}) // Adiciona opacidade reduzida se não estiver ativo
-                                                        }}
-                                                        onClick={() => toggleComplemento(complemento.id)}
-                                                    >
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={complementosSelecionados.some(c => c.id === complemento.id) && complemento.ativo !== false}
-                                                            disabled={complemento.ativo === false}
-                                                            onChange={() => { }}
-                                                            style={styles.checkboxInput}
-                                                        />
-                                                        <div style={styles.itemDetails}>
-                                                            <span style={styles.itemName}>
-                                                                {complemento.nome}
-                                                                {complemento.ativo === false && " (Inativo)"}
-                                                            </span>
-                                                            {complemento.preco > 0 && (
-                                                                <span style={styles.itemPrice}>R$ {complemento.preco.toFixed(2)}</span>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-                                )}
-
-                                {activeTab === 'adicionais' && (
-                                    <div>
-                                        <h3 style={styles.sectionTitle}>Grupos de Adicionais</h3>
-                                        {gruposAdicional.length === 0 ? (
-                                            <p style={styles.emptyMessage}>Nenhum grupo de adicionais disponível.</p>
-                                        ) : (
-                                            gruposAdicional.map(grupo => (
-                                                <div key={grupo.id} style={styles.grupoCard}>
-                                                    <div style={styles.grupoHeader}>
-                                                        <h4>{grupo.nome}</h4>
-                                                        <p style={styles.grupoMeta}>
-                                                            Limite de seleção: {grupo.limiteSelecao || 'Ilimitado'}
-                                                        </p>
-                                                    </div>
-                                                    <div style={styles.itemsList}>
-                                                        {grupo.adicionais?.map(adicional => (
-                                                            <div
-                                                                key={adicional.id}
-                                                                style={{
-                                                                    ...styles.itemCheck,
-                                                                    ...(adicionaisSelecionados.some(a => a.id === adicional.id) ? styles.itemSelected : {}),
-                                                                    ...(adicional.ativo === false ? { opacity: 0.5 } : {}) // Opacidade reduzida se inativo
-                                                                }}
-                                                                onClick={() => toggleAdicional1(adicional.id)} // Passando id do adicional
-                                                            >
-                                                                <input
-                                                                    type="checkbox"
-                                                                    checked={adicionaisSelecionados.some(a => a.id === adicional.id) && adicional.ativo !== false}
-                                                                    disabled={adicional.ativo === false}
-                                                                    onChange={() => { }} // Não é necessário manipular o onChange aqui
-                                                                    style={styles.checkboxInput}
-                                                                />
-                                                                <div style={styles.itemDetails}>
-                                                                    <span style={styles.itemName}>
-                                                                        {adicional.nome}
-                                                                        {adicional.ativo === false && " (Inativo)"}
-                                                                    </span>
-                                                                    {adicional.precoBase > 0 && (
-                                                                        <span style={styles.itemPrice}>R$ {adicional.precoBase.toFixed(2)}</span>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ))
-                                        )}
-                                    </div>
-                                )*/}
 
                         </div>
 

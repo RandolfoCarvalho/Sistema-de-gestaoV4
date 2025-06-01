@@ -1,5 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronRight, Camera, Package, Tag, Layers, Check, X } from 'lucide-react';
+import { formatPriceToInvariantBackend } from '@utils/formatters';
 import axios from 'axios';
 
 const CreateProductForm = () => {
@@ -269,94 +270,119 @@ const CreateProductForm = () => {
 );
 
 const renderStep2 = () => (
-    <div className="space-y-5">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="space-y-3">
-                <h3 className="text-sm font-medium text-gray-700">Preços</h3>
-                <div>
-                    <label className="block text-xs text-gray-500 mb-1">
-                        Preço de Custo (R$)
-                    </label>
-                    <input
-                        type="number"
-                        name="precoCusto"
-                        value={formData.precoCusto}
-                        onChange={(e) => setFormData({ ...formData, precoCusto: e.target.value })}
-                        className="w-full rounded-md border-gray-200 text-sm focus:border-blue-400 focus:ring focus:ring-blue-100"
-                        step="0.01"
-                    />
-                </div>
-                <div>
-                    <label className="block text-xs text-gray-500 mb-1">
-                        Preço de Venda (R$)
-                    </label>
-                    <input
-                        type="number"
-                        name="precoVenda"
-                        value={formData.precoVenda}
-                        onChange={(e) => setFormData({ ...formData, precoVenda: e.target.value })}
-                        className="w-full rounded-md border-gray-200 text-sm focus:border-blue-400 focus:ring focus:ring-blue-100"
-                        step="0.01"
-                    />
-                    {formData.precoCusto && formData.precoVenda && (
-                        <div className="mt-1 text-xs">
-                            <span className={`font-medium ${(formData.precoVenda - formData.precoCusto) > 0
-                                ? 'text-green-500'
-                                : 'text-red-500'
-                                }`}>
-                                Margem: {((formData.precoVenda - formData.precoCusto) / formData.precoCusto * 100).toFixed(2)}%
-                            </span>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            <div className="space-y-3">
-                <h3 className="text-sm font-medium text-gray-700">Estoque</h3>
-                <div>
-                    <label className="block text-xs text-gray-500 mb-1">
-                        Estoque Atual
-                    </label>
-                    <input
-                        type="number"
-                        name="estoqueAtual"
-                        value={formData.estoqueAtual}
-                        onChange={(e) => setFormData({ ...formData, estoqueAtual: e.target.value })}
-                        className="w-full rounded-md border-gray-200 text-sm focus:border-blue-400 focus:ring focus:ring-blue-100"
-                    />
-                </div>
-                <div>
-                    <label className="block text-xs text-gray-500 mb-1">
-                        Estoque Mínimo
-                    </label>
-                    <input
-                        type="number"
-                        name="estoqueMinimo"
-                        value={formData.estoqueMinimo}
-                        onChange={(e) => setFormData({ ...formData, estoqueMinimo: e.target.value })}
-                        className="w-full rounded-md border-gray-200 text-sm focus:border-blue-400 focus:ring focus:ring-blue-100"
-                    />
-                </div>
-                <div>
-                    <label className="block text-xs text-gray-500 mb-1">
-                        Unidade de Medida
-                    </label>
-                    <select
-                        name="unidadeMedida"
-                        value={formData.unidadeMedida}
-                        onChange={(e) => setFormData({ ...formData, unidadeMedida: e.target.value })}
-                        className="w-full rounded-md border-gray-200 text-sm focus:border-blue-400 focus:ring focus:ring-blue-100"
-                    >
-                        <option value="">Selecione...</option>
-                        <option value="UN">Unidade</option>
-                        <option value="KG">Quilograma</option>
-                        <option value="L">Litro</option>
-                        <option value="CX">Caixa</option>
-                    </select>
-                </div>
-            </div>
+  <div className="space-y-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="space-y-3">
+        <h3 className="text-sm font-medium text-gray-700">Preços</h3>
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">
+            Preço de Custo (R$)
+          </label>
+          <input
+            type="number"
+            name="precoCusto"
+            value={formData.precoCusto}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                precoCusto: formatPriceToInvariantBackend(e.target.value),
+              })
+            }
+            className="w-full rounded-md border-gray-200 text-sm focus:border-blue-400 focus:ring focus:ring-blue-100"
+            step="0.01"
+          />
         </div>
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">
+            Preço de Venda (R$)
+          </label>
+          <input
+            type="number"
+            name="precoVenda"
+            value={formData.precoVenda}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                precoVenda: formatPriceToInvariantBackend(e.target.value),
+              })
+            }
+            className="w-full rounded-md border-gray-200 text-sm focus:border-blue-400 focus:ring focus:ring-blue-100"
+            step="0.01"
+          />
+          {formData.precoCusto && formData.precoVenda && (
+            <div className="mt-1 text-xs">
+              <span
+                className={`font-medium ${
+                  formData.precoVenda - formData.precoCusto > 0
+                    ? 'text-green-500'
+                    : 'text-red-500'
+                }`}
+              >
+                Margem:{' '}
+                {(
+                  ((formData.precoVenda - formData.precoCusto) /
+                    formData.precoCusto) *
+                  100
+                ).toFixed(2)}
+                %
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <h3 className="text-sm font-medium text-gray-700">Estoque</h3>
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">
+            Estoque Atual
+          </label>
+          <input
+            type="number"
+            name="estoqueAtual"
+            value={formData.estoqueAtual}
+            onChange={(e) =>
+              setFormData({ ...formData, estoqueAtual: e.target.value })
+            }
+            className="w-full rounded-md border-gray-200 text-sm focus:border-blue-400 focus:ring focus:ring-blue-100"
+          />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">
+            Estoque Mínimo
+          </label>
+          <input
+            type="number"
+            name="estoqueMinimo"
+            value={formData.estoqueMinimo}
+            onChange={(e) =>
+              setFormData({ ...formData, estoqueMinimo: e.target.value })
+            }
+            className="w-full rounded-md border-gray-200 text-sm focus:border-blue-400 focus:ring focus:ring-blue-100"
+          />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">
+            Unidade de Medida
+          </label>
+          <select
+            name="unidadeMedida"
+            value={formData.unidadeMedida}
+            onChange={(e) =>
+              setFormData({ ...formData, unidadeMedida: e.target.value })
+            }
+            className="w-full rounded-md border-gray-200 text-sm focus:border-blue-400 focus:ring focus:ring-blue-100"
+          >
+            <option value="">Selecione...</option>
+            <option value="UN">Unidade</option>
+            <option value="KG">Quilograma</option>
+            <option value="L">Litro</option>
+            <option value="CX">Caixa</option>
+          </select>
+        </div>
+      </div>
     </div>
+  </div>
 );
 
 const renderStep3 = () => (

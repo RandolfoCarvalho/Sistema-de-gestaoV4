@@ -78,6 +78,7 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
 
             var restauranteModel = await _context.Restaurantes
                 .Include(r => r.Empresa)
+                .Include(e => e.Empresa.DiasFuncionamento)
                 .FirstOrDefaultAsync(u => u.Id.ToString() == restauranteId);
 
             if (restauranteModel == null)

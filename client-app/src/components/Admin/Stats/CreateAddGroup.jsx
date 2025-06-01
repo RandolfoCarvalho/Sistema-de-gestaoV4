@@ -2,6 +2,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import api from '../../../axiosConfig'
+import { confirmAction, showSuccess, showError } from '@utils/alerts';
 
 const GerenciamentoAdicionais = () => {
     // Estados para o modo atual (criar ou editar)
@@ -152,7 +153,7 @@ const GerenciamentoAdicionais = () => {
                 Ativo: grupoAtivo,
                 LimiteSelecao: limiteSelecao === '' ? null : parseInt(limiteSelecao),
                 Adicionais: adicionais.map(adicional => ({
-                    Id: adicional.id || 0, // Se for um novo adicional, Id será 0
+                    Id: adicional.id || 0,
                     Nome: adicional.nome?.trim() || "Adicional sem nome",
                     Descricao: adicional.descricao?.trim() || "Sem descrição",
                     PrecoBase: adicional.preco ? parseFloat(adicional.preco) : 0,
@@ -160,6 +161,7 @@ const GerenciamentoAdicionais = () => {
                     MaximoPorProduto: adicional.maximoPorProduto === '' ? null : parseInt(adicional.maximoPorProduto)
                 }))
             };
+
             let response;
             if (modo === 'criar') {
                 response = await axios.post(
@@ -168,15 +170,9 @@ const GerenciamentoAdicionais = () => {
                 );
 
                 if (response.status === 200) {
-                    Swal.fire({
-                        title: 'Sucesso!',
-                        text: 'Grupo e adicionais criados com sucesso!',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        voltarParaLista();
-                        buscarGruposAdicionais();
-                    });
+                    await showSuccess('Sucesso!', 'Grupo e adicionais criados com sucesso!');
+                    voltarParaLista();
+                    buscarGruposAdicionais();
                 }
             } else if (modo === 'editar' && grupoAtual) {
                 payload.Id = grupoAtual.id;
@@ -187,73 +183,53 @@ const GerenciamentoAdicionais = () => {
                 );
 
                 if (response.status === 200) {
-                    Swal.fire({
-                        title: 'Sucesso!',
-                        text: 'Grupo e adicionais atualizados com sucesso!',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        voltarParaLista();
-                        buscarGruposAdicionais();
-                    });
+                    await showSuccess('Sucesso!', 'Grupo e adicionais atualizados com sucesso!');
+                    voltarParaLista();
+                    buscarGruposAdicionais();
                 }
             }
         } catch (error) {
             console.error('Erro ao salvar grupo de adicionais:', error.response?.data || error.message);
-            setErro(error.response?.data || 'Erro ao salvar grupo de adicionais. Por favor, tente novamente.');
-
-            Swal.fire({
-                title: 'Erro!',
-                text: error.response?.data || 'Erro ao salvar grupo de adicionais. Por favor, tente novamente.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
+            const errorMsg = error.response?.data || 'Erro ao salvar grupo de adicionais. Por favor, tente novamente.';
+            setErro(errorMsg);
+            showError('Erro!', errorMsg);
         } finally {
             setCarregando(false);
         }
     };
+    
     const excluirGrupo = async (id) => {
-        Swal.fire({
-            title: "Tem certeza?",
-            text: "Esta ação não pode ser desfeita!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
-            confirmButtonText: "Sim, excluir!",
-            cancelButtonText: "Cancelar"
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                setCarregando(true);
-                setErro('');
-                try {
-                    const response = await axios.delete(
-                        `${process.env.REACT_APP_API_URL}/api/1.0/Adicional/DeletarGrupoAdicional/${id}`
-                    );
-                    if (response.status === 200) {
-                        Swal.fire({
-                            title: "Excluído!",
-                            text: "Grupo de adicionais excluído com sucesso!",
-                            icon: "success",
-                            confirmButtonText: "OK"
-                        });
-                    }
-                    buscarGruposAdicionais();
-                } catch (error) {
-                    console.error('Erro ao excluir grupo de adicionais:', error.response?.data || error.message);
-                    setErro(error.response?.data || 'Erro ao excluir grupo de adicionais. Por favor, tente novamente.');
+        const result = await confirmAction(
+            "Tem certeza?",
+            "Esta ação não pode ser desfeita!"
+        );
 
-                    Swal.fire({
-                        title: "Erro!",
-                        text: error.response?.data || "Erro ao excluir grupo de adicionais. Por favor, tente novamente.",
-                        icon: "error",
-                        confirmButtonText: "OK"
-                    });
-                } finally {
-                    setCarregando(false);
+        if (result.isConfirmed) {
+            setCarregando(true);
+            setErro('');
+            try {
+                const response = await axios.delete(
+                    `${process.env.REACT_APP_API_URL}/api/1.0/Adicional/DeletarGrupoAdicional/${id}`
+                );
+                if (response.status === 200) {
+                    await showSuccess(
+                        "Excluído!",
+                        "Grupo de adicionais excluído com sucesso!"
+                    );
                 }
+                buscarGruposAdicionais();
+            } catch (error) {
+                console.error('Erro ao excluir grupo de adicionais:', error.response?.data || error.message);
+                setErro(error.response?.data || 'Erro ao excluir grupo de adicionais. Por favor, tente novamente.');
+
+                showError(
+                    "Erro!",
+                    error.response?.data || "Erro ao excluir grupo de adicionais. Por favor, tente novamente."
+                );
+            } finally {
+                setCarregando(false);
             }
-        });
+        }
     };
     // Função para excluir um adicional específico (apenas na edição)
     const excluirAdicional = async (grupoId, adicionalId) => {

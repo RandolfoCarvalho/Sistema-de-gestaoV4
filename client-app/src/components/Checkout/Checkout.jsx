@@ -1,8 +1,10 @@
 ﻿import React, { useState, useEffect } from "react";
-// ... (todos os seus outros imports permanecem os mesmos) ...
 import { useCart } from "../Carrinho/CartContext";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "../Context/StoreContext";
+import { IsLojaOpen } from '../../services/lojaService';
+import { validateForm } from "../../utils/validators";
+import { showError, showInfo } from "@utils/alerts";
 import FinalUserModal from "../Modals/FinalUserModal";
 import PaymentModal from "../Pagamento/PaymentModal";
 import CheckoutSteps from "./CheckoutSteps";
@@ -39,11 +41,12 @@ const Checkout = () => {
                 const restauranteIdResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/restaurante/BuscarRestauranteIdPorNome/${currentStore}`);
                 const restauranteId = restauranteIdResponse.data;
                 localStorage.setItem('restauranteId', restauranteId);
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/restaurante/isLojaOpen/${restauranteId}`);
-                if (!response.data.isOpen) {
+                const lojaAberta = await IsLojaOpen(restauranteId);
+                if (!lojaAberta) {
                     setBlockCheckoutMessage("Loja fechada. Não é possível finalizar o pedido no momento.");
                     return;
                 }
+
                 setBlockCheckoutMessage('');
             } catch (error) {
                 console.error("Erro ao verificar status da loja:", error);
@@ -70,49 +73,41 @@ const Checkout = () => {
         verifyFinalUser();
     }, [currentStore, cartTotal]);
 
-    const validateAddress = () => {
-        // ... (sua função validateAddress existente, sem alterações)
-        const requiredFields = ['Logradouro', 'Numero', 'Bairro', 'Cidade', 'CEP'];
-        const missingFields = [];
-        requiredFields.forEach(field => {
-            if (!formData.endereco?.[field]) {
-                missingFields.push(field);
-            }
-        });
-        const cepRegex = /^\d{5}-?\d{3}$/;
-        if (formData.endereco?.CEP && !cepRegex.test(formData.endereco.CEP)) {
-            Swal.fire({ title: "CEP Inválido", text: "Por favor, digite um CEP válido no formato 12345-678", icon: "warning", confirmButtonText: "Entendi", confirmButtonColor: "#ff5733" });
-            return false;
-        }
-        if (missingFields.length > 0) {
-            const fieldNames = { Logradouro: 'Rua', Numero: 'Número', Bairro: 'Bairro', Cidade: 'Cidade', CEP: 'CEP' };
-            Swal.fire({ title: "Campos obrigatórios", text: `Por favor, preencha os seguintes campos: ${missingFields.map(f => fieldNames[f]).join(', ')}`, icon: "warning", confirmButtonText: "Entendi", confirmButtonColor: "#ff5733" });
-            return false;
-        }
-        return true;
-    };
-
-    const handleFinalizarPedido = (e) => {
+    const handleFinalizarPedido = async (e) => {
         e.preventDefault();
+
         if (blockCheckoutMessage) {
             console.warn("Tentativa de finalizar pedido enquanto bloqueado:", blockCheckoutMessage);
             return;
         }
-        const isAuthenticated = localStorage.getItem("isAuthenticated");
-        const validateForm = () => {
-            if (!validateAddress()) return false;
-            if (!formData.pagamento || !formData.pagamento.FormaPagamento) {
-                Swal.fire({ title: "Forma de pagamento", text: "Por favor, selecione uma forma de pagamento", icon: "warning", confirmButtonText: "Entendi", confirmButtonColor: "#ff5733" });
-                return false;
+
+        const restauranteId = localStorage.getItem("restauranteId");
+        if (!restauranteId) {
+            showError("Erro", "Restaurante não identificado. Tente novamente mais tarde.");
+            return;
+        }
+
+        try {
+            const lojaAberta = await IsLojaOpen(restauranteId);
+
+            if (!lojaAberta) {
+                showInfo("Loja fechada", "Ops, a loja acabou de fechar. Volte mais tarde!");
+                return;
             }
-            return true;
-        };
-        if (isAuthenticated) {
-            if (validateForm()) {
-                setPaymentModalOpen(true);
+
+            const isAuthenticated = localStorage.getItem("isAuthenticated");
+
+            if (isAuthenticated) {
+                if (validateForm(formData)) {
+                    setPaymentModalOpen(true);
+                }
+            } else {
+                setIsAuthModalOpen(true);
             }
-        } else {
-            setIsAuthModalOpen(true);
+
+        } catch (error) {
+            console.error("Erro ao verificar loja:", error);
+            showError("Erro", "Não foi possível verificar o status da loja. Tente novamente.");
         }
     };
 

@@ -209,33 +209,6 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-        // Método auxiliar para salvar a imagem
-        private async Task<string> SalvarImagem(IFormFile arquivo)
-        {
-            if (arquivo != null && arquivo.Length > 0)
-            {
-                // Gera um nome único para o arquivo
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(arquivo.FileName)}";
-
-                // Caminho onde a imagem será salva
-                var diretorioUpload = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "produtos");
-
-                if (!Directory.Exists(diretorioUpload))
-                    Directory.CreateDirectory(diretorioUpload);
-
-                var filePath = Path.Combine(diretorioUpload, fileName);
-
-                // Salva o arquivo
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await arquivo.CopyToAsync(stream);
-                }
-
-                var baseUrl = $"{Request.Scheme}://{Request.Host}";
-                return $"{baseUrl}/uploads/produtos/{fileName}";
-            }
-            return null;
-        }
 
         //Deleta Produto
         [HttpDelete("DeletarProduto/{id}")]

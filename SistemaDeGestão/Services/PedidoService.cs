@@ -111,7 +111,9 @@ namespace SistemaDeGestao.Services
         {
             if (pedidoDTO == null || !pedidoDTO.Itens.Any())
                 throw new ArgumentException("O pedido deve conter pelo menos um item.");
-            var empresa = await _context.Empresas.FirstOrDefaultAsync(e => e.RestauranteId == pedidoDTO.RestauranteId);
+            var empresa = await _context.Empresas
+                .Include(e => e.DiasFuncionamento)
+                .FirstOrDefaultAsync(e => e.RestauranteId == pedidoDTO.RestauranteId);
             if (empresa == null || !_restauranteService.IsLojaOpen(empresa)) return null;
             BigInteger pedidoNumber = new BigInteger(Guid.NewGuid().ToByteArray().Take(4).ToArray());
             pedidoNumber = BigInteger.Abs(pedidoNumber) % 999999; 

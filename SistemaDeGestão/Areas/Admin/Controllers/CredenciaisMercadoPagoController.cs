@@ -43,7 +43,29 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             };
 
             return Ok(dto);
+        }
 
+        [HttpGet]
+        [Route("GetCredentialByRestauranteId/{restauranteId}")]
+        public async Task<IActionResult> GetCredentialByRestauranteId(int restauranteId)
+        {
+            var credencial = await _context.RestauranteCredenciaisMercadoPago
+                .FirstOrDefaultAsync(c => c.RestauranteId == restauranteId && c.Ativo);
+
+            if (credencial == null)
+                return NotFound();
+
+            var dto = new RestauranteCredencialMercadoPagoDTO
+            {
+                RestauranteId = credencial.RestauranteId,
+                PublicKey = _encryptionService.Decrypt(credencial.PublicKey),
+                AccessToken = _encryptionService.Decrypt(credencial.AccessToken),
+                ClientId = _encryptionService.Decrypt(credencial.ClientId),
+                ClientSecret = _encryptionService.Decrypt(credencial.ClientSecret),
+                Ativo = credencial.Ativo
+            };
+
+            return Ok(dto);
         }
         [HttpPost]
         [Route("CreateCredential")]

@@ -22,6 +22,8 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -119,6 +121,19 @@ builder.Services.AddSingleton<IAmazonS3>(sp =>
     return new AmazonS3Client(accessKey, secretKey, region);
 });
 
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var invariantCulture = CultureInfo.InvariantCulture;
+
+    var supportedCultures = new[] { invariantCulture };
+
+    options.DefaultRequestCulture = new RequestCulture(invariantCulture);
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
+
+
+
 builder.Services.AddScoped<IImageUploadService, ImageUploadService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
@@ -213,6 +228,7 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate(); // Isso roda as migrações pendentes
 }
 
+app.UseRequestLocalization();
 //swagger
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v1"));

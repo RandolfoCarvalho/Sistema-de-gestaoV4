@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useMemo } from 'react';
+﻿import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import useOrders from './hooks/useOrders';
 import useSignalRListeners from './hooks/useSignalRListeners';
 import StatusColumn from './components/StatusColumn';
@@ -16,9 +16,9 @@ const OrderDashboard = () => {
         endDate: null,
     });
 
-    const handleFiltersChange = (newFilters) => {
+    const handleFiltersChange = useCallback((newFilters) => {
         setActiveFilters(newFilters);
-    };
+    }, []);
 
     useSignalRListeners(connection, isConnected, setOrders, processOrders, fetchOrders);
 

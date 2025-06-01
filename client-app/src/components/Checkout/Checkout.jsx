@@ -92,21 +92,61 @@ const Checkout = () => {
         return true;
     };
 
-    const handleFinalizarPedido = (e) => {
-        e.preventDefault();
-        if (blockCheckoutMessage) {
-            console.warn("Tentativa de finalizar pedido enquanto bloqueado:", blockCheckoutMessage);
+    const handleFinalizarPedido = async (e) => {
+    e.preventDefault();
+
+    if (blockCheckoutMessage) {
+        console.warn("Tentativa de finalizar pedido enquanto bloqueado:", blockCheckoutMessage);
+        return;
+    }
+
+    const restauranteId = localStorage.getItem("restauranteId");
+    if (!restauranteId) {
+        Swal.fire({
+            title: "Erro",
+            text: "Restaurante não identificado. Tente novamente mais tarde.",
+            icon: "error",
+            confirmButtonText: "Ok",
+            confirmButtonColor: "#ff5733"
+        });
+        return;
+    }
+
+    try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/1.0/restaurante/isLojaOpen/${restauranteId}`);
+        if (!response.ok) {
+            throw new Error("Erro ao verificar status da loja");
+        }
+
+        const data = await response.json();
+        if (!data.isOpen) {
+            Swal.fire({
+                title: "Loja fechada",
+                text: "Ops, a loja acabou de fechar. Volte mais tarde!",
+                icon: "info",
+                confirmButtonText: "Ok",
+                confirmButtonColor: "#ff5733"
+            });
             return;
         }
+
         const isAuthenticated = localStorage.getItem("isAuthenticated");
+
         const validateForm = () => {
             if (!validateAddress()) return false;
             if (!formData.pagamento || !formData.pagamento.FormaPagamento) {
-                Swal.fire({ title: "Forma de pagamento", text: "Por favor, selecione uma forma de pagamento", icon: "warning", confirmButtonText: "Entendi", confirmButtonColor: "#ff5733" });
+                Swal.fire({
+                    title: "Forma de pagamento",
+                    text: "Por favor, selecione uma forma de pagamento",
+                    icon: "warning",
+                    confirmButtonText: "Entendi",
+                    confirmButtonColor: "#ff5733"
+                });
                 return false;
             }
             return true;
         };
+
         if (isAuthenticated) {
             if (validateForm()) {
                 setPaymentModalOpen(true);
@@ -114,7 +154,19 @@ const Checkout = () => {
         } else {
             setIsAuthModalOpen(true);
         }
-    };
+
+    } catch (error) {
+        console.error("Erro ao verificar loja:", error);
+        Swal.fire({
+            title: "Erro",
+            text: "Não foi possível verificar o status da loja. Tente novamente.",
+            icon: "error",
+            confirmButtonText: "Ok",
+            confirmButtonColor: "#ff5733"
+        });
+    }
+};
+
 
     const handleUserModalSuccess = (userData) => {
         setFormData(prev => ({ ...prev, FinalUserName: userData.nome, FinalUserTelefone: userData.telefone, FinalUserId: userData.id }));

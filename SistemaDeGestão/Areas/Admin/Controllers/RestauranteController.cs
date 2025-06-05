@@ -43,7 +43,7 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception($"Erro ao criar novo usuário: {ex.InnerException?.Message ?? ex.Message}");
+                throw new Exception($"{ex.InnerException?.Message ?? ex.Message}");
             }
 
             return Ok(Restaurante);
@@ -156,8 +156,15 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
                 var novaImagemUrl = await _restauranteService.UploadImagemParaS3(imagemLoja, updatedRestaurante.NomeDaLoja, restauranteExistente.ImagemUrl);
                 restauranteExistente.ImagemUrl = novaImagemUrl;
             }
-            await _restauranteService.UpdateProfileAsync(restauranteExistente, updatedRestaurante);
-            return Ok();
+            try
+            {
+                await _restauranteService.UpdateProfileAsync(restauranteExistente, updatedRestaurante);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
        
         [HttpGet]

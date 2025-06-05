@@ -110,9 +110,6 @@ namespace SistemaDeGestao.Services
                 };
             }
         }
-
-
-
         public async Task<PaymentResponseDTO> ProcessPayment(PagamentoCartaoDTO paymentData, PedidoDTO pedidoDTO, string accessToken)
         {
             Console.WriteLine("==================== INÍCIO DO PROCESSAMENTO DE PAGAMENTO ====================");

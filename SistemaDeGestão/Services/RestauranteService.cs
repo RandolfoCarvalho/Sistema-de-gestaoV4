@@ -27,6 +27,15 @@ namespace SistemaDeGestao.Services
         {
             try
             {
+                var result = _context.Restaurantes
+                    .FirstOrDefault(r => r.NomeDaLoja == restaurante.NomeDaLoja || r.UserName == restaurante.UserName);
+
+                if (result != null)
+                    throw new Exception("Já existe um restaurante com esse nome de loja ou nome de usuário.");
+
+                if (string.IsNullOrWhiteSpace(restaurante.Password))
+                    throw new Exception("Senha é obrigatória.");
+
                 restaurante.Password = ComputeSha256Hash(restaurante.Password);
                 restaurante.refreshTokenExpiryTime = DateTime.SpecifyKind(DateTime.UtcNow.AddDays(7), DateTimeKind.Utc);
 
@@ -42,7 +51,6 @@ namespace SistemaDeGestao.Services
             }
             catch (Exception ex)
             {
-                // Capturar a exceção interna para obter detalhes mais específicos
                 var innerException = ex.InnerException?.Message ?? ex.Message;
                 throw new Exception("Erro ao criar novo usuário: " + innerException);
             }
@@ -52,6 +60,33 @@ namespace SistemaDeGestao.Services
         {
             if (restauranteExistente == null) return false;
 
+            if (!string.IsNullOrWhiteSpace(restauranteAtualizado.NomeDaLoja) &&
+                    restauranteAtualizado.NomeDaLoja != restauranteExistente.NomeDaLoja)
+            {
+                var nomeEmUso = await _context.Restaurantes
+                    .AnyAsync(r => r.NomeDaLoja == restauranteAtualizado.NomeDaLoja && r.Id != restauranteExistente.Id);
+
+                if (nomeEmUso)
+                {
+                    throw new Exception("Já existe um restaurante com esse nome de loja.");
+                }
+
+                restauranteExistente.NomeDaLoja = restauranteAtualizado.NomeDaLoja;
+            }
+
+            // Verifica se o UserName está sendo alterado e se já existe outro com o mesmo UserName
+            if (!string.IsNullOrWhiteSpace(restauranteAtualizado.UserName) &&
+                restauranteAtualizado.UserName != restauranteExistente.UserName)
+            {
+                var userNameEmUso = await _context.Restaurantes
+                    .AnyAsync(r => r.UserName == restauranteAtualizado.UserName && r.Id != restauranteExistente.Id);
+
+                if (userNameEmUso)
+                {
+                    throw new Exception("Já existe um restaurante com esse nome de usuário.");
+                }
+                restauranteExistente.UserName = restauranteAtualizado.UserName;
+            }
             // Atualiza propriedades do Restaurante
             restauranteExistente.UserName = restauranteAtualizado.UserName ?? restauranteExistente.UserName;
             restauranteExistente.PhoneNumber = restauranteAtualizado.PhoneNumber ?? restauranteExistente.PhoneNumber;
@@ -123,7 +158,6 @@ namespace SistemaDeGestao.Services
                     // _context.Entry(restauranteExistente.Empresa.DiasFuncionamento).State = EntityState.Modified;
                 }
             }
-
 
             await _context.SaveChangesAsync(); // Salva todas as alterações no banco
             return true;

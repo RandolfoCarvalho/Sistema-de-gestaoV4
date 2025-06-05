@@ -3,7 +3,7 @@ import {
     LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area,
     XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import { Calendar, BarChart4, TrendingUp, PieChart as PieIconLucide, DollarSign } from 'lucide-react'; // Renomeado PieIcon para evitar conflito
+import { Calendar, BarChart4, TrendingUp, PieChart as PieIconLucide, DollarSign } from 'lucide-react'; 
 
 const STATUS_MAP = {
     0: { key: 'pedido-recebido', label: 'Recebido', color: '#3B82F6' },
@@ -21,8 +21,8 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
 
     //filtro de pedido:
     const [searchTerm, setSearchTerm] = useState('');
-    const [startDate, setStartDate] = useState(null); // Para a data de início do filtro
-    const [endDate, setEndDate] = useState(null);   // Para a data de fim do filtro
+    const [startDate, setStartDate] = useState(null); 
+    const [endDate, setEndDate] = useState(null); 
 
      // Este useEffect comunica as mudanças dos filtros para o pai (OrderDashboard)
     useEffect(() => {
@@ -256,14 +256,6 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
                 </div>
             );
         }
-        // ... (resto da lógica de renderChart, usando chartColors em vez de colors)
-        // Exemplo de como usar chartColors:
-        // stroke={chartColors.orders} fill={chartColors.orders}
-
-        // (O conteúdo de renderChart() é longo, então vou omitir para brevidade, 
-        // mas você deve substituir todas as instâncias de 'colors.X' por 'chartColors.X' nele)
-
-        // Colando a lógica de renderChart aqui e fazendo as substituições necessárias
         switch (chartType) {
             case 'overview':
                 return (

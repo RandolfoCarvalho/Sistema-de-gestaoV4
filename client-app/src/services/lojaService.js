@@ -1,5 +1,4 @@
-//Funções auxiliares referentes a loja:
-
+//Funções auxiliares referentes a loja:  
 
 export const IsLojaOpen = async (restauranteId) => {
   const url = `${process.env.REACT_APP_API_URL}/api/1.0/restaurante/isLojaOpen/${restauranteId}`;

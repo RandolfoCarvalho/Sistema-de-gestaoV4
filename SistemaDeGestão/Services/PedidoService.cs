@@ -109,6 +109,12 @@ namespace SistemaDeGestao.Services
         /// <returns>O pedido criado com os dados persistidos.</returns>
         public async Task<Pedido> CriarPedidoAsync(PedidoDTO pedidoDTO)
         {
+            if (pedidoDTO.Pagamento.FormaPagamento == "dinheiro")
+            {
+                BigInteger transactionIdTemporario = new BigInteger(Guid.NewGuid().ToByteArray().Take(4).ToArray());
+                transactionIdTemporario = BigInteger.Abs(transactionIdTemporario) % 999999;
+                pedidoDTO.Pagamento.TransactionId = transactionIdTemporario.ToString();
+            }
             if (pedidoDTO == null || !pedidoDTO.Itens.Any())
                 throw new ArgumentException("O pedido deve conter pelo menos um item.");
             var empresa = await _context.Empresas
@@ -121,12 +127,13 @@ namespace SistemaDeGestao.Services
 
             var pedido = _mapper.Map<Pedido>(pedidoDTO);
             pedido.Numero = numeroPedido;
-
+            pedido.Pagamento.PagamentoAprovado = true;
+            pedido.Pagamento.DataAprovacao = DateTime.UtcNow;
             _context.Pedidos.Add(pedido);
             await _context.SaveChangesAsync();
 
             var result = await _whatsAppBot.MontarMensagemAsync(pedido);
-            if (!result) return null;
+            //if (!result) return null;
             await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoDTO);
             return pedido;
         }

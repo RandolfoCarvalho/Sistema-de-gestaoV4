@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Amazon.Runtime.Internal;
 using Azure.Core;
@@ -16,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using SistemaDeGestao.Data;
 using SistemaDeGestao.Models;
+using SistemaDeGestao.Models.DTOs.Responses;
 using SistemaDeGestao.Models.DTOs.Resquests;
 using SistemaDeGestao.Services;
 using SistemaDeGestao.Services.Interfaces;
@@ -31,8 +33,11 @@ namespace SistemaDeGestao.Controllers
         private readonly PedidoService _pedidoService;
         private readonly IHubContext<OrderHub> _hubContext;
         private readonly IEncryptionService _encryptionService;
-        private static readonly ConcurrentDictionary<string, SemaphoreSlim> _locks = new();
         private readonly ILogger<MercadoPagoController> _logger;
+        // Dicionário para controlar o acesso concorrente por telefone
+        private static readonly ConcurrentDictionary<string, SemaphoreSlim> _locks = new ConcurrentDictionary<string, SemaphoreSlim>();
+        // Dicionário para controlar o timestamp da última criação de pedido por telefone
+        private static readonly ConcurrentDictionary<string, DateTime> _lastOrderTimestamps = new ConcurrentDictionary<string, DateTime>();
         public MercadoPagoController(MercadoPagoService paymentService, IConfiguration configuration,
             DataBaseContext context, PedidoService pedidoService, IHubContext<OrderHub> hubContext, IEncryptionService encryptionService, ILogger<MercadoPagoController> logger)
         {
@@ -89,6 +94,82 @@ namespace SistemaDeGestao.Controllers
             catch (Exception ex)
             {
                 return BadRequest("Erro ao processar pagamento por cartão: " + ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("processaPagamentoDinheiro")]
+        public async Task<IActionResult> ProcessaPagamentoDinheiro([FromBody] PagamentoRequestDinheiro request)
+        {
+            var response = new PagamentoDinheiroResponseDTO { Timestamp = DateTime.UtcNow };
+
+            // Validação inicial
+            if (request?.PedidoDTO?.FinalUserTelefone == null)
+            {
+                _logger.LogWarning("PedidoDTO ou telefone ausente.");
+                response.Status = "bad_request";
+                response.Message = "Informações do pedido incompletas.";
+                return BadRequest(response);
+            }
+
+            var telefone = request.PedidoDTO.FinalUserTelefone;
+
+            try
+            {
+                await BuscaCredenciaisAsync(request.PedidoDTO.RestauranteId);
+
+                // Rate limit check
+                if (_lastOrderTimestamps.TryGetValue(telefone, out DateTime lastRequest) &&
+                    DateTime.UtcNow - lastRequest < TimeSpan.FromMinutes(1))
+                {
+                    _logger.LogInformation($"Rate limit para {telefone}");
+                    response.Status = "rate_limited";
+                    response.Message = "Aguarde 1 minuto entre pedidos.";
+                    return StatusCode(429, response);
+                }
+
+                var semaphore = _locks.GetOrAdd(telefone, _ => new SemaphoreSlim(1, 1));
+                await semaphore.WaitAsync();
+
+                try
+                {
+                    _lastOrderTimestamps.AddOrUpdate(telefone, DateTime.UtcNow, (k, v) => DateTime.UtcNow);
+
+                    var result = await _pedidoService.CriarPedidoAsync(request.PedidoDTO);
+                    if (result == null) throw new Exception("Falha ao criar pedido.");
+
+                    await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", request.PedidoDTO);
+                    await _context.SaveChangesAsync();
+
+                    response.NumeroPedido = request.PedidoDTO.Numero;
+                    response.Status = "approved";
+                    response.Message = "Pagamento registrado e pedido criado com sucesso.";
+
+                    _logger.LogInformation($"Pedido {request.PedidoDTO.Numero} criado para {telefone}");
+                    return Ok(response);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Erro ao processar pedido para {telefone}");
+                    response.Status = "error";
+                    response.Message = $"Erro: {ex.Message}";
+                    return StatusCode(500, response);
+                }
+                finally
+                {
+                    semaphore.Release();
+
+                    // Remove semáforo após delay
+                    _ = Task.Delay(10000).ContinueWith(t =>
+                        _locks.TryRemove(KeyValuePair.Create(telefone, semaphore)));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Erro crítico para {telefone}");
+                response.Status = "critical_error";
+                response.Message = $"Erro crítico: {ex.Message}";
+                return StatusCode(500, response);
             }
         }
 
@@ -488,6 +569,11 @@ namespace SistemaDeGestao.Controllers
         public long TransactionId { get; set; }
         public decimal? Amount { get; set; }
         public int RestauranteId { get; set; }
+    }
+    public class PagamentoRequestDinheiro
+    {
+        public PagamentoDinheiroDTO DadosPagamento { get; set; }
+        public PedidoDTO PedidoDTO { get; set; }
     }
     public class PagamentoRequest
     {

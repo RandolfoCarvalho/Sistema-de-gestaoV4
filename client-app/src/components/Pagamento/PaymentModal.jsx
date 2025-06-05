@@ -12,7 +12,7 @@ import axios from "axios";
 import MercadoPagoWalletButton from "./MercadoPagoWalletButton";
 
 const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSuccess, preparePedidoDTO }) => {
-    const { processPayment, processPaymentPix, loading: paymentLoading, error: paymentError } = usePayment();
+    const { processPayment, processPaymentPix, processPaymentDinheiro, loading: paymentLoading, error: paymentError } = usePayment();
     const [amount, setAmount] = useState(parseFloat(cartTotal) || 0);
     const [troco, setTroco] = useState("");
     const navigate = useNavigate();
@@ -239,7 +239,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         }
     };
     
-    // handleDinheiroSubmit (do PRIMEIRO arquivo)
     const handleDinheiroSubmit = async (e) => {
         e.preventDefault();
         setInternalLoading(true);
@@ -266,10 +265,8 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             return;
         }
     
-        console.log(`Enviando para processPayment (dinheiro):`, paymentData, "com DTO:", pedidoDTO);
-    
         try {
-            const response = await processPayment(paymentData, pedidoDTO); 
+            const response = await processPaymentDinheiro(paymentData, pedidoDTO); 
     
             if (response?.ok || response?.id) { 
                 console.log(`Pagamento em dinheiro registrado com sucesso:`, response);

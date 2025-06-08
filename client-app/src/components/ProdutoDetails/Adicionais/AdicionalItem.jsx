@@ -18,7 +18,6 @@ const AdicionalItem = ({ adicional, quantity, handleQuantityChange }) => {
                     className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 disabled:opacity-50"
                     onClick={() => handleQuantityChange(adicional, false, 'adicional')} // <-- MUDANÇA
                     disabled={quantity === 0 || !isAvailable}
-                    
                 >
                     <Minus className="w-4 h-4" />
                 </button>

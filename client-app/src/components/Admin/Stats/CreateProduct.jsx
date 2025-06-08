@@ -1,4 +1,4 @@
-﻿import { React, useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronRight, Camera, Package, Tag, Layers, Check, X, Plus, Loader2, Pencil  } from 'lucide-react';
 import { formatPriceToInvariantBackend } from '@utils/formatters';
 import axios from 'axios';

@@ -59,6 +59,22 @@ namespace SistemaDeGestao.Controllers
                 if (request?.DadosPagamento == null || request?.PedidoDTO == null)
                     return BadRequest("Dados incompletos.");
 
+                if (request.PedidoDTO == null || !request.PedidoDTO.Itens.Any())
+                    throw new ArgumentException("O pedido deve conter pelo menos um item.");
+
+                // Verifica se todos os produtos estão ativos
+                var produtoIds = request.PedidoDTO.Itens.Select(i => i.ProdutoId).ToList();
+
+                var produtosAtivos = await _context.Produtos
+                    .Where(p => produtoIds.Contains(p.Id) && p.Ativo)
+                    .Select(p => p.Id)
+                    .ToListAsync();
+
+                var produtosInativos = produtoIds.Except(produtosAtivos).ToList();
+
+                if (produtosInativos.Any())
+                    throw new InvalidOperationException("Um ou mais produtos do pedido estão indisponíveis.");
+
                 _logger.LogInformation($"Iniciando processamento de pagamento PIX para restaurante: {request.PedidoDTO.RestauranteId}");
                 
                 // Validação adicional para garantir dados essenciais
@@ -86,6 +102,25 @@ namespace SistemaDeGestao.Controllers
         {
             try
             {
+                if (request?.DadosPagamento == null || request?.PedidoDTO == null)
+                    return BadRequest("Dados incompletos.");
+
+                if (request.PedidoDTO == null || !request.PedidoDTO.Itens.Any())
+                    throw new ArgumentException("O pedido deve conter pelo menos um item.");
+
+                // Verifica se todos os produtos estão ativos
+                var produtoIds = request.PedidoDTO.Itens.Select(i => i.ProdutoId).ToList();
+
+                var produtosAtivos = await _context.Produtos
+                    .Where(p => produtoIds.Contains(p.Id) && p.Ativo)
+                    .Select(p => p.Id)
+                    .ToListAsync();
+
+                var produtosInativos = produtoIds.Except(produtosAtivos).ToList();
+
+                if (produtosInativos.Any())
+                    throw new InvalidOperationException("Um ou mais produtos do pedido estão indisponíveis.");
+
                 var accessToken = await BuscaCredenciaisAsync(request.PedidoDTO.RestauranteId);
                 var paymentResponse = await _paymentService.ProcessPayment(request.DadosPagamento, request.PedidoDTO, accessToken.ToString());
                 return Ok(paymentResponse);
@@ -134,7 +169,7 @@ namespace SistemaDeGestao.Controllers
                 try
                 {
                     _lastOrderTimestamps.AddOrUpdate(telefone, DateTime.UtcNow, (k, v) => DateTime.UtcNow);
-
+                    request.PedidoDTO.Pagamento.TrocoPara = request.DadosPagamento.TrocoPara;
                     var result = await _pedidoService.CriarPedidoAsync(request.PedidoDTO);
                     if (result == null) throw new Exception("Falha ao criar pedido.");
 

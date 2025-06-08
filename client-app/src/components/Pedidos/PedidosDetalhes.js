@@ -160,7 +160,7 @@ const OrderDetails = () => {
                 {/* Delivery Info */}
                 <div className="bg-gray-200 p-4 rounded-lg mb-4">
                     <h3 className="font-bold mb-3">Forma de entrega</h3>
-                    <p className="font-medium mb-1">Endereço de entrega</p>
+                    <p className="font-medium mb-1">Endereço de entrega 1</p>
                     {orderData?.enderecoEntrega ? (
                         <>
                             <p>{orderData.enderecoEntrega.logradouro}, {orderData.enderecoEntrega.numero}</p>

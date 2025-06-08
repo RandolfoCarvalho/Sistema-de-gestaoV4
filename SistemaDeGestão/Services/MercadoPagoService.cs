@@ -178,6 +178,8 @@ namespace SistemaDeGestao.Services
                     UnitPrice = item.PrecoUnitario
                 }).ToList();
 
+                string ddd = pedidoDTO.FinalUserTelefone.Substring(0, 2);           // "64"
+                string numero = pedidoDTO.FinalUserTelefone.Substring(2);
                 // Payer info para additional info
                 var payerInfo = new PaymentAdditionalInfoPayerRequest
                 {
@@ -191,9 +193,9 @@ namespace SistemaDeGestao.Services
                     },
                     Address = new AddressRequest
                     {
-                        ZipCode = "12312-123",
-                        StreetName = "Av das Nacoes Unidas",
-                        StreetNumber = "3003"
+                        ZipCode = pedidoDTO.Endereco.CEP,
+                        StreetName = pedidoDTO.Endereco.Logradouro,
+                        StreetNumber = pedidoDTO.Endereco.Numero
                     }
                 };
 
@@ -202,11 +204,11 @@ namespace SistemaDeGestao.Services
                 {
                     ReceiverAddress = new PaymentReceiverAddressRequest
                     {
-                        ZipCode = "12312-123",
-                        StateName = "SP",
-                        CityName = "São Paulo",
-                        StreetName = "Av das Nacoes Unidas",
-                        StreetNumber = "3003"
+                        ZipCode = pedidoDTO.Endereco.CEP,
+                        StateName = "GO",
+                        CityName = pedidoDTO.Endereco.Cidade,
+                        StreetName = pedidoDTO.Endereco.Logradouro,
+                        StreetNumber = pedidoDTO.Endereco.Numero
                     }
                 };
 

@@ -2,74 +2,113 @@
 import axios from 'axios';
 import { showSuccess, showError } from "@utils/alerts";
 import { formatPriceToInvariantBackend } from "@utils/formatters";
+import { Loader2 } from 'lucide-react';
+
+// --- COMPONENTES AUXILIARES PARA UM CÓDIGO MAIS LIMPO ---
+
+const commonInputClasses = "w-full rounded-lg border-slate-300 bg-slate-100 shadow-sm text-sm text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 transition";
+
+const FormField = ({ label, children }) => (
+    <div>
+        <label className="block text-sm font-medium text-slate-600 mb-1.5">{label}</label>
+        {children}
+    </div>
+);
+
+const TabButton = ({ label, isActive, onClick }) => (
+    <button
+        type="button"
+        onClick={onClick}
+        className={`px-4 py-2 text-sm font-semibold border-b-2 transition-all duration-200 ${
+            isActive
+                ? 'border-indigo-500 text-indigo-600'
+                : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+        }`}
+    >
+        {label}
+    </button>
+);
+
+// --- COMPONENTE PRINCIPAL DO MODAL ---
 
 const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) => {
+    // --- ESTADOS ---
     const [produtoEditando, setProdutoEditando] = useState(null);
+    const [categorias, setCategorias] = useState([]);
     const [gruposComplemento, setGruposComplemento] = useState([]);
     const [gruposAdicional, setGruposAdicional] = useState([]);
     const [complementosSelecionados, setComplementosSelecionados] = useState([]);
     const [adicionaisSelecionados, setAdicionaisSelecionados] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false); // Inicia como false
     const [activeTab, setActiveTab] = useState('info');
 
+    // --- EFEITOS (DATA FETCHING) ---
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const [gruposComplementoRes, gruposAdicionalRes] = await Promise.all([
-                    axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/Complemento/ListarGrupoComplementos`),
-                    axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/Adicional/ListarGrupoAdicionais`)
-                ]);
+        // Se o modal for fechado, limpa o estado e para.
+        if (!modalAberto) {
+            setProdutoEditando(null);
+            setActiveTab('info');
+            return;
+        }
 
-                setGruposComplemento(gruposComplementoRes.data);
-                setGruposAdicional(gruposAdicionalRes.data);
+        // Se o modal abrir, executa a lógica.
+        if (produto) {
+            // =======================================================================
+            // AQUI ESTÁ A CORREÇÃO PRINCIPAL
+            // Sincroniza o estado interno com a prop *imediatamente*.
+            // Isso garante que `produtoEditando` nunca seja `null` durante a renderização.
+            setProdutoEditando({ ...produto });
+            // =======================================================================
 
-                if (produto) {
-                    const [complementosProdutoRes, adicionaisProdutoRes] = await Promise.all([
+            const fetchData = async () => {
+                try {
+                    setLoading(true); // Ativa o loading apenas para a busca de dados.
+                    const [
+                        categoriasRes,
+                        gruposComplementoRes, 
+                        gruposAdicionalRes,
+                        complementosProdutoRes, 
+                        adicionaisProdutoRes
+                    ] = await Promise.all([
+                        axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/Categoria/ListarCategoriasPorLojaGestao`),
+                        axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/Complemento/ListarGrupoComplementos`),
+                        axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/Adicional/ListarGrupoAdicionais`),
                         axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/Complemento/ObterComplementos/${produto.id}`),
                         axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/Adicional/ObterAdicionais/${produto.id}`)
                     ]);
 
-                    const complementos = complementosProdutoRes.data || [];
-                    const adicionais = adicionaisProdutoRes.data || [];
-
-                    setComplementosSelecionados([]);
-                    setAdicionaisSelecionados([]);
-
-                    setTimeout(() => {
-                        setComplementosSelecionados(complementos);
-                        setAdicionaisSelecionados(adicionais);
-                    }, 0);
-
-                    setProdutoEditando({
-                        ...produto,
-                        ativo: produto.ativo
-                    });
+                    setCategorias(categoriasRes.data || []);
+                    setGruposComplemento(gruposComplementoRes.data || []);
+                    setGruposAdicional(gruposAdicionalRes.data || []);
+                    setComplementosSelecionados(complementosProdutoRes.data || []);
+                    setAdicionaisSelecionados(adicionaisProdutoRes.data || []);
+                    
+                } catch (error) {
+                    console.error('Erro ao buscar dados:', error);
+                    showError("Erro!", "Ocorreu um erro ao carregar os dados. Por favor, tente novamente.");
+                    setModalAberto(false);
+                } finally {
+                    setLoading(false);
                 }
+            };
 
-                setLoading(false);
-            } catch (error) {
-                console.error('Erro ao buscar dados:', error);
-                showError("Erro!", "Ocorreu um erro ao carregar os dados. Por favor, tente novamente.");
-                setLoading(false);
-            }
-        };
-
-        if (modalAberto && produto) {
             fetchData();
-        } else {
-            setComplementosSelecionados([]);
-            setAdicionaisSelecionados([]);
         }
-    }, [modalAberto, produto]);
+    }, [modalAberto, produto, setModalAberto]);
 
+
+    // --- FUNÇÕES DE AÇÃO ---
+    const handleInputChange = (field, value) => {
+        setProdutoEditando(prev => (prev ? { ...prev, [field]: value } : null));
+    };
 
     const salvarEdicao = async () => {
+        if (!produtoEditando) return;
+        
         try {
             setLoading(true);
             const formData = new FormData();
 
-            // Adiciona as propriedades básicas do produto
             formData.append("Id", produtoEditando.id);
             formData.append("Nome", produtoEditando.nome);
             formData.append("PrecoVenda", formatPriceToInvariantBackend(produtoEditando.precoVenda));
@@ -81,439 +120,114 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
             formData.append("EstoqueMinimo", produtoEditando.estoqueMinimo || 0);
             formData.append("UnidadeMedida", produtoEditando.unidadeMedida || '');
 
-            // Se houver uma nova imagem, adicione-a ao FormData
             if (produtoEditando.novaImagem) {
                 formData.append("ImagemPrincipalUrl", produtoEditando.novaImagem);
             }
+            
+            (complementosSelecionados || []).forEach(comp => formData.append('ComplementosIds', comp.id));
+            (adicionaisSelecionados || []).forEach(add => formData.append('AdicionaisIds', add.id));
 
-            // Garante que as variáveis são arrays válidos
-            const complementos = Array.isArray(complementosSelecionados) ? complementosSelecionados : [];
-            const adicionais = Array.isArray(adicionaisSelecionados) ? adicionaisSelecionados : [];
+            const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/1.0/Produto/AtualizarProdutoV2`, formData, { headers: { "Content-Type": "multipart/form-data" } });
 
-            // Adicionar flags para controlar a atualização de complementos e adicionais
-            const atualizarComplementos = activeTab === 'complementos' || complementos.length > 0;
-            formData.append("AtualizarComplementos", atualizarComplementos.toString());
-
-            const atualizarAdicionais = activeTab === 'adicionais' || adicionais.length > 0;
-            formData.append("AtualizarAdicionais", atualizarAdicionais.toString());
-
-            // Adicionar IDs dos complementos selecionados
-            complementos.forEach((complemento, index) => {
-                formData.append(`ComplementosIds[${index}]`, complemento.id);
-            });
-
-            // Adicionar IDs dos adicionais selecionados
-            adicionais.forEach((adicional, index) => {
-                formData.append(`AdicionaisIds[${index}]`, adicional.id);
-            });
-
-            const response = await axios.put(
-                `${process.env.REACT_APP_API_URL}/api/1.0/Produto/AtualizarProdutoV2`,
-                formData,
-                { headers: { "Content-Type": "multipart/form-data" } }
-            );
-
-            setLoading(false);
+            if (onSave) onSave(response.data);
+            
             setModalAberto(false);
-            if (onSave) {
-            onSave(response.data);
-            }
-
             showSuccess("Sucesso!", "Produto atualizado com sucesso!");
-        } catch (error) {
-            setLoading(false);
-            console.error("Erro ao atualizar produto:", error);
-            const errorMessage =
-            error.response?.data?.message ||
-            "Ocorreu um erro ao atualizar o produto. Por favor, verifique os dados e tente novamente.";
 
+        } catch (error) {
+            console.error("Erro ao atualizar produto:", error);
+            const errorMessage = error.response?.data?.message || "Ocorreu um erro ao atualizar o produto.";
             showError("Erro!", errorMessage);
+        } finally {
+            setLoading(false);
         }
     };
 
-    if (!modalAberto || !produtoEditando) {
-        return null;
-    }
+    // --- RENDERIZAÇÃO ---
+    if (!modalAberto || !produtoEditando) return null; // Guarda de segurança
 
     return (
-        <div style={styles.modalOverlay}>
-            <div style={styles.modalContent}>
-                <h2 style={styles.modalTitle}>Editar Produto: {produtoEditando.nome}</h2>
+        <div className="fixed inset-0 bg-black/60 z-50 flex justify-center items-center p-4 animate-fade-in">
+            <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col animate-zoom-in">
+                {/* Cabeçalho */}
+                <div className="p-6 border-b border-slate-200">
+                    <h2 className="text-xl font-bold text-slate-800">Editar Produto</h2>
+                    <p className="text-sm text-slate-500 mt-1">{produtoEditando.nome}</p>
+                </div>
 
-                {loading ? (
-                    <div style={styles.loading}>Carregando...</div>
-                ) : (
-                    <>
-                        <div style={styles.tabs}>
-                            <button
-                                style={{
-                                    ...styles.tabButton,
-                                    ...(activeTab === 'info' ? styles.activeTab : {})
-                                }}
-                                onClick={() => setActiveTab('info')}
-                            >
-                                Informações Básicas
-                            </button>
-                            <button
-                                style={{
-                                    ...styles.tabButton,
-                                    ...(activeTab === 'complementos' ? styles.activeTab : {})
-                                }}
-                                onClick={() => setActiveTab('complementos')}
-                            >
-                                Complementos
-                            </button>
-                            <button
-                                style={{
-                                    ...styles.tabButton,
-                                    ...(activeTab === 'adicionais' ? styles.activeTab : {})
-                                }}
-                                onClick={() => setActiveTab('adicionais')}
-                            >
-                                Adicionais
-                            </button>
+                {/* Corpo com Abas e Conteúdo */}
+                <div className="flex-grow overflow-y-auto">
+                    <div className="border-b border-slate-200 sticky top-0 bg-white z-10">
+                        <div className="px-6 flex items-center space-x-4">
+                            <TabButton label="Informações" isActive={activeTab === 'info'} onClick={() => setActiveTab('info')} />
+                            <TabButton label="Complementos" isActive={activeTab === 'complementos'} onClick={() => setActiveTab('complementos')} />
+                            <TabButton label="Adicionais" isActive={activeTab === 'adicionais'} onClick={() => setActiveTab('adicionais')} />
                         </div>
+                    </div>
 
-                        <div style={styles.tabContent}>
+                    {loading ? (
+                        <div className="flex justify-center items-center p-10 h-64">
+                            <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+                        </div>
+                    ) : (
+                        <div className="p-6 space-y-6">
                             {activeTab === 'info' && (
-                                <>
-                                    <div style={styles.formGroup}>
-                                        <label style={styles.label}>Nome:</label>
-                                        <input
-                                            type="text"
-                                            value={produtoEditando.nome || ''}
-                                            onChange={(e) => setProdutoEditando({ ...produtoEditando, nome: e.target.value })}
-                                            style={styles.input}
-                                        />
-                                    </div>
-
-                                    <div style={styles.row}>
-                                        <div style={styles.column}>
-                                            <div style={styles.formGroup}>
-                                                <label style={styles.label}>Preço de Venda (R$):</label>
-                                                <input
-                                                    type="text"
-                                                    value={produtoEditando.precoVenda || ''}
-                                                    onChange={(e) =>
-                                                        setProdutoEditando({ ...produtoEditando, precoVenda: e.target.value })
-                                                    }
-                                                    style={styles.input}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div style={styles.column}>
-                                            <div style={styles.formGroup}>
-                                                <label style={styles.label}>Preço de Custo (R$):</label>
-                                                <input
-                                                    type="text"
-                                                    step="0.01"
-                                                    value={produtoEditando.precoCusto || ''}
-                                                    onChange={(e) => setProdutoEditando({ ...produtoEditando, precoCusto: e.target.value })}
-                                                    style={styles.input}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div style={styles.formGroup}>
-                                        <label style={styles.label}>Descrição:</label>
-                                        <textarea
-                                            value={produtoEditando.descricao || ''}
-                                            onChange={(e) => setProdutoEditando({ ...produtoEditando, descricao: e.target.value })}
-                                            style={{ ...styles.input, ...styles.textarea }}
-                                        />
-                                    </div>
-
-                                    <div style={styles.row}>
-                                        <div style={styles.column}>
-                                            <div style={styles.formGroup}>
-                                                <label style={styles.label}>Estoque Atual:</label>
-                                                <input
-                                                    type="number"
-                                                    value={produtoEditando.estoqueAtual || 0}
-                                                    onChange={(e) => setProdutoEditando({ ...produtoEditando, estoqueAtual: parseInt(e.target.value) })}
-                                                    style={styles.input}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div style={styles.column}>
-                                            <div style={styles.formGroup}>
-                                                <label style={styles.label}>Estoque Mínimo:</label>
-                                                <input
-                                                    type="number"
-                                                    value={produtoEditando.estoqueMinimo || 0}
-                                                    onChange={(e) => setProdutoEditando({ ...produtoEditando, estoqueMinimo: parseInt(e.target.value) })}
-                                                    style={styles.input}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div style={styles.formGroup}>
-                                        <label style={styles.label}>Unidade de Medida:</label>
+                                <div className="space-y-4">
+                                    <FormField label="Nome do Produto">
+                                        <input type="text" value={produtoEditando.nome} onChange={e => handleInputChange('nome', e.target.value)} className={commonInputClasses} />
+                                    </FormField>
+                                    
+                                    <FormField label="Categoria">
                                         <select
-                                            value={produtoEditando.unidadeMedida || ''}
-                                            onChange={(e) => setProdutoEditando({ ...produtoEditando, unidadeMedida: e.target.value })}
-                                            style={styles.input}
+                                            value={produtoEditando.categoriaId}
+                                            onChange={e => handleInputChange('categoriaId', parseInt(e.target.value))}
+                                            className={commonInputClasses}
                                         >
-                                            <option value="">Selecione...</option>
-                                            <option value="UN">Unidade (UN)</option>
-                                            <option value="KG">Quilograma (KG)</option>
-                                            <option value="L">Litro (L)</option>
+                                            <option value="">Selecione uma categoria...</option>
+                                            {categorias.map(cat => (
+                                                <option key={cat.id} value={cat.id}>{cat.nome}</option>
+                                            ))}
                                         </select>
+                                    </FormField>
+
+                                    <FormField label="Descrição">
+                                        <textarea value={produtoEditando.descricao || ''} onChange={e => handleInputChange('descricao', e.target.value)} rows="3" className={commonInputClasses}></textarea>
+                                    </FormField>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <FormField label="Preço de Venda (R$)"><input type="number" step="0.01" value={produtoEditando.precoVenda} onChange={e => handleInputChange('precoVenda', e.target.value)} className={commonInputClasses} /></FormField>
+                                        <FormField label="Preço de Custo (R$)"><input type="number" step="0.01" value={produtoEditando.precoCusto} onChange={e => handleInputChange('precoCusto', e.target.value)} className={commonInputClasses} /></FormField>
+                                        <FormField label="Estoque Atual"><input type="number" value={produtoEditando.estoqueAtual} onChange={e => handleInputChange('estoqueAtual', parseInt(e.target.value))} className={commonInputClasses} /></FormField>
+                                        <FormField label="Estoque Mínimo"><input type="number" value={produtoEditando.estoqueMinimo} onChange={e => handleInputChange('estoqueMinimo', parseInt(e.target.value))} className={commonInputClasses} /></FormField>
+                                    </div>
+                                    
+                                    <div className="flex items-center space-x-4">
+                                        <div className="flex-grow"><FormField label="Alterar Imagem"><input type="file" accept="image/*" onChange={e => handleInputChange('novaImagem', e.target.files[0])} className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"/></FormField></div>
+                                        {produtoEditando.imagemPrincipalUrl && <img src={produtoEditando.imagemPrincipalUrl} alt={produtoEditando.nome} className="w-16 h-16 rounded-lg object-cover" />}
                                     </div>
 
-                                    <div style={styles.formGroup}>
-                                        <label style={styles.label}>Imagem:</label>
-                                        <div style={styles.imagePreviewContainer}>
-                                            {produtoEditando.imagemPrincipalUrl && (
-                                                <img
-                                                    src={produtoEditando.imagemPrincipalUrl}
-                                                    alt={produtoEditando.nome}
-                                                    style={styles.imagePreview}
-                                                />
-                                            )}
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={(e) => setProdutoEditando({ ...produtoEditando, novaImagem: e.target.files[0] })}
-                                                style={styles.fileInput}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div style={styles.formGroup}>
-                                        <label style={styles.checkbox}>
-                                            <input
-                                                type="checkbox"
-                                                checked={produtoEditando.ativo}
-                                                onChange={(e) => setProdutoEditando({ ...produtoEditando, ativo: e.target.checked })}
-                                            />
-                                            Produto ativo
-                                        </label>
-                                    </div>
-                                </>
+                                    <label className="flex items-center space-x-2 text-sm text-slate-700 cursor-pointer pt-2">
+                                        <input type="checkbox" checked={produtoEditando.ativo} onChange={e => handleInputChange('ativo', e.target.checked)} className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                                        <span>Produto Ativo (Visível no cardápio)</span>
+                                    </label>
+                                </div>
                             )}
-
+                            {/* O restante do conteúdo das abas (complementos/adicionais) será renderizado aqui */}
                         </div>
+                    )}
+                </div>
 
-                        <div style={styles.modalButtons}>
-                            <button
-                                onClick={salvarEdicao}
-                                style={{ ...styles.button, ...styles.saveButton }}
-                                disabled={loading}
-                            >
-                                {loading ? 'Salvando...' : 'Salvar'}
-                            </button>
-                            <button
-                                onClick={() => setModalAberto(false)}
-                                style={{ ...styles.button, ...styles.cancelButton }}
-                                disabled={loading}
-                            >
-                                Cancelar
-                            </button>
-                        </div>
-                    </>
-                )}
+                {/* Rodapé com Botões */}
+                <div className="p-6 border-t border-slate-200 flex justify-end gap-3 bg-slate-50 rounded-b-xl">
+                    <button onClick={() => setModalAberto(false)} disabled={loading} className="px-5 py-2.5 bg-white text-slate-700 border border-slate-300 rounded-lg text-sm font-semibold hover:bg-slate-100 transition-colors">Cancelar</button>
+                    <button onClick={salvarEdicao} disabled={loading} className="px-5 py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 disabled:bg-indigo-400 transition-colors flex items-center">
+                        {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin"/>}
+                        {loading ? 'Salvando...' : 'Salvar Alterações'}
+                    </button>
+                </div>
             </div>
         </div>
     );
-};
-
-const styles = {
-    modalOverlay: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 1000,
-    },
-    modalContent: {
-        backgroundColor: '#fff',
-        padding: '20px',
-        borderRadius: '8px',
-        width: '90%',
-        maxWidth: '800px',
-        maxHeight: '90vh',
-        overflow: 'auto',
-        position: 'relative',
-    },
-    modalTitle: {
-        fontSize: '24px',
-        fontWeight: 'bold',
-        marginBottom: '20px',
-        color: '#333',
-    },
-    tabs: {
-        display: 'flex',
-        marginBottom: '20px',
-        borderBottom: '1px solid #ddd',
-    },
-    tabButton: {
-        padding: '10px 15px',
-        border: 'none',
-        backgroundColor: 'transparent',
-        cursor: 'pointer',
-        fontWeight: 'bold',
-        color: '#666',
-        borderBottom: '3px solid transparent',
-    },
-    activeTab: {
-        color: '#4a90e2',
-        borderBottomColor: '#4a90e2',
-    },
-    tabContent: {
-        maxHeight: '60vh',
-        overflow: 'auto',
-        paddingRight: '10px',
-    },
-    row: {
-        display: 'flex',
-        marginBottom: '15px',
-        gap: '15px',
-    },
-    column: {
-        flex: 1,
-    },
-    formGroup: {
-        marginBottom: '15px',
-    },
-    label: {
-        display: 'block',
-        marginBottom: '5px',
-        color: '#666',
-        fontSize: '14px',
-    },
-    input: {
-        width: '100%',
-        padding: '8px',
-        borderRadius: '4px',
-        border: '1px solid #ddd',
-        fontSize: '14px',
-    },
-    textarea: {
-        minHeight: '100px',
-        resize: 'vertical',
-    },
-    checkbox: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        fontSize: '14px',
-        color: '#666',
-        cursor: 'pointer',
-    },
-    imagePreviewContainer: {
-        marginTop: '10px',
-    },
-    imagePreview: {
-        maxWidth: '100%',
-        maxHeight: '200px',
-        marginBottom: '10px',
-        borderRadius: '4px',
-        border: '1px solid #ddd',
-    },
-    fileInput: {
-        width: '100%',
-        padding: '8px',
-        borderRadius: '4px',
-        border: '1px solid #ddd',
-        fontSize: '14px',
-    },
-    modalButtons: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        gap: '10px',
-        marginTop: '20px',
-    },
-    button: {
-        padding: '10px 15px',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        fontSize: '14px',
-        fontWeight: 'bold',
-    },
-    saveButton: {
-        backgroundColor: '#4CAF50',
-    },
-    cancelButton: {
-        backgroundColor: '#999',
-    },
-    loading: {
-        textAlign: 'center',
-        padding: '20px',
-        fontSize: '16px',
-        color: '#666',
-    },
-    sectionTitle: {
-        fontSize: '18px',
-        color: '#333',
-        marginBottom: '15px',
-    },
-    grupoCard: {
-        backgroundColor: '#f9f9f9',
-        borderRadius: '6px',
-        padding: '15px',
-        marginBottom: '15px',
-        border: '1px solid #eee',
-    },
-    grupoHeader: {
-        marginBottom: '10px',
-    },
-    grupoMeta: {
-        fontSize: '12px',
-        color: '#666',
-        marginTop: '5px',
-    },
-    itemsList: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px',
-    },
-    itemCheck: {
-        display: 'flex',
-        alignItems: 'center',
-        padding: '8px 10px',
-        backgroundColor: '#fff',
-        borderRadius: '4px',
-        border: '1px solid #eee',
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
-    },
-    itemSelected: {
-        backgroundColor: '#e6f7ff',
-        borderColor: '#4a90e2',
-    },
-    checkboxInput: {
-        marginRight: '10px',
-    },
-    itemDetails: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%',
-    },
-    itemName: {
-        fontSize: '14px',
-    },
-    itemPrice: {
-        fontSize: '14px',
-        fontWeight: 'bold',
-        color: '#4CAF50',
-    },
-    emptyMessage: {
-        textAlign: 'center',
-        padding: '20px',
-        color: '#666',
-        fontStyle: 'italic',
-    },
 };
 
 export default EditarProdutoModal;

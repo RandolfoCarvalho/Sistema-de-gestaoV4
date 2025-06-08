@@ -23,12 +23,35 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     const [transactionId, setTransactionId] = useState(null);
     const [mensagem, setMensagem] = useState("");
     const restauranteId = localStorage.getItem("restauranteId");
+     // NOVOS ESTADOS PARA CONTROLAR A TELA DE SUCESSO
+    const [paymentSuccessState, setPaymentSuccessState] = useState(false);
+    const [paymentResponseData, setPaymentResponseData] = useState(null); // Para guardar a resposta do pagamento
+
     // Estado do PIX do segundo arquivo
     const [countdown, setCountdown] = useState(300); // 5 minutos = 300 segundos para o PIX
     useEffect(() => {
         const safeTotal = parseFloat(cartTotal) || 0;
         setAmount(safeTotal);
     }, [cartTotal]);
+
+    // NOVO useEffect PARA GERENCIAR O REDIRECIONAMENTO APÓS O SUCESSO
+    useEffect(() => {
+        // Se o estado de sucesso for ativado...
+        if (paymentSuccessState) {
+            // ...inicia um timer de 3 segundos.
+            const timer = setTimeout(() => {
+                // Após o tempo, chama a função de sucesso no componente pai (se existir)
+                if (onPaymentSuccess && paymentResponseData) {
+                    onPaymentSuccess(paymentResponseData);
+                }
+                // E então navega para a página de pedidos.
+                navigate("/pedidos");
+            }, 3000);
+
+            // Função de limpeza para o caso do componente ser desmontado antes do tempo
+            return () => clearTimeout(timer);
+        }
+    }, [paymentSuccessState, paymentResponseData, onPaymentSuccess, navigate]);
 
     // Inicialização do MercadoPago SDK
     useEffect(() => {
@@ -83,17 +106,13 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     if (isApproved) {
                         console.log("✅ Pagamento PIX aprovado detectado!");
                         clearInterval(interval);
-                        // setInternalLoading(false); // Desativar loading se estava ativo para isso
+                        
                         setMensagem("✅ Pagamento aprovado com sucesso!");
-                        if (onPaymentSuccess) onPaymentSuccess(response.data);
-                        setTimeout(() => {
-                            onClose();
-                            navigate("/pedidos");
-                        }, 3000);
+                        setPaymentResponseData(response.data); // Guarda a resposta
+                        setPaymentSuccessState(true);          // ATIVA A TELA DE SUCESSO
                     } else if (attempts >= maxAttempts) {
                         console.warn("⏳ Tempo de espera pelo pagamento PIX expirou.");
                         clearInterval(interval);
-                        // setInternalLoading(false);
                         setMensagem("⏳ Tempo de espera expirado. Verifique o status do seu pedido na tela de pedidos ou tente novamente.");
                     } else if (attempts % 12 === 0) { 
                         setMensagem(`⏳ Aguardando confirmação... (${Math.round(attempts/12)} min)`);
@@ -211,13 +230,11 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         try {
             const response = await processPayment(paymentData, pedidoDTO);
             const status = response?.data?.status;
+
             if (response?.ok && status === "approved") {
                 setMensagem("✅ Pagamento com cartão aprovado com sucesso!");
-                if (onPaymentSuccess) onPaymentSuccess(response);
-                setTimeout(() => {
-                    onClose();
-                    navigate("/pedidos");
-                }, 3000);
+                setPaymentResponseData(response); // Guarda a resposta
+                setPaymentSuccessState(true);      // ATIVA A TELA DE SUCESSO
             } else {
                 const errorMessage =
                     response?.data?.message ||
@@ -270,12 +287,10 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     
             if (response?.ok || response?.id) { 
                 console.log(`Pagamento em dinheiro registrado com sucesso:`, response);
+                
                 setMensagem("✅ Pedido com pagamento em dinheiro registrado!");
-                if (onPaymentSuccess) onPaymentSuccess(response);
-                setTimeout(() => {
-                    onClose(); 
-                    navigate("/pedidos");
-                }, 3000);
+                setPaymentResponseData(response); // Guarda a resposta
+                setPaymentSuccessState(true);      // ATIVA A TELA DE SUCESSO
             } else {
                 const errorMessage = response?.error || response?.message || `Registro de pagamento em dinheiro falhou.`;
                 console.error(`Erro no pagamento em dinheiro (resposta backend):`, response);
@@ -422,6 +437,8 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     setTransactionId(null);
                     setPreferenceId(null);
                     setCountdown(300);
+                    setPaymentSuccessState(false); // IMPORTANTE: Resetar o estado de sucesso ao fechar
+                    setPaymentResponseData(null);
                 }
             }}
             contentLabel="Modal de Pagamento"
@@ -447,23 +464,26 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                             }
                           />}
 
+            {paymentSuccessState ? (
+            // TELA DE SUCESSO DEDICADA
+            <div className="flex flex-col items-center justify-center text-center p-8 space-y-4">
+                <p className="text-5xl">✅</p>
+                <h3 className="text-xl font-semibold text-gray-800">Pagamento Aprovado!</h3>
+                <p className="text-gray-700">{mensagem}</p>
+                <p className="text-sm text-gray-500 mt-2">Você será redirecionado em alguns instantes...</p>
+            </div>
+        ) : (
+            // TELA NORMAL DE PAGAMENTO (seu conteúdo original)
             <div className="space-y-4">
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl sm:text-2xl font-semibold text-center text-gray-800 flex-grow">
-                        {paymentMethod === 'pix' && pixData ? "Pague com PIX" : "Detalhes de Pagamento"}
-                    </h2>
-                    {!isLoading && (
-                         <button 
-                            onClick={onClose} 
-                            className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
-                            aria-label="Fechar modal"
-                         >
-                            &times;
-                         </button>
-                    )}
+                    {/* ... seu header do modal ... */}
                 </div>
 
-                {/* Lógica de renderização para CARTAO (como no PRIMEIRO arquivo) */}
+                {/* Todos os seus formulários e lógicas de erro vão aqui dentro */}
+                {/* Ex: {paymentMethod === "cartao" && (...)} */}
+                {/* ... */}
+                
+                 {/* Lógica de renderização para CARTAO (como no PRIMEIRO arquivo) */}
                 {paymentMethod === "cartao" && (
                     <CardPaymentForm 
                         amount={amount}
@@ -532,6 +552,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     </div>
                 )}
             </div>
+        )}
         </Modal>
     );
 };

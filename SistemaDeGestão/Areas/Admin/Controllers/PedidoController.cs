@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using SistemaDeGestao.Data;
+using SistemaDeGestao.Migrations;
 using SistemaDeGestao.Models;
 using SistemaDeGestao.Models.DTOs;
 using SistemaDeGestao.Models.DTOs.Resquests;
@@ -17,15 +18,16 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
         private readonly ILogger<PedidoService> _logger;
         private readonly DataBaseContext _context;
         private readonly IHubContext<OrderHub> _hubContext;
-        
+        private readonly WhatsAppBotService _whatsappBot;
 
         public PedidoController(PedidoService pedidoService, ILogger<PedidoService> logger, DataBaseContext context, 
-            IHubContext<OrderHub> hubContext)
+            IHubContext<OrderHub> hubContext, WhatsAppBotService whatsappBot)
         {
             _pedidoService = pedidoService;
             _logger = logger;
             _context = context;
             _hubContext = hubContext;
+            _whatsappBot = whatsappBot;
         }
         [HttpGet("ListarPedidos/{status?}")]
         public async Task<ActionResult<IEnumerable<Pedido>>> ListarPedidos()
@@ -81,44 +83,40 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para registrar o cancelamento de um pedido.
+        /// </summary>
         [HttpPost("registrarCancelamento")]
+        [ProducesResponseType(typeof(object), 200)]
+        [ProducesResponseType(typeof(object), 400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> RegistrarCancelamento([FromBody] CancelamentoPedidoRequest request)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
-
             try
             {
-                // Busca o pedido com todos os relacionamentos necessários
-                var pedido = await _context.Pedidos
-                    .Include(p => p.Itens)
-                    .FirstOrDefaultAsync(p => p.Id == request.PedidoId);
+                // O controlador apenas DELEGA a lógica para o serviço
+                var (sucesso, mensagem) = await _pedidoService.RegistrarCancelamentoAsync(request);
 
-                if (pedido == null)
-                    return NotFound("Pedido não encontrado");
-                // Atualiza o status do pedido para cancelado em vez de excluí-lo
-                pedido.Status = OrderStatus.CANCELADO;
-                // Cria o registro de pedido cancelado
-                var pedidoCancelado = new PedidoCancelado
+                // E então, traduz o resultado do serviço em uma resposta HTTP
+                if (sucesso)
                 {
-                    PedidoId = request.PedidoId,
-                    MotivoCancelamento = request.MotivoCancelamento,
-                    CodigoReembolso = request.CodigoReembolso,
-                    ValorReembolsado = request.ValorReembolsado,
-                    TransacaoReembolsoId = request.TransacaoReembolsoId,
-                    EstaReembolsado = request.EstaReembolsado,
-                    FinalUserId = request.FinalUserId,
-                    DataCancelamento = DateTime.Now
-                };
-                _context.PedidosCancelados.Add(pedidoCancelado);
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
+                    return Ok(new { Sucesso = true, Mensagem = mensagem });
+                }
 
-                return Ok(new { Sucesso = true, Mensagem = "Pedido cancelado com sucesso" });
+                // Se a mensagem indica que não foi encontrado, retorna 404
+                if (mensagem.Contains("não encontrado"))
+                {
+                    return NotFound(new { Sucesso = false, Mensagem = mensagem });
+                }
+
+                // Para outros erros de negócio, retorna 400
+                return BadRequest(new { Sucesso = false, Mensagem = mensagem });
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
-                return BadRequest(new { Sucesso = false, Mensagem = "Erro ao cancelar pedido", Erro = ex.Message });
+                // Captura exceções inesperadas que possam não ter sido tratadas no serviço
+                _logger.LogError(ex, "Erro não tratado no endpoint de cancelamento de pedido.");
+                return StatusCode(500, new { Sucesso = false, Mensagem = "Ocorreu um erro inesperado no servidor." });
             }
         }
 

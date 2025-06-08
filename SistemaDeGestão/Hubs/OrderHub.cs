@@ -33,17 +33,27 @@ public class OrderHub : Hub
     {
         try
         {
-            _logger.LogInformation($"Solicitação de pedidos recebida de {Context.ConnectionId}");
-            // Buscar todos os pedidos
+            _logger.LogInformation($"Solicitação de todos os pedidos recebida do restaurante {restauranteId} pela conexão {Context.ConnectionId}");
+
             var orders = await _orderService.ListarPedidosAsync(null);
+
             var simplifiedOrders = orders
                 .Where(p => p.RestauranteId == restauranteId)
                 .Select(p => new
                 {
+                    // Informações do Pedido
                     id = p.Id,
                     numero = p.Numero,
                     dataPedido = p.DataPedido.ToString("yyyy-MM-dd HH:mm:ss"),
                     status = p.Status.ToString(),
+                    observacoes = p.Observacoes ?? "",
+                    restauranteId = p.RestauranteId,
+
+                    // --- NOVOS CAMPOS ADICIONADOS AQUI ---
+                    finalUserName = p.FinalUserName,
+                    finalUserTelefone = p.FinalUserTelefone,
+
+                    // Endereço (com checagem de nulo)
                     enderecoEntrega = p.EnderecoEntrega != null ? new
                     {
                         logradouro = p.EnderecoEntrega.Logradouro,
@@ -53,6 +63,8 @@ public class OrderHub : Hub
                         cep = p.EnderecoEntrega.CEP,
                         complemento = p.EnderecoEntrega.Complemento
                     } : null,
+
+                    // Pagamento (com checagem de nulo)
                     pagamento = p.Pagamento != null ? new
                     {
                         subTotal = p.Pagamento.SubTotal,
@@ -62,36 +74,50 @@ public class OrderHub : Hub
                         formaPagamento = p.Pagamento.FormaPagamento,
                         pagamentoAprovado = p.Pagamento.PagamentoAprovado,
                         dataAprovacao = p.Pagamento.DataAprovacao,
-                        transactionId = p.Pagamento.TransactionId
+                        transactionId = p.Pagamento.TransactionId,
+                        trocoPara = p.Pagamento.TrocoPara // Campo de troco
                     } : null,
-                    observacoes = p.Observacoes ?? "",
-                    restauranteId = p.RestauranteId,
+
+                    // Lista de Itens detalhada
                     itens = p.Itens.Select(i => new
                     {
                         id = i.Id,
                         produtoId = i.ProdutoId,
                         quantidade = i.Quantidade,
                         precoUnitario = i.PrecoUnitario,
-                        precoCusto = i.PrecoCusto,
                         subTotal = i.SubTotal,
-                        observacoes = i.Observacoes ?? ""
+                        observacoes = i.Observacoes ?? "",
+                        precoCusto = i.PrecoCusto,
+                        produtoNome = i.NomeProduto,
+
+                        // --- NOVOS CAMPOS DE CONTAGEM ADICIONADOS AQUI ---
+                        totalComplementos = i.OpcoesExtras.Count(o => o.TipoOpcao == TipoOpcaoExtra.Complemento),
+                        totalAdicionais = i.OpcoesExtras.Count(o => o.TipoOpcao == TipoOpcaoExtra.Adicional),
+
+                        complementos = i.OpcoesExtras
+                            .Where(o => o.TipoOpcao == TipoOpcaoExtra.Complemento)
+                            .Select(o => new { nome = o.Nome })
+                            .ToList(),
+
+                        adicionais = i.OpcoesExtras
+                            .Where(o => o.TipoOpcao == TipoOpcaoExtra.Adicional)
+                            .Select(o => new { nome = o.Nome, preco = o.PrecoUnitario })
+                            .ToList()
                     }).ToList()
                 })
                 .ToList();
 
-            // Loga a quantidade de pedidos enviados
-            _logger.LogInformation($"Enviando {simplifiedOrders.Count} pedidos para {Context.ConnectionId}");
-            // Enviar os pedidos ao cliente
+            _logger.LogInformation($"Enviando {simplifiedOrders.Count} pedidos detalhados para {Context.ConnectionId}");
+
             await Clients.Caller.SendAsync("ReceiveAllOrders", simplifiedOrders);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao processar pedidos");
-            await Clients.Caller.SendAsync("ReceiveError", "Erro ao processar pedidos: " + ex.Message);
+            _logger.LogError(ex, "Erro ao processar e enviar todos os pedidos. Conexão: {ConnectionId}", Context.ConnectionId);
+            await Clients.Caller.SendAsync("ReceiveError", "Erro no servidor ao buscar pedidos: " + ex.Message);
             throw;
         }
     }
-
 
     public async Task UpdateOrderStatus(int orderId, OrderStatus newStatus)
     {

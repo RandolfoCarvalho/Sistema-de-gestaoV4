@@ -6,6 +6,7 @@ import { IsLojaOpen } from '../../services/lojaService';
 import { validateForm } from "../../utils/validators";
 import { showError, showInfo } from "@utils/alerts";
 import FinalUserModal from "../Modals/FinalUserModal";
+import StoreInfo from '../HeaderPublic/StoreInfo';
 import PaymentModal from "../Pagamento/PaymentModal";
 import CheckoutSteps from "./CheckoutSteps";
 import CheckoutForm from "./CheckoutForm";
@@ -124,76 +125,77 @@ const Checkout = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12">
-            <HeaderPublic />
-            <div className="max-w-screen-xl mx-auto px-4 md:px-8 lg:px-16 mt-24">
-                {/* A mensagem de bloqueio foi MOVIDA daqui */}
-                <CheckoutSteps />
+        // O container principal não precisa mais de padding vertical.
+        <div className="min-h-screen bg-gray-50 flex flex-col">
+        {/* 1. O HeaderPublic é renderizado primeiro. Ele agora ocupa seu espaço natural. */}
+        <HeaderPublic />
+        <StoreInfo />
+        <main className="flex-grow py-12">
+            <div className="max-w-screen-xl mx-auto px-4 md:px-8 lg:px-16">
+            <CheckoutSteps />
 
-                {isAuthModalOpen && (
-                    <FinalUserModal
-                        isOpen={isAuthModalOpen}
-                        onClose={() => setIsAuthModalOpen(false)}
-                        onSuccess={handleUserModalSuccess}
-                    />
-                )}
+            {/* ... resto dos seus modais ... */}
+            {isAuthModalOpen && (
+                <FinalUserModal
+                    isOpen={isAuthModalOpen}
+                    onClose={() => setIsAuthModalOpen(false)}
+                    onSuccess={handleUserModalSuccess}
+                />
+            )}
+            {isPaymentModalOpen && (
+                <PaymentModal
+                    isOpen={isPaymentModalOpen}
+                    onClose={() => setPaymentModalOpen(false)}
+                    paymentMethod={formData.pagamento?.FormaPagamento}
+                    cartTotal={cartTotal}
+                    onPaymentSuccess={handlePaymentSuccess}
+                    preparePedidoDTO={preparePedidoDTO}
+                />
+            )}
 
-                {isPaymentModalOpen && (
-                    <PaymentModal
-                        isOpen={isPaymentModalOpen}
-                        onClose={() => setPaymentModalOpen(false)}
-                        paymentMethod={formData.pagamento?.FormaPagamento}
-                        cartTotal={cartTotal}
-                        onPaymentSuccess={handlePaymentSuccess}
-                        preparePedidoDTO={preparePedidoDTO}
-                    />
-                )}
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-2">
-                        <CheckoutForm formData={formData} setFormData={setFormData} />
-                    </div>
-                    <OrderSummary
-                        cart={cart}
-                        cartTotal={cartTotal}
-                        updateQuantity={updateQuantity}
-                        removeFromCart={removeFromCart}
-                    />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8"> 
+                <div className="lg:col-span-2">
+                <CheckoutForm formData={formData} setFormData={setFormData} />
                 </div>
-
-                {/* Formulário para o botão de finalizar pedido */}
-                <form onSubmit={handleFinalizarPedido} className="mt-8 text-center"> {/* Adicionado text-center ao form se a mensagem for centralizada */}
-                    
-                    {/* NOVA POSIÇÃO E ESTILO para a Mensagem de Bloqueio */}
-                    {blockCheckoutMessage && (
-                        <p className="text-sm text-red-600 dark:text-red-500 mb-4">
-                            {/* Você pode adicionar um ícone de aviso aqui se desejar, ex: usando Heroicons ou SVGs */}
-                            {/* Ex: <svg className="inline h-4 w-4 mr-1 align-text-bottom" ... > ... </svg> */}
-                            {blockCheckoutMessage}
-                        </p>
-                    )}
-
-                    <button
-                        type="submit"
-                        className={`w-full text-white py-4 px-6 rounded-full font-semibold transition-colors ${
-                            isSubmitting || blockCheckoutMessage
-                            ? 'bg-gray-400 cursor-not-allowed opacity-70'
-                            : 'bg-blue-600 hover:bg-blue-700'
-                        }`}
-                        disabled={isSubmitting || !!blockCheckoutMessage}
-                    >
-                        {isSubmitting ? "Processando..." : "Finalizar Pedido"}
-                    </button>
-                </form>
-
-                {showFinalUserModal && (
-                    <FinalUserModal
-                        isOpen={showFinalUserModal}
-                        onClose={() => setShowFinalUserModal(false)}
-                        onSuccess={handleUserModalSuccess}
-                    />
-                )}
+                <OrderSummary
+                cart={cart}
+                cartTotal={cartTotal}
+                updateQuantity={updateQuantity}
+                removeFromCart={removeFromCart}
+                />
             </div>
+
+            <form onSubmit={handleFinalizarPedido} className="mt-8 text-center">
+                {blockCheckoutMessage && (
+                <p className="text-sm text-red-600 dark:text-red-500 mb-4">
+                    {blockCheckoutMessage}
+                </p>
+                )}
+                <button
+                type="submit"
+                className={`w-full text-white py-4 px-6 rounded-full font-semibold transition-colors ${
+                    isSubmitting || blockCheckoutMessage
+                    ? 'bg-gray-400 cursor-not-allowed opacity-70'
+                    : 'bg-blue-600 hover:bg-blue-700'
+                }`}
+                disabled={isSubmitting || !!blockCheckoutMessage}
+                >
+                {isSubmitting ? "Processando..." : "Finalizar Pedido"}
+                </button>
+            </form>
+
+            {showFinalUserModal && (
+                <FinalUserModal
+                    isOpen={showFinalUserModal}
+                    onClose={() => setShowFinalUserModal(false)}
+                    onSuccess={handleUserModalSuccess}
+                />
+            )}
+            </div>
+        </main>
+        
+        {/* Se a sua página de checkout tiver um BottomNav, ele deve vir aqui no final */}
+        {/* <BottomNav /> */}
         </div>
     );
 };

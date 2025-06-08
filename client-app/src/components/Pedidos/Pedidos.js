@@ -169,16 +169,20 @@ const OrderHistory = () => {
                                             href={`https://wa.me/55${storeInfo.phoneNumber}?text=Acompanhar pedido número ${orderNumber}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="bg-green-500 text-white py-3 rounded-lg font-medium flex items-center justify-center gap-2"
+                                            className="bg-green-500 text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 text-base"
                                         >
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                <path strokeLinecap="round" strokeLinejoin="round"
-                                                    d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                                <path strokeLinecap="round" strokeLinejoin="round"
-                                                    d="M9.172 9.172a4 4 0 105.656 5.656M15 12a3 3 0 01-3 3"/>
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-5 w-5"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                                strokeWidth={2}
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M9.172 9.172a4 4 0 105.656 5.656M15 12a3 3 0 01-3 3" />
                                             </svg>
-                                            Acompanhar pedido
+                                            <span className="leading-none">Acompanhar pedido</span>
                                         </a>
                                     )}
                                 </div>

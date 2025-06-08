@@ -1,51 +1,174 @@
-﻿import React, { useState } from "react";
-import { SearchIcon, ShareIcon } from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useStore } from "../Context/StoreContext";
-import SearchBar from "./SearchBar";
-import StoreInfo from "./StoreInfo";
-import ShareButton from "./ShareButton";
-
-const HeaderPublic = () => {
+﻿import React, { useState, useEffect, useRef } from 'react';
+import { Search, Share2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useStore } from '../Context/StoreContext';
+import { useSearchProducts } from './hooks/useSearchProducts'; // Agora usado internamente
+import SearchResultsDropdown from './SearchResultsDropdown'; // Componente de UI para os resultados
+import Swal from 'sweetalert2';
+// O Header aceita props opcionais para o modo de "busca dinâmica"
+const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
     const navigate = useNavigate();
-    const location = useLocation();
-    const { currentStore } = useStore();
-    const [isSearchOpen, setIsSearchOpen] = useState(false);
-    const { storeInfo } = useStore();
+    const { currentStore, storeInfo } = useStore();
+    const [isSearchActive, setIsSearchActive] = useState(false);
     const logoUrl = storeInfo?.imagemUrl;
-    const handleStoreClick = () => {
-        if (!currentStore) return;
-        const storePath = `/loja/${encodeURIComponent(currentStore)}`;
-        if (location.pathname !== storePath) {
-            navigate(storePath, { state: { storeName: currentStore } });
+    const inputRef = useRef(null);
+    const headerRef = useRef(null);
+
+    const handleShare = async () => {
+        const shareData = {
+            title: `Confira a loja: ${currentStore}`,
+            text: `Encontrei produtos incríveis na ${currentStore}!`,
+            url: window.location.href, // Compartilha a URL da página atual
+        };
+
+        // Verifica se a Web Share API está disponível no navegador
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+                console.log('Conteúdo compartilhado com sucesso!');
+            } catch (err) {
+                console.error('Erro ao compartilhar:', err);
+            }
+        } else {
+            // Fallback para navegadores que não suportam a API (a maioria dos desktops)
+            try {
+                await navigator.clipboard.writeText(shareData.url);
+                // Usando SweetAlert2 para um feedback mais elegante
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Link copiado!',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                });
+            } catch (err) {
+                console.error('Falha ao copiar o link:', err);
+                 Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Não foi possível copiar o link',
+                    showConfirmButton: false,
+                    timer: 2000,
+                });
+            }
         }
     };
+
+    // --- LÓGICA DE CONTROLE ---
+    // Verifica se está no modo "dinâmico" (controlado pela página Produtos)
+    const isDynamicSearchMode = onSearchChange !== undefined;
+
+    // --- LÓGICA DE BUSCA INTERNA (para páginas como Checkout) ---
+    // Usa o hook useSearchProducts somente se NÃO estiver no modo dinâmico
+    const internalSearch = useSearchProducts();
+    
+    // --- SELEÇÃO DE ESTADO E FUNÇÕES ---
+    // Se estiver no modo dinâmico, usa as props. Senão, usa a busca interna.
+    const searchTerm = isDynamicSearchMode ? controlledSearchTerm : internalSearch.searchTerm;
+    const setSearchTerm = isDynamicSearchMode ? onSearchChange : internalSearch.setSearchTerm;
+    const produtos = isDynamicSearchMode ? [] : internalSearch.produtos; // Só precisamos dos produtos no modo dropdown
+    const loading = isDynamicSearchMode ? false : internalSearch.loading; // E do loading também
+
+
+    // --- Handlers de UI ---
+    const handleStoreClick = () => navigate(`/loja/${encodeURIComponent(currentStore)}`);
+    const handleActivateSearch = () => setIsSearchActive(true);
+    const handleDeactivateSearch = () => {
+        setIsSearchActive(false);
+        setSearchTerm(''); // Limpa tanto o estado do pai quanto o interno
+    };
+
+    const handleProdutoClick = (id) => {
+        navigate(`/product/${id}`);
+        handleDeactivateSearch();
+    };
+
+
+    // --- Efeitos ---
+    useEffect(() => {
+        if (isSearchActive) setTimeout(() => inputRef.current?.focus(), 50);
+    }, [isSearchActive]);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (headerRef.current && !headerRef.current.contains(event.target)) {
+                if (isSearchActive) handleDeactivateSearch();
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [isSearchActive]);
+
+
     return (
-        <div className="w-full pb-13">
-            <header className="fixed top-0 w-full z-50 bg-blue-500 h-16">
+        <div ref={headerRef} className="w-full bg-gray-900 relative z-30 border-b border-gray-200">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                        <div className="flex items-center space-x-3 cursor-pointer" onClick={handleStoreClick}>
-                            <div className="w-10 h-10 bg-white rounded-full overflow-hidden">
-                            <img
-                                src={logoUrl || "/api/placeholder/32/32"}
-                                alt="Logo da loja"
-                                className="w-full h-full object-cover"
-                                />
-                            </div>
-                            <h1 className="text-xl font-bold text-white">{currentStore || "Loja nao encontrada"}</h1>
+                <div className="relative flex items-center justify-between h-16">
+                    
+                    {/* Logo e Nome da Loja */}
+                    <div
+                        onClick={handleStoreClick}
+                        className={`flex items-center space-x-3 cursor-pointer transition-opacity duration-300 ${isSearchActive ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                    >
+                        <div className="w-10 h-10 bg-gray-100 rounded-full overflow-hidden">
+                            <img src={logoUrl || "/api/placeholder/40/40"} alt="Logo da loja" className="w-full h-full object-cover" />
                         </div>
-                        <div className="flex items-center space-x-4">
-                            <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="p-2 hover:bg-blue-600 rounded-full">
-                                <SearchIcon className="w-5 h-5 text-white" />
-                            </button>
-                            <ShareButton currentStore={currentStore} />
+                        <h1 className="text-lg font-bold text-white sm:block">{currentStore || "Loja"}</h1>
+                    </div>
+
+                    {/* Barra de Busca que se expande */}
+                    <div className={`absolute left-0 right-0 flex items-center transition-all duration-300 ease-in-out ${isSearchActive ? 'w-full' : 'w-10 h-10 justify-end ml-auto'}`}>
+                        <div className="relative flex-1">
+                            <input
+                                ref={inputRef}
+                                type="search"
+                                placeholder={isSearchActive ? "Buscar produtos na loja..." : ""}
+                                className={`w-full h-10 pl-10 pr-4 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300 ${isSearchActive ? 'opacity-100' : 'opacity-0 cursor-pointer'}`}
+                                onClick={!isSearchActive ? handleActivateSearch : undefined}
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <Search onClick={handleActivateSearch} className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-white cursor-pointer" />
+                        </div>
+
+                        {/* Botões de Ação */}
+                        <div className="flex items-center space-x-2 pl-3">
+                            {isSearchActive ? (
+                                <button onClick={handleDeactivateSearch} className="text-sm font-semibold text-blue-600 hover:text-blue-800 whitespace-nowrap">
+                                    Cancelar
+                                </button>
+                            ) : (
+                                // CONECTANDO A FUNÇÃO AO BOTÃO
+                                <button
+                                    onClick={handleShare}
+                                    className="p-2 text-white hover:bg-gray-100 rounded-full"
+                                    title="Compartilhar loja" // Boa prática para acessibilidade
+                                >
+                                    <Share2 size={18} />
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
-                {isSearchOpen && <SearchBar />}
-            </header>
-            <StoreInfo />
+            </div>
+
+            {/* O Dropdown só é renderizado se:
+                1. A busca estiver ativa.
+                2. NÃO estivermos no modo dinâmico (ou seja, estamos no Checkout, etc.).
+                3. Houver um termo de busca.
+            */}
+            {isSearchActive && !isDynamicSearchMode && searchTerm && (
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+                    <SearchResultsDropdown
+                        produtos={produtos}
+                        loading={loading}
+                        onProdutoClick={handleProdutoClick}
+                    />
+                </div>
+            )}
         </div>
     );
 };

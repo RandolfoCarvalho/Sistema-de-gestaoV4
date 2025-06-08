@@ -3,19 +3,19 @@ import { useStore } from "../Context/StoreContext";
 
 const StoreInfo = () => {
     const { storeInfo } = useStore();
+
+    // O estado de carregamento pode ser mais simples
     if (!storeInfo) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-100">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-                <h1 className="text-2xl font-semibold text-gray-700">Carregando informações da loja...</h1>
+            <div className="bg-white py-4 text-center text-sm text-gray-500">
+                Carregando...
             </div>
         );
     }
     const { nomeDaLoja, empresa } = storeInfo;
 
-    // Função para formatar o horário, removendo zeros desnecessários
     const formatarHorario = (horario) => {
-        if (!horario) return "00:00";
+        if (!horario) return "N/A";
         const [hora, minuto] = horario.split(":");
         return `${parseInt(hora)}h${minuto !== "00" ? minuto : ""}`;
     };
@@ -23,50 +23,40 @@ const StoreInfo = () => {
     const horarioAbertura = formatarHorario(empresa?.horarioAbertura);
     const horarioFechamento = formatarHorario(empresa?.horarioFechamento);
 
-    // Função para verificar se a loja está aberta
     const lojaEstaAberta = () => {
         if (!empresa?.horarioAbertura || !empresa?.horarioFechamento) return false;
-
         const agora = new Date();
-        const horaAtual = agora.getHours();
-        const minutoAtual = agora.getMinutes();
-
-        const [horaAbertura, minutoAbertura] = empresa.horarioAbertura.split(":").map(Number);
-        const [horaFechamento, minutoFechamento] = empresa.horarioFechamento.split(":").map(Number);
-
-        const horarioAtualEmMinutos = horaAtual * 60 + minutoAtual;
-        const horarioAberturaEmMinutos = horaAbertura * 60 + minutoAbertura;
-        const horarioFechamentoEmMinutos = horaFechamento * 60 + minutoFechamento;
-
-        return horarioAtualEmMinutos >= horarioAberturaEmMinutos && horarioAtualEmMinutos < horarioFechamentoEmMinutos;
+        const horaAtual = agora.getHours() * 60 + agora.getMinutes();
+        const [hA, mA] = empresa.horarioAbertura.split(":").map(Number);
+        const [hF, mF] = empresa.horarioFechamento.split(":").map(Number);
+        const horarioAberturaEmMinutos = hA * 60 + mA;
+        const horarioFechamentoEmMinutos = hF * 60 + mF;
+        return horaAtual >= horarioAberturaEmMinutos && horaAtual < horarioFechamentoEmMinutos;
     };
 
+    const estaAberta = lojaEstaAberta();
+
+    // Agora, o componente retorna um bloco simples de divs, sem 'fixed'
     return (
-        <>
-            <div className="fixed top-16 w-full bg-white shadow-sm z-40">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between py-3">
-                        <div className="text-sm text-gray-600">
-                            Abre às {horarioAbertura} · Fecha às {horarioFechamento}
-                        </div>
-                        <div className="text-sm font-medium text-blue-500">
-                            Perfil da loja - {nomeDaLoja}
-                        </div>
+        <div className="w-full bg-gray-900 ">
+            {/* Barra de horário principal */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between py-3">
+                    <div className="text-sm text-white">
+                        Abre às {horarioAbertura} · Fecha às {horarioFechamento}
+                    </div>
+                    <div className="text-sm font-medium text-white">
+                        Perfil da loja - {nomeDaLoja}
                     </div>
                 </div>
             </div>
-            {/* Exibe a mensagem de "Loja fechada" apenas se a loja estiver fechada */}
-            {!lojaEstaAberta() && (
-            <div className="fixed top-28 w-full bg-red-50 z-30">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="py-2 text-center text-sm text-red-500">
-                        Loja fechada, abre às {horarioAbertura}
-                    </div>
+            {/* Mensagem de "Loja fechada" condicional */}
+            {!estaAberta && (
+                <div className="w-full bg-red-100 text-red-700 text-center text-sm font-semibold py-2">
+                    A loja está fechada no momento.
                 </div>
-            </div>
-        )}
-            
-        </>
+            )}
+        </div>
     );
 };
 

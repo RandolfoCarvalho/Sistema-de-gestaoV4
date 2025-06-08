@@ -71,7 +71,6 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
         verificarOuCriarUsuario();
     }, [formData.FinalUserTelefone, formData.FinalUserName]);
     
-    // Preparar o pedidoDTO para enviar ao processamento de pagamento
     const preparePedidoDTO = () => {
         // Estrutura do DTO
         return {
@@ -100,10 +99,9 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
                 TaxaEntrega: formData.pagamento?.TaxaEntrega || 0,
                 Desconto: formData.pagamento?.Desconto || 0,
                 ValorTotal: cartTotal + (formData.pagamento?.TaxaEntrega || 0) - (formData.pagamento?.Desconto || 0),
-                // Use formData.pagamento.FormaPagamento instead of selectedPaymentMethod
                 FormaPagamento: formData.pagamento?.FormaPagamento || 'dinheiro'
             },
-
+            
             // Itens do pedido
             Itens: cart.map(item => ({
                 ProdutoId: item.id,
@@ -113,19 +111,22 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
                 SubTotal: item.precoVenda * item.quantity,
                 PrecoCusto: item.precoCusto || 0,
                 Observacoes: item.observacoes || '',
+                
                 OpcoesExtras: Array.isArray(item.selectedExtras)
                     ? item.selectedExtras.map(extra => ({
-                        TipoOpcao: extra.tipoOpcao || 0,
+                        // --- AQUI ESTÁ A CORREÇÃO ---
+                        // Mapeia a string 'adicional' para 1, e qualquer outra coisa (como 'complemento') para 0.
+                        TipoOpcao: extra.type === 'adicional' ? 1 : 0, 
+
                         ReferenciaId: extra.id,
                         Nome: extra.nome,
                         Quantidade: extra.quantity,
-                        PrecoUnitario: extra.preco || extra.precoAdicional || extra.precoBase || 0
+                        PrecoUnitario: extra.price || extra.preco || extra.precoAdicional || extra.precoBase || 0
                     }))
                     : []
             }))
         };
     };
-
     // Função para iniciar o processo de pagamento
     const handleProceedToPayment = (paymentMethod) => {
         setSelectedPaymentMethod(paymentMethod);

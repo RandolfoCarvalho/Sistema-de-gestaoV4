@@ -1,357 +1,310 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { X, Printer, Coins, PlusCircle, ChevronsRight, Loader2, AlertTriangle } from 'lucide-react';
+
+// --- HELPERS E SUB-COMPONENTES PARA UM CÓDIGO LIMPO E ELEGANTE ---
+
+const formatCurrency = (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
+const formatDate = (dateString) => dateString ? new Date(dateString).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Data indisponível';
+
+const getStatusInfo = (status) => {
+    const s = (status || '').toUpperCase();
+    const statusMap = {
+        'NOVO': { text: 'Novo', style: 'bg-green-100 text-green-800' },
+        'CONFIRMADO': { text: 'Confirmado', style: 'bg-blue-100 text-blue-800' },
+        'EM_PRODUCAO': { text: 'Em Preparo', style: 'bg-amber-100 text-amber-800' },
+        'EM_ENTREGA': { text: 'Em Entrega', style: 'bg-indigo-100 text-indigo-800' },
+        'CONCLUIDO': { text: 'Concluído', style: 'bg-slate-200 text-slate-800' },
+        'CANCELADO': { text: 'Cancelado', style: 'bg-red-100 text-red-800' },
+    };
+    return statusMap[s] || { text: s, style: 'bg-gray-100 text-gray-800' };
+};
+const TabButton = ({ label, isActive, onClick }) => (
+    <button
+        onClick={onClick}
+        className={`px-4 py-2 font-semibold text-sm transition-all ${isActive ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}
+    >
+        {label}
+    </button>
+);
+
+const InfoCard = ({ title, children }) => (
+    <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+        <h3 className="font-semibold mb-3 text-slate-800">{title}</h3>
+        <div className="space-y-3">{children}</div>
+    </div>
+);
+
+const InfoPair = ({ label, value }) => (
+    <div>
+        <p className="text-xs text-slate-500">{label}</p>
+        <p className="font-medium text-slate-700">{value || 'Não informado'}</p>
+    </div>
+);
+
+const ItemDetailRow = ({ item }) => (
+    <div className="py-3 border-b border-slate-200 last:border-b-0">
+        <div className="flex justify-between items-start">
+            <div className="flex-1 pr-4">
+                <p className="font-semibold text-slate-800">{item.quantidade}x {item.produtoNome}</p>
+                
+                {/* --- NOVO BLOCO DE RESUMO --- */}
+                <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
+                    {item.totalAdicionais > 0 && (
+                        <span className="flex items-center gap-1">
+                            <PlusCircle size={12} className="text-green-500" /> {item.totalAdicionais} Adicional(is)
+                        </span>
+                    )}
+                    {item.totalComplementos > 0 && (
+                         <span className="flex items-center gap-1">
+                            <ChevronsRight size={12} className="text-slate-400" /> {item.totalComplementos} Complemento(s)
+                        </span>
+                    )}
+                </div>
+            </div>
+            <span className="font-mono text-sm">{formatCurrency(item.subTotal)}</span>
+        </div>
+        
+        {/* As listas detalhadas permanecem as mesmas, mas podem ser ocultadas por padrão se você quiser */}
+        {item.adicionais?.length > 0 && (
+            <ul className="pl-5 mt-2 space-y-1 text-xs text-green-700">
+                {item.adicionais.map((ad, i) => <li key={i} className="flex items-center gap-1.5"><PlusCircle size={12} />{ad.nome} (+{formatCurrency(ad.preco)})</li>)}
+            </ul>
+        )}
+        {item.complementos?.length > 0 && (
+            <ul className="pl-5 mt-2 space-y-1 text-xs text-slate-500">
+                {item.complementos.map((c, i) => <li key={i} className="flex items-center gap-1.5"><ChevronsRight size={12} />{c.nome}</li>)}
+            </ul>
+        )}
+        {item.observacoes && <p className="pl-5 mt-2 text-xs text-amber-700 italic">Obs: {item.observacoes}</p>}
+    </div>
+);
+
+
+// --- COMPONENTE PRINCIPAL ---
 
 const OrderModal = ({ order, onClose }) => {
+    // --- CORREÇÃO APLICADA AQUI ---
+    // Todos os hooks são declarados no nível superior, ANTES de qualquer retorno condicional.
     const [showConfirm, setShowConfirm] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [motivoCancelamento, setMotivoCancelamento] = useState('');
     const [activeTab, setActiveTab] = useState('detalhes');
-    
-    const formatCurrency = (value) => {
-        return new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
-        }).format(value);
-    };
-    
-    console.log("order.status: ", order.status);
-    console.log("Pedido: ", JSON.stringify(order, null, 2));
-    
+    console.log("Miha ordem: ", order);
+    // Agora o retorno condicional pode ser usado com segurança.
+    if (!order) return null;
+
     const handleCancelOrder = async () => {
         if (!motivoCancelamento.trim()) {
             setError('Por favor, informe o motivo do cancelamento.');
             return;
         }
+
+        setLoading(true);
+        setError('');
+
         try {
-            setLoading(true);
             const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/buscarTransactionId/${order.id}`);
-            const pedido = res.data;
-            const transactionId = pedido.pagamento?.transactionId || order.pagamento?.transactionId || '';
-            console.log("Pedidos: " + JSON.stringify(pedido, null, 2));
-            // Reembolso
-            const reembolsoResult = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/processaReembolso`, {
-                transactionId: transactionId,
-                Amount: order.pagamento?.valorTotal || 0,
-                RestauranteId: pedido.restauranteId || order.restauranteId,
-            });
-            // Cancelamento
+            const pedidoCompleto = res.data;
+
+            if (!pedidoCompleto) {
+                setError('Não foi possível carregar os detalhes do pedido para o cancelamento.');
+                setLoading(false);
+                return;
+            }
+
+            if (pedidoCompleto.pagamento?.formaPagamento?.toLowerCase() === 'dinheiro') {
+                await cancelOrderWithoutRefund(pedidoCompleto);
+            } else {
+                await cancelOrderWithRefund(pedidoCompleto);
+            }
+            setTimeout(() => {
+                window.location.reload();
+            }, 3000); 
+        } catch (err) {
+            console.error("Erro na etapa inicial de cancelamento:", err);
+            setError('Erro ao iniciar o processo de cancelamento. Tente novamente.');
+        }
+    };
+
+    // --- CORREÇÃO APLICADA AQUI ---
+    // Função para cancelamento simples (DINHEIRO) - agora envia todos os campos com valores padrão.
+    const cancelOrderWithoutRefund = async (pedido) => {
+        try {
             await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/Pedido/registrarCancelamento`, {
                 pedidoId: pedido.id,
                 motivoCancelamento: motivoCancelamento,
-                codigoReembolso: reembolsoResult.data.id || '',
-                valorReembolsado: order.pagamento?.valorTotal || 0,
-                transacaoReembolsoId: transactionId,
-                estaReembolsado: true,
-                FinalUserId: pedido.finalUserId,
-                FinalUserName: pedido.finalUserName,
+                
+                // Enviando valores padrão para os campos opcionais para evitar erro de nulo no backend
+                codigoReembolso: '', // String vazia em vez de nulo
+                valorReembolsado: 0, // Zero em vez de nulo
+                transacaoReembolsoId: '', // String vazia em vez de nulo
+                
+                estaReembolsado: false, // Define explicitamente como false
+                finalUserId: pedido.finalUserId,
             });
-            // Notificação de sucesso
-            setError('');
-            setShowConfirm(false);
-            const notificacao = document.createElement('div');
-            notificacao.className = 'fixed top-4 right-4 bg-green-500 text-white p-4 rounded shadow-lg z-50';
-            notificacao.textContent = 'Pedido cancelado e reembolsado com sucesso!';
-            document.body.appendChild(notificacao);
-    
-            setTimeout(() => {
-                notificacao.remove();
-                onClose();
-            }, 3000);
-    
+
+            showSuccessNotification('Pedido cancelado com sucesso!');
         } catch (err) {
-            console.error(err);
-            setError('Erro ao cancelar e reembolsar o pedido. Tente novamente mais tarde.');
-        } finally {
-            setLoading(false);
+            console.error("Erro ao cancelar pedido (dinheiro):", err);
+            setError('Erro ao registrar o cancelamento. Por favor, tente novamente.');
         }
     };
-    
-    // Status do pedido com cores correspondentes
-    const getStatusColor = (status) => {
-        const statusMap = {
-            'NOVO': 'Pendente',
-            'CONFIRMADO': 'Confirmado',
-            'EM_PREPARACAO': 'Em Preparação',
-            'EM_ENTREGA': 'Em Entrega',
-            'ENTREGUE': 'Entregue',
-            'CANCELADO': 'Cancelado'
-        };
-        
-        const statusColors = {
-            'Pendente': 'bg-yellow-100 text-yellow-800',
-            'Confirmado': 'bg-blue-100 text-blue-800',
-            'Em Preparação': 'bg-purple-100 text-purple-800',
-            'Em Entrega': 'bg-indigo-100 text-indigo-800',
-            'Entregue': 'bg-green-100 text-green-800',
-            'Cancelado': 'bg-red-100 text-red-800',
-            'NOVO': 'bg-yellow-100 text-yellow-800'
-        };
-        
-        return statusColors[status] || 'bg-gray-100 text-gray-800';
+
+    // Função para cancelamento com reembolso - agora recebe o objeto completo
+    const cancelOrderWithRefund = async (pedido) => {
+        try {
+            const transactionId = pedido.pagamento?.transactionId;
+
+            if (!transactionId) {
+                setError('ID da transação não encontrado. Não é possível processar o reembolso.');
+                return;
+            }
+
+            const reembolsoResult = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/processaReembolso`, {
+                transactionId: transactionId,
+                Amount: pedido.pagamento?.valorTotal || 0,
+                RestauranteId: pedido.restauranteId,
+            });
+
+            // --- CORREÇÃO APLICADA AQUI TAMBÉM ---
+            // Garante que todos os campos sejam enviados, usando valores padrão se a API de reembolso falhar em retornar algo
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/Pedido/registrarCancelamento`, {
+                pedidoId: pedido.id,
+                motivoCancelamento: motivoCancelamento,
+                codigoReembolso: reembolsoResult.data?.id || '', // Usa o ID do reembolso ou uma string vazia
+                valorReembolsado: pedido.pagamento?.valorTotal || 0,
+                transacaoReembolsoId: transactionId,
+                estaReembolsado: true,
+                finalUserId: pedido.finalUserId,
+            });
+
+            showSuccessNotification('Pedido cancelado e reembolsado com sucesso!');
+        } catch (err)
+        {
+            console.error("Erro ao cancelar e reembolsar:", err);
+            setError('Erro ao processar o reembolso. A transação pode já ter sido estornada ou houve uma falha na comunicação.');
+        }
     };
-    
-    // Função para formatar a data do pedido
-    const formatDate = (dateString) => {
-        if (!dateString) return 'Data não disponível';
-        return new Date(dateString).toLocaleDateString('pt-BR', { 
-            day: '2-digit', 
-            month: '2-digit', 
-            year: 'numeric', 
-            hour: '2-digit', 
-            minute: '2-digit' 
-        });
+
+    // Função auxiliar para notificações (para evitar repetição de código)
+    const showSuccessNotification = (message) => {
+        setShowConfirm(false);
+        const notificacao = document.createElement('div');
+        notificacao.className = 'fixed top-4 right-4 bg-green-500 text-white p-4 rounded shadow-lg z-50 animate-fade-in-down';
+        notificacao.textContent = message;
+        document.body.appendChild(notificacao);
+
+        setTimeout(() => {
+            notificacao.remove();
+            onClose(); // Fecha o modal principal após o sucesso
+        }, 3000);
     };
+    const statusInfo = getStatusInfo(order.status);
     
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
-            <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full m-4 max-h-[90vh] flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 animate-fade-in">
+            <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col animate-zoom-in">
                 {/* Header */}
-                <div className="p-4 border-b flex justify-between items-center bg-gray-50 rounded-t-lg">
-                    <h2 className="text-xl font-semibold">Pedido #{order.id} - {order.numero}</h2>
-                    <div className="flex items-center space-x-2">
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
-                            {order.status}
-                        </span>
-                        <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
+                <div className="p-5 border-b flex justify-between items-center bg-slate-50 rounded-t-xl">
+                    <div>
+                        <h2 className="text-xl font-bold text-slate-800">Pedido {order.numero}</h2>
+                        <span className="text-sm text-slate-500">ID: {order.id}</span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <span className={`px-3 py-1.5 rounded-full text-sm font-semibold ${statusInfo.style}`}>{statusInfo.text}</span>
+                        <button onClick={onClose} className="p-2 rounded-full text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-colors"><X size={20} /></button>
                     </div>
                 </div>
+
                 {/* Tabs */}
-                <div className="flex border-b">
-                    <button 
-                        className={`px-4 py-2 font-medium ${activeTab === 'detalhes' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-blue-500'}`}
-                        onClick={() => setActiveTab('detalhes')}
-                    >
-                        Detalhes
-                    </button>
-                    <button 
-                        className={`px-4 py-2 font-medium ${activeTab === 'entrega' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-blue-500'}`}
-                        onClick={() => setActiveTab('entrega')}
-                    >
-                        Entrega
-                    </button>
-                    <button 
-                        className={`px-4 py-2 font-medium ${activeTab === 'pagamento' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-blue-500'}`}
-                        onClick={() => setActiveTab('pagamento')}
-                    >
-                        Pagamento
-                    </button>
+                <div className="flex border-b border-slate-200 px-2">
+                    <TabButton label="Detalhes do Pedido" isActive={activeTab === 'detalhes'} onClick={() => setActiveTab('detalhes')} />
+                    <TabButton label="Cliente e Entrega" isActive={activeTab === 'entrega'} onClick={() => setActiveTab('entrega')} />
+                    <TabButton label="Pagamento" isActive={activeTab === 'pagamento'} onClick={() => setActiveTab('pagamento')} />
                 </div>
+
                 {/* Conteúdo da Tab */}
-                <div className="p-4 overflow-y-auto flex-grow">
+                <div className="p-6 overflow-y-auto flex-grow bg-white">
                     {activeTab === 'detalhes' && (
-                        <div>
-                            <div className="flex justify-between items-center mb-4">
-                                <p className="text-gray-500">Data: {formatDate(order.dataPedido)}</p>
-                                <p className="font-medium text-lg">{formatCurrency(order.pagamento?.valorTotal || 0)}</p>
+                        <div className="space-y-4">
+                            <div className="flex justify-between items-center text-sm">
+                                <p className="text-slate-500">Data: <span className="font-medium text-slate-700">{formatDate(order.dataPedido)}</span></p>
+                                <p className="font-bold text-lg text-slate-800">{formatCurrency(order.pagamento?.valorTotal)}</p>
                             </div>
                             
                             {order.observacoes && (
-                                <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-                                    <h3 className="font-semibold mb-1 text-gray-800">Observações do Pedido</h3>
-                                    <p className="text-gray-600">{order.observacoes}</p>
-                                </div>
+                                <InfoCard title="Observações Gerais do Pedido">
+                                    <p className="italic text-slate-600">{order.observacoes}</p>
+                                </InfoCard>
                             )}
-                            
-                            <h3 className="font-semibold mb-2 text-gray-800">Itens do Pedido</h3>
-                            <div className="bg-gray-50 rounded-lg p-3 mb-4">
-                                {order.itens && order.itens.map((item, index) => (
-                                    <div key={item.id || index} className="flex justify-between py-2 border-b border-gray-200 last:border-0">
-                                        <div className="flex-1">
-                                            <p className="font-medium">Item #{item.produtoId}</p>
-                                            {item.observacoes && <p className="text-sm text-gray-500">Obs: {item.observacoes}</p>}
-                                        </div>
-                                        <div className="text-right">
-                                            <p>{item.quantidade} x {formatCurrency(item.precoUnitario)}</p>
-                                            <p className="font-medium">{formatCurrency(item.subTotal)}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                                <div className="flex justify-between pt-3 font-semibold">
-                                    <p>Total</p>
-                                    <p>{formatCurrency(order.pagamento?.valorTotal || 0)}</p>
-                                </div>
-                            </div>
+
+                            <InfoCard title="Itens do Pedido">
+                                <ul className="divide-y divide-slate-200 -mt-3">
+                                    {order.itens?.map(item => <ItemDetailRow key={item.id} item={item} />)}
+                                </ul>
+                            </InfoCard>
                         </div>
                     )}
                     {activeTab === 'entrega' && (
-                        <div className="space-y-3">
-                            <div className="bg-gray-50 rounded-lg p-4">
-                                <h3 className="font-semibold mb-2 text-gray-800">Endereço de Entrega</h3>
+                        <div className="space-y-5">
+                            <InfoCard title="Dados do Cliente">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <p className="text-sm text-gray-500">Logradouro</p>
-                                        <p className="font-medium">{order.enderecoEntrega?.logradouro || 'Não informado'}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500">Número</p>
-                                        <p className="font-medium">{order.enderecoEntrega?.numero || 'Não informado'}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500">Complemento</p>
-                                        <p className="font-medium">{order.enderecoEntrega?.complemento || 'Não informado'}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500">Bairro</p>
-                                        <p className="font-medium">{order.enderecoEntrega?.bairro || 'Não informado'}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500">Cidade</p>
-                                        <p className="font-medium">{order.enderecoEntrega?.cidade || 'Não informado'}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500">CEP</p>
-                                        <p className="font-medium">{order.enderecoEntrega?.cep || 'Não informado'}</p>
-                                    </div>
+                                    <InfoPair label="Nome" value={order.finalUser?.nome || order.finalUserName} />
+                                    <InfoPair label="Telefone" value={order.finalUser?.telefone || order.finalUserTelefone} />
                                 </div>
-                            </div>
+                            </InfoCard>
+                            <InfoCard title="Endereço de Entrega">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <InfoPair label="Endereço" value={`${order.enderecoEntrega?.logradouro || ''}, ${order.enderecoEntrega?.numero || ''}`} />
+                                    <InfoPair label="Bairro" value={order.enderecoEntrega?.bairro} />
+                                    <InfoPair label="Cidade" value={order.enderecoEntrega?.cidade} />
+                                    <InfoPair label="CEP" value={order.enderecoEntrega?.cep} />
+                                    <div className="md:col-span-2"><InfoPair label="Complemento" value={order.enderecoEntrega?.complemento} /></div>
+                                </div>
+                            </InfoCard>
                         </div>
                     )}
                     {activeTab === 'pagamento' && (
-                        <div className="space-y-3">
-                            <div className="bg-gray-50 rounded-lg p-4">
-                                <h3 className="font-semibold mb-2 text-gray-800">Detalhes do Pagamento</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <p className="text-sm text-gray-500">Forma de Pagamento</p>
-                                        <p className="font-medium">{order.pagamento?.formaPagamento || 'Não informado'}</p>
+                        <InfoCard title="Detalhes do Pagamento">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <InfoPair label="Forma de Pagamento" value={order.pagamento?.formaPagamento} />
+                                <InfoPair label="Status" value={order.pagamento?.pagamentoAprovado ? 'Aprovado' : 'Pendente'} />
+                                <div className="md:col-span-2"><InfoPair label="ID da Transação" value={order.pagamento?.transactionId} /></div>
+                                <InfoPair label="Subtotal" value={formatCurrency(order.pagamento?.subTotal)} />
+                                <InfoPair label="Taxa de Entrega" value={formatCurrency(order.pagamento?.taxaEntrega)} />
+                                <InfoPair label="Desconto" value={formatCurrency(order.pagamento?.desconto)} />
+                                <div className="font-bold text-slate-800"><InfoPair label="Valor Total" value={formatCurrency(order.pagamento?.valorTotal)} /></div>
+
+                                {order.pagamento?.formaPagamento?.toLowerCase() === 'dinheiro' && order.pagamento?.trocoPara > 0 && (
+                                    <div className="md:col-span-2 mt-2 p-3 bg-blue-100 border border-blue-200 rounded-lg flex items-center gap-2 text-blue-800">
+                                        <Coins size={18} />
+                                        <span className="font-semibold text-sm">Troco para: {formatCurrency(order.pagamento.trocoPara)}</span>
                                     </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500">Status</p>
-                                        <div className="mt-1">
-                                            <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                                order.pagamento?.pagamentoAprovado ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                                            }`}>
-                                                {order.pagamento?.pagamentoAprovado ? 'Aprovado' : 'Pendente'}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    {order.pagamento?.transactionId && (
-                                        <div>
-                                            <p className="text-sm text-gray-500">ID da Transação</p>
-                                            <p className="font-medium font-mono text-sm">{order.pagamento.transactionId}</p>
-                                        </div>
-                                    )}
-                                    <div>
-                                        <p className="text-sm text-gray-500">Subtotal</p>
-                                        <p className="font-medium">{formatCurrency(order.pagamento?.subTotal || 0)}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500">Taxa de Entrega</p>
-                                        <p className="font-medium">{formatCurrency(order.pagamento?.taxaEntrega || 0)}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500">Desconto</p>
-                                        <p className="font-medium">{formatCurrency(order.pagamento?.desconto || 0)}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500">Valor Total</p>
-                                        <p className="font-medium">{formatCurrency(order.pagamento?.valorTotal || 0)}</p>
-                                    </div>
-                                    {order.pagamento?.dataAprovacao && (
-                                        <div>
-                                            <p className="text-sm text-gray-500">Data de Aprovação</p>
-                                            <p className="font-medium">{formatDate(order.pagamento.dataAprovacao)}</p>
-                                        </div>
-                                    )}
-                                </div>
+                                )}
                             </div>
-                        </div>
+                        </InfoCard>
                     )}
                 </div>
-                {/* Footer com ações */}
-                <div className="p-4 border-t bg-gray-50 rounded-b-lg flex justify-end gap-3">
-                    <button
-                        onClick={() => alert("Imprimindo nota fiscal...")}
-                        className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 flex items-center"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                        </svg>
-                        Imprimir NF
-                    </button>
-                    {order.status !== 'CANCELADO' && (
-                        <button
-                            onClick={() => setShowConfirm(true)}
-                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 flex items-center"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                            Cancelar Pedido
-                        </button>
-                    )}
-                    <button
-                        onClick={onClose}
-                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                    >
-                        Fechar
-                    </button>
+
+                {/* Footer */}
+                <div className="p-4 border-t bg-slate-50 rounded-b-xl flex justify-end gap-3">
+                    <button className="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-100 transition-colors flex items-center gap-2"><Printer size={16} /> Imprimir</button>
+                    {order.status !== 'CANCELADO' && <button onClick={() => setShowConfirm(true)} className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors flex items-center gap-2"><X size={16} /> Cancelar Pedido</button>}
                 </div>
-                {/* Modal de confirmação de cancelamento */}
+
+                {/* Modal de Confirmação */}
                 {showConfirm && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
-                        <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full animate-fadeIn">
-                            <div className="mb-4 flex items-center text-red-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                </svg>
-                                <h3 className="text-lg font-semibold">Cancelar e Reembolsar Pedido</h3>
-                            </div>
-                            
-                            <p className="mb-4 text-gray-600">Este pedido será cancelado e o valor de {formatCurrency(order.pagamento?.valorTotal || 0)} será reembolsado ao cliente. Esta ação não pode ser desfeita.</p>
-                            
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-1 text-gray-700">
-                                    Motivo do Cancelamento:
-                                </label>
-                                <textarea 
-                                    value={motivoCancelamento}
-                                    onChange={(e) => setMotivoCancelamento(e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    rows="3"
-                                    placeholder="Informe o motivo do cancelamento"
-                                />
-                            </div>
-                            
-                            {error && (
-                                <div className="mb-4 p-2 bg-red-50 border-l-4 border-red-500 text-red-700">
-                                    <p className="text-sm">{error}</p>
-                                </div>
-                            )}
-                            
+                    <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50">
+                        <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full animate-zoom-in">
+                            <div className="mb-4 flex items-center"><AlertTriangle className="h-8 w-8 mr-3 text-red-500" /><h3 className="text-lg font-bold text-slate-800">Cancelar e Reembolsar</h3></div>
+                            <p className="mb-4 text-slate-600">O valor de <strong>{formatCurrency(order.pagamento?.valorTotal)}</strong> será reembolsado. Esta ação não pode ser desfeita.</p>
+                            <div className="mb-4"><label className="block text-sm font-medium mb-1 text-slate-700">Motivo do Cancelamento:</label><textarea value={motivoCancelamento} onChange={(e) => setMotivoCancelamento(e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" rows="3" placeholder="Ex: Item indisponível" /></div>
+                            {error && <div className="mb-4 p-2 bg-red-50 border-l-4 border-red-500 text-red-700"><p className="text-sm">{error}</p></div>}
                             <div className="flex justify-end gap-3 mt-4">
-                                <button
-                                    onClick={() => {
-                                        setShowConfirm(false);
-                                        setError('');
-                                    }}
-                                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50"
-                                    disabled={loading}
-                                >
-                                    Voltar
-                                </button>
-                                <button
-                                    onClick={handleCancelOrder}
-                                    disabled={loading}
-                                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:bg-red-300 disabled:cursor-not-allowed flex items-center"
-                                >
-                                    {loading ? (
-                                        <>
-                                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                            </svg>
-                                            Processando...
-                                        </>
-                                    ) : (
-                                        'Confirmar Cancelamento'
-                                    )}
-                                </button>
+                                <button onClick={() => { setShowConfirm(false); setError(''); }} disabled={loading} className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-100">Voltar</button>
+                                <button onClick={handleCancelOrder} disabled={loading} className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-red-300 disabled:cursor-not-allowed flex items-center">{loading ? <><Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4" /> Processando...</> : 'Confirmar Cancelamento'}</button>
                             </div>
                         </div>
                     </div>

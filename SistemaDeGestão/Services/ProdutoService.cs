@@ -32,7 +32,7 @@ namespace SistemaDeGestao.Services
             var produtosMaisVendidos = await _context.Pedidos
                 .Where(p => p.RestauranteId == restauranteId)
                 .SelectMany(p => p.Itens)
-                .Where(ip => ip.Produto.LojaId == restauranteId)
+                .Where(ip => ip.Produto.LojaId == restauranteId && ip.Produto.Ativo)
                 .GroupBy(ip => ip.ProdutoId)
                 .Select(g => new
                 {
@@ -62,7 +62,7 @@ namespace SistemaDeGestao.Services
             var produtos = await _context.Produtos
             .Include(p => p.Complementos)
             .ThenInclude(pc => pc.Complemento)
-            .Where(p => p.Restaurante.Id == lojaId && p.Ativo)
+            .Where(p => p.Restaurante.Id == lojaId)
             .ToListAsync();
             return produtos;
         }
@@ -185,7 +185,7 @@ namespace SistemaDeGestao.Services
                 await _context.Entry(produto)
                     .Collection(p => p.Adicionais)
                     .LoadAsync();
-
+                await _context.SaveChangesAsync();
                 return produto;
             }
             catch (Exception ex)

@@ -70,7 +70,12 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
         [Route("CriarCategoria")]
         public async Task<IActionResult> CriarCategoria([FromBody] Categoria categoria)
         {
-
+            var restauranteIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(restauranteIdClaim) || !int.TryParse(restauranteIdClaim, out var restauranteId))
+            {
+                return BadRequest("O ID do restaurante não foi encontrado ou não é válido.");
+            }
+            categoria.RestauranteId = restauranteId;
             var categoriaResult = await _categoriaService.CriarCategoria(categoria);
             if (categoriaResult == null) return BadRequest("Erro ao criar complemento");
             return Ok(categoriaResult);
@@ -80,6 +85,12 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
         [Route("AtualizarCategoria")]
         public async Task<IActionResult> AtualizarCategoria([FromBody] Categoria categoria)
         {
+            var restauranteIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(restauranteIdClaim) || !int.TryParse(restauranteIdClaim, out var restauranteId))
+            {
+                return BadRequest("O ID do restaurante não foi encontrado ou não é válido.");
+            }
+            categoria.RestauranteId = restauranteId;
             var categoriaResult = await _categoriaService.AtualizarCategoria(categoria);
             if (categoriaResult == null) return BadRequest("Não foi possivel atualizar a Categoria");
             return Ok(categoriaResult);

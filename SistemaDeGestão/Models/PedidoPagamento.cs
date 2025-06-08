@@ -20,6 +20,9 @@ namespace SistemaDeGestao.Models
         public decimal ValorTotal { get; set; }
 
         public string FormaPagamento { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal? TrocoPara { get; set; }
+
         public bool PagamentoAprovado { get; set; }
         [JsonIgnore]
         public Pedido Pedido { get; set; }

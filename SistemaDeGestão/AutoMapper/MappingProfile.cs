@@ -19,6 +19,7 @@ namespace SistemaDeGestao.AutoMapper
                     Desconto = src.Pagamento.Desconto,
                     ValorTotal = src.Pagamento.ValorTotal,
                     FormaPagamento = src.Pagamento.FormaPagamento,
+                    TrocoPara = src.Pagamento.TrocoPara,
                     PagamentoAprovado = false
                 }))
                 .ForMember(dest => dest.EnderecoEntrega, opt => opt.MapFrom(src => src.Endereco));

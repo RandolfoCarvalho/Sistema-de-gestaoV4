@@ -63,8 +63,8 @@ const GestaoComponent = () => {
                 setProdutos(prevProdutos => prevProdutos.filter(produto => produto.id !== id));
                 showSuccess("Produto excluído!", "O produto foi excluído com sucesso.");
             } catch (err) {
-                console.error("Erro ao excluir produto:", err);
-                showError("Erro!", "Ocorreu um erro ao excluir o produto.");
+                console.error("Ocorreu um erro ao excluir o produto:", err);
+                showError("Erro!", "Apenas administradores podem excluir; desative o produto se necessário:.");
             }
         }
     }, []);

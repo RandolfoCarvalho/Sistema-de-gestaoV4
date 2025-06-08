@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SistemaDeGestao.Data;
 using SistemaDeGestao.Migrations;
 using SistemaDeGestao.Models;
+using SistemaDeGestao.Models.DTOs.Resquests;
 using System.Numerics;
 
 namespace SistemaDeGestao.Services
@@ -41,28 +42,39 @@ namespace SistemaDeGestao.Services
             try
             {
                 IQueryable<Pedido> query = _context.Pedidos
-                    .Include(p => p.Itens)
-                        .ThenInclude(i => i.Produto)
+                    // Includes principais do Pedido
                     .Include(p => p.EnderecoEntrega)
                     .Include(p => p.Pagamento)
                     .Include(p => p.FinalUser)
                     .Include(p => p.Restaurante)
+
+                    // Includes aninhados para os Itens do Pedido
+                    .Include(p => p.Itens)
+                        .ThenInclude(i => i.Produto) // Para obter o nome do produto
+
+                    // --- CORREÇÃO APLICADA AQUI ---
+                    // Carrega a coleção genérica de opções extras para cada item
+                    .Include(p => p.Itens)
+                        .ThenInclude(i => i.OpcoesExtras)
+
                     .AsNoTracking();
 
                 if (status.HasValue)
                 {
                     query = query.Where(p => p.Status == status.Value);
                 }
+
                 var limitedQuery = query
                     .OrderByDescending(p => p.DataPedido)
                     .Take(100);
+
                 var pedidos = await limitedQuery.ToListAsync();
                 return pedidos;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Erro ao listar pedidos");
-                throw;
+                throw; // Re-lançar a exceção para ser tratada por quem chamou
             }
         }
         public async Task<Pedido> AtualizarStatusPedidoAsync(int id, OrderStatus novoStatus)
@@ -109,6 +121,21 @@ namespace SistemaDeGestao.Services
         /// <returns>O pedido criado com os dados persistidos.</returns>
         public async Task<Pedido> CriarPedidoAsync(PedidoDTO pedidoDTO)
         {
+            if (pedidoDTO == null || !pedidoDTO.Itens.Any())
+                throw new ArgumentException("O pedido deve conter pelo menos um item.");
+
+            // Verifica se todos os produtos estão ativos
+            var produtoIds = pedidoDTO.Itens.Select(i => i.ProdutoId).ToList();
+
+            var produtosAtivos = await _context.Produtos
+                .Where(p => produtoIds.Contains(p.Id) && p.Ativo)
+                .Select(p => p.Id)
+                .ToListAsync();
+
+            var produtosInativos = produtoIds.Except(produtosAtivos).ToList();
+
+            if (produtosInativos.Any())
+                throw new InvalidOperationException("Um ou mais produtos do pedido estão indisponíveis.");
             if (pedidoDTO.Pagamento.FormaPagamento == "dinheiro")
             {
                 BigInteger transactionIdTemporario = new BigInteger(Guid.NewGuid().ToByteArray().Take(4).ToArray());
@@ -117,6 +144,7 @@ namespace SistemaDeGestao.Services
             }
             if (pedidoDTO == null || !pedidoDTO.Itens.Any())
                 throw new ArgumentException("O pedido deve conter pelo menos um item.");
+            
             var empresa = await _context.Empresas
                 .Include(e => e.DiasFuncionamento)
                 .FirstOrDefaultAsync(e => e.RestauranteId == pedidoDTO.RestauranteId);
@@ -136,6 +164,76 @@ namespace SistemaDeGestao.Services
             //if (!result) return null;
             await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoDTO);
             return pedido;
+        }
+
+        /// <summary>
+        /// Registra o cancelamento de um pedido, atualiza seu status,
+        /// salva o histórico do cancelamento e notifica o cliente via WhatsApp.
+        /// </summary>
+        /// <param name="request">Os dados da solicitação de cancelamento.</param>
+        /// <returns>Um objeto indicando sucesso ou falha.</returns>
+        public async Task<(bool Sucesso, string Mensagem)> RegistrarCancelamentoAsync(CancelamentoPedidoRequest request)
+        {
+            // A transação garante que todas as operações sejam atômicas: ou tudo funciona, ou nada é salvo.
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                // 1. Buscar o pedido original
+                var pedido = await _context.Pedidos
+                    .Include(p => p.Itens) // Incluir itens para o cálculo de valor ou outras lógicas
+                    .FirstOrDefaultAsync(p => p.Id == request.PedidoId);
+
+                if (pedido == null)
+                {
+                    return (false, "Pedido não encontrado.");
+                }
+
+                // 2. Atualizar o status do pedido para CANCELADO
+                pedido.Status = OrderStatus.CANCELADO;
+
+                // 3. Criar o registro histórico do cancelamento
+                var pedidoCancelado = new PedidoCancelado
+                {
+                    PedidoId = request.PedidoId,
+                    MotivoCancelamento = request.MotivoCancelamento,
+                    CodigoReembolso = request.CodigoReembolso ?? "",
+                    ValorReembolsado = request.ValorReembolsado ?? 0,
+                    TransacaoReembolsoId = request.TransacaoReembolsoId,
+                    EstaReembolsado = request.EstaReembolsado,
+                    FinalUserId = request.FinalUserId,
+                    DataCancelamento = DateTime.Now
+                };
+
+                _context.PedidosCancelados.Add(pedidoCancelado);
+
+                // 4. Salvar as mudanças no banco de dados
+                await _context.SaveChangesAsync();
+
+                // 5. Comitar a transação, confirmando todas as operações
+                await transaction.CommitAsync();
+
+                // 6. Chamar o serviço de notificação APÓS a confirmação no banco
+                // O try-catch aqui garante que uma falha no envio da mensagem não desfaça o cancelamento.
+                try
+                {
+                    await _whatsAppBot.MontarMensagemAsync(pedido);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "O pedido {PedidoId} foi cancelado com sucesso, mas falhou ao enviar a notificação via WhatsApp.", pedido.Id);
+                    // Não retorna erro ao cliente, pois a operação principal (cancelamento) foi um sucesso.
+                }
+
+                return (true, "Pedido cancelado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                // Se qualquer operação no banco falhar, desfaz tudo
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Falha crítica ao tentar cancelar o pedido {PedidoId}.", request.PedidoId);
+                return (false, "Erro interno ao processar o cancelamento do pedido.");
+            }
         }
 
         /*public async Task<ItemPedido> AdicionarItemAoPedido(ItemPedido item)

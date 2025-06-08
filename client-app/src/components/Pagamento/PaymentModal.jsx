@@ -265,7 +265,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         if (troco && parseFloat(troco) <= parseFloat(amount)) {
             const msg = "❌ O valor do troco não pode ser menor ou igual ao total a pagar.";
             setInternalError(msg);
-            setMensagem(msg); // <-- ESSENCIAL PARA QUE APAREÇA
+            setMensagem(msg);
             setInternalLoading(false);
             return;
         }
@@ -518,7 +518,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                         onSubmit={handleDinheiroSubmit}
                         onClose={onClose}
                         isLoading={isLoading}
-                        errorMessage={mensagem} // <-- AQUI
+                        errorMessage={mensagem}
                     />
                 )}
                 {/* Lógica de renderização para MERCADOPAGO Wallet (como no PRIMEIRO arquivo) */}

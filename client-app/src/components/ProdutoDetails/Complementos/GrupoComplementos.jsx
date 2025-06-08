@@ -84,9 +84,9 @@ const GrupoComplementos = ({
                                 item={complemento}
                                 isComplemento={true}
                                 // Lê a quantidade com a chave correta
-                                currentQuantity={selectedExtrasQuantities[`complemento_${complemento.id}`] || 0} // <-- MUDANÇA
+                                currentQuantity={selectedExtrasQuantities[`complemento_${complemento.id}`] || 0}
                                 // Passa uma função que já inclui o tipo 'complemento'
-                                onQuantityChange={(item, isIncrement) => handleQuantityChange(item, isIncrement, 'complemento')} // <-- MUDANÇA
+                                onQuantityChange={(item, isIncrement) => handleQuantityChange(item, isIncrement, 'complemento')}
                             />
                         ))
                     }

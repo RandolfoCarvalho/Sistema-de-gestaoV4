@@ -14,6 +14,7 @@ namespace SistemaDeGestao.Models
         public string Descricao { get; set; }
 
         public bool Ativo { get; set; } = true;
+        public bool MultiplaEscolha { get; set; } = false;
 
         // Define se é obrigatório escolher algum complemento deste grupo
         public bool Obrigatorio { get; set; }

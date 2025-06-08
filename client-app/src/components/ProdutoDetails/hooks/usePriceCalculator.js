@@ -21,62 +21,70 @@ export const usePriceCalculator = (
 
     // Calcula o preço total do produto incluindo adicionais e complementos
     const calculateTotalPrice = useCallback(() => {
-    if (!product) return 0;
-    
-    // Calcula o preço unitário do produto com seus complementos e adicionais
-    let unitPrice = product.precoVenda;
-    
-    // Complementos de múltipla escolha
-    gruposComplementos.forEach((grupo) => {
-        if ((grupo.quantidadeMinima || 0) > 1 && grupo.complementos) {
-            unitPrice += grupo.complementos.reduce((sum, item) => {
-                const itemQuantity = selectedExtrasQuantities[item.id] || 0;
-                return sum + getItemPrice(item, true) * itemQuantity;
-            }, 0);
-        }
-    });
-    
-    // Complementos de escolha única (radio)
-    gruposComplementos.forEach((grupo) => {
-        if ((grupo.quantidadeMinima || 0) <= 1 && selectedRadioComplementos[grupo.id]) {
-            const selectedComplemento = grupo.complementos.find(
-                (c) => c.id === selectedRadioComplementos[grupo.id]
-            );
-            if (selectedComplemento) {
-                unitPrice += getItemPrice(selectedComplemento, true);
+        if (!product) return 0;
+        let unitPrice = product.precoVenda || 0;
+        // 2. Itera sobre os complementos de ESCOLHA ÚNICA (radio)
+        gruposComplementos.forEach(grupo => {
+            // Apenas grupos que NÃO são de múltipla escolha e têm uma seleção
+            if (!grupo.multiplaEscolha && selectedRadioComplementos[grupo.id]) {
+                const selectedId = selectedRadioComplementos[grupo.id];
+                const complemento = grupo.complementos.find(c => c.id === selectedId);
+                if (complemento) {
+                    unitPrice += complemento.preco || 0;
+                }
             }
-        }
-    });
-    
-    // Adicionais
-    gruposAdicionais.forEach((grupo) => {
-        if (grupo.adicionais) {
-            unitPrice += grupo.adicionais.reduce((sum, adicional) => {
-                const itemQuantity = selectedExtrasQuantities[adicional.id] || 0;
-                return sum + getItemPrice(adicional, false) * itemQuantity;
-            }, 0);
-        }
-    });
-    
-    // Multiplica o preço unitário (produto + complementos + adicionais) pela quantidade
-    return unitPrice * quantity;
-}, [product, gruposComplementos, gruposAdicionais, selectedExtrasQuantities, selectedRadioComplementos, quantity]);
-
-    // Adiciona o produto ao carrinho validando complementos obrigatórios
-    const handleAddToCartWithValidation = useCallback(() => {
-        const gruposObrigatorios = gruposComplementos.filter((grupo) => grupo.obrigatorio);
-
-        const gruposNaoSelecionados = gruposObrigatorios.filter((grupo) => {
-            if (grupo.quantidadeMinima === 1) {
-                return !selectedRadioComplementos[grupo.id];
-            }
-            return !grupo.complementos.some((item) => selectedExtrasQuantities[item.id] > 0);
         });
 
-        if (gruposNaoSelecionados.length > 0) {
+        // 3. Itera sobre os itens de MÚLTIPLA ESCOLHA (complementos e adicionais)
+        Object.entries(selectedExtrasQuantities).forEach(([key, itemQuantity]) => {
+            if (itemQuantity > 0) {
+                console.log(`Analisando chave: ${key}, Quantidade: ${itemQuantity}`); // LOG
+
+                const [type, id] = key.split('_');
+                const numericId = parseInt(id, 10);
+                let item = null;
+
+                if (type === 'complemento') {
+                    item = gruposComplementos.flatMap(g => g.complementos).find(c => c.id === numericId);
+                    if (item) console.log(`Encontrado COMPLEMENTO: ${item.nome}, Preço: ${item.preco}`); // LOG
+                } else if (type === 'adicional') {
+                    item = gruposAdicionais.flatMap(g => g.adicionais).find(a => a.id === numericId);
+                }
+
+                if (item) {
+                    const itemPrice = item.preco ?? item.precoAdicional ?? item.precoBase ?? 0;
+                    unitPrice += itemPrice * itemQuantity;
+                } else {
+                    console.warn(`Item com chave ${key} não foi encontrado nos dados.`); // LOG
+                }
+            }
+        });
+
+        return unitPrice * quantity;
+
+}, [product, gruposComplementos, gruposAdicionais, selectedExtrasQuantities, selectedRadioComplementos, quantity]);
+
+    const handleAddToCartWithValidation = useCallback(() => {
+        // A lógica de validação de grupos obrigatórios pode permanecer a mesma.
+        const gruposObrigatoriosNaoAtendidos = gruposComplementos.filter(grupo => {
+            if (!grupo.obrigatorio) return false;
+            if (!grupo.multiplaEscolha) {
+                return (grupo.quantidadeMinima >= 1 && !selectedRadioComplementos[grupo.id]);
+            }
+            if (grupo.multiplaEscolha) {
+                const totalSelecionadoNoGrupo = grupo.complementos.reduce((acc, comp) => {
+                    const key = `complemento_${comp.id}`;
+                    return acc + (selectedExtrasQuantities[key] || 0);
+                }, 0);
+                return totalSelecionadoNoGrupo < (grupo.quantidadeMinima || 0);
+            }
+            return false;
+        });
+
+        if (gruposObrigatoriosNaoAtendidos.length > 0) {
             Swal.fire({
                 title: "Seleção obrigatória!",
-                text: `Por favor, selecione os complementos obrigatórios: ${gruposNaoSelecionados
+                text: `Por favor, atenda aos requisitos do(s) grupo(s): ${gruposObrigatoriosNaoAtendidos
                     .map((g) => g.nome)
                     .join(", ")}`,
                 icon: "warning",
@@ -86,60 +94,53 @@ export const usePriceCalculator = (
             return;
         }
 
-        // Coleta os complementos e adicionais selecionados
-        const selectedExtras = [];
+        // --- Coleta os complementos e adicionais selecionados ---
+        const selectedItems = [];
 
-        // Complementos múltipla escolha
-        gruposComplementos.forEach((grupo) => {
-            if ((grupo.quantidadeMinima || 0) > 1 && grupo.complementos) {
-                grupo.complementos.forEach((complemento) => {
-                    if (selectedExtrasQuantities[complemento.id] > 0) {
-                        selectedExtras.push({
-                            ...complemento,
-                            quantity: selectedExtrasQuantities[complemento.id],
-                            grupoId: grupo.id,
-                            grupoNome: grupo.nome,
-                        });
-                    }
-                });
-            }
-        });
-
-        // Complementos de escolha única (radio)
-        gruposComplementos.forEach((grupo) => {
-            if ((grupo.quantidadeMinima || 0) <= 1 && selectedRadioComplementos[grupo.id]) {
-                const selectedComplemento = grupo.complementos.find(
-                    (c) => c.id === selectedRadioComplementos[grupo.id]
-                );
-                if (selectedComplemento) {
-                    selectedExtras.push({
-                        ...selectedComplemento,
-                        quantity: 1,
-                        grupoId: grupo.id,
-                        grupoNome: grupo.nome,
-                    });
+        // 1. Coleta complementos de escolha única (radio)
+        // Esta parte já estava correta.
+        gruposComplementos.forEach(grupo => {
+            if (!grupo.multiplaEscolha && selectedRadioComplementos[grupo.id]) {
+                const selectedId = selectedRadioComplementos[grupo.id];
+                const complemento = grupo.complementos.find(c => c.id === selectedId);
+                if (complemento) {
+                    selectedItems.push({ ...complemento, quantity: 1, grupoNome: grupo.nome });
                 }
             }
         });
+        // 2. Coleta itens de múltipla escolha (complementos e adicionais)
+        // AQUI ESTÁ A CORREÇÃO SIMPLIFICADA
+        Object.entries(selectedExtrasQuantities).forEach(([key, itemQuantity]) => {
+            if (itemQuantity > 0) {
+                const [type, id] = key.split('_');
+                const numericId = parseInt(id, 10);
+                let itemData = null;
+                let grupoNome = '';
 
-        // Adicionais
-        gruposAdicionais.forEach((grupo) => {
-            grupo.adicionais.forEach((adicional) => {
-                if (selectedExtrasQuantities[adicional.id] > 0) {
-                    selectedExtras.push({
-                        ...adicional,
-                        quantity: selectedExtrasQuantities[adicional.id],
-                        grupoId: grupo.id,
-                        grupoNome: grupo.nome,
-                    });
+                if (type === 'complemento') {
+                    // Achatamos a lista de todos os complementos para encontrar o item
+                    itemData = gruposComplementos.flatMap(g => g.complementos).find(c => c.id === numericId);
+                    // Encontramos o grupo pai depois de achar o item
+                    const grupoPai = gruposComplementos.find(g => g.complementos.some(c => c.id === numericId));
+                    if (grupoPai) grupoNome = grupoPai.nome;
+
+                } else if (type === 'adicional') {
+                    // Achatamos a lista de todos os adicionais para encontrar o item
+                    itemData = gruposAdicionais.flatMap(g => g.adicionais).find(a => a.id === numericId);
+                    // Encontramos o grupo pai depois de achar o item
+                    const grupoPai = gruposAdicionais.find(g => g.adicionais.some(a => a.id === numericId));
+                    if (grupoPai) grupoNome = grupoPai.nome;
                 }
-            });
+                if (itemData) {
+                    selectedItems.push({ ...itemData, quantity: itemQuantity, grupoNome: grupoNome });
+                }
+            }
         });
-
-        // Adiciona ao carrinho
-        addToCart(product, quantity, selectedExtras);
+        addToCart(product, quantity, selectedItems);
         setShowCartModal(true);
-    }, [gruposComplementos, selectedExtrasQuantities, selectedRadioComplementos, gruposAdicionais, quantity, addToCart, setShowCartModal]);
+        
+    }, [product, gruposComplementos, gruposAdicionais, selectedExtrasQuantities, selectedRadioComplementos, quantity, addToCart, setShowCartModal]);
 
     return { calculateTotalPrice, handleAddToCartWithValidation };
 };
+

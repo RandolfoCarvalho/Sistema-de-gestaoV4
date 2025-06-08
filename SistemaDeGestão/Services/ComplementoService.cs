@@ -211,6 +211,7 @@ namespace SistemaDeGestao.Services
             grupoExistente.QuantidadeMinima = grupoComplemento.QuantidadeMinima;
             grupoExistente.Obrigatorio = grupoComplemento.Obrigatorio;
             grupoExistente.Descricao = grupoComplemento.Descricao;
+            grupoExistente.MultiplaEscolha = grupoComplemento.MultiplaEscolha;
 
             var complementosRemovidos = grupoExistente.Complementos
                 .Where(c => !grupoComplemento.Complementos.Any(nc => nc.Id == c.Id))

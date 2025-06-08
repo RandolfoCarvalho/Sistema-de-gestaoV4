@@ -46,10 +46,7 @@ const GerenciamentoComplementos = () => {
 
     // Manipulador para o checkbox de múltipla escolha
     const handleMultiplaEscolhaChange = (e) => {
-        const checked = e.target.checked;
-        setMultiplaEscolha(checked);
-        // Ajustar quantidade mínima conforme o estado da caixa
-        setQuantidadeMinima(checked ? 2 : 1);
+        setMultiplaEscolha(e.target.checked);
     };
 
     // Função para buscar um grupo específico pelo ID
@@ -69,7 +66,7 @@ const GerenciamentoComplementos = () => {
             setGrupoObrigatorio(grupo.obrigatorio);
             setQuantidadeMinima(grupo.quantidadeMinima || '');
             setQuantidadeMaxima(grupo.quantidadeMaxima || '');
-
+            setMultiplaEscolha(grupo.multiplaEscolha);
             setComplementos(grupo.complementos.map(complemento => ({
                 id: complemento.id,
                 nome: complemento.nome,
@@ -203,6 +200,7 @@ const GerenciamentoComplementos = () => {
                 Obrigatorio: grupoObrigatorio,
                 QuantidadeMinima: quantidadeMinima === '' ? null : parseInt(quantidadeMinima),
                 QuantidadeMaxima: quantidadeMaxima === '' ? null : parseInt(quantidadeMaxima),
+                MultiplaEscolha: multiplaEscolha,
                 Complementos: complementos.map(complemento => ({
                     Id: complemento.id || 0,
                     Nome: complemento.nome?.trim() || "Complemento sem nome",
@@ -514,7 +512,7 @@ const GerenciamentoComplementos = () => {
                                 onChange={handleMultiplaEscolhaChange}
                                 className="mt-1"
                             />
-                            <span className="ml-2 text-sm">Mutiplos adicionais</span>
+                            <span className="ml-2 text-sm">Mutiplos Complementos</span>
                         </div>
 
                         <div>

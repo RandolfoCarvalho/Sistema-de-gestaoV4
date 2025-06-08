@@ -26,7 +26,7 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
         [HttpPost("VerificarTelefone")]
         public async Task<IActionResult> VerificarTelefone([FromBody] FinalUser user)
         {
-            var finalUser = await _clienteService.BuscarPorTelefone(user.Telefone);
+            var finalUser = await _clienteService.BuscarPorTelefone(user.Telefone, user.Nome);
             if (finalUser == null)
             {
                 finalUser = await _clienteService.CriarCliente(user);

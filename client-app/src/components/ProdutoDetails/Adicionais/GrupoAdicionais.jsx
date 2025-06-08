@@ -34,7 +34,8 @@ const GrupoAdicionais = ({ grupo, selectedExtrasQuantities, handleQuantityChange
                         <AdicionalItem
                             key={adicional.id}
                             adicional={adicional}
-                            quantity={selectedExtrasQuantities[adicional.id] || 0}
+                            // Lê a quantidade usando a chave com prefixo
+                            quantity={selectedExtrasQuantities[`adicional_${adicional.id}`] || 0} // <-- MUDANÇA
                             handleQuantityChange={handleQuantityChange}
                         />
                     ))}

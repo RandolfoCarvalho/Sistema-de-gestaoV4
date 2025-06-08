@@ -27,11 +27,14 @@ const Checkout = () => {
 
     const {
         formData,
+        handleProceedToPayment,
         setFormData,
         isSubmitting,
-        preparePedidoDTO
+        preparePedidoDTO,
+        isUserModalOpen, 
+        setIsUserModalOpen, 
+        handleUserSuccess, 
     } = useCheckout(cart, cartTotal, currentStore, clearCart, navigate);
-
     useEffect(() => {
         const updateCheckoutRules = async () => {
             if (cartTotal <= 0) {
@@ -133,8 +136,12 @@ const Checkout = () => {
         <main className="flex-grow py-12">
             <div className="max-w-screen-xl mx-auto px-4 md:px-8 lg:px-16">
             <CheckoutSteps />
-
-            {/* ... resto dos seus modais ... */}
+            {/* Renderização condicional do Modal */}
+            <FinalUserModal 
+                isOpen={isUserModalOpen}
+                onClose={() => setIsUserModalOpen(false)} // Permite fechar o modal (opcional)
+                onSuccess={handleUserSuccess} // Passa a função de callback
+            />
             {isAuthModalOpen && (
                 <FinalUserModal
                     isOpen={isAuthModalOpen}

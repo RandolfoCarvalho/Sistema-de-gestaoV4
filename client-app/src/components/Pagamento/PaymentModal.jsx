@@ -262,8 +262,10 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         setInternalError(null);
         setMensagem("");
         
-        if (troco && parseFloat(troco) < parseFloat(amount)) {
-            setInternalError("O valor do troco não pode ser menor que o total a pagar.");
+        if (troco && parseFloat(troco) <= parseFloat(amount)) {
+            const msg = "❌ O valor do troco não pode ser menor ou igual ao total a pagar.";
+            setInternalError(msg);
+            setMensagem(msg); // <-- ESSENCIAL PARA QUE APAREÇA
             setInternalLoading(false);
             return;
         }
@@ -475,14 +477,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         ) : (
             // TELA NORMAL DE PAGAMENTO (seu conteúdo original)
             <div className="space-y-4">
-                <div className="flex justify-between items-center mb-4">
-                    {/* ... seu header do modal ... */}
-                </div>
-
-                {/* Todos os seus formulários e lógicas de erro vão aqui dentro */}
-                {/* Ex: {paymentMethod === "cartao" && (...)} */}
-                {/* ... */}
-                
                  {/* Lógica de renderização para CARTAO (como no PRIMEIRO arquivo) */}
                 {paymentMethod === "cartao" && (
                     <CardPaymentForm 
@@ -524,9 +518,9 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                         onSubmit={handleDinheiroSubmit}
                         onClose={onClose}
                         isLoading={isLoading}
+                        errorMessage={mensagem} // <-- AQUI
                     />
                 )}
-
                 {/* Lógica de renderização para MERCADOPAGO Wallet (como no PRIMEIRO arquivo) */}
                 {paymentMethod === "mercadopago" && (
                      <MercadoPagoWalletButton 
@@ -542,7 +536,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     </p>
                 )}
 
-                {mensagem && !displayError && !isLoading && (
+                {/* {mensagem && !displayError && !isLoading && (
                      <div className={`text-center mt-4 p-3 rounded border text-sm ${
                         mensagem.includes("✅") ? "bg-green-100 border-green-300 text-green-700" :
                         mensagem.includes("⚠️") ? "bg-yellow-100 border-yellow-300 text-yellow-700" :
@@ -550,7 +544,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                      }`}>
                         {mensagem}
                     </div>
-                )}
+                )} */}
             </div>
         )}
         </Modal>

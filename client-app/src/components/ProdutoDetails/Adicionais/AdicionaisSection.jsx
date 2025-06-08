@@ -20,7 +20,8 @@ const AdicionaisSection = ({
                     isOpen={gruposOpen[grupo.id]}
                     toggleGrupo={toggleGrupo}
                     selectedExtrasQuantities={selectedExtrasQuantities}
-                    handleQuantityChange={handleQuantityChange}
+                    // Passa o handleQuantityChange modificado para o AdicionalItem usar
+                    handleQuantityChange={(item, isIncrement) => handleQuantityChange(item, isIncrement, 'adicional')}
                 />
             ))}
         </div>

@@ -4,7 +4,7 @@ import { useStore } from '../Context/StoreContext';
 import axios from "axios";
 import {
     ChevronLeft, PackageCheck, ChefHat, Bike, PartyPopper, Wallet, User,
-    MapPin, Hash, Calendar, Clock, RefreshCw, ShoppingCart
+    MapPin, Hash, Calendar, Clock, RefreshCw, ShoppingCart, XCircle
 } from 'lucide-react';
 import BottomNav from '../BottomNav';
 
@@ -22,7 +22,7 @@ const formatDate = (dateString) => {
 };
 
 // --- Componentes de UI de Alta Qualidade ---
-
+const STATUS_CANCELADO = 4;
 // 1. Status Tracker Gráfico (O ponto focal da tela)
 const StatusTracker = ({ status, orderDate }) => {
     const statusSteps = useMemo(() => [
@@ -34,6 +34,25 @@ const StatusTracker = ({ status, orderDate }) => {
 
     const currentStatusIndex = status > 4 ? 4 : status;
 
+    // Se o pedido foi cancelado, renderiza uma UI específica
+    if (status === STATUS_CANCELADO) {
+        return (
+            <div className="bg-red-50 p-5 rounded-xl shadow-sm border border-red-200">
+                <div className="flex justify-between items-center mb-5">
+                    <h2 className="text-lg font-bold text-red-800">Status do Pedido</h2>
+                    <span className="text-sm font-medium text-red-600">{formatDate(orderDate).date}</span>
+                </div>
+                <div className="flex items-center justify-center text-center">
+                     <div className="flex flex-col items-center">
+                        <div className="w-12 h-12 rounded-full flex items-center justify-center bg-red-600 text-white">
+                            <XCircle size={24} />
+                        </div>
+                        <p className="mt-2 text-base font-bold text-red-700">Pedido Cancelado</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="bg-white p-5 rounded-xl shadow-sm">
             <div className="flex justify-between items-center mb-5">

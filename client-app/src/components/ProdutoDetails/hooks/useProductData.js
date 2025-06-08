@@ -71,21 +71,23 @@ export const useProductData = (productId) => {
     const initializeSelectionStates = (complementos, adicionais) => {
         const initialQuantities = {};
 
-        // Inicializa quantidades para adicionais
+         // Adiciona prefixo para ADICIONAIS
         adicionais.forEach(grupo => {
             if (grupo.adicionais && grupo.adicionais.length > 0) {
                 grupo.adicionais.forEach(adicional => {
-                    initialQuantities[adicional.id] = 0;
+                    const key = `adicional_${adicional.id}`; // <-- MUDANÇA
+                    initialQuantities[key] = 0;
                 });
             }
         });
 
-        // Inicializa quantidades para complementos multi-escolha
+        // Adiciona prefixo para COMPLEMENTOS
         complementos.forEach(grupo => {
-            if (grupo.complementos && grupo.complementos.length > 0) {
-                if ((grupo.quantidadeMinima || 0) > 1) {
+            if (grupo.multiplaEscolha) {
+                if (grupo.complementos && grupo.complementos.length > 0) {
                     grupo.complementos.forEach(complemento => {
-                        initialQuantities[complemento.id] = 0;
+                        const key = `complemento_${complemento.id}`; // <-- MUDANÇA
+                        initialQuantities[key] = 0;
                     });
                 }
             }
@@ -117,10 +119,12 @@ export const useProductData = (productId) => {
         }));
     };
 
-    const handleQuantityChange = (item, increment) => {
-        const itemId = item.id.toString();
+    const handleQuantityChange = (item, increment, type) => { // <-- MUDANÇA: adicionado 'type'
+        // Cria a chave única com o prefixo
+        const uniqueKey = `${type}_${item.id}`; // <-- MUDANÇA
+
         setSelectedExtrasQuantities(prev => {
-            const currentQuantity = prev[itemId] || 0;
+            const currentQuantity = prev[uniqueKey] || 0; // <-- MUDANÇA: usa a chave única
             const maxQuantity = item.maximoPorProduto || 1;
             let newQuantity;
 
@@ -129,11 +133,16 @@ export const useProductData = (productId) => {
             } else {
                 newQuantity = Math.max(0, currentQuantity - 1);
             }
+            
+            const newQuantities = { ...prev };
 
-            return {
-                ...prev,
-                [itemId]: newQuantity
-            };
+            if (newQuantity > 0) {
+                newQuantities[uniqueKey] = newQuantity; // <-- MUDANÇA: atualiza a chave única
+            } else {
+                delete newQuantities[uniqueKey]; // Opcional, mas bom para limpar o estado
+            }
+
+            return newQuantities;
         });
     };
 

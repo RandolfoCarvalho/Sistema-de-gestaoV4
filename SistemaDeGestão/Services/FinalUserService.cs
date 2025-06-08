@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using SistemaDeGestao.Data;
 using SistemaDeGestao.Models;
 using SistemaDeGestao.Models.DTOs;
@@ -15,10 +16,15 @@ namespace SistemaDeGestao.Services
             _context = context;
         }
 
-        public async Task<FinalUser> BuscarPorTelefone(string telefone)
+        public async Task<FinalUser> BuscarPorTelefone(string telefone, string nome)
         {
-            return await _context.FinalUsers
+            var finalUser = await _context.FinalUsers
                 .FirstOrDefaultAsync(c => c.Telefone == telefone);
+            if (finalUser == null) throw new Exception("Final user nao encontrado");
+            finalUser.Nome = nome;
+            _context.Update(finalUser);
+            _context.SaveChanges();
+            return finalUser;
         }
 
         public async Task<FinalUser> CriarCliente(FinalUser user)

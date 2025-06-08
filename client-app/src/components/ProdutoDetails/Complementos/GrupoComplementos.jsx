@@ -22,7 +22,7 @@ const GrupoComplementos = ({
         return items.reduce((total, item) => total + (item.maximoPorProduto || 1), 0);
     };
     const minQuantity = grupo.quantidadeMinima || 0;
-    const isSingleChoice = minQuantity <= 1;
+    const isSingleChoice = !grupo.multiplaEscolha;
 
     // Define o texto de informação do grupo
     let infoText = '';
@@ -66,7 +66,6 @@ const GrupoComplementos = ({
                     <ChevronDown size={20} className="text-gray-500" />
                 }
             </button>
-
             {isOpen && (
                 <div className="mt-2 space-y-3 pl-1">
                     {isSingleChoice
@@ -80,12 +79,14 @@ const GrupoComplementos = ({
                             />
                         ))
                         : grupo.complementos.map(complemento => (
-                            <MultipleChoiceItem
+                             <MultipleChoiceItem
                                 key={complemento.id}
                                 item={complemento}
                                 isComplemento={true}
-                                currentQuantity={selectedExtrasQuantities[complemento.id] || 0}
-                                onQuantityChange={handleQuantityChange}
+                                // Lê a quantidade com a chave correta
+                                currentQuantity={selectedExtrasQuantities[`complemento_${complemento.id}`] || 0} // <-- MUDANÇA
+                                // Passa uma função que já inclui o tipo 'complemento'
+                                onQuantityChange={(item, isIncrement) => handleQuantityChange(item, isIncrement, 'complemento')} // <-- MUDANÇA
                             />
                         ))
                     }

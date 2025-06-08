@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import FinalUserModal from '../../Modals/FinalUserModal';
+import Swal from 'sweetalert2';
 
 // Hook personalizado para gerenciar o estado e lógica do checkout
 export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) => {
     const [userId, setUserId] = useState(localStorage.getItem('userId') || null);
+    const [isUserModalOpen, setIsUserModalOpen] = useState(false);
     const [formData, setFormData] = useState({
-        FinalUserName: 'Randolfo',
+        FinalUserName: localStorage.getItem("FinalUserName"),
         FinalUserTelefone: localStorage.getItem("FinalUserTelefone"),
         FinalUserId: localStorage.getItem('userId') || null,
         RestauranteId: localStorage.getItem('restauranteId') || 1,
@@ -32,22 +35,32 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('dinheiro');
     
     // Atualiza o valor total sempre que o cartTotal mudar
-    useEffect(() => {
-        setFormData(prev => ({
-            ...prev,
-            pagamento: {
-                ...prev.pagamento,
-                SubTotal: cartTotal,
-                ValorTotal: cartTotal + (prev.pagamento?.TaxaEntrega || 0) - (prev.pagamento?.Desconto || 0)
-            }
-        }));
-    }, [cartTotal]);
+     useEffect(() => {
+        const nome = localStorage.getItem("FinalUserName");
+        const telefone = localStorage.getItem("FinalUserTelefone");
+        if (!nome || !telefone) {
+            setIsUserModalOpen(true);
+        } else {
+            // Se já tiver os dados, garanta que o estado do formulário está atualizado
+            setFormData(prev => ({
+                ...prev,
+                FinalUserName: nome,
+                FinalUserTelefone: telefone,
+            }));
+        }
+     }, [cartTotal]);
+
+     const handleUserSuccess = (userData) => {
+        setFormData(prev => ({ ...prev, FinalUserName: userData.nome, FinalUserTelefone: userData.telefone, FinalUserId: userData.id }));
+            setIsUserModalOpen(false); // Fecha o modal
+            Swal.fire({ title: "Autenticação bem-sucedida!", text: "Agora preencha os dados de endereço e pagamento para continuar.", icon: "success", confirmButtonText: "Entendi", confirmButtonColor: "#4BB543" });
+        };
 
     useEffect(() => {
         const verificarOuCriarUsuario = async () => {
             const telefone = formData.FinalUserTelefone;
             const nome = formData.FinalUserName;
-    
+            
             if (!telefone || !nome) return;
     
             try {
@@ -129,6 +142,13 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
     };
     // Função para iniciar o processo de pagamento
     const handleProceedToPayment = (paymentMethod) => {
+        // Se os dados do usuário ainda não foram preenchidos, abra o modal de identificação
+        if (!formData.FinalUserName || !formData.FinalUserTelefone) {
+            setIsUserModalOpen(true);
+            return; // Impede a continuação
+        }
+
+        // Se os dados estiverem ok, prossiga para o modal de pagamento
         setSelectedPaymentMethod(paymentMethod);
         setFormData(prev => ({
             ...prev,
@@ -156,7 +176,11 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
         setSelectedPaymentMethod,
         handleProceedToPayment,
         handlePaymentSuccess,
-        preparePedidoDTO
+        preparePedidoDTO,
+        // NOVOS RETORNOS
+        isUserModalOpen,
+        setIsUserModalOpen,
+        handleUserSuccess
     };
 };
 

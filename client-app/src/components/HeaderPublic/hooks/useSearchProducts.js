@@ -1,11 +1,12 @@
 ﻿import { useState, useEffect } from "react";
 import axios from "axios";
+import { useStore } from "../../Context/StoreContext";
 
-export const useSearchProducts = (currentStore) => {
+export const useSearchProducts = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [produtos, setProdutos] = useState([]);
     const [loading, setLoading] = useState(false);
-
+     const { currentStore } = useStore();
     useEffect(() => {
         const fetchProdutos = async () => {
             if (!currentStore || searchTerm.trim() === "") {

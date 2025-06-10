@@ -17,7 +17,6 @@ const BASE_SIDEBAR_CLASSES = `
 const Sidebar = ({ isSidebarOpen }) => {
     const { storeInfo } = useStore();
     const logoUrl = storeInfo?.imagemUrl;
-
     const sidebarVisibilityClass = isSidebarOpen ? "translate-x-0" : "-translate-x-full";
 
     return (

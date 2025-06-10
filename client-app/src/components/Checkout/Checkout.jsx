@@ -24,7 +24,6 @@ const Checkout = () => {
     const [isPaymentModalOpen, setPaymentModalOpen] = useState(false);
     const [showFinalUserModal, setShowFinalUserModal] = useState(false);
     const [blockCheckoutMessage, setBlockCheckoutMessage] = useState('');
-
     const {
         formData,
         handleProceedToPayment,

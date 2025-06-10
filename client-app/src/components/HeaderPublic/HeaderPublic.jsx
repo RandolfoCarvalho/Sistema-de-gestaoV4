@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 // O Header aceita props opcionais para o modo de "busca dinâmica"
 const HeaderPublic = ({ onSearchChange, currentStore, searchTerm: controlledSearchTerm }) => {
     const navigate = useNavigate();
-    const { storeInfo } = useStore();
+    const { fantasyName, storeInfo } = useStore();
     const [isSearchActive, setIsSearchActive] = useState(false);
     const logoUrl = storeInfo?.imagemUrl;
     const inputRef = useRef(null);
@@ -23,7 +23,7 @@ const HeaderPublic = ({ onSearchChange, currentStore, searchTerm: controlledSear
 
         // 1. Monte a URL completa e correta
         const shareUrl = `${window.location.origin}/loja/${currentStore}`;
-        const storeName = currentStore.charAt(0).toUpperCase() + currentStore.slice(1); // Deixa o nome mais bonito, ex: "Penseleve"
+        const storeName = currentStore.charAt(0).toUpperCase() + currentStore.slice(1);
 
         const shareData = {
             title: `Confira o cardápio de ${storeName}!`,
@@ -109,7 +109,7 @@ const HeaderPublic = ({ onSearchChange, currentStore, searchTerm: controlledSear
                         <div className="w-10 h-10 bg-gray-100 rounded-full overflow-hidden">
                             <img src={logoUrl || "/api/placeholder/40/40"} alt="Logo da loja" className="w-full h-full object-cover" />
                         </div>
-                        <h1 className="text-lg font-bold text-white sm:block">{currentStore || "Loja"}</h1>
+                        <h1 className="text-lg font-bold text-white sm:block">{fantasyName || "Loja"}</h1>
                     </div>
 
                     {/* Barra de Busca que se expande */}

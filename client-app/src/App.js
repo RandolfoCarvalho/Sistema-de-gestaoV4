@@ -8,7 +8,7 @@ import { UserProvider } from './UserContext';
 import { CartProvider } from './components/Carrinho/CartContext';
 import { SignalRProvider } from './services/SignalRContext';
 import { StoreProvider } from './components/Context/StoreContext';
-
+import { AuthProvider } from "./services/AuthContext";
 // Global Styles
 import './App.css';
 import './index.css';
@@ -38,7 +38,7 @@ import WhatsappBOT from './components/Admin/Stats/WhatsappBOT/whatsappBOT';
 import Sair from './components/Admin/Stats/logout';
 import PaginaDeCarregamento from './components/ui/FuturisticLoadingSpinner';
 import ProtectedRoute from './components/ProtectedRoute';
-import { AuthProvider } from "./services/AuthContext";
+import PerfilLoja from './components/Perfil/PerfilLoja';
 import ProtectedStore from './components/ProtectedStore';
 
 
@@ -85,9 +85,6 @@ const App = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const toggleDarkMode = () => setDarkMode(!darkMode);
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-    
-    // O bloco de lógica que você tinha aqui foi movido para o componente RoteadorPrincipal
-
     return (
         <SignalRProvider>
             <StoreProvider>
@@ -100,8 +97,9 @@ const App = () => {
                                     {/* MODIFICADO: A rota principal agora usa nosso novo componente inteligente */}
                                     <Route path="/" element={<RoteadorPrincipal />} />
 
-                                    {/* O restante das suas rotas continua igual */}
-                                    <Route element={<ProtectedStore/>}>
+                                    {/* O restante das rotas continua igual */}
+                                        <Route element={<ProtectedStore />}>
+                                        {/* Public Routes */}
                                         <Route path="/loja/:nomeDaLoja" element={<Produtos />} />
                                         <Route path="/product/:id" element={<ProductDetails />} />
                                         <Route path="/checkout" element={<CheckoutPage />} />
@@ -109,8 +107,8 @@ const App = () => {
                                         <Route path="/pedidos" element={<Pedidos />} />
                                         <Route path="/pedidos/:numeroPedido" element={<PedidosDetalhes />} />
                                         <Route path="/promo" element={<Promocoes />} />
+                                        <Route path="/perfil" element={<PerfilLoja />} />
                                     </Route>
-                                    
                                     {/* Admin Routes */}
                                     <Route element={<ProtectedRoute/>}>
                                         <Route path="/admin" element={

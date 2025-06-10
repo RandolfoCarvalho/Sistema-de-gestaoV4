@@ -5,7 +5,7 @@ import * as React from "react";
 interface InputComIconeProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label: string;
-  icon: React.ReactNode; // Permite passar qualquer componente React como ícone
+  icon: React.ReactNode;
 }
 
 const InputComIcone = React.forwardRef<HTMLInputElement, InputComIconeProps>(

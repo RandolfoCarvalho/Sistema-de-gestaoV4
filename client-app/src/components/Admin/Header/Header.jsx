@@ -6,7 +6,7 @@ import { useStore } from '../../Context/StoreContext';
 import { useNavigate } from 'react-router-dom';
 
 const Header = ({ isSidebarOpen, toggleSidebar, darkMode, toggleDarkMode }) => {
-    const { currentStore } = useStore();
+    const { fantasyName, currentStore } = useStore();
     const navigate = useNavigate();
 
     const handleStoreClick = () => {
@@ -37,7 +37,7 @@ const Header = ({ isSidebarOpen, toggleSidebar, darkMode, toggleDarkMode }) => {
                         >
                             <MdSpaceDashboard className="h-8 me-3 text-xl text-violet-500" />
                             <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
-                                {currentStore || "Gestão"}
+                                {fantasyName || "Gestão"}
                             </span>
                         </div>
                     </div>

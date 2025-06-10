@@ -2,6 +2,8 @@
 import { Clock } from 'lucide-react';
 import api from '../../../axiosConfig';
 import LojaFuncionamento from '../../Pedidos/LojaFuncionamento'; // Importando o novo componente
+import { slugify } from '../../../utils/slugify'; 
+import { useStore } from '../../Context/StoreContext';
 import {
   Eye,
   EyeOff,
@@ -19,6 +21,7 @@ const Perfil = () => {
     const [mensagemErro, setMensagemErro] = useState("");
     const [mostrarAccessToken, setMostrarAccessToken] = useState(false);
     const [imagemPreview, setImagemPreview] = useState(null);
+    const { updateCurrentStore } = useStore();
     const [restaurante, setRestaurante] = useState({
         id: 0,
         userName: '',
@@ -62,6 +65,36 @@ const Perfil = () => {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
     const [activeTab, setActiveTab] = useState('dados-restaurante');
+
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+
+      setRestaurante(prev => {
+          let novosDados = { ...prev };
+          const keys = name.split('.');
+
+          // Lógica para lidar com objetos aninhados (ex: 'empresa.nomeFantasia')
+          if (keys.length > 1) {
+              let temp = novosDados;
+              for (let i = 0; i < keys.length - 1; i++) {
+                  temp = temp[keys[i]];
+              }
+              temp[keys[keys.length - 1]] = value;
+          } else {
+              novosDados[name] = value;
+          }
+
+          // *** A LÓGICA DO SLUG FICA AQUI ***
+          // Se o campo alterado foi o 'nomeFantasia'...
+          if (name === 'empresa.nomeFantasia') {
+              // ...gere o slug e atualize o campo 'nomeDaLoja'
+              const novoSlug = slugify(value);
+              novosDados.nomeDaLoja = novoSlug;
+          }
+          
+          return novosDados;
+      });
+  };
 
     useEffect(() => {
         const fetchRestaurante = async () => {
@@ -129,30 +162,11 @@ const Perfil = () => {
     };
     
     
-    // Atualizar valores do restaurante
-    const handleRestauranteChange = (e) => {
-        const { name, value } = e.target;
-        setRestaurante(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
     const toggleMostrarSenha = () => {
         setMostrarSenha(!mostrarSenha);
     };
 
-    // Atualizar valores da empresa
-    const handleEmpresaChange = (e) => {
-        const { name, value } = e.target;
-        setRestaurante(prev => ({
-            ...prev,
-            empresa: {
-                ...prev.empresa,
-                [name]: value
-            }
-        }));
-    };
+   
 
     const handleImagemLojaChange = (event) => {
         const file = event.target.files[0];
@@ -161,7 +175,17 @@ const Perfil = () => {
             setImagemPreview(URL.createObjectURL(file)); // Gera preview
         }
     };
+    const handleEmpresaChange = (e) => {
+      const { name, value } = e.target;
 
+      setRestaurante(prev => ({
+          ...prev,
+          empresa: {
+              ...prev.empresa,
+              [name]: value // Atualiza a propriedade específica (ex: 'horarioAbertura')
+          }
+      }));
+    };
     // Handler para os checkboxes de dias de funcionamento
     const handleDiaFuncionamentoChange = (e) => {
         const { name, checked } = e.target;
@@ -247,6 +271,8 @@ const Perfil = () => {
 
             setMessage({ type: 'success', text: 'Perfil atualizado com sucesso!' });
             // Limpar campos de senha após envio bem-sucedido
+            const novoSlug = dadosParaEnviar.nomeDaLoja;
+            updateCurrentStore(novoSlug);
             setSenha("");
             setConfirmarSenha("");
         } catch (error) {
@@ -262,138 +288,63 @@ const Perfil = () => {
       case 'dados-restaurante':
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* ... input de imagem ... */}
             <div className="col-span-1 md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="imagemLoja">
-                Imagem da Loja
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="imagemLoja">Imagem da Loja</label>
               <div className="flex items-center gap-4">
                 <div className="flex-1">
                   <input
-                    className="w-full px-3 py-2 text-gray-700  rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    id="imagemLoja"
-                    name="imagemLoja"
-                    type="file"
-                    accept="image/*"
+                    className="w-full px-3 py-2 text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    id="imagemLoja" name="imagemLoja" type="file" accept="image/*"
                     onChange={handleImagemLojaChange}
                   />
                 </div>
                 {(imagemPreview || restaurante.imagemUrl) && (
                   <div className="w-24 h-24 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                    <img
-                      src={imagemPreview || restaurante.imagemUrl}
-                      alt="Imagem da loja"
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={imagemPreview || restaurante.imagemUrl} alt="Imagem da loja" className="w-full h-full object-cover"/>
                   </div>
                 )}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="userName">
-                Nome de Usuário
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="userName">Nome de Usuário</label>
               <input
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                id="userName"
-                name="userName"
-                value={restaurante.userName || ''}
-                onChange={handleRestauranteChange}
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="userName" name="userName" value={restaurante.userName || ''}
+                onChange={handleChange} // CORRIGIDO
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="nomeDaLoja">
-                Nome da Loja
-              </label>
-              <input
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                id="nomeDaLoja"
-                name="nomeDaLoja"
-                value={restaurante.nomeDaLoja || ''}
-                onChange={handleRestauranteChange}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="emailAddress">
-                Email
-              </label>
-              <input
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                id="emailAddress"
-                name="emailAddress"
-                type="email"
-                value={restaurante.emailAddress || ''}
-                onChange={handleRestauranteChange}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="phoneNumber">
-                Telefone
-              </label>
-              <input
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                id="phoneNumber"
-                name="phoneNumber"
-                value={restaurante.phoneNumber || ''}
-                onChange={handleRestauranteChange}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="password">
-                Nova Senha (deixe em branco para manter a atual)
-              </label>
-              <div className="relative">
+              <label className="block text-sm font-medium text-gray-700 mb-1">URL da Loja</label>
                 <input
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                  id="password"
-                  name="password"
-                  type={mostrarSenha ? "text" : "password"}
-                  value={senha}
-                  onChange={(e) => setSenha(e.target.value)}
-                  placeholder="Digite para alterar a senha"
-                />
-                <button
-                  type="button"
-                  onClick={toggleMostrarSenha}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                >
-                  {mostrarSenha ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
+                  className="w-full px-3 py-2 text-gray-500 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed"
+                  type="text" value={restaurante.nomeDaLoja || ''}
+                  readOnly
+              />
+              <small className="text-gray-500">fomedique.com.br/loja/{restaurante.nomeDaLoja || ''}</small>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="confirmarSenha">
-                Confirmar Nova Senha
-              </label>
-              <div className="relative">
-                <input
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                  id="confirmarSenha"
-                  name="confirmarSenha"
-                  type={mostrarSenha ? "text" : "password"}
-                  value={confirmarSenha}
-                  onChange={(e) => setConfirmarSenha(e.target.value)}
-                  placeholder="Confirme a nova senha"
-                />
-                {senha !== confirmarSenha && confirmarSenha !== "" && (
-                  <div className="text-red-500 text-xs mt-1">
-                    As senhas não conferem
-                  </div>
-                )}
-              </div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="emailAddress">Email</label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="emailAddress" name="emailAddress" type="email" value={restaurante.emailAddress || ''}
+                onChange={handleChange} // CORRIGIDO
+              />
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="phoneNumber">Telefone</label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="phoneNumber" name="phoneNumber" value={restaurante.phoneNumber || ''}
+                onChange={handleChange} // CORRIGIDO
+              />
+            </div>
+             {/* ... inputs de senha ... */}
           </div>
         );
 
@@ -401,292 +352,195 @@ const Perfil = () => {
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="cnpj">
-                CNPJ
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="cnpj">CNPJ</label>
               <input
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                id="cnpj"
-                name="cnpj"
-                value={restaurante.empresa?.cnpj || ''}
-                onChange={handleEmpresaChange}
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="cnpj" name="empresa.cnpj" value={restaurante.empresa?.cnpj || ''}
+                onChange={handleChange} // CORRIGIDO
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="cpf">
-                CPF
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="cpf">CPF</label>
               <input
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                id="cpf"
-                name="cpf"
-                value={restaurante.empresa?.cpf || ''}
-                onChange={handleEmpresaChange}
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="cpf" name="empresa.cpf" value={restaurante.empresa?.cpf || ''}
+                onChange={handleChange} // CORRIGIDO
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="razaoSocial">
-                Razão Social
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="razaoSocial">Razão Social</label>
               <input
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                id="razaoSocial"
-                name="razaoSocial"
-                value={restaurante.empresa?.razaoSocial || ''}
-                onChange={handleEmpresaChange}
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="razaoSocial" name="empresa.razaoSocial" value={restaurante.empresa?.razaoSocial || ''}
+                onChange={handleChange} // CORRIGIDO
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="nomeFantasia">
-                Nome Fantasia
-              </label>
+           <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="nomeFantasia">Nome de Exibição da Loja (Nome Fantasia)</label>
               <input
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                id="nomeFantasia"
-                name="nomeFantasia"
-                value={restaurante.empresa?.nomeFantasia || ''}
-                onChange={handleEmpresaChange}
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="nomeFantasia" name="empresa.nomeFantasia" value={restaurante.empresa?.nomeFantasia || ''}
+                onChange={handleChange} // JÁ ESTAVA CORRETO, MAS CONFIRMANDO
+                placeholder="Ex: Pense Leve Açaí"
               />
             </div>
-
+            
             <div className="col-span-1 md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="endereco">
-                Endereço
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="endereco">Endereço</label>
               <input
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                id="endereco"
-                name="endereco"
-                value={restaurante.empresa?.endereco || ''}
-                onChange={handleEmpresaChange}
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="endereco" name="empresa.endereco" value={restaurante.empresa?.endereco || ''}
+                onChange={handleChange} // CORRIGIDO
+              />
+            </div>
+            
+             {/* ...outros inputs de endereço, bairro, etc. TODOS com onChange={handleChange} e name="empresa.propriedade" */}
+             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="bairro">Bairro</label>
+              <input
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="bairro" name="empresa.bairro" value={restaurante.empresa?.bairro || ''}
+                onChange={handleChange} // CORRIGIDO
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="bairro">
-                Bairro
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="cidade">Cidade</label>
               <input
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                id="bairro"
-                name="bairro"
-                value={restaurante.empresa?.bairro || ''}
-                onChange={handleEmpresaChange}
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="cidade" name="empresa.cidade" value={restaurante.empresa?.cidade || ''}
+                onChange={handleChange} // CORRIGIDO
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="cidade">
-                Cidade
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="estado">Estado</label>
               <input
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                id="cidade"
-                name="cidade"
-                value={restaurante.empresa?.cidade || ''}
-                onChange={handleEmpresaChange}
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="estado" name="empresa.estado" value={restaurante.empresa?.estado || ''}
+                onChange={handleChange} // CORRIGIDO
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="estado">
-                Estado
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="cep">CEP</label>
               <input
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                id="estado"
-                name="estado"
-                value={restaurante.empresa?.estado || ''}
-                onChange={handleEmpresaChange}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="cep">
-                CEP
-              </label>
-              <input
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                id="cep"
-                name="cep"
-                value={restaurante.empresa?.cep || ''}
-                onChange={handleEmpresaChange}
+                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                id="cep" name="empresa.cep" value={restaurante.empresa?.cep || ''}
+                onChange={handleChange} // CORRIGIDO
               />
             </div>
           </div>
         );
 
       case 'horarios':
-        return (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="horarioAbertura">
-                  Horário de Abertura
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
-                    <Clock size={16} />
-                  </div>
-                  <input
-                    className="w-full pl-10 px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    id="horarioAbertura"
-                    name="horarioAbertura"
-                    type="time"
-                    value={restaurante.empresa?.horarioAbertura || ''}
-                    onChange={handleEmpresaChange}
-                  />
-                </div>
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="horarioAbertura">
+              Horário de Abertura
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
+                <Clock size={16} />
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="horarioFechamento">
-                  Horário de Fechamento
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
-                    <Clock size={16} />
-                  </div>
-                  <input
-                    className="w-full pl-10 px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    id="horarioFechamento"
-                    name="horarioFechamento"
-                    type="time"
-                    value={restaurante.empresa?.horarioFechamento || ''}
-                    onChange={handleEmpresaChange}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Dias de Funcionamento
-              </label>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div className="flex items-center">
-                  <input
-                    id="domingo"
-                    name="domingo"
-                    type="checkbox"
-                    checked={restaurante.empresa?.diasFuncionamento?.domingo || false}
-                    onChange={handleDiaFuncionamentoChange}
-                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="domingo" className="ml-2 text-sm text-gray-700">
-                    Domingo
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="segunda"
-                    name="segunda"
-                    type="checkbox"
-                    checked={restaurante.empresa?.diasFuncionamento?.segunda || false}
-                    onChange={handleDiaFuncionamentoChange}
-                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="segunda" className="ml-2 text-sm text-gray-700">
-                    Segunda-feira
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="terca"
-                    name="terca"
-                    type="checkbox"
-                    checked={restaurante.empresa?.diasFuncionamento?.terca || false}
-                    onChange={handleDiaFuncionamentoChange}
-                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="terca" className="ml-2 text-sm text-gray-700">
-                    Terça-feira
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="quarta"
-                    name="quarta"
-                    type="checkbox"
-                    checked={restaurante.empresa?.diasFuncionamento?.quarta || false}
-                    onChange={handleDiaFuncionamentoChange}
-                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="quarta" className="ml-2 text-sm text-gray-700">
-                    Quarta-feira
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="quinta"
-                    name="quinta"
-                    type="checkbox"
-                    checked={restaurante.empresa?.diasFuncionamento?.quinta || false}
-                    onChange={handleDiaFuncionamentoChange}
-                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="quinta" className="ml-2 text-sm text-gray-700">
-                    Quinta-feira
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="sexta"
-                    name="sexta"
-                    type="checkbox"
-                    checked={restaurante.empresa?.diasFuncionamento?.sexta || false}
-                    onChange={handleDiaFuncionamentoChange}
-                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="sexta" className="ml-2 text-sm text-gray-700">
-                    Sexta-feira
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="sabado"
-                    name="sabado"
-                    type="checkbox"
-                    checked={restaurante.empresa?.diasFuncionamento?.sabado || false}
-                    onChange={handleDiaFuncionamentoChange}
-                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="sabado" className="ml-2 text-sm text-gray-700">
-                    Sábado
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="observacoes">
-                Observações
-              </label>
-              <textarea
-                className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
-                focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
-                id="observacoes"
-                name="observacoes"
-                rows={4}
-                value={restaurante.empresa?.observacoes || ''}
-                onChange={handleEmpresaChange}
-                placeholder="Informações adicionais, como regras, etc."
+              <input
+                className="w-full pl-10 px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                id="horarioAbertura"
+                name="horarioAbertura" // Nome correto, sem aninhamento
+                type="time"
+                value={restaurante.empresa?.horarioAbertura || ''}
+                onChange={handleEmpresaChange} // <-- CORREÇÃO: Usa o handler específico
               />
             </div>
           </div>
-        );
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="horarioFechamento">
+              Horário de Fechamento
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
+                <Clock size={16} />
+              </div>
+              <input
+                className="w-full pl-10 px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                id="horarioFechamento"
+                name="horarioFechamento" // Nome correto, sem aninhamento
+                type="time"
+                value={restaurante.empresa?.horarioFechamento || ''}
+                onChange={handleEmpresaChange} // <-- CORREÇÃO: Usa o handler específico
+              />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Dias de Funcionamento
+          </label>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {/* Exemplo para Domingo, repita para os outros dias */}
+            <div className="flex items-center">
+              <input
+                id="domingo"
+                name="domingo" // Nome correto, sem aninhamento
+                type="checkbox"
+                checked={restaurante.empresa?.diasFuncionamento?.domingo || false}
+                onChange={handleDiaFuncionamentoChange} // <-- CORREÇÃO: Usa o handler de checkbox
+                className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <label htmlFor="domingo" className="ml-2 text-sm text-gray-700">Domingo</label>
+            </div>
+            
+            {/* Repita o padrão para todos os outros dias */}
+            <div className="flex items-center">
+                <input id="segunda" name="segunda" type="checkbox" checked={restaurante.empresa?.diasFuncionamento?.segunda || false} onChange={handleDiaFuncionamentoChange} className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                <label htmlFor="segunda" className="ml-2 text-sm text-gray-700">Segunda-feira</label>
+            </div>
+            <div className="flex items-center">
+                <input id="terca" name="terca" type="checkbox" checked={restaurante.empresa?.diasFuncionamento?.terca || false} onChange={handleDiaFuncionamentoChange} className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                <label htmlFor="terca" className="ml-2 text-sm text-gray-700">Terça-feira</label>
+            </div>
+            <div className="flex items-center">
+                <input id="quarta" name="quarta" type="checkbox" checked={restaurante.empresa?.diasFuncionamento?.quarta || false} onChange={handleDiaFuncionamentoChange} className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                <label htmlFor="quarta" className="ml-2 text-sm text-gray-700">Quarta-feira</label>
+            </div>
+            <div className="flex items-center">
+                <input id="quinta" name="quinta" type="checkbox" checked={restaurante.empresa?.diasFuncionamento?.quinta || false} onChange={handleDiaFuncionamentoChange} className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                <label htmlFor="quinta" className="ml-2 text-sm text-gray-700">Quinta-feira</label>
+            </div>
+            <div className="flex items-center">
+                <input id="sexta" name="sexta" type="checkbox" checked={restaurante.empresa?.diasFuncionamento?.sexta || false} onChange={handleDiaFuncionamentoChange} className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                <label htmlFor="sexta" className="ml-2 text-sm text-gray-700">Sexta-feira</label>
+            </div>
+            <div className="flex items-center">
+                <input id="sabado" name="sabado" type="checkbox" checked={restaurante.empresa?.diasFuncionamento?.sabado || false} onChange={handleDiaFuncionamentoChange} className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                <label htmlFor="sabado" className="ml-2 text-sm text-gray-700">Sábado</label>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="observacoes">
+            Observações
+          </label>
+          <textarea
+            className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+            id="observacoes"
+            name="observacoes" // Nome correto, sem aninhamento
+            rows={4}
+            value={restaurante.empresa?.observacoes || ''}
+            onChange={handleEmpresaChange} // <-- CORREÇÃO: Usa o handler específico
+            placeholder="Informações adicionais, como regras, etc."
+          />
+        </div>
+      </div>
+    );
 
       case 'dados-mercado-pago':
         return (

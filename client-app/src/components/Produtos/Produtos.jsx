@@ -20,6 +20,26 @@ const Produtos = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
 
+
+   useEffect(() => {
+  if (nomeDaLoja && !loading) {
+    localStorage.setItem('fomedique_current_store', nomeDaLoja);
+
+    const timer = setTimeout(() => {
+
+      const novaUrl = '/';
+
+      const novoTitulo = `${lojaInfo?.nome_loja || nomeDaLoja} | Fomedique`;
+
+      // Agora isso vai funcionar perfeitamente
+      window.history.pushState({ store: nomeDaLoja }, novoTitulo, novaUrl);
+      document.title = novoTitulo;
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }
+}, [nomeDaLoja, loading, lojaInfo]);
+
   const finalFilteredProducts = useMemo(() => {
     let filtered = produtos;
 
@@ -98,6 +118,7 @@ const Produtos = () => {
         <HeaderPublic 
           onSearchChange={setSearchTerm} 
           searchTerm={searchTerm}
+          currentStore={nomeDaLoja}
       />
         
         <StoreInfo />
@@ -183,5 +204,4 @@ const Produtos = () => {
     </div>
   );
 };
-
 export default Produtos;

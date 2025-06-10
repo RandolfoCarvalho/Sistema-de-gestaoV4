@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Adicionado useEffect aqui
 import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from 'react-router-dom';
 import axios from 'axios';
 import Modal from 'react-modal';
@@ -19,20 +19,15 @@ import ProductDetails from './components/ProdutoDetails/ProductDetails';
 import Header from './components/HeaderPublic/HeaderPublic';
 import CheckoutPage from './components/Checkout/Checkout';
 import Autenticacao from './components/Authentication/Login';
-
-import BottomNav from "./components/BottomNav";
 import Pedidos from "./components/Pedidos/Pedidos";
 import Promocoes from "./components/Promocoes/Promocoes";
 import PedidosDetalhes from "./components/Pedidos/PedidosDetalhes";
-
 
 // Admin Components
 import Sidebar from './components/Admin/Sidebar/Sidebar';
 import HeaderAdmin from './components/Admin/Header/Header';
 import Main from './components/Admin/ui/Main';
 import Content from './components/Admin/ui/Content';
-//import RestaurantDashboard from './components/Admin/Stats/RestaurantDashboard';
-import ProtectedStore from './components/ProtectedStore';
 import RestaurantDashboard from './components/Admin/Dashboard/OrderDashboard';
 import Create from './components/Admin/Stats/CreateProduct';
 import CriarGrupoAdicionais from './components/Admin/Stats/CreateAddGroup';
@@ -41,40 +36,58 @@ import MeusProdutos from './components/Admin/Stats/Products';
 import Perfil from './components/Admin/Stats/Perfil';
 import WhatsappBOT from './components/Admin/Stats/WhatsappBOT/whatsappBOT';
 import Sair from './components/Admin/Stats/logout';
-
-//protecao da rota admin
+import PaginaDeCarregamento from './components/ui/FuturisticLoadingSpinner';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from "./services/AuthContext";
+import ProtectedStore from './components/ProtectedStore';
+
 
 // Axios Global Config
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 Modal.setAppElement('#root');
 
-// Layout Components
-const AdminLayout = ({ children }) => (
-    <>
-        <Header />
-        {children}
-    </>
-);
+// ==========================================================
+// NOVO: Componente para lidar com a Rota Principal ("/")
+// ==========================================================
+const RoteadorPrincipal = () => {
+  const [lojaDeterminada, setLojaDeterminada] = useState(null);
+  const [verificando, setVerificando] = useState(true);
 
-// Private Route Component
-const PrivateRoute = ({ element: Element }) => {
-    const isAuthenticated = () => localStorage.getItem('token') !== null;
-    return isAuthenticated() ? (
-        <AdminLayout>
-            <Element />
-        </AdminLayout>
-    ) : (
-        <Navigate to="/auth/login" replace />
-    );
+  useEffect(() => {
+    // Este hook roda apenas uma vez quando o componente é montado
+    const lojaSalva = localStorage.getItem('fomedique_current_store');
+    if (lojaSalva) {
+      setLojaDeterminada(lojaSalva);
+    }
+    // Independente de encontrar ou não, a verificação terminou
+    setVerificando(false);
+  }, []); // O array vazio [] garante que rode só uma vez
+
+  if (verificando) {
+    // Enquanto estamos verificando o localStorage, mostre uma tela de carregamento
+    return <PaginaDeCarregamento />;
+  }
+
+  if (lojaDeterminada) {
+    // Se encontramos uma loja salva, redireciona o usuário para a página daquela loja
+    // O usuário não verá a URL mudar, pois o React Router faz isso internamente.
+    return <Navigate to={`/loja/${lojaDeterminada}`} replace />;
+  } else {
+    // Se não há loja salva, o usuário provavelmente acessou app.fomedique.com.br diretamente.
+    // O melhor a fazer é levá-lo para a página de login/autenticação.
+    return <Navigate to="/auth/login" replace />;
+  }
 };
+
 
 const App = () => {
     const [darkMode, setDarkMode] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const toggleDarkMode = () => setDarkMode(!darkMode);
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+    
+    // O bloco de lógica que você tinha aqui foi movido para o componente RoteadorPrincipal
+
     return (
         <SignalRProvider>
             <StoreProvider>
@@ -84,9 +97,11 @@ const App = () => {
                         <Router>
                             <div className={darkMode ? "dark" : ""}>
                                 <Routes>
-                                 <Route path="/" element={<Produtos />} />
+                                    {/* MODIFICADO: A rota principal agora usa nosso novo componente inteligente */}
+                                    <Route path="/" element={<RoteadorPrincipal />} />
+
+                                    {/* O restante das suas rotas continua igual */}
                                     <Route element={<ProtectedStore/>}>
-                                        {/* Public Routes */}
                                         <Route path="/loja/:nomeDaLoja" element={<Produtos />} />
                                         <Route path="/product/:id" element={<ProductDetails />} />
                                         <Route path="/checkout" element={<CheckoutPage />} />
@@ -95,6 +110,7 @@ const App = () => {
                                         <Route path="/pedidos/:numeroPedido" element={<PedidosDetalhes />} />
                                         <Route path="/promo" element={<Promocoes />} />
                                     </Route>
+                                    
                                     {/* Admin Routes */}
                                     <Route element={<ProtectedRoute/>}>
                                         <Route path="/admin" element={

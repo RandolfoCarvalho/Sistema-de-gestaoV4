@@ -6,53 +6,47 @@ import { useSearchProducts } from './hooks/useSearchProducts'; // Agora usado in
 import SearchResultsDropdown from './SearchResultsDropdown'; // Componente de UI para os resultados
 import Swal from 'sweetalert2';
 // O Header aceita props opcionais para o modo de "busca dinâmica"
-const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
+const HeaderPublic = ({ onSearchChange, currentStore, searchTerm: controlledSearchTerm }) => {
     const navigate = useNavigate();
-    const { currentStore, storeInfo } = useStore();
+    const { storeInfo } = useStore();
     const [isSearchActive, setIsSearchActive] = useState(false);
     const logoUrl = storeInfo?.imagemUrl;
     const inputRef = useRef(null);
     const headerRef = useRef(null);
 
     const handleShare = async () => {
+        // Guarda de segurança: não faz nada se por algum motivo não soubermos a loja.
+        if (!currentStore) {
+            console.error("Não foi possível determinar a loja para compartilhar.");
+            return;
+        }
+
+        // 1. Monte a URL completa e correta
+        const shareUrl = `${window.location.origin}/loja/${currentStore}`;
+        const storeName = currentStore.charAt(0).toUpperCase() + currentStore.slice(1); // Deixa o nome mais bonito, ex: "Penseleve"
+
         const shareData = {
-            title: `Confira a loja: ${currentStore}`,
-            text: `Encontrei produtos incríveis na ${currentStore}!`,
-            url: window.location.href, // Compartilha a URL da página atual
+            title: `Confira o cardápio de ${storeName}!`,
+            text: `Estou fazendo meu pedido em ${storeName} pelo Fomédique. Peça você também!`,
+            url: shareUrl,
         };
 
-        // Verifica se a Web Share API está disponível no navegador
+        // 2. Tenta usar a API de compartilhamento nativa (melhor para mobile)
         if (navigator.share) {
             try {
                 await navigator.share(shareData);
-                console.log('Conteúdo compartilhado com sucesso!');
+                console.log('Loja compartilhada com sucesso!');
             } catch (err) {
                 console.error('Erro ao compartilhar:', err);
             }
         } else {
-            // Fallback para navegadores que não suportam a API (a maioria dos desktops)
+            // 3. Fallback: Se não houver API, copia para a área de transferência (desktop)
             try {
-                await navigator.clipboard.writeText(shareData.url);
-                // Usando SweetAlert2 para um feedback mais elegante
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'success',
-                    title: 'Link copiado!',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    timerProgressBar: true,
-                });
+                await navigator.clipboard.writeText(shareUrl);
+                alert('Link da loja copiado para a área de transferência!');
             } catch (err) {
                 console.error('Falha ao copiar o link:', err);
-                 Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'error',
-                    title: 'Não foi possível copiar o link',
-                    showConfirmButton: false,
-                    timer: 2000,
-                });
+                alert('Não foi possível copiar o link.');
             }
         }
     };
@@ -74,7 +68,7 @@ const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
 
 
     // --- Handlers de UI ---
-    const handleStoreClick = () => navigate(`/loja/${encodeURIComponent(currentStore)}`);
+    const handleStoreClick = () => navigate(`/`);
     const handleActivateSearch = () => setIsSearchActive(true);
     const handleDeactivateSearch = () => {
         setIsSearchActive(false);
@@ -85,7 +79,6 @@ const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
         navigate(`/product/${id}`);
         handleDeactivateSearch();
     };
-
 
     // --- Efeitos ---
     useEffect(() => {
@@ -141,11 +134,10 @@ const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
                                     Cancelar
                                 </button>
                             ) : (
-                                // CONECTANDO A FUNÇÃO AO BOTÃO
                                 <button
-                                    onClick={handleShare}
+                                    onClick={handleShare} 
                                     className="p-2 text-white hover:bg-gray-100 rounded-full"
-                                    title="Compartilhar loja" // Boa prática para acessibilidade
+                                    title="Compartilhar loja"
                                 >
                                     <Share2 size={18} />
                                 </button>

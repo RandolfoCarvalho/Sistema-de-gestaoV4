@@ -1,9 +1,7 @@
 ﻿import { useState, useEffect } from "react";
 import axios from "axios";
-import { useStore } from "../../Context/StoreContext";
 
-export const useSearchProducts = () => {
-    const { currentStore } = useStore();
+export const useSearchProducts = (currentStore) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [produtos, setProdutos] = useState([]);
     const [loading, setLoading] = useState(false);

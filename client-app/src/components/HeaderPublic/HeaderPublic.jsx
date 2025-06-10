@@ -13,7 +13,7 @@ const HeaderPublic = ({ onSearchChange, currentStore, searchTerm: controlledSear
     const logoUrl = storeInfo?.imagemUrl;
     const inputRef = useRef(null);
     const headerRef = useRef(null);
-
+    
     const handleShare = async () => {
         // Guarda de segurança: não faz nada se por algum motivo não soubermos a loja.
         if (!currentStore) {
@@ -57,7 +57,7 @@ const HeaderPublic = ({ onSearchChange, currentStore, searchTerm: controlledSear
 
     // --- LÓGICA DE BUSCA INTERNA (para páginas como Checkout) ---
     // Usa o hook useSearchProducts somente se NÃO estiver no modo dinâmico
-    const internalSearch = useSearchProducts();
+    const internalSearch = useSearchProducts(isDynamicSearchMode ? null : currentStore);
     
     // --- SELEÇÃO DE ESTADO E FUNÇÕES ---
     // Se estiver no modo dinâmico, usa as props. Senão, usa a busca interna.

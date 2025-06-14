@@ -1,63 +1,79 @@
-﻿import React from "react";
+﻿import React, { useEffect, useState } from "react";
+// Passo 1: Importar o componente Link
+import { Link } from "react-router-dom"; 
 import { useStore } from "../Context/StoreContext";
+import { IsLojaOpen } from "../../services/lojaService";
+import axios from "axios";
 
 const StoreInfo = () => {
-    const { storeInfo } = useStore();
+  const { storeInfo } = useStore();
+  const [lojaAberta, setLojaAberta] = useState(true);
 
-    // O estado de carregamento pode ser mais simples
-    if (!storeInfo) {
-        return (
-            <div className="bg-white py-4 text-center text-sm text-gray-500">
-                Carregando...
-            </div>
+  useEffect(() => {
+    const nomeDaLoja = storeInfo?.nomeDaLoja;
+
+    const fetchData = async () => {
+      try {
+        const restauranteIdResponse = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/1.0/restaurante/BuscarRestauranteIdPorNome/${nomeDaLoja}`
         );
+        const restauranteId = restauranteIdResponse.data;
+        localStorage.setItem("restauranteId", restauranteId);
+
+        const lojaAbertaConsult = await IsLojaOpen(restauranteId);
+        setLojaAberta(lojaAbertaConsult);
+      } catch (error) {
+        console.error("Erro ao verificar status da loja:", error);
+      }
+    };
+    
+    if (nomeDaLoja) {
+      fetchData();
     }
-    const { nomeDaLoja, empresa } = storeInfo;
+  }, [storeInfo]); 
 
-    const formatarHorario = (horario) => {
-        if (!horario) return "N/A";
-        const [hora, minuto] = horario.split(":");
-        return `${parseInt(hora)}h${minuto !== "00" ? minuto : ""}`;
-    };
-
-    const horarioAbertura = formatarHorario(empresa?.horarioAbertura);
-    const horarioFechamento = formatarHorario(empresa?.horarioFechamento);
-
-    const lojaEstaAberta = () => {
-        if (!empresa?.horarioAbertura || !empresa?.horarioFechamento) return false;
-        const agora = new Date();
-        const horaAtual = agora.getHours() * 60 + agora.getMinutes();
-        const [hA, mA] = empresa.horarioAbertura.split(":").map(Number);
-        const [hF, mF] = empresa.horarioFechamento.split(":").map(Number);
-        const horarioAberturaEmMinutos = hA * 60 + mA;
-        const horarioFechamentoEmMinutos = hF * 60 + mF;
-        return horaAtual >= horarioAberturaEmMinutos && horaAtual < horarioFechamentoEmMinutos;
-    };
-
-    const estaAberta = lojaEstaAberta();
-
-    // Agora, o componente retorna um bloco simples de divs, sem 'fixed'
+  if (!storeInfo || !storeInfo.empresa) {
     return (
-        <div className="w-full bg-gray-900 ">
-            {/* Barra de horário principal */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between py-3">
-                    <div className="text-sm text-white">
-                        Abre às {horarioAbertura} · Fecha às {horarioFechamento}
-                    </div>
-                    <div className="text-sm font-medium text-white">
-                        Perfil da loja - {nomeDaLoja}
-                    </div>
-                </div>
-            </div>
-            {/* Mensagem de "Loja fechada" condicional */}
-            {!estaAberta && (
-                <div className="w-full bg-red-100 text-red-700 text-center text-sm font-semibold py-2">
-                    A loja está fechada no momento.
-                </div>
-            )}
-        </div>
+      <div className="bg-white py-4 text-center text-sm text-gray-500">
+        Carregando informações da loja...
+      </div>
     );
+  }
+
+  const { nomeDaLoja, empresa } = storeInfo;
+
+  const formatarHorario = (horario) => {
+    if (!horario) return "N/A";
+    const [hora, minuto] = horario.split(":");
+    return `${parseInt(hora)}h${minuto !== "00" ? minuto : ""}`;
+  };
+
+  const horarioAbertura = formatarHorario(empresa.horarioAbertura);
+  const horarioFechamento = formatarHorario(empresa.horarioFechamento);
+
+  return (
+    <div className="w-full bg-gray-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between py-3">
+          <div className="text-sm text-white">
+            Abre às {horarioAbertura} · Fecha às {horarioFechamento}
+          </div>
+          {/* Passo 2 e 3: Substituir a div pelo Link e configurar a rota */}
+          <Link 
+            to={`/loja/${nomeDaLoja}/perfil`} 
+            className="text-sm font-medium text-white hover:underline"
+          >
+            Perfil da loja - {nomeDaLoja}
+          </Link>
+        </div>
+      </div>
+      {!lojaAberta && (
+        <div className="w-full bg-red-100 text-red-700 text-center text-sm font-semibold py-2">
+          A loja está fechada no momento.
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default StoreInfo;

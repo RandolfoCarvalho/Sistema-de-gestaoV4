@@ -81,7 +81,7 @@ export const usePriceCalculator = (
             return false;
         });
 
-        if (gruposObrigatoriosNaoAtendidos.length > 0) {
+        /*if (gruposObrigatoriosNaoAtendidos.length <= 0) {
             Swal.fire({
                 title: "Seleção obrigatória!",
                 text: `Por favor, atenda aos requisitos do(s) grupo(s): ${gruposObrigatoriosNaoAtendidos
@@ -92,7 +92,7 @@ export const usePriceCalculator = (
                 confirmButtonColor: "#d33",
             });
             return;
-        }
+        }*/
 
         // --- Coleta os complementos e adicionais selecionados ---
         const selectedItems = [];

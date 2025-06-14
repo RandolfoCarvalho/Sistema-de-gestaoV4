@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 // O Header aceita props opcionais para o modo de "busca dinâmica"
 const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
     const navigate = useNavigate();
-    const { currentStore, storeInfo } = useStore();
+    const { fantasyName, currentStore, storeInfo } = useStore();
     const [isSearchActive, setIsSearchActive] = useState(false);
     const logoUrl = storeInfo?.imagemUrl;
     const inputRef = useRef(null);
@@ -116,7 +116,7 @@ const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
                         <div className="w-10 h-10 bg-gray-100 rounded-full overflow-hidden">
                             <img src={logoUrl || "/api/placeholder/40/40"} alt="Logo da loja" className="w-full h-full object-cover" />
                         </div>
-                        <h1 className="text-lg font-bold text-white sm:block">{currentStore || "Loja"}</h1>
+                        <h1 className="text-lg font-bold text-white sm:block">{fantasyName || "Loja"}</h1>
                     </div>
 
                     {/* Barra de Busca que se expande */}

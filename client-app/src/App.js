@@ -24,7 +24,7 @@ import BottomNav from "./components/BottomNav";
 import Pedidos from "./components/Pedidos/Pedidos";
 import Promocoes from "./components/Promocoes/Promocoes";
 import PedidosDetalhes from "./components/Pedidos/PedidosDetalhes";
-
+import PerfilLoja from "./components/Perfil/PerfilLoja";
 
 // Admin Components
 import Sidebar from './components/Admin/Sidebar/Sidebar';
@@ -94,6 +94,7 @@ const App = () => {
                                         <Route path="/pedidos" element={<Pedidos />} />
                                         <Route path="/pedidos/:numeroPedido" element={<PedidosDetalhes />} />
                                         <Route path="/promo" element={<Promocoes />} />
+                                        <Route path='/loja/:nomeDaLoja/perfil' element={<PerfilLoja />} />
                                     </Route>
                                     {/* Admin Routes */}
                                     <Route element={<ProtectedRoute/>}>

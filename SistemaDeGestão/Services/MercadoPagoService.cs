@@ -112,6 +112,7 @@ namespace SistemaDeGestao.Services
         }
         public async Task<PaymentResponseDTO> ProcessPayment(PagamentoCartaoDTO paymentData, PedidoDTO pedidoDTO, string accessToken)
         {
+            await VerificarDisponbilidadeProduto(pedidoDTO);
             Console.WriteLine("==================== INÍCIO DO PROCESSAMENTO DE PAGAMENTO ====================");
             try
             {
@@ -474,5 +475,18 @@ namespace SistemaDeGestao.Services
             return reembolsoResponse;
         }
 
+        private async Task VerificarDisponbilidadeProduto(PedidoDTO pedido)
+        {
+            foreach (var item in pedido.Itens)
+            {
+                var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.Id == item.ProdutoId);
+
+                if (produto == null)
+                    throw new InvalidOperationException($"Produto com ID {item.ProdutoId} não encontrado.");
+
+                if (produto.EstoqueAtual < item.Quantidade)
+                    throw new InvalidOperationException($"Estoque insuficiente para o produto '{produto.Nome}'. Quantidade solicitada: {item.Quantidade}, disponível: {produto.EstoqueAtual}");
+            }
+        }
     }
 }

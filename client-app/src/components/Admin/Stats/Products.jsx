@@ -3,7 +3,7 @@ import axios from 'axios';
 import EditarProdutoModal from './EditarProdutoModal';
 import api from '../../../axiosConfig';
 import { confirmAction, showError, showSuccess } from "@utils/alerts";
-
+import CategoryPillsFilter from '../ui/CategoryPillsFilter';
 const GestaoComponent = () => {
     const [produtos, setProdutos] = useState([]);
     const [categorias, setCategorias] = useState([]);
@@ -111,22 +111,11 @@ const GestaoComponent = () => {
                 </h1>
             </header>
 
-            <div className="mb-8 sm:mb-10 flex justify-center"> {/* Reduzida margem inferior */}
-                <select
-                    value={categoriaSelecionada}
-                    onChange={(e) => setCategoriaSelecionada(e.target.value)}
-                    className="w-full max-w-md p-2.5 text-sm text-slate-700 bg-white border border-slate-300 rounded-lg shadow-sm
-                               focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-shadow" // Reduzido padding e fonte
-                    aria-label="Selecionar categoria de produtos"
-                >
-                    <option value="todas">Todas as Categorias</option>
-                    {categorias.map(categoria => (
-                        <option key={categoria.id} value={categoria.id}>
-                            {categoria.nome}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            <CategoryPillsFilter 
+                categorias={categorias}
+                categoriaSelecionada={categoriaSelecionada}
+                onSelectCategory={setCategoriaSelecionada}
+            />
 
             {categoriasVisiveis.length > 0 ? (
                 categoriasVisiveis.map(categoriaId => {

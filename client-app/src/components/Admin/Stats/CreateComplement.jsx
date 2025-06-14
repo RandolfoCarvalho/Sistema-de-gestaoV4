@@ -1,781 +1,313 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { confirmAction, showSuccess, showError } from '@utils/alerts';
-import api from '../../../axiosConfig';
+import { confirmAction, showSuccess, showError } from '@utils/alerts'; // Ajuste o caminho se necessário
+import api from '../../../axiosConfig'; // Ajuste o caminho se necessário
+import { Plus, Trash2, Save, X, Loader2, List, ChevronsRight, Edit, Info, AlertTriangle } from 'lucide-react';
 
 const GerenciamentoComplementos = () => {
-    // Estados para o modo atual (criar ou editar)
-    const [modo, setModo] = useState('listar'); // 'listar', 'criar', 'editar'
+    // --- ESTADOS GERAIS ---
     const [gruposComplementos, setGruposComplementos] = useState([]);
-    const [grupoAtual, setGrupoAtual] = useState(null);
-    const [carregando, setCarregando] = useState(false);
-    const [erro, setErro] = useState('');
-    // Estados para formulário de criar/editar grupo
-    const [grupoNome, setGrupoNome] = useState('');
-    const [grupoDescricao, setGrupoDescricao] = useState('');
-    const [grupoAtivo, setGrupoAtivo] = useState(true);
-    const [grupoObrigatorio, setGrupoObrigatorio] = useState(false);
-    const [quantidadeMinima, setQuantidadeMinima] = useState('');
-    const [multiplaEscolha, setMultiplaEscolha] = useState(false);
+    const [grupoSelecionadoId, setGrupoSelecionadoId] = useState(null);
+    const [isCreating, setIsCreating] = useState(false);
 
-    const [quantidadeMaxima, setQuantidadeMaxima] = useState('');
-    const [complementos, setComplementos] = useState([]);
-    const [novoComplemento, setNovoComplemento] = useState({
+    // --- ESTADOS DE CONTROLE DE UI ---
+    const [isLoadingList, setIsLoadingList] = useState(true);
+    const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState(null);
+
+    // --- ESTADOS DO FORMULÁRIO UNIFICADO ---
+    const [formData, setFormData] = useState({
+        id: null,
         nome: '',
-        preco: '',
         descricao: '',
-        maximoPorProduto: '',
-        estoqueAtual: '',
-        ativo: true
+        ativo: true,
+        obrigatorio: false, // Campo crucial
+        multiplaEscolha: false,
+        complementos: []
     });
-    // Função para buscar todos os grupos de complementos
+    const [novoComplemento, setNovoComplemento] = useState({ nome: '', preco: '', descricao: '', maximoPorProduto: '', estoqueAtual: '', ativo: true });
+
+    // --- FUNÇÕES DE API E DADOS ---
     const buscarGruposComplementos = async () => {
-        setCarregando(true);
-        setErro('');
+        setIsLoadingList(true);
+        setError(null);
         try {
             const response = await api.get('/api/1.0/Complemento/ListarGrupoComplementosAtivosEInativos');
-            setGruposComplementos(response.data);
-            console.log("Grupos", response.data);
-        } catch (error) {
-            console.error('Erro ao buscar grupos de complementos:', error);
-            setErro('Falha ao carregar os grupos de complementos. Por favor, tente novamente.');
+            setGruposComplementos(response.data || []);
+        } catch (err) {
+            console.error('Erro ao buscar grupos:', err);
+            setError('Falha ao carregar os grupos de complementos.');
         } finally {
-            setCarregando(false);
+            setIsLoadingList(false);
         }
     };
 
-
-    // Manipulador para o checkbox de múltipla escolha
-    const handleMultiplaEscolhaChange = (e) => {
-        setMultiplaEscolha(e.target.checked);
-    };
-
-    // Função para buscar um grupo específico pelo ID
-    const [modalAberto, setModalAberto] = useState(false);
-
-    const buscarGrupoComplementoPorId = async (id) => {
-        setCarregando(true);
-        setErro('');
+    const buscarDetalhesDoGrupo = async (id) => {
+        if (!id) return;
+        setIsLoadingDetails(true);
+        setError(null);
+        setIsCreating(false);
         try {
             const response = await api.get(`/api/1.0/Complemento/ListarGrupoComplementos/${id}`);
             const grupo = response.data;
-            console.log("Grupo por ID", response.data);
-            setGrupoAtual(grupo);
-            setGrupoNome(grupo.nome);
-            setGrupoDescricao(grupo.descricao || '');
-            setGrupoAtivo(grupo.ativo);
-            setGrupoObrigatorio(grupo.obrigatorio);
-            setQuantidadeMinima(grupo.quantidadeMinima || '');
-            setQuantidadeMaxima(grupo.quantidadeMaxima || '');
-            setMultiplaEscolha(grupo.multiplaEscolha);
-            setComplementos(grupo.complementos.map(complemento => ({
-                id: complemento.id,
-                nome: complemento.nome,
-                preco: complemento.preco.toString(),
-                descricao: complemento.descricao,
-                maximoPorProduto: complemento.maximoPorProduto ? complemento.maximoPorProduto.toString() : '',
-                estoqueAtual: complemento.estoqueAtual ? complemento.estoqueAtual.toString() : '',
-                ativo: complemento.ativo
-            })));
-
-            setModo('editar');
-            setModalAberto(true);
-        } catch (error) {
-            console.error('Erro ao buscar grupo de complementos:', error);
-            setErro('Falha ao carregar o grupo de complementos. Por favor, tente novamente.');
+            setFormData({
+                id: grupo.id,
+                nome: grupo.nome || '',
+                descricao: grupo.descricao || '',
+                ativo: grupo.ativo,
+                obrigatorio: grupo.obrigatorio,
+                multiplaEscolha: grupo.multiplaEscolha,
+                complementos: grupo.complementos.map(comp => ({
+                    id: comp.id,
+                    nome: comp.nome || '',
+                    preco: comp.preco.toString(),
+                    descricao: comp.descricao || '',
+                    maximoPorProduto: comp.maximoPorProduto ? comp.maximoPorProduto.toString() : '',
+                    estoqueAtual: comp.estoqueAtual ? comp.estoqueAtual.toString() : '',
+                    ativo: comp.ativo
+                })) || []
+            });
+        } catch (err) {
+            console.error('Erro ao buscar detalhes do grupo:', err);
+            showError("Erro", "Falha ao carregar os detalhes do grupo.");
+            setGrupoSelecionadoId(null);
         } finally {
-            setCarregando(false);
+            setIsLoadingDetails(false);
         }
     };
 
-    // Carregar grupos de complementos ao montar o componente
     useEffect(() => {
         buscarGruposComplementos();
     }, []);
 
-    // Handlers para manipular o formulário
-    const handleGrupoNomeChange = (e) => {
-        setGrupoNome(e.target.value);
-    };
+    useEffect(() => {
+        if (grupoSelecionadoId) {
+            buscarDetalhesDoGrupo(grupoSelecionadoId);
+        }
+    }, [grupoSelecionadoId]);
 
-    const handleGrupoDescricaoChange = (e) => {
-        setGrupoDescricao(e.target.value);
-    };
-
-    const handleGrupoAtivoChange = (e) => {
-        setGrupoAtivo(e.target.checked);
-    };
-
-    const handleGrupoObrigatorioChange = (e) => {
-        setGrupoObrigatorio(e.target.checked);
-    };
-
-    const handleQuantidadeMinimaChange = (e) => {
-        setQuantidadeMinima(e.target.value);
-    };
-
-    const handleQuantidadeMaximaChange = (e) => {
-        setQuantidadeMaxima(e.target.value);
-    };
-
-    const handleNovoComplementoChange = (e) => {
+    // --- HANDLERS E MANIPULAÇÃO DO FORMULÁRIO ---
+    const handleFormChange = (e) => {
         const { name, value, type, checked } = e.target;
-
-        const novoValor = type === 'checkbox'
-            ? checked
-            : (name === 'maximoPorProduto' && value === '')
-                ? ''
-                : value;
-
-        setNovoComplemento({ ...novoComplemento, [name]: novoValor });
+        setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
     };
 
     const handleComplementoChange = (index, e) => {
         const { name, value, type, checked } = e.target;
-        const novosComplementos = [...complementos];
-
-        novosComplementos[index][name] = type === 'checkbox'
-            ? checked
-            : value;
-
-        setComplementos(novosComplementos);
+        const novosComplementos = [...formData.complementos];
+        novosComplementos[index][name] = type === 'checkbox' ? checked : value;
+        setFormData(prev => ({ ...prev, complementos: novosComplementos }));
     };
 
-    const adicionarComplemento = () => {
-        if (novoComplemento.nome && novoComplemento.preco && novoComplemento.descricao) {
-            setComplementos([...complementos, novoComplemento]);
-            setNovoComplemento({
-                nome: '',
-                preco: '',
-                descricao: '',
-                maximoPorProduto: '',
-                estoqueAtual: '',
-                ativo: true
-            });
+    const handleNovoComplementoChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setNovoComplemento(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    };
+    
+    const adicionarItemComplemento = () => {
+        if (novoComplemento.nome && novoComplemento.preco) {
+            setFormData(prev => ({
+                ...prev,
+                complementos: [...prev.complementos, { ...novoComplemento, id: 0 }]
+            }));
+            setNovoComplemento({ nome: '', preco: '', descricao: '', maximoPorProduto: '', estoqueAtual: '', ativo: true });
+        } else {
+            showError("Campos incompletos", "Preencha ao menos Nome e Preço para adicionar um item.");
         }
     };
-    const removerComplemento = async (id, index) => {
-        try {
-            await api.delete(`/api/1.0/Complemento/DeletarComplemento/${id}`);
-            // Se a API deletar com sucesso, removemos do estado local
-            const novosComplementos = complementos.filter((_, i) => i !== index);
-            setComplementos(novosComplementos);
-        } catch (error) {
-            console.error("Erro ao deletar complemento:", error);
-            alert("Erro ao deletar complemento!");
-        }
+    
+    const removerItemComplementoLocal = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            complementos: prev.complementos.filter((_, i) => i !== index)
+        }));
     };
 
-    const limparFormulario = () => {
-        setGrupoNome('');
-        setGrupoDescricao('');
-        setGrupoAtivo(true);
-        setGrupoObrigatorio(false);
-        setQuantidadeMinima('');
-        setQuantidadeMaxima('');
-        setComplementos([]);
-        setGrupoAtual(null);
+    const iniciarCriacao = () => {
+        setGrupoSelecionadoId(null);
+        setIsCreating(true);
+        setFormData({ id: null, nome: '', descricao: '', ativo: true, obrigatorio: false, multiplaEscolha: false, complementos: [] });
     };
 
-    const iniciarCriacaoGrupo = () => {
-        limparFormulario();
-        setModo('criar');
+    const cancelarEdicao = () => {
+        setIsCreating(false);
+        setGrupoSelecionadoId(null);
     };
 
-    const voltarParaLista = () => {
-        setModo('listar');
-        limparFormulario();
-    };
-
-    // Função para salvar (criar ou atualizar) um grupo de complementos
+    // --- FUNÇÕES DE AÇÃO (CRUD) ---
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setCarregando(true);
-        setErro('');
+        if (!formData.nome.trim()) {
+            showError("Nome obrigatório", "O nome do grupo não pode ser vazio.");
+            return;
+        }
+        
+        setIsSubmitting(true);
+        setError(null);
 
+        // O payload agora não inclui mais os campos de quantidade mínima/máxima a nível de grupo
+        const payload = {
+            Id: formData.id || 0,
+            Nome: formData.nome.trim(),
+            Descricao: formData.descricao.trim(),
+            Ativo: formData.ativo,
+            Obrigatorio: formData.obrigatorio, // Campo corrigido
+            MultiplaEscolha: formData.multiplaEscolha,
+            Complementos: formData.complementos.map(comp => ({
+                Id: comp.id || 0,
+                Nome: comp.nome.trim(),
+                Descricao: comp.descricao.trim(),
+                Preco: comp.preco ? parseFloat(comp.preco) : 0,
+                Ativo: comp.ativo,
+                MaximoPorProduto: comp.maximoPorProduto === '' ? null : parseInt(comp.maximoPorProduto),
+                EstoqueAtual: comp.estoqueAtual === '' ? null : parseInt(comp.estoqueAtual)
+            }))
+        };
         try {
-            const payload = {
-                Nome: grupoNome?.trim() || "Grupo sem nome",
-                Descricao: grupoDescricao?.trim() || "",
-                Ativo: grupoAtivo,
-                Obrigatorio: grupoObrigatorio,
-                QuantidadeMinima: quantidadeMinima === '' ? null : parseInt(quantidadeMinima),
-                QuantidadeMaxima: quantidadeMaxima === '' ? null : parseInt(quantidadeMaxima),
-                MultiplaEscolha: multiplaEscolha,
-                Complementos: complementos.map(complemento => ({
-                    Id: complemento.id || 0,
-                    Nome: complemento.nome?.trim() || "Complemento sem nome",
-                    Descricao: complemento.descricao?.trim() || "Sem descrição",
-                    Preco: complemento.preco ? parseFloat(complemento.preco) : 0,
-                    Ativo: complemento.ativo,
-                    MaximoPorProduto: complemento.maximoPorProduto === '' ? null : parseInt(complemento.maximoPorProduto),
-                    EstoqueAtual: complemento.estoqueAtual === '' ? null : parseInt(complemento.estoqueAtual)
-                }))
-            };
-
-            let response;
-
-            if (modo === 'criar') {
-                response = await api.post('/api/1.0/Complemento/CriarGrupoComplemento', payload);
-
-                if (response.status === 200) {
-                    await showSuccess('Sucesso!', 'Grupo e complementos criados com sucesso!');
-                    voltarParaLista();
-                    buscarGruposComplementos();
-                }
-            } else if (modo === 'editar' && grupoAtual) {
-                payload.Id = grupoAtual.id;
-
-                response = await api.put('/api/1.0/Complemento/AtualizarGrupoComplemento', payload);
-
-                if (response.status === 200) {
-                    await showSuccess('Sucesso!', 'Grupo e complementos atualizados com sucesso!');
-                    voltarParaLista();
-                    buscarGruposComplementos();
-                }
+            if (isCreating) {
+                await api.post('/api/1.0/Complemento/CriarGrupoComplemento', payload);
+                showSuccess('Sucesso!', 'Grupo criado com sucesso!');
+            } else {
+                await api.put('/api/1.0/Complemento/AtualizarGrupoComplemento', payload);
+                showSuccess('Sucesso!', 'Grupo atualizado com sucesso!');
             }
-        } catch (error) {
-            console.error('Erro ao salvar grupo de complementos:', error.response?.data || error.message);
-            const errorMsg = error.response?.data || 'Erro ao salvar grupo de complementos. Por favor, tente novamente.';
-            setErro(errorMsg);
-            showError('Erro!', errorMsg);
+            cancelarEdicao();
+            await buscarGruposComplementos();
+        } catch (err) {
+            console.error('Erro ao salvar grupo:', err);
+            showError('Erro ao Salvar', err.response?.data || 'Ocorreu um erro ao salvar.');
         } finally {
-            setCarregando(false);
+            setIsSubmitting(false);
         }
     };
 
-    const excluirGrupo = async (id) => {
-        const result = await confirmAction(
-            "Tem certeza?",
-            "Esta ação não pode ser desfeita!"
-        );
-
+    const handleDeleteGrupo = async (id) => {
+        const result = await confirmAction("Tem certeza?", "Esta ação excluirá o grupo e todos os seus complementos. Não pode ser desfeita!");
         if (result.isConfirmed) {
-            setCarregando(true);
-            setErro('');
-
+            setIsSubmitting(true);
             try {
-                const response = await api.delete(`/api/1.0/Complemento/DeletarGrupoComplemento/${id}`);
-
-                if (response.status === 200) {
-                    await showSuccess("Excluído!", "Grupo de complementos excluído com sucesso!");
-                    buscarGruposComplementos();
+                await api.delete(`/api/1.0/Complemento/DeletarGrupoComplemento/${id}`);
+                showSuccess("Excluído!", "Grupo de complementos excluído com sucesso!");
+                if (grupoSelecionadoId === id) {
+                    cancelarEdicao();
                 }
-            } catch (error) {
-                console.error('Erro ao excluir grupo de complementos:', error.response?.data || error.message);
-                const errorMsg = error.response?.data || 'Erro ao excluir grupo de complementos. Por favor, tente novamente.';
-                setErro(errorMsg);
-                showError("Erro!", errorMsg);
+                await buscarGruposComplementos();
+            } catch (err) {
+                showError("Erro!", err.response?.data || "Não foi possível excluir o grupo.");
             } finally {
-                setCarregando(false);
+                setIsSubmitting(false);
             }
         }
     };
-
-    // Função para excluir um complemento específico (apenas na edição)
-    const excluirComplemento = async (grupoId, complementoId) => {
-        if (window.confirm("Tem certeza que deseja excluir este complemento?")) {
-            setCarregando(true);
-            setErro('');
+    
+    const handleDeleteComplementoPermanently = async (complementoId) => {
+        if (!formData.id || !complementoId) return;
+        const result = await confirmAction("Excluir permanentemente?", "Este item será removido do banco de dados.");
+        if (result.isConfirmed) {
+            setIsSubmitting(true);
             try {
-                const response = await api.delete(`/api/1.0/Complemento/ExcluirComplementoDeGrupo/${grupoId}/${complementoId}`);
-                if (response.status === 200) {
-                    alert('Complemento excluído com sucesso!');
-                    // Atualizar o grupo atual para refletir a exclusão
-                    buscarGrupoComplementoPorId(grupoId);
-                }
-            } catch (error) {
-                console.error('Erro ao excluir complemento:', error.response?.data || error.message);
-                setErro(error.response?.data || 'Erro ao excluir complemento. Por favor, tente novamente.');
+                await api.delete(`/api/1.0/Complemento/ExcluirComplementoDeGrupo/${formData.id}/${complementoId}`);
+                showSuccess('Item Excluído', 'O complemento foi removido permanentemente.');
+                await buscarDetalhesDoGrupo(formData.id);
+            } catch (err) {
+                showError("Erro ao excluir", err.response?.data || "Não foi possível remover o item.");
             } finally {
-                setCarregando(false);
+                setIsSubmitting(false);
             }
         }
-    };
-    // Renderização da lista de grupos de complementos
-    const renderizarListaGrupos = () => {
-        // Estado de carregamento
-        if (carregando && gruposComplementos.length === 0) {
-            return (
-                <div className="flex items-center justify-center py-6">
-                    <div className="h-6 w-6 border-t-2 border-blue-500 rounded-full animate-spin mr-2"></div>
-                    <p className="text-blue-600 text-sm font-medium">Carregando grupos...</p>
-                </div>
-            );
-        }
-
-        // Estado de erro
-        if (erro && gruposComplementos.length === 0) {
-            return (
-                <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded-md">
-                    <div className="flex items-center">
-                        <svg className="h-5 w-5 text-red-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <p className="text-sm text-red-700">{erro}</p>
-                    </div>
-                </div>
-            );
-        }
-        // Estado vazio
-        if (gruposComplementos.length === 0) {
-            return (
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-5 text-center">
-                    <svg className="h-8 w-8 text-gray-400 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                    </svg>
-                    <p className="text-gray-600 font-medium text-sm mb-3">Nenhum grupo de complementos encontrado.</p>
-                    <button className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors">
-                        Criar Novo Grupo
-                    </button>
-                </div>
-            );
-        }
-        // Lista de grupos
-        return (
-            <div className="space-y-3">
-                {gruposComplementos.map(grupo => (
-                    <div key={grupo.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow transition-shadow">
-                        {/* Cabeçalho do grupo */}
-                        <div className="flex justify-between items-center p-2.5 bg-gradient-to-r from-blue-50 to-white border-b">
-                            <div className="flex items-center">
-                                <div className="bg-white rounded-md p-1 shadow-sm mr-2">
-                                    <svg className="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold text-gray-800 text-sm">
-                                        {grupo.nome || "Grupo sem nome"}
-                                    </h3>
-                                    {grupo.descricao && (
-                                        <p className="text-xs text-gray-500">{grupo.descricao}</p>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="flex space-x-1">
-                                <button
-                                    onClick={() => buscarGrupoComplementoPorId(grupo.id)}
-                                    className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-colors"
-                                    title="Editar grupo"
-                                >
-                                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                    </svg>
-                                </button>
-                                <button
-                                    onClick={() => excluirGrupo(grupo.id)}
-                                    className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
-                                    title="Excluir grupo"
-                                >
-                                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        {/* Listagem de complementos */}
-                        <div className="p-2 bg-gray-50">
-                            {grupo.complementos && grupo.complementos.length > 0 ? (
-                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-                                    {grupo.complementos.map(complemento => (
-                                        <div
-                                            key={complemento.id}
-                                            className="relative p-2 bg-white rounded-md border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all flex flex-col h-full"
-                                        >
-                                            {!complemento.ativo && (
-                                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full font-medium text-xs">
-                                                    Inativo
-                                                </span>
-                                            )}
-                                            <div className="flex justify-between items-start mb-1">
-                                                <h4 className="font-medium text-gray-800 text-xs">{complemento.nome}</h4>
-                                                <span className="text-blue-600 font-semibold text-xs">
-                                                    R$ {complemento.preco.toFixed(2)}
-                                                </span>
-                                            </div>
-
-                                            {complemento.descricao && (
-                                                <p className="text-xs text-gray-600 mb-1 line-clamp-1">
-                                                    {complemento.descricao}
-                                                </p>
-                                            )}
-
-                                            <div className="flex flex-wrap gap-1 mt-auto">
-                                                {complemento.maximoPorProduto && (
-                                                    <span className="inline-flex items-center px-1.5 py-0.5 bg-blue-50 text-blue-700 text-xs rounded">
-                                                        Máx: {complemento.maximoPorProduto}
-                                                    </span>
-                                                )}
-                                                {complemento.estoqueAtual !== null && complemento.estoqueAtual !== undefined && (
-                                                    <span className={`inline-flex items-center px-1.5 py-0.5 text-xs rounded ${complemento.estoqueAtual > 10
-                                                            ? 'bg-green-50 text-green-700'
-                                                            : complemento.estoqueAtual > 0
-                                                                ? 'bg-yellow-50 text-yellow-700'
-                                                                : 'bg-red-50 text-red-700'
-                                                        }`}>
-                                                        Est: {complemento.estoqueAtual}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="flex items-center justify-center py-3 bg-white rounded-md border border-gray-100">
-                                    <svg className="h-4 w-4 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <span className="text-xs text-gray-500">Sem complementos</span>
-                                    <button className="ml-2 text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center">
-                                        <svg className="h-3 w-3 mr-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                        </svg>
-                                        Adicionar
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                ))}
-            </div>
-        );
-    };
-    // Renderização do formulário para criar/editar grupo de complementos
-    const renderizarFormularioGrupo = () => {
-        return (
-            <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                    <label htmlFor="grupoNome" className="block text-sm font-medium text-gray-700">
-                        Nome do Grupo
-                    </label>
-                    <input
-                        type="text"
-                        id="grupoNome"
-                        value={grupoNome}
-                        onChange={handleGrupoNomeChange}
-                        required
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="grupoDescricao" className="block text-sm font-medium text-gray-700">
-                        Descrição do Grupo
-                    </label>
-                    <textarea
-                        id="grupoDescricao"
-                        value={grupoDescricao}
-                        onChange={handleGrupoDescricaoChange}
-                        rows="2"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <div className="flex items-center">
-                            <input
-                                type="checkbox"
-                                id="grupoAtivo"
-                                checked={grupoAtivo}
-                                onChange={handleGrupoAtivoChange}
-                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                            />
-                            <label htmlFor="grupoAtivo" className="ml-2 block text-sm text-gray-700">
-                                Ativo
-                            </label>
-                        </div>
-
-                        <div className="flex items-center">
-                            <input
-                                type="checkbox"
-                                id="grupoObrigatorio"
-                                checked={grupoObrigatorio}
-                                onChange={handleGrupoObrigatorioChange}
-                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                            />
-                            <label htmlFor="grupoObrigatorio" className="ml-2 block text-sm text-gray-700">
-                                Obrigatório
-                            </label>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2">
-                        <div>
-                            <label htmlFor="multiplaEscolha" className="block text-sm font-medium text-gray-700">
-                                Múltipla escolha de adicionais
-                            </label>
-                            <input
-                                type="checkbox"
-                                id="multiplaEscolha"
-                                checked={multiplaEscolha}
-                                onChange={handleMultiplaEscolhaChange}
-                                className="mt-1"
-                            />
-                            <span className="ml-2 text-sm">Mutiplos Complementos</span>
-                        </div>
-
-                        <div>
-                            <label htmlFor="quantidadeMaxima" className="block text-sm font-medium text-gray-700">
-                                Quantidade Máxima
-                            </label>
-                            <input
-                                type="number"
-                                id="quantidadeMaxima"
-                                value={quantidadeMaxima}
-                                onChange={handleQuantidadeMaximaChange}
-                                min="1"
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                placeholder="Opcional"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 className="text-lg font-medium text-gray-700 mb-2">Complementos</h3>
-
-                    {complementos.length > 0 ? (
-                        <div className="space-y-2 mb-4">
-                            {complementos.map((complemento, index) => (
-                                <div key={index} className="p-3 bg-gray-50 rounded border">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-                                        <div>
-                                            <label className="block text-xs font-medium text-gray-700">Nome</label>
-                                            <input
-                                                type="text"
-                                                name="nome"
-                                                value={complemento.nome}
-                                                onChange={(e) => handleComplementoChange(index, e)}
-                                                required
-                                                className="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-medium text-gray-700">Preço</label>
-                                            <input
-                                                type="number"
-                                                name="preco"
-                                                value={complemento.preco}
-                                                onChange={(e) => handleComplementoChange(index, e)}
-                                                required
-                                                step="0.01"
-                                                className="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="mb-2">
-                                        <label className="block text-xs font-medium text-gray-700">Descrição</label>
-                                        <textarea
-                                            name="descricao"
-                                            value={complemento.descricao}
-                                            onChange={(e) => handleComplementoChange(index, e)}
-                                            required
-                                            className="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                            rows="2"
-                                        />
-                                    </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2">
-                                        <div>
-                                            <label className="block text-xs font-medium text-gray-700">Máximo por Produto</label>
-                                            <input
-                                                type="number"
-                                                name="maximoPorProduto"
-                                                value={complemento.maximoPorProduto}
-                                                onChange={(e) => handleComplementoChange(index, e)}
-                                                min="1"
-                                                className="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                                placeholder="Opcional"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-medium text-gray-700">Estoque Atual</label>
-                                            <input
-                                                type="number"
-                                                name="estoqueAtual"
-                                                value={complemento.estoqueAtual}
-                                                onChange={(e) => handleComplementoChange(index, e)}
-                                                min="0"
-                                                className="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                                placeholder="Opcional"
-                                            />
-                                        </div>
-                                        <div className="flex items-end">
-                                            <div className="flex items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    name="ativo"
-                                                    id={`complemento-ativo-${index}`}
-                                                    checked={complemento.ativo}
-                                                    onChange={(e) => handleComplementoChange(index, e)}
-                                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                                />
-                                                <label htmlFor={`complemento-ativo-${index}`} className="ml-2 block text-sm text-gray-700">
-                                                    Ativo
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex justify-end">
-                                        <button
-                                            type="button"
-                                            onClick={() => removerComplemento(complemento.id, index)}
-                                            className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
-                                        >
-                                            Remover
-                                        </button>
-                                        {/* Botão de excluir aparece apenas para complementos já existentes com ID */}
-                                        {modo === 'editar' && complemento.id && (
-                                            <button
-                                                type="button"
-                                                onClick={() => excluirComplemento(grupoAtual.id, complemento.id)}
-                                                className="ml-2 px-2 py-1 bg-red-700 text-white rounded hover:bg-red-800 text-sm"
-                                            >
-                                                Excluir Permanentemente
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-gray-500 mb-4">Nenhum complemento adicionado. Adicione pelo menos um complemento.</p>
-                    )}
-
-                    <div className="p-3 bg-gray-100 rounded border">
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">Novo Complemento</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-                            <div>
-                                <input
-                                    type="text"
-                                    name="nome"
-                                    value={novoComplemento.nome}
-                                    onChange={handleNovoComplementoChange}
-                                    placeholder="Nome do Complemento"
-                                    className="block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                />
-                            </div>
-                            <div>
-                                <input
-                                    type="number"
-                                    name="preco"
-                                    value={novoComplemento.preco}
-                                    onChange={handleNovoComplementoChange}
-                                    placeholder="Preço do Complemento"
-                                    step="0.01"
-                                    className="block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="mb-2">
-                            <textarea
-                                name="descricao"
-                                value={novoComplemento.descricao}
-                                onChange={handleNovoComplementoChange}
-                                placeholder="Descrição do Complemento"
-                                className="block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                rows="2"
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2">
-                            <div>
-                                <input
-                                    type="number"
-                                    name="maximoPorProduto"
-                                    value={novoComplemento.maximoPorProduto}
-                                    onChange={handleNovoComplementoChange}
-                                    placeholder="Máximo por produto (opcional)"
-                                    min="1"
-                                    className="block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                />
-                            </div>
-                            <div>
-                                <input
-                                    type="number"
-                                    name="estoqueAtual"
-                                    value={novoComplemento.estoqueAtual}
-                                    onChange={handleNovoComplementoChange}
-                                    placeholder="Estoque atual (opcional)"
-                                    min="0"
-                                    className="block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                />
-                            </div>
-                            <div className="flex items-center">
-                                <input
-                                    type="checkbox"
-                                    name="ativo"
-                                    id="novoComplementoAtivo"
-                                    checked={novoComplemento.ativo}
-                                    onChange={handleNovoComplementoChange}
-                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                />
-                                <label htmlFor="novoComplementoAtivo" className="ml-2 block text-sm text-gray-700">
-                                    Ativo
-                                </label>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-end">
-                            <button
-                                type="button"
-                                onClick={adicionarComplemento}
-                                disabled={!novoComplemento.nome || !novoComplemento.preco || !novoComplemento.descricao}
-                                className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                            >
-                                Adicionar Complemento
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="flex justify-between pt-4">
-                    <button
-                        type="button"
-                        onClick={voltarParaLista}
-                        className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-                    >
-                        Cancelar
-                    </button>
-                    <button
-                        type="submit"
-                        disabled={complementos.length === 0 || carregando}
-                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                    >
-                        {carregando ? 'Salvando...' : modo === 'criar' ? 'Criar Grupo de Complementos' : 'Atualizar Grupo de Complementos'}
-                    </button>
-                </div>
-            </form>
-        );
     };
 
     return (
-        <div className="p-2">
-            <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                <div className="p-4 border-b">
-                    <div className="flex justify-between items-center">
-                        <h2 className="text-xl font-bold text-gray-800">
-                            Gerenciamento de Complementos
-                        </h2>
-                        {modo === 'listar' && (
-                            <button
-                                onClick={iniciarCriacaoGrupo}
-                                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                            >
-                                Criar Novo Grupo
-                            </button>
-                        )}
+        <div className="h-screen w-full bg-gray-100 flex flex-col font-sans">
+            <header className="p-4 bg-white border-b border-gray-200 shrink-0">
+                <h1 className="text-xl font-bold text-gray-800">Gerenciamento de Complementos</h1>
+                {error && <div className="mt-2 p-2 bg-red-100 text-red-700 text-sm rounded-md flex items-center"><AlertTriangle size={16} className="mr-2" />{error}</div>}
+            </header>
+
+            <main className="flex-grow grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 min-h-0">
+                <aside className="md:col-span-1 lg:col-span-1 h-full min-h-0 bg-white border-r border-gray-200 flex flex-col">
+                    <div className="p-4 border-b border-gray-200"><h2 className="text-lg font-bold text-gray-800 flex items-center"><List size={20} className="mr-2" />Grupos</h2></div>
+                    <div className="p-4"><button onClick={iniciarCriacao} className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"><Plus size={16} className="mr-2" /> Criar Novo Grupo</button></div>
+                    <div className="flex-grow overflow-y-auto px-2 pb-2">
+                        {isLoadingList ? <div className="flex justify-center items-center h-full"><Loader2 className="animate-spin text-blue-500" size={24} /></div>
+                            : gruposComplementos.length === 0 ? <div className="p-4 text-center text-sm text-gray-500">Nenhum grupo encontrado.</div>
+                            : <ul className="space-y-1">{gruposComplementos.map(grupo => (<li key={grupo.id}><button onClick={() => setGrupoSelecionadoId(grupo.id)} className={`w-full text-left p-3 rounded-md flex justify-between items-center transition-colors ${grupoSelecionadoId === grupo.id ? 'bg-blue-100 text-blue-800 font-semibold' : 'hover:bg-gray-100'}`}><span className="flex items-center"><span className={`w-2 h-2 rounded-full mr-3 shrink-0 ${grupo.ativo ? 'bg-green-500' : 'bg-red-500'}`}></span>{grupo.nome}</span><ChevronsRight size={16} className={`transition-transform ${grupoSelecionadoId === grupo.id ? 'translate-x-1' : ''}`} /></button></li>))}</ul>}
                     </div>
-                </div>
-                <div className="p-4">
-                    {modo === 'listar' && renderizarListaGrupos()}
-                    {(modo === 'criar' || modo === 'editar') && renderizarFormularioGrupo()}
-                </div>
-            </div>
+                </aside>
+
+                <section className="md:col-span-2 lg:col-span-3 h-full min-h-0 bg-gray-50">
+                    {isLoadingDetails ? <div className="flex justify-center items-center h-full"><Loader2 className="animate-spin text-blue-500" size={32} /></div>
+                    : !isCreating && !grupoSelecionadoId ? <div className="flex flex-col justify-center items-center h-full text-center text-gray-500 p-8"><Info size={48} className="mb-4 text-gray-400" /><h3 className="text-xl font-semibold text-gray-700">Gerenciador de Complementos</h3><p className="mt-2 max-w-md">Selecione um grupo à esquerda para editar, ou clique em "Criar Novo Grupo" para começar.</p></div>
+                    : (
+                        <form onSubmit={handleSubmit} className="h-full flex flex-col">
+                            <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-white shrink-0">
+                                <h2 className="text-lg font-bold text-gray-800 flex items-center"><Edit size={20} className="mr-2" />{isCreating ? 'Criando Novo Grupo' : `Editando: ${formData.nome}`}</h2>
+                                {!isCreating && <button type="button" onClick={() => handleDeleteGrupo(formData.id)} className="p-2 text-red-600 hover:bg-red-100 rounded-md transition-colors" title="Excluir Grupo"><Trash2 size={18} /></button>}
+                            </div>
+                            
+                            <div className="flex-grow overflow-y-auto p-6 space-y-6">
+                                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                                    <h3 className="font-semibold text-gray-700 mb-4">Regras do Grupo</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        <div><label htmlFor="nome" className="block text-sm font-medium text-gray-600 mb-1">Nome do Grupo *</label><input type="text" id="nome" name="nome" value={formData.nome} onChange={handleFormChange} required className="w-full p-2 border border-gray-300 rounded-md" /></div>
+                                        <div className="lg:col-span-2"><label htmlFor="descricao" className="block text-sm font-medium text-gray-600 mb-1">Descrição</label><input type="text" id="descricao" name="descricao" value={formData.descricao} onChange={handleFormChange} className="w-full p-2 border border-gray-300 rounded-md" /></div>
+                                        <div className="flex flex-col justify-end space-y-2 pt-2 md:col-span-3">
+                                            <div className="flex items-center"><input type="checkbox" id="ativo" name="ativo" checked={formData.ativo} onChange={handleFormChange} className="h-4 w-4 rounded" /><label htmlFor="ativo" className="ml-2 text-sm">Grupo Ativo</label></div>
+                                            <div className="flex items-center"><input type="checkbox" id="obrigatorio" name="obrigatorio" checked={formData.obrigatorio} onChange={handleFormChange} className="h-4 w-4 rounded" /><label htmlFor="obrigatorio" className="ml-2 text-sm">Obrigatório</label></div>
+                                            <div className="flex items-center"><input type="checkbox" id="multiplaEscolha" name="multiplaEscolha" checked={formData.multiplaEscolha} onChange={handleFormChange} className="h-4 w-4 rounded" /><label htmlFor="multiplaEscolha" className="ml-2 text-sm">Múltipla Escolha</label></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                                    <h3 className="font-semibold text-gray-700 mb-4">Itens do Complemento ({formData.complementos.length})</h3>
+                                    <div className="space-y-3">
+                                        {formData.complementos.length > 0 ? formData.complementos.map((complemento, index) => (
+                                            <div key={complemento.id || `new-${index}`} className="p-3 bg-gray-50 rounded-md border border-gray-200 space-y-2">
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                                                    <div><label className="text-xs font-medium text-gray-500">Nome *</label><input type="text" name="nome" value={complemento.nome} onChange={e => handleComplementoChange(index, e)} required className="w-full p-2 mt-1 border border-gray-300 rounded-md text-sm"/></div>
+                                                    <div><label className="text-xs font-medium text-gray-500">Preço *</label><input type="number" name="preco" value={complemento.preco} onChange={e => handleComplementoChange(index, e)} required step="0.01" className="w-full p-2 mt-1 border border-gray-300 rounded-md text-sm"/></div>
+                                                    <div><label className="text-xs font-medium text-gray-500">Máx. por Produto</label><input type="number" name="maximoPorProduto" value={complemento.maximoPorProduto} onChange={e => handleComplementoChange(index, e)} placeholder="Opcional" min="1" className="w-full p-2 mt-1 border border-gray-300 rounded-md text-sm"/></div>
+                                                    <div><label className="text-xs font-medium text-gray-500">Estoque Atual</label><input type="number" name="estoqueAtual" value={complemento.estoqueAtual} onChange={e => handleComplementoChange(index, e)} placeholder="Ilimitado" min="0" className="w-full p-2 mt-1 border border-gray-300 rounded-md text-sm"/></div>
+                                                </div>
+                                                <div><label className="text-xs font-medium text-gray-500">Descrição</label><textarea name="descricao" value={complemento.descricao} onChange={e => handleComplementoChange(index, e)} rows="2" className="w-full p-2 mt-1 border border-gray-300 rounded-md text-sm"></textarea></div>
+                                                <div className="flex justify-between items-center pt-2">
+                                                    <div className="flex items-center"><input type="checkbox" id={`complemento-ativo-${index}`} name="ativo" checked={complemento.ativo} onChange={e => handleComplementoChange(index, e)} className="h-4 w-4 rounded"/><label htmlFor={`complemento-ativo-${index}`} className="ml-2 text-sm">Ativo</label></div>
+                                                    <div className="flex gap-2">
+                                                        {complemento.id > 0 && <button type="button" onClick={() => handleDeleteComplementoPermanently(complemento.id)} className="px-3 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-md hover:bg-red-200">Excluir Perm.</button>}
+                                                        <button type="button" onClick={() => removerItemComplementoLocal(index)} className="px-3 py-1 text-xs font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">Remover</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )) : <p className="text-sm text-gray-500 text-center py-4">Nenhum item adicionado. Adicione um abaixo.</p>}
+                                    </div>
+                                </div>
+                                
+                                <div className="p-4 bg-blue-50 rounded-lg border-2 border-dashed border-blue-200">
+                                     <h3 className="font-semibold text-gray-700 mb-2">Adicionar Novo Item</h3>
+                                     <div className="space-y-2">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2"><input type="text" name="nome" value={novoComplemento.nome} onChange={handleNovoComplementoChange} placeholder="Nome do item *" className="p-2 border border-gray-300 rounded-md text-sm"/><input type="number" name="preco" value={novoComplemento.preco} onChange={handleNovoComplementoChange} placeholder="Preço *" step="0.01" className="p-2 border border-gray-300 rounded-md text-sm"/></div>
+                                        <textarea name="descricao" value={novoComplemento.descricao} onChange={handleNovoComplementoChange} placeholder="Descrição" rows="2" className="w-full p-2 border border-gray-300 rounded-md text-sm"></textarea>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                            <input type="number" name="maximoPorProduto" value={novoComplemento.maximoPorProduto} onChange={handleNovoComplementoChange} placeholder="Máximo por produto (opcional)" min="1" className="p-2 border border-gray-300 rounded-md text-sm"/>
+                                            <input type="number" name="estoqueAtual" value={novoComplemento.estoqueAtual} onChange={handleNovoComplementoChange} placeholder="Estoque atual (opcional)" min="0" className="p-2 border border-gray-300 rounded-md text-sm"/>
+                                        </div>
+                                        <button type="button" onClick={adicionarItemComplemento} disabled={!novoComplemento.nome || !novoComplemento.preco} className="w-full mt-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center"><Plus size={16} className="mr-2"/> Adicionar à Lista</button>
+                                     </div>
+                                </div>
+                            </div>
+                            
+                            <div className="p-4 border-t border-gray-200 bg-white flex justify-end gap-4 shrink-0">
+                                <button type="button" onClick={cancelarEdicao} className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">Cancelar</button>
+                                <button type="submit" disabled={isSubmitting || formData.complementos.length === 0} className="px-6 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center gap-2">
+                                    {isSubmitting ? <Loader2 className="animate-spin" size={16}/> : <Save size={16}/>}
+                                    {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
+                                </button>
+                            </div>
+                        </form>
+                    )}
+                </section>
+            </main>
         </div>
     );
 };

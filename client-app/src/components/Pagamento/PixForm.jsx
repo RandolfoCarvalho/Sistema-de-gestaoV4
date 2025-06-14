@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const PixForm = ({ amount, onSubmit, onClose, isLoading }) => {
+const PixForm = ({ amount, onSubmit, onClose, isLoading, errorMessage }) => {
     const [payerFirstName, setPayerFirstName] = useState("");
     const [payerLastName, setPayerLastName] = useState("");
     const [payerEmail, setPayerEmail] = useState("");
@@ -22,8 +22,13 @@ const PixForm = ({ amount, onSubmit, onClose, isLoading }) => {
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">Pagamento PIX</h3>
                 <p className="text-gray-600 text-sm">Preencha os dados para gerar o QR Code PIX</p>
             </div>
-
             <form onSubmit={handleSubmit} className="space-y-4">
+               
+                {errorMessage && (
+                    <div className="border border-red-300 bg-red-50 text-red-700 p-3 rounded-md text-sm font-medium">
+                        {errorMessage}
+                    </div>
+                    )}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Nome</label>
                     <input
@@ -59,7 +64,6 @@ const PixForm = ({ amount, onSubmit, onClose, isLoading }) => {
                         placeholder="exemplo@email.com"
                     />
                 </div>
-
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Valor a pagar</label>
                     <input
@@ -86,6 +90,8 @@ const PixForm = ({ amount, onSubmit, onClose, isLoading }) => {
                     >
                         {isLoading ? "Gerando..." : "Gerar PIX"}
                     </button>
+                    
+                    
                 </div>
             </form>
         </div>

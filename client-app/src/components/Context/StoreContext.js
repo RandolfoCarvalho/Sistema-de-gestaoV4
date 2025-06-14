@@ -1,5 +1,7 @@
 ﻿import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '../../axiosConfig';
+// import { use } from 'react'; // <-- Este import não é usado, pode remover
+
 const StoreContext = createContext();
 
 export function StoreProvider({ children }) {
@@ -7,22 +9,37 @@ export function StoreProvider({ children }) {
         const savedStore = localStorage.getItem('currentStore');
         return savedStore || '';
     });
+    // Renomeei para seguir o padrão camelCase, mas é opcional
+    const [fantasyName, setFantasyName] = useState(''); 
     const [storeInfo, setStoreInfo] = useState(null);
+    
     useEffect(() => {
         if (currentStore) {
             localStorage.setItem('currentStore', currentStore);
             fetchStoreInfo(currentStore);
+        } else {
+            // Limpa os dados se não houver loja
+            setStoreInfo(null);
+            setFantasyName('');
         }
     }, [currentStore]);
 
     const fetchStoreInfo = async (storeName) => {
         try {
             const response = await api.get(`/api/1.0/restaurante/GetRestauranteInfoByName/${storeName}`);
-            setStoreInfo(response.data);
-            console.log("Store info data" + JSON.stringify(response.data))
+            const data = response.data;
+            
+            setStoreInfo(data);
+
+            // CORREÇÃO #1: Usar optional chaining (?.) e o nome correto da propriedade
+            // Isso evita erros se 'empresa' não existir e garante o case correto.
+            const nomeFantasiaDaApi = data?.empresa?.nomeFantasia;
+            setFantasyName(nomeFantasiaDaApi || ''); // Se for nulo, define como string vazia
+
         } catch (error) {
             console.error('Erro ao obter informações da loja:', error);
             setStoreInfo(null);
+            setFantasyName(''); // Limpa o nome em caso de erro
         }
     };
 
@@ -36,7 +53,9 @@ export function StoreProvider({ children }) {
         const lojaIndex = pathParts.indexOf('loja');
         if (lojaIndex !== -1 && pathParts[lojaIndex + 1]) {
             const storeName = pathParts[lojaIndex + 1];
-            setCurrentStore(storeName);
+            if (storeName !== currentStore) { // Evita buscas desnecessárias
+                setCurrentStore(storeName);
+            }
         }
     };
 
@@ -48,6 +67,7 @@ export function StoreProvider({ children }) {
         <StoreContext.Provider value={{
             currentStore,
             storeInfo,
+            fantasyName,
             updateCurrentStore,
             checkAndUpdateStoreFromURL
         }}>

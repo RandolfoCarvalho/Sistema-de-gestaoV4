@@ -1,677 +1,338 @@
 ﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Swal from 'sweetalert2';
-import api from '../../../axiosConfig'
-import { confirmAction, showSuccess, showError } from '@utils/alerts';
+import { confirmAction, showSuccess, showError } from '@utils/alerts'; // Ajuste o caminho se necessário
+import api from '../../../axiosConfig'; // Ajuste o caminho se necessário
+import { Plus, Trash2, Save, X, Loader2, List, ChevronsRight, Edit, Info, AlertTriangle } from 'lucide-react';
 
 const GerenciamentoAdicionais = () => {
-    // Estados para o modo atual (criar ou editar)
-    const [modo, setModo] = useState('listar');
+    // --- ESTADOS GERAIS ---
     const [gruposAdicionais, setGruposAdicionais] = useState([]);
-    const [grupoAtual, setGrupoAtual] = useState(null);
-    const [carregando, setCarregando] = useState(false);
-    const [erro, setErro] = useState('');
+    const [grupoSelecionadoId, setGrupoSelecionadoId] = useState(null);
+    const [isCreating, setIsCreating] = useState(false);
 
-    // Estados para formulário de criar/editar grupo
-    const [grupoNome, setGrupoNome] = useState('');
-    const [grupoAtivo, setGrupoAtivo] = useState(true);
-    const [limiteSelecao, setLimiteSelecao] = useState('');
-    const [adicionais, setAdicionais] = useState([]);
-    const [novoAdicional, setNovoAdicional] = useState({
+    // --- ESTADOS DE CONTROLE DE UI ---
+    const [isLoadingList, setIsLoadingList] = useState(true);
+    const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState(null);
+
+    // --- ESTADOS DO FORMULÁRIO UNIFICADO ---
+    const [formData, setFormData] = useState({
+        id: null,
         nome: '',
-        precoBase: '',
-        descricao: '',
-        maximoPorProduto: '',
-        ativo: true
+        ativo: true,
+        limiteSelecao: '',
+        adicionais: []
     });
+    const [novoAdicional, setNovoAdicional] = useState({ nome: '', precoBase: '', descricao: '', maximoPorProduto: '', ativo: true });
 
-    // Função para buscar todos os grupos de adicionais
+    // --- FUNÇÕES DE API E DADOS ---
     const buscarGruposAdicionais = async () => {
-        setCarregando(true);
-        setErro('');
+        setIsLoadingList(true);
+        setError(null);
         try {
-            const response = await api.get('/api/1.0/Adicional/ListarGrupoAdicionaisAtivosEInativos'
-            );
-            setGruposAdicionais(response.data);
-        } catch (error) {
-            console.error('Erro ao buscar grupos de adicionais:', error);
-            setErro('Falha ao carregar os grupos de adicionais. Por favor, tente novamente.');
+            const response = await api.get('/api/1.0/Adicional/ListarGrupoAdicionaisAtivosEInativos');
+            setGruposAdicionais(response.data || []);
+        } catch (err) {
+            console.error('Erro ao buscar grupos:', err);
+            setError('Falha ao carregar os grupos de adicionais.');
         } finally {
-            setCarregando(false);
+            setIsLoadingList(false);
         }
     };
 
-    // Função para buscar um grupo específico pelo ID
-    const [modalAberto, setModalAberto] = useState(false);
-
-    const buscarGrupoAdicionalPorId = async (id) => {
-        setCarregando(true);
-        setErro('');
+    const buscarDetalhesDoGrupo = async (id) => {
+        if (!id) return;
+        setIsLoadingDetails(true);
+        setError(null);
+        setIsCreating(false);
         try {
-            const response = await api.get(`/api/1.0/Adicional/ListarGrupoAdicionais/${id}`
-            );
-
+            const response = await api.get(`/api/1.0/Adicional/ListarGrupoAdicionais/${id}`);
             const grupo = response.data;
-            setGrupoAtual(grupo);
-            setGrupoNome(grupo.nome);
-            setGrupoAtivo(grupo.ativo);
-            setLimiteSelecao(grupo.limiteSelecao || '');
-
-            setAdicionais(grupo.adicionais.map(adicional => ({
-                id: adicional.id,
-                nome: adicional.nome,
-                preco: adicional.precoBase.toString(),
-                descricao: adicional.descricao,
-                maximoPorProduto: adicional.maximoPorProduto ? adicional.maximoPorProduto.toString() : '',
-                ativo: adicional.ativo
-            })));
-
-            setModo('editar');
-            setModalAberto(true);
-        } catch (error) {
-            console.error('Erro ao buscar grupo de adicionais:', error);
-            setErro('Falha ao carregar o grupo de adicionais. Por favor, tente novamente.');
+            setFormData({
+                id: grupo.id,
+                nome: grupo.nome || '',
+                ativo: grupo.ativo,
+                limiteSelecao: grupo.limiteSelecao || '',
+                adicionais: grupo.adicionais.map(ad => ({
+                    id: ad.id,
+                    nome: ad.nome || '',
+                    precoBase: ad.precoBase.toString(),
+                    descricao: ad.descricao || '',
+                    maximoPorProduto: ad.maximoPorProduto ? ad.maximoPorProduto.toString() : '',
+                    ativo: ad.ativo
+                })) || []
+            });
+        } catch (err) {
+            console.error('Erro ao buscar detalhes do grupo:', err);
+            showError("Erro", "Falha ao carregar os detalhes do grupo.");
+            setGrupoSelecionadoId(null);
         } finally {
-            setCarregando(false);
+            setIsLoadingDetails(false);
         }
     };
-    // Carregar grupos de adicionais ao montar o componente
+
     useEffect(() => {
         buscarGruposAdicionais();
     }, []);
-    // Handlers para manipular o formulário
-    const handleGrupoNomeChange = (e) => {
-        setGrupoNome(e.target.value);
-    };
-    const handleGrupoAtivoChange = (e) => {
-        setGrupoAtivo(e.target.checked);
-    };
-    const handleLimiteSelecaoChange = (e) => {
-        setLimiteSelecao(e.target.value);
-    };
-    const handleNovoAdicionalChange = (e) => {
+
+    useEffect(() => {
+        if (grupoSelecionadoId) {
+            buscarDetalhesDoGrupo(grupoSelecionadoId);
+        } else {
+            // Limpa o formulário se nada estiver selecionado
+            setFormData({ id: null, nome: '', ativo: true, limiteSelecao: '', adicionais: [] });
+        }
+    }, [grupoSelecionadoId]);
+
+    // --- HANDLERS E MANIPULAÇÃO DO FORMULÁRIO ---
+    const handleFormChange = (e) => {
         const { name, value, type, checked } = e.target;
-
-        const novoValor = type === 'checkbox'
-            ? checked
-            : (name === 'maximoPorProduto' && value === ''
-                ? ''
-                : value);
-
-        setNovoAdicional({ ...novoAdicional, [name]: novoValor });
+        setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
     };
 
     const handleAdicionalChange = (index, e) => {
         const { name, value, type, checked } = e.target;
-        const novosAdicionais = [...adicionais];
-
-        novosAdicionais[index][name] = type === 'checkbox'
-            ? checked
-            : value;
-
-        setAdicionais(novosAdicionais);
+        const novosAdicionais = [...formData.adicionais];
+        novosAdicionais[index][name] = type === 'checkbox' ? checked : value;
+        setFormData(prev => ({ ...prev, adicionais: novosAdicionais }));
     };
-    const adicionarAdicional = () => {
-        if (novoAdicional.nome && novoAdicional.preco && novoAdicional.descricao) {
-            setAdicionais([...adicionais, novoAdicional]);
-            setNovoAdicional({
-                nome: '',
-                precoBase: '',
-                descricao: '',
-                maximoPorProduto: '',
-                ativo: true
-            });
-        }
-    };
-    const removerAdicional = (index) => {
-        const novosAdicionais = adicionais.filter((_, i) => i !== index);
-        setAdicionais(novosAdicionais);
-    };
-    const limparFormulario = () => {
-        setGrupoNome('');
-        setGrupoAtivo(true);
-        setLimiteSelecao('');
-        setAdicionais([]);
-        setGrupoAtual(null);
-    };
-    const iniciarCriacaoGrupo = () => {
-        limparFormulario();
-        setModo('criar');
-    };
-    const voltarParaLista = () => {
-        setModo('listar');
-        limparFormulario();
-    };
-    // Função para salvar (criar ou atualizar) um grupo de adicionais
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setCarregando(true);
-        setErro('');
-        try {
-            const payload = {
-                Nome: grupoNome?.trim() || "Grupo sem nome",
-                Ativo: grupoAtivo,
-                LimiteSelecao: limiteSelecao === '' ? null : parseInt(limiteSelecao),
-                Adicionais: adicionais.map(adicional => ({
-                    Id: adicional.id || 0,
-                    Nome: adicional.nome?.trim() || "Adicional sem nome",
-                    Descricao: adicional.descricao?.trim() || "Sem descrição",
-                    PrecoBase: adicional.preco ? parseFloat(adicional.preco) : 0,
-                    Ativo: adicional.ativo,
-                    MaximoPorProduto: adicional.maximoPorProduto === '' ? null : parseInt(adicional.maximoPorProduto)
-                }))
-            };
 
-            let response;
-            if (modo === 'criar') {
-                response = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/api/1.0/Adicional/CriarGrupoAdicional`,
-                    payload
-                );
-
-                if (response.status === 200) {
-                    await showSuccess('Sucesso!', 'Grupo e adicionais criados com sucesso!');
-                    voltarParaLista();
-                    buscarGruposAdicionais();
-                }
-            } else if (modo === 'editar' && grupoAtual) {
-                payload.Id = grupoAtual.id;
-
-                response = await axios.put(
-                    `${process.env.REACT_APP_API_URL}/api/1.0/Adicional/AtualizarGrupoAdicional`,
-                    payload
-                );
-
-                if (response.status === 200) {
-                    await showSuccess('Sucesso!', 'Grupo e adicionais atualizados com sucesso!');
-                    voltarParaLista();
-                    buscarGruposAdicionais();
-                }
-            }
-        } catch (error) {
-            console.error('Erro ao salvar grupo de adicionais:', error.response?.data || error.message);
-            const errorMsg = error.response?.data || 'Erro ao salvar grupo de adicionais. Por favor, tente novamente.';
-            setErro(errorMsg);
-            showError('Erro!', errorMsg);
-        } finally {
-            setCarregando(false);
+    const handleNovoAdicionalChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setNovoAdicional(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    };
+    
+    const adicionarItemAdicional = () => {
+        if (novoAdicional.nome && novoAdicional.precoBase) {
+            setFormData(prev => ({
+                ...prev,
+                adicionais: [...prev.adicionais, { ...novoAdicional, id: 0 }]
+            }));
+            setNovoAdicional({ nome: '', precoBase: '', descricao: '', maximoPorProduto: '', ativo: true });
+        } else {
+            showError("Campos incompletos", "Preencha Nome e Preço para adicionar um item.");
         }
     };
     
-    const excluirGrupo = async (id) => {
-        const result = await confirmAction(
-            "Tem certeza?",
-            "Esta ação não pode ser desfeita!"
-        );
+    const removerItemAdicionalLocal = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            adicionais: prev.adicionais.filter((_, i) => i !== index)
+        }));
+    };
 
+    const iniciarCriacao = () => {
+        setGrupoSelecionadoId(null);
+        setIsCreating(true);
+        setFormData({ id: null, nome: '', ativo: true, limiteSelecao: '', adicionais: [] });
+    };
+    
+    const cancelarEdicao = () => {
+        setIsCreating(false);
+        setGrupoSelecionadoId(null);
+    };
+
+    // --- FUNÇÕES DE AÇÃO (CRUD) ---
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!formData.nome.trim()) {
+            showError("Nome obrigatório", "O nome do grupo não pode ser vazio.");
+            return;
+        }
+        setIsSubmitting(true);
+        setError(null);
+        const payload = {
+            Id: formData.id || 0,
+            Nome: formData.nome.trim(),
+            Ativo: formData.ativo,
+            LimiteSelecao: formData.limiteSelecao === '' ? null : parseInt(formData.limiteSelecao),
+            Adicionais: formData.adicionais.map(ad => ({
+                Id: ad.id || 0,
+                Nome: ad.nome.trim(),
+                Descricao: ad.descricao.trim(),
+                PrecoBase: ad.precoBase ? parseFloat(ad.precoBase) : 0,
+                Ativo: ad.ativo,
+                MaximoPorProduto: ad.maximoPorProduto === '' ? null : parseInt(ad.maximoPorProduto)
+            }))
+        };
+        try {
+            if (isCreating) {
+                await api.post('/api/1.0/Adicional/CriarGrupoAdicional', payload);
+                showSuccess('Sucesso!', 'Grupo criado com sucesso!');
+            } else {
+                await api.put('/api/1.0/Adicional/AtualizarGrupoAdicional', payload);
+                showSuccess('Sucesso!', 'Grupo atualizado com sucesso!');
+            }
+            cancelarEdicao();
+            buscarGruposAdicionais();
+        } catch (err) {
+            console.error('Erro ao salvar grupo:', err);
+            const errorMsg = err.response?.data || 'Ocorreu um erro ao salvar.';
+            showError('Erro ao Salvar', errorMsg);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleDeleteGrupo = async (id) => {
+        const result = await confirmAction("Tem certeza?", "Esta ação excluirá o grupo e todos os seus adicionais. Não pode ser desfeita!");
         if (result.isConfirmed) {
-            setCarregando(true);
-            setErro('');
+            setIsSubmitting(true);
             try {
-                const response = await axios.delete(
-                    `${process.env.REACT_APP_API_URL}/api/1.0/Adicional/DeletarGrupoAdicional/${id}`
-                );
-                if (response.status === 200) {
-                    await showSuccess(
-                        "Excluído!",
-                        "Grupo de adicionais excluído com sucesso!"
-                    );
+                await api.delete(`/api/1.0/Adicional/DeletarGrupoAdicional/${id}`);
+                showSuccess("Excluído!", "Grupo de adicionais excluído com sucesso!");
+                if (grupoSelecionadoId === id) {
+                    cancelarEdicao();
                 }
                 buscarGruposAdicionais();
-            } catch (error) {
-                console.error('Erro ao excluir grupo de adicionais:', error.response?.data || error.message);
-                setErro(error.response?.data || 'Erro ao excluir grupo de adicionais. Por favor, tente novamente.');
-
-                showError(
-                    "Erro!",
-                    error.response?.data || "Erro ao excluir grupo de adicionais. Por favor, tente novamente."
-                );
+            } catch (err) {
+                showError("Erro!", err.response?.data || "Não foi possível excluir o grupo.");
             } finally {
-                setCarregando(false);
+                setIsSubmitting(false);
             }
         }
     };
-    // Função para excluir um adicional específico (apenas na edição)
-    const excluirAdicional = async (grupoId, adicionalId) => {
-        if (window.confirm("Tem certeza que deseja excluir este adicional?")) {
-            setCarregando(true);
-            setErro('');
+    
+    // FUNCIONALIDADE RESTAURADA: Excluir um adicional específico da base de dados.
+    const handleDeleteAdicionalPermanently = async (adicionalId) => {
+        if (!formData.id || !adicionalId) return;
+
+        const result = await confirmAction("Excluir permanentemente?", "Este item será removido do banco de dados.");
+        if (result.isConfirmed) {
+            setIsSubmitting(true);
             try {
-                const response = await axios.delete(
-                    `${process.env.REACT_APP_API_URL}/api/1.0/Adicional/ExcluirAdicionalDeGrupo/${grupoId}/${adicionalId}`
-                );
-
-                if (response.status === 200) {
-                    alert('Adicional excluído com sucesso!');
-                    // Atualizar o grupo atual para refletir a exclusão
-                    buscarGrupoAdicionalPorId(grupoId);
-                }
-            } catch (error) {
-                console.error('Erro ao excluir adicional:', error.response?.data || error.message);
-                setErro(error.response?.data || 'Erro ao excluir adicional. Por favor, tente novamente.');
+                await api.delete(`/api/1.0/Adicional/ExcluirAdicionalDeGrupo/${formData.id}/${adicionalId}`);
+                showSuccess('Item Excluído', 'O adicional foi removido permanentemente.');
+                // Recarrega os dados do grupo para atualizar a lista de adicionais
+                buscarDetalhesDoGrupo(formData.id);
+            } catch (err) {
+                showError("Erro ao excluir", err.response?.data || "Não foi possível remover o item.");
             } finally {
-                setCarregando(false);
+                setIsSubmitting(false);
             }
         }
     };
 
-    // Renderização da lista de grupos de adicionais
-    const renderizarListaGrupos = () => {
-        // Configurações dinâmicas para estados
-        const states = {
-            loading: {
-                render: () => (
-                    <div className="flex items-center justify-center py-8">
-                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500 mr-3" />
-                        <p className="text-indigo-600 font-medium">Carregando grupos...</p>
-                    </div>
-                ),
-                condition: carregando && gruposAdicionais.length === 0,
-            },
-            error: {
-                render: () => (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-3 my-2">
-                        <div className="flex items-center">
-                            <svg className="h-5 w-5 text-red-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <p className="text-sm text-red-700">{erro}</p>
-                        </div>
-                    </div>
-                ),
-                condition: erro && gruposAdicionais.length === 0,
-            },
-            empty: {
-                render: () => (
-                    <div className="bg-white border border-dashed border-gray-300 rounded-lg p-6 text-center">
-                        <svg className="h-8 w-8 text-gray-400 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <h3 className="text-lg font-semibold text-gray-700 mb-1">Nenhum grupo encontrado</h3>
-                        <p className="text-gray-500 text-sm mb-3">Crie seu primeiro grupo de adicionais</p>
-                        <button
-                            onClick={iniciarCriacaoGrupo}
-                            className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-medium rounded-lg shadow hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 transition-all duration-300"
-                        >
-                            <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                            </svg>
-                            Criar Primeiro Grupo
-                        </button>
-                    </div>
-                ),
-                condition: gruposAdicionais.length === 0,
-            },
-        };
-
-        // Verifica e renderiza estado correspondente
-        const activeState = Object.values(states).find(state => state.condition);
-        if (activeState) return activeState.render();
-
-        // Componentes reutilizáveis
-        const StatusBadge = ({ ativo }) => (
-            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${ativo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                {ativo ? 'Ativo' : 'Inativo'}
-            </span>
-        );
-
-        const AdicionalCard = ({ adicional }) => (
-            <div className="bg-white rounded-lg p-2 border border-gray-200 shadow-sm hover:shadow hover:border-indigo-200 transition-all duration-200 flex flex-col h-full">
-                <div className="flex justify-between items-start">
-                    <h4 className="font-semibold text-gray-800 truncate text-sm">{adicional.nome}</h4>
-                    <span className="text-indigo-600 font-bold text-sm">
-                        R$ {adicional.precoBase.toFixed(2).replace('.', ',')}
-                    </span>
-                </div>
-                <p className="mt-1 text-xs text-gray-600 line-clamp-1">{adicional.descricao}</p>
-                <div className="flex justify-between items-center mt-1">
-                    {adicional.maximoPorProduto && (
-                        <div className="inline-flex items-center text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">
-                            <span className="text-xs">Máx: {adicional.maximoPorProduto}</span>
-                        </div>
-                    )}
-                    {!adicional.ativo && <StatusBadge ativo={false} />}
-                </div>
-            </div>
-        );
-
-        return (
-            <div className="space-y-3">
-                {gruposAdicionais.map(grupo => (
-                    <div key={grupo.id} className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:shadow transition-all duration-300">
-                        <div className="p-3 flex justify-between items-center border-b border-gray-100 bg-gradient-to-r from-blue-50 to-indigo-50">
-                            <div className="flex items-center space-x-3">
-                                <div className="bg-white p-1.5 rounded-md shadow-sm">
-                                    <svg className="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <div className="flex items-center">
-                                        <h3 className="font-bold text-gray-800">{grupo.nome}</h3>
-                                        <StatusBadge ativo={grupo.ativo} />
-                                    </div>
-                                    <span className="text-xs text-gray-500">{grupo.adicionais?.length || 0} itens</span>
-                                </div>
-                            </div>
-
-                            <div className="flex space-x-1">
-                                <button
-                                    onClick={() => buscarGrupoAdicionalPorId(grupo.id)}
-                                    className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors"
-                                    title="Editar"
-                                >
-                                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                    </svg>
-                                </button>
-                                <button
-                                    onClick={() => excluirGrupo(grupo.id)}
-                                    className="p-1.5 text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                                    title="Excluir"
-                                >
-                                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="p-2 bg-gray-50">
-                            {grupo.adicionais?.length > 0 ? (
-                                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                                    {grupo.adicionais.map(adicional => (
-                                        <AdicionalCard key={adicional.id} adicional={adicional} />
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="text-center py-4 flex items-center justify-center">
-                                    <svg className="h-4 w-4 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <span className="text-sm text-gray-500">Sem adicionais</span>
-                                    <button
-                                        onClick={() => buscarGrupoAdicionalPorId(grupo.id)}
-                                        className="ml-2 inline-flex items-center text-xs text-indigo-600 hover:text-indigo-800 font-medium"
-                                    >
-                                        <svg className="h-3 w-3 mr-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                        </svg>
-                                        Adicionar
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                ))}
-            </div>
-        );
-    };
-    // Renderização do formulário para criar/editar grupo de adicionais
-    const renderizarFormularioGrupo = () => {
-        return (
-            <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                    <label htmlFor="grupoNome" className="block text-sm font-medium text-gray-700">
-                        Nome do Grupo
-                    </label>
-                    <input
-                        type="text"
-                        id="grupoNome"
-                        value={grupoNome}
-                        onChange={handleGrupoNomeChange}
-                        required
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    />
-                </div>
-
-                <div className="flex space-x-4">
-                    <div className="flex items-center">
-                        <input
-                            type="checkbox"
-                            id="grupoAtivo"
-                            checked={grupoAtivo}
-                            onChange={handleGrupoAtivoChange}
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                        />
-                        <label htmlFor="grupoAtivo" className="ml-2 block text-sm text-gray-700">
-                            Ativo
-                        </label>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 className="text-lg font-medium text-gray-700 mb-2">Adicionais</h3>
-
-                    {adicionais.length > 0 ? (
-                        <div className="space-y-2 mb-4">
-                            {adicionais.map((adicional, index) => (
-                                <div key={index} className="p-3 bg-gray-50 rounded border">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-                                        <div>
-                                            <label className="block text-xs font-medium text-gray-700">Nome</label>
-                                            <input
-                                                type="text"
-                                                name="nome"
-                                                value={adicional.nome}
-                                                onChange={(e) => handleAdicionalChange(index, e)}
-                                                required
-                                                className="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-medium text-gray-700">Preço</label>
-                                            <input
-                                                type="number"
-                                                name="preco"
-                                                value={adicional.preco}
-                                                onChange={(e) => handleAdicionalChange(index, e)}
-                                                required
-                                                step="0.01"
-                                                className="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="mb-2">
-                                        <label className="block text-xs font-medium text-gray-700">Descrição</label>
-                                        <textarea
-                                            name="descricao"
-                                            value={adicional.descricao}
-                                            onChange={(e) => handleAdicionalChange(index, e)}
-                                            required
-                                            className="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                            rows="2"
-                                        />
-                                    </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-                                        <div>
-                                            <label className="block text-xs font-medium text-gray-700">Máximo por Produto</label>
-                                            <input
-                                                type="number"
-                                                name="maximoPorProduto"
-                                                value={adicional.maximoPorProduto}
-                                                onChange={(e) => handleAdicionalChange(index, e)}
-                                                min="1"
-                                                className="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                                placeholder="Sem limite"
-                                            />
-                                        </div>
-                                        <div className="flex items-end">
-                                            <div className="flex items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    name="ativo"
-                                                    id={`adicional-ativo-${index}`}
-                                                    checked={adicional.ativo}
-                                                    onChange={(e) => handleAdicionalChange(index, e)}
-                                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                                />
-                                                <label htmlFor={`adicional-ativo-${index}`} className="ml-2 block text-sm text-gray-700">
-                                                    Ativo
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex justify-end">
-                                        <button
-                                            type="button"
-                                            onClick={() => removerAdicional(index)}
-                                            className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
-                                        >
-                                            Remover
-                                        </button>
-                                        {/* Botão de excluir aparece apenas para adicionais já existentes com ID */}
-                                        {modo === 'editar' && adicional.id && (
-                                            <button
-                                                type="button"
-                                                onClick={() => excluirAdicional(grupoAtual.id, adicional.id)}
-                                                className="ml-2 px-2 py-1 bg-red-700 text-white rounded hover:bg-red-800 text-sm"
-                                            >
-                                                Excluir Permanentemente
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-gray-500 mb-4">Nenhum adicional adicionado. Adicione pelo menos um adicional.</p>
-                    )}
-                    <div className="p-3 bg-gray-100 rounded border">
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">Novo Adicional</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-                            <div>
-                                <input
-                                    type="text"
-                                    name="nome"
-                                    value={novoAdicional.nome}
-                                    onChange={handleNovoAdicionalChange}
-                                    placeholder="Nome do Adicional"
-                                    className="block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                />
-                            </div>
-                            <div>
-                                <input
-                                    type="number"
-                                    name="preco"
-                                    value={novoAdicional.preco}
-                                    onChange={handleNovoAdicionalChange}
-                                    placeholder="Preço do Adicional"
-                                    step="0.01"
-                                    className="block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                />
-                            </div>
-                        </div>
-                        <div className="mb-2">
-                            <textarea
-                                name="descricao"
-                                value={novoAdicional.descricao}
-                                onChange={handleNovoAdicionalChange}
-                                placeholder="Descrição do Adicional"
-                                className="block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                rows="2"
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-                            <div>
-                                <input
-                                    type="number"
-                                    name="maximoPorProduto"
-                                    value={novoAdicional.maximoPorProduto}
-                                    onChange={handleNovoAdicionalChange}
-                                    placeholder="Máximo por produto (opcional)"
-                                    min="1"
-                                    className="block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                />
-                                <span className="text-xs text-gray-500 mt-1 block">
-                                    Deixe em branco para não definir limite
-                                </span>
-                            </div>
-                            <div className="flex items-end">
-                                <div className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        name="ativo"
-                                        id="novo-adicional-ativo"
-                                        checked={novoAdicional.ativo}
-                                        onChange={handleNovoAdicionalChange}
-                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                    />
-                                    <label htmlFor="novo-adicional-ativo" className="ml-2 block text-sm text-gray-700">
-                                        Ativo
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <button
-                            type="button"
-                            onClick={adicionarAdicional}
-                            className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                        >
-                            Adicionar Adicional
-                        </button>
-                    </div>
-                </div>
-                {erro && <p className="text-red-600">{erro}</p>}
-                <div className="flex space-x-4">
-                    <button
-                        type="button"
-                        onClick={voltarParaLista}
-                        className="flex-1 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Cancelar
-                    </button>
-                    <button
-                        type="submit"
-                        disabled={carregando}
-                        className="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300"
-                    >
-                        {carregando ? 'Salvando...' : (modo === 'criar' ? 'Criar Grupo' : 'Atualizar Grupo')}
-                    </button>
-                </div>
-            </form>
-        );
-    };
+    // --- RENDERIZAÇÃO ---
     return (
-        <div className="p-2">
-            <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                <div className="p-4 border-b">
-                    <div className="flex justify-between items-center">
-                        <h2 className="text-xl font-bold text-gray-800">
-                            {modo === 'listar' ? 'Gerenciamento de Adicionais' :
-                                modo === 'criar' ? 'Criar Grupo de Adicionais' : 'Editar Grupo de Adicionais'}
-                        </h2>
-                        {modo === 'listar' && (
-                            <button
-                                onClick={iniciarCriacaoGrupo}
-                                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                            >
-                                Criar Novo Grupo de Adicionais
-                            </button>
+        <div className="h-screen w-full bg-gray-100 flex flex-col font-sans">
+            <header className="p-4 bg-white border-b border-gray-200 shrink-0">
+                <h1 className="text-xl font-bold text-gray-800">Gerenciamento de Adicionais</h1>
+                {error && <div className="mt-2 p-2 bg-red-100 text-red-700 text-sm rounded-md flex items-center"><AlertTriangle size={16} className="mr-2" />{error}</div>}
+            </header>
+
+            <main className="flex-grow grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 min-h-0">
+                {/* COLUNA DA ESQUERDA: LISTA DE GRUPOS */}
+                <aside className="md:col-span-1 lg:col-span-1 h-full min-h-0 bg-white border-r border-gray-200 flex flex-col">
+                    <div className="p-4 border-b border-gray-200">
+                        <h2 className="text-lg font-bold text-gray-800 flex items-center"><List size={20} className="mr-2" />Grupos</h2>
+                    </div>
+                    <div className="p-4">
+                        <button onClick={iniciarCriacao} className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors">
+                            <Plus size={16} className="mr-2" /> Criar Novo Grupo
+                        </button>
+                    </div>
+                    <div className="flex-grow overflow-y-auto px-2 pb-2">
+                        {isLoadingList ? (
+                            <div className="flex justify-center items-center h-full"><Loader2 className="animate-spin text-blue-500" size={24} /></div>
+                        ) : gruposAdicionais.length === 0 ? (
+                            <div className="p-4 text-center text-sm text-gray-500">Nenhum grupo encontrado.</div>
+                        ) : (
+                            <ul className="space-y-1">
+                                {gruposAdicionais.map(grupo => (
+                                    <li key={grupo.id}>
+                                        <button onClick={() => setGrupoSelecionadoId(grupo.id)} className={`w-full text-left p-3 rounded-md flex justify-between items-center transition-colors ${grupoSelecionadoId === grupo.id ? 'bg-blue-100 text-blue-800 font-semibold' : 'hover:bg-gray-100'}`}>
+                                            <span className="flex items-center"><span className={`w-2 h-2 rounded-full mr-3 shrink-0 ${grupo.ativo ? 'bg-green-500' : 'bg-red-500'}`}></span>{grupo.nome}</span>
+                                            <ChevronsRight size={16} className={`transition-transform ${grupoSelecionadoId === grupo.id ? 'translate-x-1' : ''}`} />
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
                         )}
                     </div>
-                </div>
+                </aside>
 
-                <div className="p-4">
-                    {modo === 'listar' && renderizarListaGrupos()}
-                    {(modo === 'criar' || modo === 'editar') && renderizarFormularioGrupo()}
-                </div>
-            </div>
+                {/* COLUNA DA DIREITA: CONTEÚDO */}
+                <section className="md:col-span-2 lg:col-span-3 h-full min-h-0 bg-gray-50">
+                    {isLoadingDetails ? (
+                        <div className="flex justify-center items-center h-full"><Loader2 className="animate-spin text-blue-500" size={32} /></div>
+                    ) : !isCreating && !grupoSelecionadoId ? (
+                        <div className="flex flex-col justify-center items-center h-full text-center text-gray-500 p-8">
+                            <Info size={48} className="mb-4 text-gray-400" />
+                            <h3 className="text-xl font-semibold text-gray-700">Gerenciador de Adicionais</h3>
+                            <p className="mt-2 max-w-md">Selecione um grupo na lista à esquerda para editar, ou clique em "Criar Novo Grupo" para começar.</p>
+                        </div>
+                    ) : (
+                        <form onSubmit={handleSubmit} className="h-full flex flex-col">
+                            {/* Cabeçalho do Formulário */}
+                            <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-white shrink-0">
+                                <h2 className="text-lg font-bold text-gray-800 flex items-center"><Edit size={20} className="mr-2" />{isCreating ? 'Criando Novo Grupo' : `Editando: ${formData.nome}`}</h2>
+                                {!isCreating && (
+                                    <button type="button" onClick={() => handleDeleteGrupo(formData.id)} className="p-2 text-red-600 hover:bg-red-100 rounded-md transition-colors" title="Excluir Grupo"><Trash2 size={18} /></button>
+                                )}
+                            </div>
+                            
+                            {/* Corpo do Formulário (com scroll) */}
+                            <div className="flex-grow overflow-y-auto p-6 space-y-6">
+                                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                                    <h3 className="font-semibold text-gray-700 mb-4">Detalhes do Grupo</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label htmlFor="nome" className="block text-sm font-medium text-gray-600 mb-1">Nome do Grupo *</label>
+                                            <input type="text" id="nome" name="nome" value={formData.nome} onChange={handleFormChange} required className="w-full p-2 border border-gray-300 rounded-md" />
+                                        </div>
+                                        <div className="md:col-span-2 flex items-center"><input type="checkbox" id="ativo" name="ativo" checked={formData.ativo} onChange={handleFormChange} className="h-4 w-4 rounded border-gray-300 text-blue-600" /><label htmlFor="ativo" className="ml-2 text-sm font-medium text-gray-700">Grupo Ativo</label></div>
+                                    </div>
+                                </div>
+                                
+                                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                                    <h3 className="font-semibold text-gray-700 mb-4">Itens Adicionais ({formData.adicionais.length})</h3>
+                                    <div className="space-y-3">
+                                        {formData.adicionais.length > 0 ? formData.adicionais.map((adicional, index) => (
+                                            <div key={adicional.id || `new-${index}`} className="p-3 bg-gray-50 rounded-md border border-gray-200 space-y-2">
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    <div><label className="text-xs font-medium text-gray-500">Nome</label><input type="text" name="nome" value={adicional.nome} onChange={e => handleAdicionalChange(index, e)} required className="w-full p-2 mt-1 border border-gray-300 rounded-md text-sm"/></div>
+                                                    <div><label className="text-xs font-medium text-gray-500">Preço</label><input type="number" name="precoBase" value={adicional.precoBase} onChange={e => handleAdicionalChange(index, e)} required step="0.01" className="w-full p-2 mt-1 border border-gray-300 rounded-md text-sm"/></div>
+                                                    <div><label className="text-xs font-medium text-gray-500">Máx. por Produto</label><input type="number" name="maximoPorProduto" value={adicional.maximoPorProduto} onChange={e => handleAdicionalChange(index, e)} placeholder="Opcional" min="1" className="w-full p-2 mt-1 border border-gray-300 rounded-md text-sm"/></div>
+                                                </div>
+                                                <div><label className="text-xs font-medium text-gray-500">Descrição</label><textarea name="descricao" value={adicional.descricao} onChange={e => handleAdicionalChange(index, e)} rows="2" className="w-full p-2 mt-1 border border-gray-300 rounded-md text-sm"></textarea></div>
+                                                <div className="flex justify-between items-center pt-2">
+                                                    <div className="flex items-center"><input type="checkbox" id={`adicional-ativo-${index}`} name="ativo" checked={adicional.ativo} onChange={e => handleAdicionalChange(index, e)} className="h-4 w-4 rounded border-gray-300"/><label htmlFor={`adicional-ativo-${index}`} className="ml-2 text-sm text-gray-700">Ativo</label></div>
+                                                    <div className="flex gap-2">
+                                                        {adicional.id > 0 && <button type="button" onClick={() => handleDeleteAdicionalPermanently(adicional.id)} className="px-3 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-md hover:bg-red-200">Excluir Perm.</button>}
+                                                        <button type="button" onClick={() => removerItemAdicionalLocal(index)} className="px-3 py-1 text-xs font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">Remover</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )) : <p className="text-sm text-gray-500 text-center py-4">Nenhum item adicionado. Adicione um abaixo.</p>}
+                                    </div>
+                                </div>
+                                
+                                <div className="p-4 bg-blue-50 rounded-lg border-2 border-dashed border-blue-200">
+                                    <h3 className="font-semibold text-gray-700 mb-2">Adicionar Novo Item</h3>
+                                    <div className="space-y-2">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2"><input type="text" name="nome" value={novoAdicional.nome} onChange={handleNovoAdicionalChange} placeholder="Nome do item *" className="p-2 border border-gray-300 rounded-md text-sm"/><input type="number" name="precoBase" value={novoAdicional.precoBase} onChange={handleNovoAdicionalChange} placeholder="Preço *" step="0.01" className="p-2 border border-gray-300 rounded-md text-sm"/></div>
+                                        <textarea name="descricao" value={novoAdicional.descricao} onChange={handleNovoAdicionalChange} placeholder="Descrição" rows="2" className="w-full p-2 border border-gray-300 rounded-md text-sm"></textarea>
+                                        <button type="button" onClick={adicionarItemAdicional} className="w-full mt-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors flex items-center justify-center"><Plus size={16} className="mr-2"/> Adicionar à Lista</button>
+                                    </div>
+                                </div>
+                            </div>
 
-            {/* Indicador de carregamento */}
-            {carregando && (
-                <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-                    <div className="bg-white p-4 rounded-lg shadow-lg">
-                        <p className="text-gray-700">Processando...</p>
-                    </div>
-                </div>
-            )}
+                            {/* Rodapé Fixo */}
+                            <div className="p-4 border-t border-gray-200 bg-white flex justify-end gap-4 shrink-0">
+                                <button type="button" onClick={cancelarEdicao} className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">Cancelar</button>
+                                <button type="submit" disabled={isSubmitting} className="px-6 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 disabled:bg-blue-300 flex items-center gap-2">
+                                    {isSubmitting ? <Loader2 className="animate-spin" size={16}/> : <Save size={16}/>}
+                                    {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
+                                </button>
+                            </div>
+                        </form>
+                    )}
+                </section>
+            </main>
         </div>
     );
-
 };
+
 export default GerenciamentoAdicionais;

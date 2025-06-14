@@ -19,7 +19,7 @@ const Produtos = () => {
   const [maisVendidos, setMaisVendidos] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState("");
-
+  console.log("Produtos: ", produtos);
   const finalFilteredProducts = useMemo(() => {
     let filtered = produtos;
 

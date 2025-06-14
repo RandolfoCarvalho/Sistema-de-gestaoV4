@@ -225,24 +225,16 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             PayerIdentificationType: formData.payer.identification.type,
             PayerIdentificationNumber: formData.payer.identification.number,
         };
-        console.log("Enviando dados do cartão para processPayment:", paymentData);
-    
         try {
             const response = await processPayment(paymentData, pedidoDTO);
             const status = response?.data?.status;
 
             if (response?.ok && status === "approved") {
                 setMensagem("✅ Pagamento com cartão aprovado com sucesso!");
-                setPaymentResponseData(response); // Guarda a resposta
-                setPaymentSuccessState(true);      // ATIVA A TELA DE SUCESSO
+                setPaymentResponseData(response);
+                setPaymentSuccessState(true);
             } else {
-                const errorMessage =
-                    response?.data?.message ||
-                    response?.message ||
-                    response?.error?.message ||
-                    response?.error ||
-                    "Pagamento com cartão falhou.";
-                console.error("Erro no pagamento com cartão (resposta backend):", response);
+                const errorMessage = response?.error?.message || "Pagamento com cartão falhou.";
                 setInternalError(`❌ ${errorMessage}`);
                 setMensagem(`❌ ${errorMessage}`);
             }
@@ -288,14 +280,13 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             const response = await processPaymentDinheiro(paymentData, pedidoDTO); 
     
             if (response?.ok || response?.id) { 
-                console.log(`Pagamento em dinheiro registrado com sucesso:`, response);
-                
+                console.log("response: ", response);
                 setMensagem("✅ Pedido com pagamento em dinheiro registrado!");
-                setPaymentResponseData(response); // Guarda a resposta
-                setPaymentSuccessState(true);      // ATIVA A TELA DE SUCESSO
+                setPaymentResponseData(response);
+                setPaymentSuccessState(true);   
             } else {
-                const errorMessage = response?.error || response?.message || `Registro de pagamento em dinheiro falhou.`;
-                console.error(`Erro no pagamento em dinheiro (resposta backend):`, response);
+                const errorMessage = response?.error?.message || response?.error || "Registro de pagamento em dinheiro falhou.";
+                console.error(`Erro no pagamento em dinheiro (resposta backend):`, errorMessage);
                 setInternalError(`❌ ${errorMessage}`);
                 setMensagem(`❌ ${errorMessage}`);
             }
@@ -323,46 +314,54 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         }
     };
 
-    // handlePixSubmit (do SEGUNDO arquivo, melhorado)
     const handlePixSubmit = async (formData) => {
         setInternalLoading(true);
         setInternalError(null);
         setPixData(null); 
         setMensagem("");   
-        const paymentData = {
-            FormaPagamento: "pix",
-            Amount: parseFloat(formData.amount),
-            PayerFirstName: formData.payerFirstName,
-            PayerLastName: formData.payerLastName,
-            PayerEmail: formData.payerEmail
-        };
+
         const pedidoDTO = preparePedidoDTO();
-        
+
         if (!pedidoDTO) {
             console.error("Falha ao preparar PedidoDTO para pagamento PIX.");
             setInternalError("Não foi possível preparar os dados do pedido para PIX.");
+            setMensagem("❌ Não foi possível preparar os dados do pedido para PIX.");
             setInternalLoading(false);
             return;
         }
+
         try {
+            // 🔎 Verifica se o estoque está disponível antes de gerar o QR Code
+            const estoqueValidoResponse = await verificarEstoquePedido(pedidoDTO);
+            console.log("estoqueValidoResponse", estoqueValidoResponse)
+            if (estoqueValidoResponse?.statusText != "OK") {
+                setInternalError("❌ Estoque insuficiente ou pedido inválido.");
+                setMensagem("❌ Estoque insuficiente ou pedido inválido.");
+                setInternalLoading(false);
+                return;
+            }
+            const paymentData = {
+                FormaPagamento: "pix",
+                Amount: parseFloat(formData.amount),
+                PayerFirstName: formData.payerFirstName,
+                PayerLastName: formData.payerLastName,
+                PayerEmail: formData.payerEmail
+            };
             const response = await processPaymentPix(paymentData, pedidoDTO);
-            if (response?.ok && response.data?.qrCodeBase64 && response.data?.idPagamento) { 
-                console.log(`Dados do PIX recebidos:`, response.data);
+            if (response?.ok && response.data?.qrCodeBase64 && response.data?.idPagamento) {
                 setPixData({
                     qrCodeBase64: response.data.qrCodeBase64,
-                    qrCodeCopyPaste: response.data.qrCodeString || response.data.qr_code, 
+                    qrCodeCopyPaste: response.data.qrCodeString || response.data.qr_code,
                 });
-                setTransactionId(response.data.idPagamento.toString()); 
-                setCountdown(300); 
-                setMensagem("⏳ PIX gerado. Realize o pagamento e aguarde a confirmação."); 
+                setTransactionId(response.data.idPagamento.toString());
+                setCountdown(300);
+                setMensagem("⏳ PIX gerado. Realize o pagamento e aguarde a confirmação.");
             } else {
-                const errorMessage = response?.error?.message || response?.message || response?.data?.message || "Não foi possível obter os dados do PIX.";
-                console.error("Resposta do backend para PIX inválida ou com erro:", response);
+                const errorMessage = response?.error?.message || response?.message || "Não foi possível obter os dados do PIX.";
                 setInternalError(`❌ ${errorMessage}`);
                 setMensagem(`❌ ${errorMessage}`);
             }
         } catch (error) {
-            console.error(`Catch: Erro ao processar pagamento com PIX:`, error);
             const errorMessage = error.response?.data?.message || error.message || `Ocorreu um erro inesperado no PIX.`;
             setInternalError(`❌ ${errorMessage}`);
             setMensagem(`❌ ${errorMessage}`);
@@ -370,6 +369,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             setInternalLoading(false);
         }
     };
+
 
     // verificarPagamentoManualPix (do SEGUNDO arquivo)
     const verificarPagamentoManualPix = async () => {
@@ -410,6 +410,18 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         }
     };
 
+    const verificarEstoquePedido = async (pedidoDTO) => {
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/api/1.0/Pedido/verificar-estoque-pedido`,
+                pedidoDTO 
+            );
+            return response;
+        } catch (err) {
+            console.error("Erro ao verificar estoque:", err);
+            return null;
+        }   
+    };
     // useEffect para countdown do PIX (do SEGUNDO arquivo)
     useEffect(() => {
         if (!pixData || countdown <= 0) {
@@ -493,6 +505,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     <PixForm 
                         amount={amount}
                         onSubmit={handlePixSubmit}
+                        errorMessage={mensagem}
                         onClose={onClose}
                         isLoading={isLoading}
                     />
@@ -530,12 +543,12 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     />
                 )}
 
-                {displayError && !isLoading && (
+                {/* {displayError && !isLoading && (
                     <p className="text-red-600 text-center mt-4 bg-red-100 p-3 rounded border border-red-300 text-sm">
                         {typeof displayError === 'object' ? JSON.stringify(displayError) : displayError}
                     </p>
                 )}
-
+                */}
                 {/* {mensagem && !displayError && !isLoading && (
                      <div className={`text-center mt-4 p-3 rounded border text-sm ${
                         mensagem.includes("✅") ? "bg-green-100 border-green-300 text-green-700" :

@@ -1,14 +1,20 @@
-﻿import ProductListItem from './ProductListItem';
+﻿// Exemplo de uso em CategorySection.js
+import React from 'react';
+import ProductCard from './ProductCard';
 
-const CategorySection = ({ categoryName, products }) => (
-    <div className="mb-1 px-1">
-        <h3 className="text-lg font-semibold text-gray-700 mb-3">{categoryName}</h3>
-        <div className="space-y-2">
-            {products.map((produto) => (
-                <ProductListItem key={produto.id} produto={produto} />
-            ))}
-        </div>
-    </div>
-);
+const CategorySection = ({ categoryName, products }) => {
+  return (
+    <section>
+      <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
+        {categoryName}
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> {/* Layout de lista */}
+        {products.map(product => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+    </section>
+  );
+};
 
 export default CategorySection;

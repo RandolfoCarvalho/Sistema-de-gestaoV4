@@ -124,7 +124,6 @@ namespace SistemaDeGestao.Services
             if (pedidoDTO == null || !pedidoDTO.Itens.Any())
                 throw new ArgumentException("O pedido deve conter pelo menos um item.");
 
-            // Verifica se todos os produtos estão ativos
             var produtoIds = pedidoDTO.Itens.Select(i => i.ProdutoId).ToList();
 
             var produtosAtivos = await _context.Produtos
@@ -136,35 +135,53 @@ namespace SistemaDeGestao.Services
 
             if (produtosInativos.Any())
                 throw new InvalidOperationException("Um ou mais produtos do pedido estão indisponíveis.");
+
             if (pedidoDTO.Pagamento.FormaPagamento == "dinheiro")
             {
                 BigInteger transactionIdTemporario = new BigInteger(Guid.NewGuid().ToByteArray().Take(4).ToArray());
                 transactionIdTemporario = BigInteger.Abs(transactionIdTemporario) % 999999;
                 pedidoDTO.Pagamento.TransactionId = transactionIdTemporario.ToString();
             }
-            if (pedidoDTO == null || !pedidoDTO.Itens.Any())
-                throw new ArgumentException("O pedido deve conter pelo menos um item.");
-            
+
             var empresa = await _context.Empresas
                 .Include(e => e.DiasFuncionamento)
                 .FirstOrDefaultAsync(e => e.RestauranteId == pedidoDTO.RestauranteId);
             if (empresa == null || !_restauranteService.IsLojaOpen(empresa)) return null;
+
             BigInteger pedidoNumber = new BigInteger(Guid.NewGuid().ToByteArray().Take(4).ToArray());
-            pedidoNumber = BigInteger.Abs(pedidoNumber) % 999999; 
+            pedidoNumber = BigInteger.Abs(pedidoNumber) % 999999;
             string numeroPedido = $"PED: {pedidoNumber:D5}";
 
             var pedido = _mapper.Map<Pedido>(pedidoDTO);
             pedido.Numero = numeroPedido;
             pedido.Pagamento.PagamentoAprovado = true;
             pedido.Pagamento.DataAprovacao = DateTime.UtcNow;
-            _context.Pedidos.Add(pedido);
-            await _context.SaveChangesAsync();
+
+            // 🔐 Começa a transação
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                _context.Pedidos.Add(pedido);
+                await _context.SaveChangesAsync();
+
+                // 👇 Reduz o estoque com segurança
+                await ReduzirEstoqueAsync(pedido);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
 
             var result = await _whatsAppBot.MontarMensagemAsync(pedido);
-            //if (!result) return null;
             await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoDTO);
+
             return pedido;
         }
+
 
         /// <summary>
         /// Registra o cancelamento de um pedido, atualiza seu status,
@@ -233,6 +250,23 @@ namespace SistemaDeGestao.Services
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Falha crítica ao tentar cancelar o pedido {PedidoId}.", request.PedidoId);
                 return (false, "Erro interno ao processar o cancelamento do pedido.");
+            }
+        }
+
+        private async Task ReduzirEstoqueAsync(Pedido pedido)
+        {
+            foreach (var item in pedido.Itens)
+            {
+                var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.Id == item.ProdutoId);
+
+                if (produto == null)
+                    throw new InvalidOperationException($"Produto com ID {item.ProdutoId} não encontrado.");
+
+                if (produto.EstoqueAtual < item.Quantidade)
+                    throw new InvalidOperationException($"Estoque insuficiente para o produto '{produto.Nome}'. Quantidade solicitada: {item.Quantidade}, disponível: {produto.EstoqueAtual}");
+
+                produto.EstoqueAtual -= item.Quantidade;
+                _context.Produtos.Update(produto);
             }
         }
 

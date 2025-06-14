@@ -5,7 +5,7 @@ import { useState } from 'react';
 const usePayment = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
+    
     // Modificado para receber também o pedidoDTO
     const processPayment = async (paymentData, pedidoDTO) => {
         setLoading(true);

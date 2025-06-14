@@ -167,7 +167,7 @@ const OrderDashboard = () => {
 
     return (
         <div className="p-4 sm:p-6 max-w-full bg-gray-50 min-h-screen">
-            <div className="mb-6">
+            <div className="mb-6" >
                 <OrderAnalyticsDashboard
                     orders={orders} 
                     onFiltersChange={handleFiltersChange}

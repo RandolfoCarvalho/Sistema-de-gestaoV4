@@ -135,7 +135,6 @@ namespace SistemaDeGestao.Services
 
             if (produtosInativos.Any())
                 throw new InvalidOperationException("Um ou mais produtos do pedido estão indisponíveis.");
-
             if (pedidoDTO.Pagamento.FormaPagamento == "dinheiro")
             {
                 BigInteger transactionIdTemporario = new BigInteger(Guid.NewGuid().ToByteArray().Take(4).ToArray());
@@ -147,7 +146,6 @@ namespace SistemaDeGestao.Services
                 .Include(e => e.DiasFuncionamento)
                 .FirstOrDefaultAsync(e => e.RestauranteId == pedidoDTO.RestauranteId);
             if (empresa == null || !_restauranteService.IsLojaOpen(empresa)) return null;
-
             BigInteger pedidoNumber = new BigInteger(Guid.NewGuid().ToByteArray().Take(4).ToArray());
             pedidoNumber = BigInteger.Abs(pedidoNumber) % 999999;
             string numeroPedido = $"PED: {pedidoNumber:D5}";
@@ -175,13 +173,10 @@ namespace SistemaDeGestao.Services
                 await transaction.RollbackAsync();
                 throw;
             }
-
             var result = await _whatsAppBot.MontarMensagemAsync(pedido);
             await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoDTO);
-
             return pedido;
         }
-
 
         /// <summary>
         /// Registra o cancelamento de um pedido, atualiza seu status,
@@ -269,7 +264,6 @@ namespace SistemaDeGestao.Services
                 _context.Produtos.Update(produto);
             }
         }
-
         /*public async Task<ItemPedido> AdicionarItemAoPedido(ItemPedido item)
         {
             var produto = await _context.Produtos.FindAsync(item.ProdutoId);

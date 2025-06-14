@@ -25,30 +25,25 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     const restauranteId = localStorage.getItem("restauranteId");
      // NOVOS ESTADOS PARA CONTROLAR A TELA DE SUCESSO
     const [paymentSuccessState, setPaymentSuccessState] = useState(false);
-    const [paymentResponseData, setPaymentResponseData] = useState(null); // Para guardar a resposta do pagamento
+    const [paymentResponseData, setPaymentResponseData] = useState(null); 
 
     // Estado do PIX do segundo arquivo
-    const [countdown, setCountdown] = useState(300); // 5 minutos = 300 segundos para o PIX
+    const [countdown, setCountdown] = useState(300);
     useEffect(() => {
         const safeTotal = parseFloat(cartTotal) || 0;
         setAmount(safeTotal);
     }, [cartTotal]);
 
-    // NOVO useEffect PARA GERENCIAR O REDIRECIONAMENTO APÓS O SUCESSO
     useEffect(() => {
         // Se o estado de sucesso for ativado...
         if (paymentSuccessState) {
             // ...inicia um timer de 3 segundos.
             const timer = setTimeout(() => {
-                // Após o tempo, chama a função de sucesso no componente pai (se existir)
                 if (onPaymentSuccess && paymentResponseData) {
                     onPaymentSuccess(paymentResponseData);
                 }
-                // E então navega para a página de pedidos.
                 navigate("/pedidos");
             }, 3000);
-
-            // Função de limpeza para o caso do componente ser desmontado antes do tempo
             return () => clearTimeout(timer);
         }
     }, [paymentSuccessState, paymentResponseData, onPaymentSuccess, navigate]);
@@ -77,13 +72,12 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             console.error("Erro ao buscar credencial do restaurante:", err);
         });
     }, []);
-    // useEffect para verificação de status de pagamento PIX (do SEGUNDO arquivo, melhorado)
+    // useEffect para verificação de status de pagamento PIX 
     useEffect(() => {
         if (pixData && transactionId && restauranteId) {
             let attempts = 0;
-            const maxAttempts = 60; // 60 x 5s = 5 minutos
+            const maxAttempts = 60; 
             setMensagem("⏳ Aguardando confirmação do pagamento PIX...");
-            // setInternalLoading(true); // O loading é ativado pelo handlePixSubmit e aqui apenas para verificação
 
             console.log(`Iniciando verificação de pagamento PIX. TransactionId: ${transactionId}, RestauranteId: ${restauranteId}`);
     
@@ -108,8 +102,8 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                         clearInterval(interval);
                         
                         setMensagem("✅ Pagamento aprovado com sucesso!");
-                        setPaymentResponseData(response.data); // Guarda a resposta
-                        setPaymentSuccessState(true);          // ATIVA A TELA DE SUCESSO
+                        setPaymentResponseData(response.data); 
+                        setPaymentSuccessState(true);
                     } else if (attempts >= maxAttempts) {
                         console.warn("⏳ Tempo de espera pelo pagamento PIX expirou.");
                         clearInterval(interval);
@@ -121,7 +115,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     console.error("Erro ao verificar status do pagamento PIX:", err);
                     if (attempts >= maxAttempts) {
                         clearInterval(interval);
-                        // setInternalLoading(false);
                         setMensagem("⚠️ Não foi possível confirmar o pagamento PIX no momento. Verifique na tela de pedidos ou tente novamente.");
                     }
                 }
@@ -134,15 +127,13 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         }
     }, [pixData, transactionId, restauranteId, navigate, onClose, onPaymentSuccess]);
 
-    // useEffect para geração de preferência "mercadopago" (como no PRIMEIRO arquivo)
     useEffect(() => {
         setPreferenceId(null);
-        setInternalError(null); // Limpar erros internos ao mudar método ou abrir
+        setInternalError(null); 
 
         if (isOpen && paymentMethod === "mercadopago") {
             const generatePreference = async () => {
                 setInternalLoading(true);
-                // setInternalError(null); // Já limpou acima
                 const pedidoDTO = preparePedidoDTO();
 
                 if (!pedidoDTO) {
@@ -179,7 +170,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         }
     }, [isOpen, paymentMethod, amount, processPayment, preparePedidoDTO]);
 
-    // handleCardPaymentSubmit (do PRIMEIRO arquivo)
+    // handleCardPaymentSubmit
     const handleCardPaymentSubmit = async (formData, additionalData) => {
         setInternalLoading(true);
         setInternalError(null);
@@ -226,6 +217,8 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             PayerIdentificationNumber: formData.payer.identification.number,
         };
         try {
+            console.log("paymentData ", paymentData)
+            console.log("pedidoDTO ", pedidoDTO)
             const response = await processPayment(paymentData, pedidoDTO);
             const status = response?.data?.status;
 
@@ -300,7 +293,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         }
     };
 
-    // handleCopyPixCode (do PRIMEIRO arquivo, igual ao segundo)
+    // handleCopyPixCode
     const handleCopyPixCode = () => {
         if(pixData?.qrCodeCopyPaste) {
             navigator.clipboard.writeText(pixData.qrCodeCopyPaste)
@@ -329,7 +322,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             setInternalLoading(false);
             return;
         }
-
         try {
             // 🔎 Verifica se o estoque está disponível antes de gerar o QR Code
             const estoqueValidoResponse = await verificarEstoquePedido(pedidoDTO);
@@ -369,7 +361,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             setInternalLoading(false);
         }
     };
-
 
     // verificarPagamentoManualPix (do SEGUNDO arquivo)
     const verificarPagamentoManualPix = async () => {

@@ -17,10 +17,11 @@ using MercadoPago.Error;
 using MercadoPago.Resource.Payment;
 using Microsoft.AspNetCore.SignalR;
 using SistemaDeGestao.Controllers;
+using SistemaDeGestao.Interfaces;
 
 namespace SistemaDeGestao.Services
 {
-    public class MercadoPagoService
+    public class MercadoPagoService : IMercadoPagoService
     {
         private readonly DataBaseContext _context;
         private readonly IConfiguration _configuration;

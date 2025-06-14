@@ -7,7 +7,7 @@ public class PedidoDTO
     public string FinalUserTelefone { get; set; }
     public int? FinalUserId { get; set; }
     public OrderStatus Status { get; set; }
-    public string Numero { get; set; }
+    public string? Numero { get; set; }
     public EnderecoEntregaDTO Endereco { get; set; }
     public PagamentoDTO Pagamento { get; set; }
     public string Observacoes { get; set; }

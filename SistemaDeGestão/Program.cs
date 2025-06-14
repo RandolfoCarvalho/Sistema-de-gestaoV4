@@ -24,6 +24,9 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
+using SistemaDeGestao.Interfaces;
+using StackExchange.Redis;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -105,7 +108,20 @@ builder.Services.AddScoped<AdicionalService>();
 builder.Services.AddScoped<PedidoService>();
 builder.Services.AddScoped<IFinalUserService, FinalUserService>();
 builder.Services.AddScoped<FinalUserService>();
-builder.Services.AddScoped<MercadoPagoService>();
+builder.Services.AddScoped<IMercadoPagoService, MercadoPagoService>();
+//PaymentOrchestrator
+builder.Services.AddScoped<IPagamentoOrchestratorService, PagamentoOrchestratorService>();
+// 2. Registro do Cliente de API do Mercado Pago com IHttpClientFactory
+builder.Services.AddHttpClient<IMercadoPagoApiClient, MercadoPagoApiClient>();
+
+// 3. Configuração do Cache Distribuído (Redis é o recomendado)
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    // Pega a connection string do seu appsettings.json
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "SistemaDeGestao_";
+});
+
 builder.Services.AddHttpClient<WhatsAppBotService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IEncryptionService, EncryptionService>();
@@ -147,7 +163,28 @@ builder.Services.AddControllers()
             options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
             options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-        });
+            options.JsonSerializerOptions.UnmappedMemberHandling = System.Text.Json.Serialization.JsonUnmappedMemberHandling.Skip;
+        })
+        .ConfigureApiBehaviorOptions(options =>
+         {
+             options.InvalidModelStateResponseFactory = context =>
+             {
+                 // Cria um objeto com os detalhes do erro
+                 var problemDetails = new ValidationProblemDetails(context.ModelState)
+                 {
+                     Title = "Um ou mais erros de validação ocorreram.",
+                     Status = StatusCodes.Status400BadRequest,
+                     Instance = context.HttpContext.Request.Path
+                 };
+
+                 // Loga o erro detalhado no servidor para você ver no 'docker logs'
+                 var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                 logger.LogError("Erro de Validação de Modelo: {@ValidationErrors}", problemDetails.Errors);
+
+                 // Retorna o erro detalhado para o cliente (frontend)
+                 return new BadRequestObjectResult(problemDetails);
+             };
+         });
 /*builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Auth/Login";  // Caminho para o redirecionamento de login

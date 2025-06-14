@@ -90,8 +90,6 @@ const PixForm = ({ amount, onSubmit, onClose, isLoading, errorMessage }) => {
                     >
                         {isLoading ? "Gerando..." : "Gerar PIX"}
                     </button>
-                    
-                    
                 </div>
             </form>
         </div>

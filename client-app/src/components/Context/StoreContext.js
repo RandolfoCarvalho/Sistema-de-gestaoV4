@@ -1,7 +1,5 @@
 ﻿import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '../../axiosConfig';
-// import { use } from 'react'; // <-- Este import não é usado, pode remover
-
 const StoreContext = createContext();
 
 export function StoreProvider({ children }) {
@@ -53,7 +51,7 @@ export function StoreProvider({ children }) {
         const lojaIndex = pathParts.indexOf('loja');
         if (lojaIndex !== -1 && pathParts[lojaIndex + 1]) {
             const storeName = pathParts[lojaIndex + 1];
-            if (storeName !== currentStore) { // Evita buscas desnecessárias
+            if (storeName !== currentStore) { 
                 setCurrentStore(storeName);
             }
         }

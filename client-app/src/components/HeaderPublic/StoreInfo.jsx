@@ -39,7 +39,6 @@ const StoreInfo = () => {
       </div>
     );
   }
-
   const { nomeDaLoja, empresa } = storeInfo;
 
   const formatarHorario = (horario) => {

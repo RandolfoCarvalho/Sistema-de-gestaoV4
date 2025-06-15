@@ -1,12 +1,18 @@
 ﻿import React, { useState, useMemo, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+//UI
 import ReportModal from '../../ui/ReportModal';
+import NotificationToast from '../../ui/NotificationToast';
+
 import {
     LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area,
     XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import { FileText, Calendar, BarChart4, TrendingUp, PieChart as PieIconLucide, DollarSign } from 'lucide-react'; 
+import { FileText, Calendar, BarChart4, TrendingUp, PieChart as PieIconLucide, DollarSign, Bell  } from 'lucide-react'; 
+
+//hooks
+import { useSignalR } from '../../../../services/SignalRContext';
 
 const BACKEND_STRING_TO_KEY = {
     "NOVO": 0, "EM_PRODUCAO": 1, "EM_ENTREGA": 2, 
@@ -28,7 +34,10 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
     const [isChartVisible, setIsChartVisible] = useState(true);
     //estado do modal de relatorio
     const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-
+    //estado notificacao novo pedido
+    const { notification, setNotification } = useSignalR();
+    //estado conexao signralR
+     const { connection, isConnected } = useSignalR();
     //geracao do relatorio 
     const handleGenerateReport = ({ startDate, endDate, statusFilter }) => {
         // --- PASSO 1: PREPARAÇÃO E FILTRAGEM DOS DADOS ---
@@ -566,14 +575,31 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
 
     return (
         <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
+            {/* 👇 RENDERIZAÇÃO CONDICIONAL DO TOAST USANDO O ESTADO DO CONTEXTO */}
+            {notification && (
+                <NotificationToast 
+                    order={notification} 
+                    onClose={() => setNotification(null)} 
+                />
+            )}
+
             <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
                 <h3 className="text-xl font-semibold text-gray-800 mb-2 sm:mb-0">Análise Detalhada de Pedidos</h3>
-                <button
-                    onClick={() => setIsChartVisible(!isChartVisible)}
-                    className="text-sm text-blue-600 hover:underline px-2 py-1 rounded hover:bg-blue-50"
-                >
-                    {isChartVisible ? 'Minimizar Gráficos ▲' : 'Expandir Gráficos ▼'}
-                </button>
+                
+                {/* 👇 8. AGRUPAR OS BOTÕES DO CABEÇALHO PARA ALINHAMENTO CORRETO */}
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={() => setIsChartVisible(!isChartVisible)}
+                        className="text-sm text-blue-600 hover:underline px-2 py-1 rounded hover:bg-blue-50"
+                    >
+                        {isChartVisible ? 'Minimizar Gráficos ▲' : 'Expandir Gráficos ▼'}
+                    </button>
+                    {/* Ícone do sino com indicador de notificação */}
+                    <button className="relative p-2 text-gray-500 hover:text-blue-600 hover:bg-gray-100 rounded-full">
+                        <Bell size={20} />
+                        {notification && <span className="absolute top-1 right-1 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>}
+                    </button>
+                </div>
             </div>
             {/* SEÇÃO DE FILTROS ADICIONADA */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 border border-gray-200 rounded-lg">
@@ -706,7 +732,7 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
                                     Sua margem de lucro média é de {profitMargin}%.
                                 </p>
                             </div>
-                            <div className="bg-red-50 p-4 rounded-lg shadow"> {/* Mudado para cor de cancelamento */}
+                            <div className="bg-red-50 p-4 rounded-lg shadow">
                                 <h4 className="font-medium text-red-700">Taxa de Cancelamento</h4>
                                 <p className="text-gray-600 mt-1">
                                     Sua taxa de cancelamento é de {cancellationRate}%.

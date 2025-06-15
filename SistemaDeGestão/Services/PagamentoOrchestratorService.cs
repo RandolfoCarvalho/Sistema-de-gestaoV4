@@ -126,8 +126,6 @@ public class PagamentoOrchestratorService : IPagamentoOrchestratorService
             request.PedidoDTO.Pagamento.TrocoPara = request.DadosPagamento.TrocoPara;
             var result = await _pedidoService.CriarPedidoAsync(request.PedidoDTO);
             if (result == null) throw new Exception("Falha ao criar pedido no serviço de pedidos.");
-
-            await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", request.PedidoDTO);
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("Pedido em dinheiro {NumeroPedido} criado com sucesso para o telefone {Telefone}", request.PedidoDTO.Numero, telefone);
@@ -257,8 +255,6 @@ public class PagamentoOrchestratorService : IPagamentoOrchestratorService
                 var result = await _pedidoService.CriarPedidoAsync(pedidoDTO);
                 if (result == null) throw new Exception("Falha ao criar o pedido final a partir do pedido pendente.");
 
-                await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoDTO);
-
                 // Apenas removemos o pendente se tudo deu certo
                 _context.PedidosPendentes.Remove(pedidoPendente);
                 await _context.SaveChangesAsync();
@@ -354,9 +350,6 @@ public class PagamentoOrchestratorService : IPagamentoOrchestratorService
 
             var result = await _pedidoService.CriarPedidoAsync(pedidoDTO);
             if (result == null) throw new Exception("Falha ao criar o pedido final a partir do pedido pendente.");
-
-            await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoDTO);
-
             _context.PedidosPendentes.Remove(pedidoPendente);
             await _context.SaveChangesAsync();
 

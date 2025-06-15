@@ -8,6 +8,9 @@ export const SignalRProvider = ({ children }) => {
     const [connection, setConnection] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
 
+    // 👇 NOVO: Estado para a notificação, gerenciado globalmente
+    const [notification, setNotification] = useState(null);
+
     useEffect(() => {
         const newConnection = new signalR.HubConnectionBuilder()
             //.withUrl("http://localhost:5000/orderHub")
@@ -53,7 +56,7 @@ export const SignalRProvider = ({ children }) => {
     }, []);
 
     return (
-        <SignalRContext.Provider value={{ connection, isConnected }}>
+        <SignalRContext.Provider value={{ connection, isConnected, notification, setNotification }}>
             {children}
         </SignalRContext.Provider>
     );

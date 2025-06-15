@@ -41,7 +41,6 @@ import MeusProdutos from './components/Admin/Stats/Products';
 import Perfil from './components/Admin/Stats/Perfil';
 import WhatsappBOT from './components/Admin/Stats/WhatsappBOT/whatsappBOT';
 import Sair from './components/Admin/Stats/logout';
-
 //protecao da rota admin
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from "./services/AuthContext";

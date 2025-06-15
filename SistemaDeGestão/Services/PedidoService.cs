@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SistemaDeGestao.Data;
 using SistemaDeGestao.Migrations;
 using SistemaDeGestao.Models;
+using SistemaDeGestao.Models.DTOs.Notification;
 using SistemaDeGestao.Models.DTOs.Resquests;
 using System.Numerics;
 
@@ -173,8 +174,27 @@ namespace SistemaDeGestao.Services
                 await transaction.RollbackAsync();
                 throw;
             }
-            var result = await _whatsAppBot.MontarMensagemAsync(pedido);
-            await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoDTO);
+            var pedidoCompletoParaNotificacao = await _context.Pedidos
+                .AsNoTracking()
+                .Include(p => p.Pagamento)
+                .Include(p => p.EnderecoEntrega)
+                .Include(p => p.Itens)
+                    .ThenInclude(i => i.OpcoesExtras)
+                .FirstOrDefaultAsync(p => p.Id == pedido.Id);
+
+            if (pedidoCompletoParaNotificacao == null)
+            {
+                _logger.LogError("CRITICAL: Pedido com ID {PedidoId} não encontrado imediatamente após a criação.", pedido.Id);
+                return pedido;
+            }
+            // MAPEAR O OBJETO COMPLETO E CORRETO para o DTO
+            var pedidoNotificationDto = _mapper.Map<PedidoNotificationDTO>(pedidoCompletoParaNotificacao);
+            pedidoNotificationDto.Status = OrderStatus.NOVO.ToString();
+            Console.WriteLine($"[DEBUG] Status mapeado: {pedidoNotificationDto.Status}");
+            pedidoNotificationDto.Numero = pedidoCompletoParaNotificacao.Numero;
+            // ENVIAR O DTO CORRETO
+            await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoNotificationDto);
+            var result = await _whatsAppBot.MontarMensagemAsync(pedidoCompletoParaNotificacao);
             return pedido;
         }
 

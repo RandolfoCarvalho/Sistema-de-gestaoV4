@@ -3,7 +3,7 @@ import { Search, BarChart2, Bell } from 'lucide-react';
 import MetricsCard from './FluidMetricsCard';
 import StatusColumn from './StatusColumn';
 import useOrders from '../hooks/useOrders';
-import { useSignalRListeners } from '../hooks/useSignalRListeners';
+import useSignalRListeners from '../hooks/useSignalRListeners';
 import { useSignalR } from '../../services/SignalRContext';
 
 const OrderManagementPanel = () => {

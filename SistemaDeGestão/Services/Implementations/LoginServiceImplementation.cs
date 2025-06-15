@@ -2,6 +2,7 @@
 using SistemaDeGestao.Configurations;
 using SistemaDeGestao.Data;
 using SistemaDeGestao.Models;
+using SistemaDeGestao.Models.DTOs.Responses;
 using SistemaDeGestao.Repository;
 using SistemaDeGestao.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,19 +15,24 @@ namespace SistemaDeGestao.Services.Implementations
         private const string DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
         private TokenConfiguration _configuration;
         private IUserRepository _userRepository;
+        private readonly DataBaseContext _context;
         private readonly ITokenService _tokenService;
         private readonly ILogger<LoginServiceImplementation> _logger;
-        public LoginServiceImplementation(ILogger<LoginServiceImplementation> logger, TokenConfiguration configuration, IUserRepository userRepository, ITokenService tokenService)
+        public LoginServiceImplementation(ILogger<LoginServiceImplementation> logger, TokenConfiguration configuration,
+            IUserRepository userRepository, ITokenService tokenService, 
+            DataBaseContext context)
         {
             _configuration = configuration;
             _userRepository = userRepository;
             _tokenService = tokenService;
             _logger = logger;
+            _context = context;
         }
 
-        public TokenVO ValidateCredentials(Restaurante userCredentials)
+        public LoginResultDTO ValidateCredentials(Restaurante userCredentials)
         {
             var user = _userRepository.ValidateCredentials(userCredentials);
+            var userFromDb = _context.Restaurantes.FirstOrDefault(u => u.UserName == userCredentials.UserName);
             if (user == null) return null;
             var claims = new List<Claim>
             {
@@ -47,14 +53,12 @@ namespace SistemaDeGestao.Services.Implementations
             DateTime expirationDate = createDate.AddMinutes(_configuration.Minutes);
 
 
-
-            return new TokenVO(
-                   true,
-                   createDate.ToString(DATE_FORMAT),
-                   expirationDate.ToString(DATE_FORMAT),
-                   accessToken,
-                   refreshToken
-                );
+            var tokenVO = new TokenVO(true, createDate.ToString(DATE_FORMAT), expirationDate.ToString(DATE_FORMAT), accessToken, refreshToken);
+            return new LoginResultDTO
+            {
+                Token = tokenVO,
+                UserData = userFromDb 
+            };
         }
         public TokenVO ValidateCredentials(TokenVO token)
         {

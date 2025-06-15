@@ -38,19 +38,15 @@ export const usePriceCalculator = (
         // 3. Itera sobre os itens de MÚLTIPLA ESCOLHA (complementos e adicionais)
         Object.entries(selectedExtrasQuantities).forEach(([key, itemQuantity]) => {
             if (itemQuantity > 0) {
-                console.log(`Analisando chave: ${key}, Quantidade: ${itemQuantity}`); // LOG
-
                 const [type, id] = key.split('_');
                 const numericId = parseInt(id, 10);
                 let item = null;
 
                 if (type === 'complemento') {
                     item = gruposComplementos.flatMap(g => g.complementos).find(c => c.id === numericId);
-                    if (item) console.log(`Encontrado COMPLEMENTO: ${item.nome}, Preço: ${item.preco}`); // LOG
                 } else if (type === 'adicional') {
                     item = gruposAdicionais.flatMap(g => g.adicionais).find(a => a.id === numericId);
                 }
-
                 if (item) {
                     const itemPrice = item.preco ?? item.precoAdicional ?? item.precoBase ?? 0;
                     unitPrice += itemPrice * itemQuantity;
@@ -59,7 +55,6 @@ export const usePriceCalculator = (
                 }
             }
         });
-
         return unitPrice * quantity;
 
 }, [product, gruposComplementos, gruposAdicionais, selectedExtrasQuantities, selectedRadioComplementos, quantity]);
@@ -78,15 +73,10 @@ export const usePriceCalculator = (
                 const key = `complemento_${comp.id}`;
                 return acc + (selectedExtrasQuantities[key] || 0);
             }, 0);
-            console.log(`Grupo "${grupo.nome}": Mínimo: ${grupo.quantidadeMinima}, Selecionado: ${totalSelecionadoNoGrupo}`);
             return totalSelecionadoNoGrupo <= 0;
         }
-        
         return false;
     });
-
-    console.log("gruposObrigatoriosNaoAtendidos", gruposObrigatoriosNaoAtendidos);
-
     // Mostra o erro APENAS se o array tiver um ou mais grupos não atendidos.
     if (gruposObrigatoriosNaoAtendidos.length > 0) { 
         Swal.fire({

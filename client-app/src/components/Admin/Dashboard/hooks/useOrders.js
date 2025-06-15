@@ -28,7 +28,6 @@ const useOrders = () => {
         };
         
         data.forEach(order => {
-            console.log(`Pedido ID: ${order.id}, Status: ${order.status}`);
             let statusKey;
             let statusValue = order.status;
             if (typeof statusValue === 'string') {
@@ -68,8 +67,6 @@ const useOrders = () => {
                 console.warn(`Categoria de status não encontrada para o pedido: ${order.id} com status ${order.status}`);
             }
         });
-    
-        console.log("Pedidos processados por status:", processedOrders);
         return processedOrders;
     }, []);
 

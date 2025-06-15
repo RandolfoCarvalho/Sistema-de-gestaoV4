@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect, useMemo  } from 'react';
 import { useParams } from 'react-router-dom';
 import HeaderPublic from '../HeaderPublic/HeaderPublic';
-import StoreInfo from '../HeaderPublic/StoreInfo'; // Importação do StoreInfo, necessária para o layout
+import StoreInfo from '../HeaderPublic/StoreInfo';
 import BottomNav from '../BottomNav';
 import useLojaData from './hooks/useLojaData';
 import CategoryFilter from './CategoryFilter';
@@ -18,7 +18,6 @@ const Produtos = () => {
   const [maisVendidos, setMaisVendidos] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState("");
-  console.log("Produtos: ", produtos);
   const finalFilteredProducts = useMemo(() => {
     let filtered = produtos;
 
@@ -62,7 +61,6 @@ const Produtos = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Guarda para o estado de carregamento
   if (loading) {
     return <ProductPageSkeleton />;
   }

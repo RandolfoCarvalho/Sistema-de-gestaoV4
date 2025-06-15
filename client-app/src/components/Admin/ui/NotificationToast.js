@@ -11,7 +11,6 @@ const NotificationToast = ({ order, onClose }) => {
   }, [onClose]);
 
   if (!order) return null;
-  console.log("order", order)
   return (
     <div 
       className="fixed top-20 right-5 z-50 flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg dark:text-gray-400 dark:bg-gray-800 transition-all duration-300 ease-in-out transform animate-fade-in-right"

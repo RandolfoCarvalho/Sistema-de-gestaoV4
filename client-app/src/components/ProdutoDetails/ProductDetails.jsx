@@ -1,15 +1,13 @@
-﻿import React from 'react';
-import { useParams } from 'react-router-dom';
+﻿import { useParams } from 'react-router-dom';
 import { ChevronLeft, Heart, Info, Clock, Star } from 'lucide-react';
-import HeaderPublic from '../HeaderPublic/HeaderPublic';
 import ProductImage from './ProductImage';
 import ProductInfo from './ProductInfo';
 import QuantitySelector from './QuantitySelector';
 import TotalPrice from './TotalPrice';
 import AddToCartButton from './AddToCartButton';
-import FuturisticLoadingSpinner from '../ui/FuturisticLoadingSpinner';
 import ErrorDisplay from './ErrorDisplay';
 import ComplementosSection from './Complementos/ComplementosSection';
+import ProductDetailsSkeleton from '../ui/skeleton/ProductDetailsSkeleton'; 
 import AdicionaisSection from './Adicionais/AdicionaisSection';
 import { useCart } from '../Carrinho/CartContext';
 import CartActionModal from '../Carrinho/CartActionModal';
@@ -53,29 +51,11 @@ const ProductDetails = () => {
     );
 
     if (loading) {
-        return (
-            <div className="flex items-center justify-center h-screen bg-gray-50">
-                <FuturisticLoadingSpinner
-                  message="Carregando produto..."
-                  accentColor="red"
-                  secondaryColor="red"
-                  darkMode={false}
-                  showBorder={false}
-                  phaseMessages={[
-                    "Verificando a qualidade do produto...",
-                    "Preparando os detalhes exclusivos...",
-                    "Ajustando as últimas informações...",
-                    "Pronto para exibir! Só mais um segundo..."
-                  ]}
-                />
-            </div>
-        );
+        return <ProductDetailsSkeleton />;
     }
-
     if (error || !product) {
         return <ErrorDisplay error={error} />;
     }
-
     return (
         <div className="bg-gray-50 min-h-screen">
             {/* Cabeçalho fixo com sombra suave */}
@@ -88,20 +68,12 @@ const ProductDetails = () => {
                         <ChevronLeft size={24} className="text-gray-700" />
                     </button>
                     <h1 className="ml-4 font-medium text-gray-800 flex-1">Detalhes do Produto</h1>
-                    { /*<button className="p-2 rounded-full hover:bg-gray-100">
-                        <Heart size={20} className="text-gray-600" />
-                    </button> */}
                 </div>
             </div>
-
-            {/* Conteúdo principal com padding superior para compensar o header fixo */}
             <div className="max-w-2xl mx-auto pt-16 pb-28">
-                {/* Imagem do produto em destaque */}
                 <div className="w-full h-64 relative overflow-hidden">
                     <ProductImage image={product.imagemPrincipalUrl} alt={product.nome} />
                 </div>
-
-                {/* Informações do produto com design limpo */}
                 <div className="bg-white px-4 py-5">
                     <ProductInfo
                         name={product.nome}
@@ -109,11 +81,7 @@ const ProductDetails = () => {
                         description={product.descricao}
                     />
                 </div>
-
-                {/* Linha suave de separação */}
                 <div className="h-2 bg-gray-50"></div>
-
-                {/* Seção de complementos e adicionais com design melhorado */}
                 <div className="bg-white px-4 py-2">
                     {gruposComplementos.length > 0 && (
                         <div className="py-2">
@@ -131,7 +99,6 @@ const ProductDetails = () => {
                             />
                         </div>
                     )}
-
                     {gruposAdicionais.length > 0 && (
                         <div className="py-2">
                             <h2 className="text-lg font-semibold text-gray-800 mb-3">Adicione extras</h2>
@@ -146,8 +113,6 @@ const ProductDetails = () => {
                             />
                         </div>
                     )}
-
-                    {/* Seletor de quantidade com design moderno */}
                     <div className="py-6">
                         <h2 className="text-lg font-semibold text-gray-800 mb-3">Quantidade</h2>
                         <QuantitySelector
@@ -157,15 +122,11 @@ const ProductDetails = () => {
                         />
                     </div>
                 </div>
-
-                {/* Observações (opcional) */}
                 <div className="bg-white mt-2 px-4 py-4 flex items-center text-gray-500">
                     <Info size={18} className="mr-2" />
                     <span>Alguma observação? Adicione ao finalizar seu pedido.</span>
                 </div>
             </div>
-
-            {/* Rodapé fixo com botão de adicionar ao carrinho */}
             <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-lg z-20">
                 <div className="max-w-2xl mx-auto flex justify-between items-center p-4">
                     <TotalPrice total={calculateTotalPrice()} />

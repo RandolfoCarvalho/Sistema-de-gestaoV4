@@ -6,21 +6,17 @@ const useSignalRListeners = (connection, isConnected, setOrders, processOrders, 
         if (!connection || !isConnected) return;
         // Listener para receber todos os pedidos
         connection.on("ReceiveAllOrders", (data) => {
-            console.log("Pedidos recebidos:", data);
             const processed = processOrders(data);
             setOrders(processed);
         });
 
         // Listener para receber atualização de um pedido específico
         connection.on("ReceiveOrderUpdate", (updatedOrder) => {
-            console.log("Pedido atualizado recebido:", updatedOrder);
             fetchOrders(connection, isConnected);
         });
         
         //NOVO LISTENER PARA NOTIFICAÇÃO DE NOVO PEDIDO
         connection.on("ReceiveOrderNotification", (newOrder) => {
-            console.log("✨ Novo pedido recebido em tempo real:", newOrder);
-
             // 1. Atualiza o estado da notificação no contexto
             if (setNotification) {
                 setNotification(newOrder);

@@ -35,9 +35,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     }, [cartTotal]);
 
     useEffect(() => {
-        // Se o estado de sucesso for ativado...
         if (paymentSuccessState) {
-            // ...inicia um timer de 3 segundos.
             const timer = setTimeout(() => {
                 if (onPaymentSuccess && paymentResponseData) {
                     onPaymentSuccess(paymentResponseData);
@@ -65,7 +63,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         .then(data => {
             if (data.publicKey) {
             initMercadoPago(data.publicKey, { locale: 'pt-BR' });
-            console.log("MercadoPago SDK carregado com chave do restaurante", data.publicKey);
             }
         })
         .catch(err => {
@@ -78,27 +75,18 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             let attempts = 0;
             const maxAttempts = 60; 
             setMensagem("⏳ Aguardando confirmação do pagamento PIX...");
-
-            console.log(`Iniciando verificação de pagamento PIX. TransactionId: ${transactionId}, RestauranteId: ${restauranteId}`);
-    
             const interval = setInterval(async () => {
                 try {
                     attempts++;
-                    console.log(`Tentativa ${attempts}/${maxAttempts} de verificação do pagamento PIX`);
-    
                     const response = await axios.get(
                         `${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/ObterPagamentoAsync/${transactionId}/${restauranteId}`
                     );
-                    
-                    console.log(`Resposta do servidor (verificação PIX):`, response.data);
-                    
                     const isApproved = 
                         response.data?.status === "approved" || 
                         (response.data?.message && response.data.message.toLowerCase().includes("pedido ja existe")) ||
                         (response.data?.message && response.data.message.toLowerCase().includes("pedido já existe"));
                     
                     if (isApproved) {
-                        console.log("✅ Pagamento PIX aprovado detectado!");
                         clearInterval(interval);
                         
                         setMensagem("✅ Pagamento aprovado com sucesso!");
@@ -122,7 +110,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     
             return () => {
                 clearInterval(interval);
-                // setInternalLoading(false); 
             };
         }
     }, [pixData, transactionId, restauranteId, navigate, onClose, onPaymentSuccess]);
@@ -153,7 +140,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     const response = await processPayment({ FormaPagamento: "mercadopago", Amount: parseFloat(amount) }, pedidoDTO);
 
                     if (response?.preferenceId) {
-                        console.log("Preferência Mercado Pago gerada:", response.preferenceId);
                         setPreferenceId(response.preferenceId);
                     } else {
                         console.error("Erro: Resposta da geração de preferência Mercado Pago inválida:", response);
@@ -217,8 +203,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             PayerIdentificationNumber: formData.payer.identification.number,
         };
         try {
-            console.log("paymentData ", paymentData)
-            console.log("pedidoDTO ", pedidoDTO)
             const response = await processPayment(paymentData, pedidoDTO);
             const status = response?.data?.status;
 
@@ -273,7 +257,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             const response = await processPaymentDinheiro(paymentData, pedidoDTO); 
     
             if (response?.ok || response?.id) { 
-                console.log("response: ", response);
                 setMensagem("✅ Pedido com pagamento em dinheiro registrado!");
                 setPaymentResponseData(response);
                 setPaymentSuccessState(true);   
@@ -325,7 +308,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         try {
             // 🔎 Verifica se o estoque está disponível antes de gerar o QR Code
             const estoqueValidoResponse = await verificarEstoquePedido(pedidoDTO);
-            console.log("estoqueValidoResponse", estoqueValidoResponse)
             if (estoqueValidoResponse?.statusText != "OK") {
                 setInternalError("❌ Estoque insuficiente ou pedido inválido.");
                 setMensagem("❌ Estoque insuficiente ou pedido inválido.");
@@ -362,7 +344,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         }
     };
 
-    // verificarPagamentoManualPix (do SEGUNDO arquivo)
+    // verificarPagamentoManualPix
     const verificarPagamentoManualPix = async () => {
         if (!transactionId || !restauranteId) {
             setInternalError("Não é possível verificar o pagamento: dados incompletos.");
@@ -375,7 +357,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             const response = await axios.get(
                 `${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/ObterPagamentoAsync/${transactionId}/${restauranteId}`
             );
-            console.log("Resposta da verificação manual PIX:", response.data);
             const isApproved =
                 response.data?.status === "approved" ||
                 (response.data?.message && response.data.message.toLowerCase().includes("pedido ja existe")) ||
@@ -413,7 +394,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             return null;
         }   
     };
-    // useEffect para countdown do PIX (do SEGUNDO arquivo)
+    // useEffect para countdown do PIX
     useEffect(() => {
         if (!pixData || countdown <= 0) {
             return;
@@ -442,7 +423,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     setTransactionId(null);
                     setPreferenceId(null);
                     setCountdown(300);
-                    setPaymentSuccessState(false); // IMPORTANTE: Resetar o estado de sucesso ao fechar
+                    setPaymentSuccessState(false); 
                     setPaymentResponseData(null);
                 }
             }}
@@ -470,7 +451,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                           />}
 
             {paymentSuccessState ? (
-            // TELA DE SUCESSO DEDICADA
             <div className="flex flex-col items-center justify-center text-center p-8 space-y-4">
                 <p className="text-5xl">✅</p>
                 <h3 className="text-xl font-semibold text-gray-800">Pagamento Aprovado!</h3>
@@ -478,9 +458,9 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                 <p className="text-sm text-gray-500 mt-2">Você será redirecionado em alguns instantes...</p>
             </div>
         ) : (
-            // TELA NORMAL DE PAGAMENTO (seu conteúdo original)
+            // TELA NORMAL DE PAGAMENTO
             <div className="space-y-4">
-                 {/* Lógica de renderização para CARTAO (como no PRIMEIRO arquivo) */}
+                 {/* Lógica de renderização para CARTAO*/}
                 {paymentMethod === "cartao" && (
                     <CardPaymentForm 
                         amount={amount}
@@ -525,30 +505,14 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                         errorMessage={mensagem}
                     />
                 )}
-                {/* Lógica de renderização para MERCADOPAGO Wallet (como no PRIMEIRO arquivo) */}
+                {/* Lógica de renderização para MERCADOPAGO Wallet */}
                 {paymentMethod === "mercadopago" && (
                      <MercadoPagoWalletButton 
                         preferenceId={preferenceId}
-                        isLoading={isLoading} // isLoading já inclui internalLoading da geração da preferência
+                        isLoading={isLoading} 
                         onClose={onClose}
                     />
                 )}
-
-                {/* {displayError && !isLoading && (
-                    <p className="text-red-600 text-center mt-4 bg-red-100 p-3 rounded border border-red-300 text-sm">
-                        {typeof displayError === 'object' ? JSON.stringify(displayError) : displayError}
-                    </p>
-                )}
-                */}
-                {/* {mensagem && !displayError && !isLoading && (
-                     <div className={`text-center mt-4 p-3 rounded border text-sm ${
-                        mensagem.includes("✅") ? "bg-green-100 border-green-300 text-green-700" :
-                        mensagem.includes("⚠️") ? "bg-yellow-100 border-yellow-300 text-yellow-700" :
-                        "bg-blue-100 border-blue-300 text-blue-700" 
-                     }`}>
-                        {mensagem}
-                    </div>
-                )} */}
             </div>
         )}
         </Modal>

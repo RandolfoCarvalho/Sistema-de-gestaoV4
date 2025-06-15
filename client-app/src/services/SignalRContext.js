@@ -21,17 +21,14 @@ export const SignalRProvider = ({ children }) => {
 
         newConnection.onclose(() => {
             setIsConnected(false);
-            console.log('Connection closed');
         });
 
         newConnection.onreconnecting(() => {
             setIsConnected(false);
-            console.log('Reconnecting...');
         });
 
         newConnection.onreconnected(() => {
             setIsConnected(true);
-            console.log('Reconnected!');
         });
 
         const startConnection = async () => {
@@ -39,15 +36,12 @@ export const SignalRProvider = ({ children }) => {
                 await newConnection.start();
                 setConnection(newConnection);
                 setIsConnected(true);
-                console.log("SignalR Connected!");
             } catch (err) {
                 console.error("SignalR Connection Error: ", err);
                 setTimeout(startConnection, 5000);
             }
         };
-
         startConnection();
-
         return () => {
             if (newConnection) {
                 newConnection.stop();
@@ -61,7 +55,6 @@ export const SignalRProvider = ({ children }) => {
         </SignalRContext.Provider>
     );
 };
-
 // Hook para usar o SignalRContext
 const useSignalR = () => useContext(SignalRContext);
 

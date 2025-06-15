@@ -25,7 +25,6 @@ const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
         if (navigator.share) {
             try {
                 await navigator.share(shareData);
-                console.log('Conteúdo compartilhado com sucesso!');
             } catch (err) {
                 console.error('Erro ao compartilhar:', err);
             }

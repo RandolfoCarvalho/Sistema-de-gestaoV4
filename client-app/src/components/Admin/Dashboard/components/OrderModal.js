@@ -91,7 +91,6 @@ const OrderModal = ({ order, onClose }) => {
     const [error, setError] = useState('');
     const [motivoCancelamento, setMotivoCancelamento] = useState('');
     const [activeTab, setActiveTab] = useState('detalhes');
-    console.log("Miha ordem: ", order);
     // Agora o retorno condicional pode ser usado com segurança.
     if (!order) return null;
 

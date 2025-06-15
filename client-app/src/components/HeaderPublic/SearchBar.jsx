@@ -10,7 +10,6 @@ const SearchBar = () => {
     const handleProdutoClick = (id) => {
         navigate(`/product/${id}`);
     };
-    console.log("Produtos: ", produtos)
     return (
         <div className="py-3 px-2 border-t border-blue-400">
             <div className="relative">

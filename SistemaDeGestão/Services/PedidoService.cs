@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SistemaDeGestao.Data;
 using SistemaDeGestao.Migrations;
 using SistemaDeGestao.Models;
+using SistemaDeGestao.Models.DTOs.Notification;
 using SistemaDeGestao.Models.DTOs.Resquests;
 using System.Numerics;
 
@@ -124,7 +125,6 @@ namespace SistemaDeGestao.Services
             if (pedidoDTO == null || !pedidoDTO.Itens.Any())
                 throw new ArgumentException("O pedido deve conter pelo menos um item.");
 
-            // Verifica se todos os produtos estão ativos
             var produtoIds = pedidoDTO.Itens.Select(i => i.ProdutoId).ToList();
 
             var produtosAtivos = await _context.Produtos
@@ -142,27 +142,59 @@ namespace SistemaDeGestao.Services
                 transactionIdTemporario = BigInteger.Abs(transactionIdTemporario) % 999999;
                 pedidoDTO.Pagamento.TransactionId = transactionIdTemporario.ToString();
             }
-            if (pedidoDTO == null || !pedidoDTO.Itens.Any())
-                throw new ArgumentException("O pedido deve conter pelo menos um item.");
-            
+
             var empresa = await _context.Empresas
                 .Include(e => e.DiasFuncionamento)
                 .FirstOrDefaultAsync(e => e.RestauranteId == pedidoDTO.RestauranteId);
             if (empresa == null || !_restauranteService.IsLojaOpen(empresa)) return null;
             BigInteger pedidoNumber = new BigInteger(Guid.NewGuid().ToByteArray().Take(4).ToArray());
-            pedidoNumber = BigInteger.Abs(pedidoNumber) % 999999; 
+            pedidoNumber = BigInteger.Abs(pedidoNumber) % 999999;
             string numeroPedido = $"PED: {pedidoNumber:D5}";
 
             var pedido = _mapper.Map<Pedido>(pedidoDTO);
             pedido.Numero = numeroPedido;
             pedido.Pagamento.PagamentoAprovado = true;
             pedido.Pagamento.DataAprovacao = DateTime.UtcNow;
-            _context.Pedidos.Add(pedido);
-            await _context.SaveChangesAsync();
 
-            var result = await _whatsAppBot.MontarMensagemAsync(pedido);
-            //if (!result) return null;
-            await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoDTO);
+            // 🔐 Começa a transação
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                _context.Pedidos.Add(pedido);
+                await _context.SaveChangesAsync();
+
+                // 👇 Reduz o estoque com segurança
+                await ReduzirEstoqueAsync(pedido);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+            var pedidoCompletoParaNotificacao = await _context.Pedidos
+                .AsNoTracking()
+                .Include(p => p.Pagamento)
+                .Include(p => p.EnderecoEntrega)
+                .Include(p => p.Itens)
+                    .ThenInclude(i => i.OpcoesExtras)
+                .FirstOrDefaultAsync(p => p.Id == pedido.Id);
+
+            if (pedidoCompletoParaNotificacao == null)
+            {
+                _logger.LogError("CRITICAL: Pedido com ID {PedidoId} não encontrado imediatamente após a criação.", pedido.Id);
+                return pedido;
+            }
+            // MAPEAR O OBJETO COMPLETO E CORRETO para o DTO
+            var pedidoNotificationDto = _mapper.Map<PedidoNotificationDTO>(pedidoCompletoParaNotificacao);
+            pedidoNotificationDto.Status = OrderStatus.NOVO.ToString();
+            Console.WriteLine($"[DEBUG] Status mapeado: {pedidoNotificationDto.Status}");
+            pedidoNotificationDto.Numero = pedidoCompletoParaNotificacao.Numero;
+            // ENVIAR O DTO CORRETO
+            await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", pedidoNotificationDto);
+            var result = await _whatsAppBot.MontarMensagemAsync(pedidoCompletoParaNotificacao);
             return pedido;
         }
 
@@ -236,6 +268,22 @@ namespace SistemaDeGestao.Services
             }
         }
 
+        private async Task ReduzirEstoqueAsync(Pedido pedido)
+        {
+            foreach (var item in pedido.Itens)
+            {
+                var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.Id == item.ProdutoId);
+
+                if (produto == null)
+                    throw new InvalidOperationException($"Produto com ID {item.ProdutoId} não encontrado.");
+
+                if (produto.EstoqueAtual < item.Quantidade)
+                    throw new InvalidOperationException($"Estoque insuficiente para o produto '{produto.Nome}'. Quantidade solicitada: {item.Quantidade}, disponível: {produto.EstoqueAtual}");
+
+                produto.EstoqueAtual -= item.Quantidade;
+                _context.Produtos.Update(produto);
+            }
+        }
         /*public async Task<ItemPedido> AdicionarItemAoPedido(ItemPedido item)
         {
             var produto = await _context.Produtos.FindAsync(item.ProdutoId);

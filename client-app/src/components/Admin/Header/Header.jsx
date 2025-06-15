@@ -3,54 +3,61 @@ import { FaMoon, FaSun } from "react-icons/fa";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { MdSpaceDashboard } from "react-icons/md";
 import { useStore } from '../../Context/StoreContext';
-import { useNavigate } from 'react-router-dom';
 
-const Header = ({ isSidebarOpen, toggleSidebar, darkMode, toggleDarkMode }) => {
+const Header = ({ toggleSidebar, darkMode, toggleDarkMode }) => {
     const { currentStore } = useStore();
-    const navigate = useNavigate();
 
     const handleStoreClick = () => {
         if (!currentStore) return;
         const storePath = `/loja/${encodeURIComponent(currentStore)}`;
-        navigate(storePath, { state: { storeName: currentStore } });
         window.open(storePath, "_blank");
     };
 
     return (
-        <div className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-            <div className="px-3 py-3 lg:px-5 lg:pl-3">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center justify-start rtl:justify-end">
-                        <button
-                            className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg
-                                hover:bg-gray-100 focus:outline-none focus:ring-2
-                                focus:ring-gray-200 dark:text-gray-400
-                                dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                            onClick={toggleSidebar}
-                        >
-                            <HiOutlineMenuAlt2 className="text-2xl" />
-                        </button>
-
-                        <div
-                            onClick={handleStoreClick}
-                            className="flex items-center ms-2 md:me-24 cursor-pointer"
-                        >
-                            <MdSpaceDashboard className="h-8 me-3 text-xl text-violet-500" />
-                            <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
-                                {currentStore || "Gestão"}
-                            </span>
-                        </div>
-                    </div>
-
+        // 1. HEADER: Sombra suave, altura fixa, padding e transição de cores
+        <header className="fixed top-0 z-50 w-full bg-white dark:bg-gray-800 shadow-md transition-colors duration-300">
+            <div className="flex items-center justify-between h-16 px-4 sm:px-6">
+                
+                {/* LADO ESQUERDO: Botão de menu e nome da loja */}
+                <div className="flex items-center gap-4"> {/* 2. GAP para espaçamento consistente */}
+                    
+                    {/* 3. BOTÃO DE ÍCONE UNIFICADO */}
                     <button
-                        className="dark:bg-slate-50 dark:text-slate-100 rounded-full p-2"
-                        onClick={toggleDarkMode}
+                        onClick={toggleSidebar}
+                        title="Abrir/Fechar menu"
+                        className="p-2 text-gray-500 rounded-full hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 dark:focus:ring-offset-gray-800 transition-all duration-200"
                     >
-                        {darkMode ? <FaSun /> : <FaMoon />}
+                        <HiOutlineMenuAlt2 className="w-6 h-6" />
                     </button>
+
+                    {/* 4. LINK DA LOJA REFINADO */}
+                    <div
+                        onClick={handleStoreClick}
+                        title={`Abrir loja '${currentStore}' em nova aba`}
+                        className="group flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                    >
+                        <MdSpaceDashboard className="w-6 h-6 text-violet-500 transition-transform duration-300 group-hover:scale-110" />
+                        <span className="text-lg font-semibold text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                            {currentStore || "Gestão"}
+                        </span>
+                    </div>
+                </div>
+
+                {/* LADO DIREITO: Botão de Dark Mode */}
+                <div className="flex items-center">
+                    
+                    {/* 3. BOTÃO DE ÍCONE UNIFICADO */}
+                    <button
+                        onClick={toggleDarkMode}
+                        title="Alterar tema"
+                        className="p-2 text-gray-500 rounded-full hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 dark:focus:ring-offset-gray-800 transition-all duration-200"
+                    >
+                        {darkMode ? <FaSun className="w-5 h-5" /> : <FaMoon className="w-5 h-5" />}
+                    </button>
+                    {/* Futuramente, o menu de usuário poderia entrar aqui */}
                 </div>
             </div>
-        </div>
+        </header>
     );
 };
 

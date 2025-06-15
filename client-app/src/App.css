@@ -10,8 +10,36 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
-}
+  :root {
+    /* Estas são as cores padrão do ShadCN para o modo claro. 
+       Ajuste se o seu tema for diferente. 
+       O 'bg-muted' é usado pelo Skeleton. */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    /* ... outras cores do seu tema */
+  }
 
+  .dark {
+    /* Cores para o modo escuro */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+     /* ... outras cores do seu tema */
+  }
+}
+@layer utilities {
+  @keyframes pulse {
+    50% {
+      opacity: .5;
+    }
+  }
+  .animate-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
 .App {
   text-align: center;
 }

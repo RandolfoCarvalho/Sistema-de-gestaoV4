@@ -25,21 +25,15 @@ export const useProductData = (productId) => {
                     axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/Complemento/ListarGrupoComplementosPorLoja/${currentStore}/${productId}`),
                     axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/Adicional/ListarGrupoAdicionaisPorLoja/${currentStore}/${productId}`)
                 ]);
-
                 setProduct(productResponse.data);
-
                 const complementos = gruposComplementosResponse.data || [];
-                console.log("complementos: " + gruposComplementosResponse.data)
                 setGruposComplementos(complementos);
-
                 const adicionais = gruposAdicionaisResponse.data || [];
                 setGruposAdicionais(adicionais);
-                console.log("adicionais: " + adicionais.data)
                 // Inicializa estados de visibilidade
                 initializeOpenStates(complementos, adicionais);
                 // Inicializa estados de seleção
                 initializeSelectionStates(complementos, adicionais);
-
                 setError(null);
             } catch (error) {
                 console.error('Erro ao buscar dados do produto:', error);

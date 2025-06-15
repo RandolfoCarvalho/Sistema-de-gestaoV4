@@ -25,30 +25,23 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     const restauranteId = localStorage.getItem("restauranteId");
      // NOVOS ESTADOS PARA CONTROLAR A TELA DE SUCESSO
     const [paymentSuccessState, setPaymentSuccessState] = useState(false);
-    const [paymentResponseData, setPaymentResponseData] = useState(null); // Para guardar a resposta do pagamento
+    const [paymentResponseData, setPaymentResponseData] = useState(null); 
 
     // Estado do PIX do segundo arquivo
-    const [countdown, setCountdown] = useState(300); // 5 minutos = 300 segundos para o PIX
+    const [countdown, setCountdown] = useState(300);
     useEffect(() => {
         const safeTotal = parseFloat(cartTotal) || 0;
         setAmount(safeTotal);
     }, [cartTotal]);
 
-    // NOVO useEffect PARA GERENCIAR O REDIRECIONAMENTO APÓS O SUCESSO
     useEffect(() => {
-        // Se o estado de sucesso for ativado...
         if (paymentSuccessState) {
-            // ...inicia um timer de 3 segundos.
             const timer = setTimeout(() => {
-                // Após o tempo, chama a função de sucesso no componente pai (se existir)
                 if (onPaymentSuccess && paymentResponseData) {
                     onPaymentSuccess(paymentResponseData);
                 }
-                // E então navega para a página de pedidos.
                 navigate("/pedidos");
             }, 3000);
-
-            // Função de limpeza para o caso do componente ser desmontado antes do tempo
             return () => clearTimeout(timer);
         }
     }, [paymentSuccessState, paymentResponseData, onPaymentSuccess, navigate]);
@@ -70,46 +63,35 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         .then(data => {
             if (data.publicKey) {
             initMercadoPago(data.publicKey, { locale: 'pt-BR' });
-            console.log("MercadoPago SDK carregado com chave do restaurante", data.publicKey);
             }
         })
         .catch(err => {
             console.error("Erro ao buscar credencial do restaurante:", err);
         });
     }, []);
-    // useEffect para verificação de status de pagamento PIX (do SEGUNDO arquivo, melhorado)
+    // useEffect para verificação de status de pagamento PIX 
     useEffect(() => {
         if (pixData && transactionId && restauranteId) {
             let attempts = 0;
-            const maxAttempts = 60; // 60 x 5s = 5 minutos
+            const maxAttempts = 60; 
             setMensagem("⏳ Aguardando confirmação do pagamento PIX...");
-            // setInternalLoading(true); // O loading é ativado pelo handlePixSubmit e aqui apenas para verificação
-
-            console.log(`Iniciando verificação de pagamento PIX. TransactionId: ${transactionId}, RestauranteId: ${restauranteId}`);
-    
             const interval = setInterval(async () => {
                 try {
                     attempts++;
-                    console.log(`Tentativa ${attempts}/${maxAttempts} de verificação do pagamento PIX`);
-    
                     const response = await axios.get(
                         `${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/ObterPagamentoAsync/${transactionId}/${restauranteId}`
                     );
-                    
-                    console.log(`Resposta do servidor (verificação PIX):`, response.data);
-                    
                     const isApproved = 
                         response.data?.status === "approved" || 
                         (response.data?.message && response.data.message.toLowerCase().includes("pedido ja existe")) ||
                         (response.data?.message && response.data.message.toLowerCase().includes("pedido já existe"));
                     
                     if (isApproved) {
-                        console.log("✅ Pagamento PIX aprovado detectado!");
                         clearInterval(interval);
                         
                         setMensagem("✅ Pagamento aprovado com sucesso!");
-                        setPaymentResponseData(response.data); // Guarda a resposta
-                        setPaymentSuccessState(true);          // ATIVA A TELA DE SUCESSO
+                        setPaymentResponseData(response.data); 
+                        setPaymentSuccessState(true);
                     } else if (attempts >= maxAttempts) {
                         console.warn("⏳ Tempo de espera pelo pagamento PIX expirou.");
                         clearInterval(interval);
@@ -121,7 +103,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     console.error("Erro ao verificar status do pagamento PIX:", err);
                     if (attempts >= maxAttempts) {
                         clearInterval(interval);
-                        // setInternalLoading(false);
                         setMensagem("⚠️ Não foi possível confirmar o pagamento PIX no momento. Verifique na tela de pedidos ou tente novamente.");
                     }
                 }
@@ -129,20 +110,17 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     
             return () => {
                 clearInterval(interval);
-                // setInternalLoading(false); 
             };
         }
     }, [pixData, transactionId, restauranteId, navigate, onClose, onPaymentSuccess]);
 
-    // useEffect para geração de preferência "mercadopago" (como no PRIMEIRO arquivo)
     useEffect(() => {
         setPreferenceId(null);
-        setInternalError(null); // Limpar erros internos ao mudar método ou abrir
+        setInternalError(null); 
 
         if (isOpen && paymentMethod === "mercadopago") {
             const generatePreference = async () => {
                 setInternalLoading(true);
-                // setInternalError(null); // Já limpou acima
                 const pedidoDTO = preparePedidoDTO();
 
                 if (!pedidoDTO) {
@@ -162,7 +140,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     const response = await processPayment({ FormaPagamento: "mercadopago", Amount: parseFloat(amount) }, pedidoDTO);
 
                     if (response?.preferenceId) {
-                        console.log("Preferência Mercado Pago gerada:", response.preferenceId);
                         setPreferenceId(response.preferenceId);
                     } else {
                         console.error("Erro: Resposta da geração de preferência Mercado Pago inválida:", response);
@@ -179,7 +156,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         }
     }, [isOpen, paymentMethod, amount, processPayment, preparePedidoDTO]);
 
-    // handleCardPaymentSubmit (do PRIMEIRO arquivo)
+    // handleCardPaymentSubmit
     const handleCardPaymentSubmit = async (formData, additionalData) => {
         setInternalLoading(true);
         setInternalError(null);
@@ -225,24 +202,16 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             PayerIdentificationType: formData.payer.identification.type,
             PayerIdentificationNumber: formData.payer.identification.number,
         };
-        console.log("Enviando dados do cartão para processPayment:", paymentData);
-    
         try {
             const response = await processPayment(paymentData, pedidoDTO);
             const status = response?.data?.status;
 
             if (response?.ok && status === "approved") {
                 setMensagem("✅ Pagamento com cartão aprovado com sucesso!");
-                setPaymentResponseData(response); // Guarda a resposta
-                setPaymentSuccessState(true);      // ATIVA A TELA DE SUCESSO
+                setPaymentResponseData(response);
+                setPaymentSuccessState(true);
             } else {
-                const errorMessage =
-                    response?.data?.message ||
-                    response?.message ||
-                    response?.error?.message ||
-                    response?.error ||
-                    "Pagamento com cartão falhou.";
-                console.error("Erro no pagamento com cartão (resposta backend):", response);
+                const errorMessage = response?.error?.message || "Pagamento com cartão falhou.";
                 setInternalError(`❌ ${errorMessage}`);
                 setMensagem(`❌ ${errorMessage}`);
             }
@@ -288,14 +257,12 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             const response = await processPaymentDinheiro(paymentData, pedidoDTO); 
     
             if (response?.ok || response?.id) { 
-                console.log(`Pagamento em dinheiro registrado com sucesso:`, response);
-                
                 setMensagem("✅ Pedido com pagamento em dinheiro registrado!");
-                setPaymentResponseData(response); // Guarda a resposta
-                setPaymentSuccessState(true);      // ATIVA A TELA DE SUCESSO
+                setPaymentResponseData(response);
+                setPaymentSuccessState(true);   
             } else {
-                const errorMessage = response?.error || response?.message || `Registro de pagamento em dinheiro falhou.`;
-                console.error(`Erro no pagamento em dinheiro (resposta backend):`, response);
+                const errorMessage = response?.error?.message || response?.error || "Registro de pagamento em dinheiro falhou.";
+                console.error(`Erro no pagamento em dinheiro (resposta backend):`, errorMessage);
                 setInternalError(`❌ ${errorMessage}`);
                 setMensagem(`❌ ${errorMessage}`);
             }
@@ -309,7 +276,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         }
     };
 
-    // handleCopyPixCode (do PRIMEIRO arquivo, igual ao segundo)
+    // handleCopyPixCode
     const handleCopyPixCode = () => {
         if(pixData?.qrCodeCopyPaste) {
             navigator.clipboard.writeText(pixData.qrCodeCopyPaste)
@@ -323,46 +290,52 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         }
     };
 
-    // handlePixSubmit (do SEGUNDO arquivo, melhorado)
     const handlePixSubmit = async (formData) => {
         setInternalLoading(true);
         setInternalError(null);
         setPixData(null); 
         setMensagem("");   
-        const paymentData = {
-            FormaPagamento: "pix",
-            Amount: parseFloat(formData.amount),
-            PayerFirstName: formData.payerFirstName,
-            PayerLastName: formData.payerLastName,
-            PayerEmail: formData.payerEmail
-        };
+
         const pedidoDTO = preparePedidoDTO();
-        
+
         if (!pedidoDTO) {
             console.error("Falha ao preparar PedidoDTO para pagamento PIX.");
             setInternalError("Não foi possível preparar os dados do pedido para PIX.");
+            setMensagem("❌ Não foi possível preparar os dados do pedido para PIX.");
             setInternalLoading(false);
             return;
         }
         try {
+            // 🔎 Verifica se o estoque está disponível antes de gerar o QR Code
+            const estoqueValidoResponse = await verificarEstoquePedido(pedidoDTO);
+            if (estoqueValidoResponse?.statusText != "OK") {
+                setInternalError("❌ Estoque insuficiente ou pedido inválido.");
+                setMensagem("❌ Estoque insuficiente ou pedido inválido.");
+                setInternalLoading(false);
+                return;
+            }
+            const paymentData = {
+                FormaPagamento: "pix",
+                Amount: parseFloat(formData.amount),
+                PayerFirstName: formData.payerFirstName,
+                PayerLastName: formData.payerLastName,
+                PayerEmail: formData.payerEmail
+            };
             const response = await processPaymentPix(paymentData, pedidoDTO);
-            if (response?.ok && response.data?.qrCodeBase64 && response.data?.idPagamento) { 
-                console.log(`Dados do PIX recebidos:`, response.data);
+            if (response?.ok && response.data?.qrCodeBase64 && response.data?.idPagamento) {
                 setPixData({
                     qrCodeBase64: response.data.qrCodeBase64,
-                    qrCodeCopyPaste: response.data.qrCodeString || response.data.qr_code, 
+                    qrCodeCopyPaste: response.data.qrCodeString || response.data.qr_code,
                 });
-                setTransactionId(response.data.idPagamento.toString()); 
-                setCountdown(300); 
-                setMensagem("⏳ PIX gerado. Realize o pagamento e aguarde a confirmação."); 
+                setTransactionId(response.data.idPagamento.toString());
+                setCountdown(300);
+                setMensagem("⏳ PIX gerado. Realize o pagamento e aguarde a confirmação.");
             } else {
-                const errorMessage = response?.error?.message || response?.message || response?.data?.message || "Não foi possível obter os dados do PIX.";
-                console.error("Resposta do backend para PIX inválida ou com erro:", response);
+                const errorMessage = response?.error?.message || response?.message || "Não foi possível obter os dados do PIX.";
                 setInternalError(`❌ ${errorMessage}`);
                 setMensagem(`❌ ${errorMessage}`);
             }
         } catch (error) {
-            console.error(`Catch: Erro ao processar pagamento com PIX:`, error);
             const errorMessage = error.response?.data?.message || error.message || `Ocorreu um erro inesperado no PIX.`;
             setInternalError(`❌ ${errorMessage}`);
             setMensagem(`❌ ${errorMessage}`);
@@ -371,7 +344,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         }
     };
 
-    // verificarPagamentoManualPix (do SEGUNDO arquivo)
+    // verificarPagamentoManualPix
     const verificarPagamentoManualPix = async () => {
         if (!transactionId || !restauranteId) {
             setInternalError("Não é possível verificar o pagamento: dados incompletos.");
@@ -384,7 +357,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             const response = await axios.get(
                 `${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/ObterPagamentoAsync/${transactionId}/${restauranteId}`
             );
-            console.log("Resposta da verificação manual PIX:", response.data);
             const isApproved =
                 response.data?.status === "approved" ||
                 (response.data?.message && response.data.message.toLowerCase().includes("pedido ja existe")) ||
@@ -410,7 +382,19 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         }
     };
 
-    // useEffect para countdown do PIX (do SEGUNDO arquivo)
+    const verificarEstoquePedido = async (pedidoDTO) => {
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/api/1.0/Pedido/verificar-estoque-pedido`,
+                pedidoDTO 
+            );
+            return response;
+        } catch (err) {
+            console.error("Erro ao verificar estoque:", err);
+            return null;
+        }   
+    };
+    // useEffect para countdown do PIX
     useEffect(() => {
         if (!pixData || countdown <= 0) {
             return;
@@ -439,7 +423,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     setTransactionId(null);
                     setPreferenceId(null);
                     setCountdown(300);
-                    setPaymentSuccessState(false); // IMPORTANTE: Resetar o estado de sucesso ao fechar
+                    setPaymentSuccessState(false); 
                     setPaymentResponseData(null);
                 }
             }}
@@ -467,7 +451,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                           />}
 
             {paymentSuccessState ? (
-            // TELA DE SUCESSO DEDICADA
             <div className="flex flex-col items-center justify-center text-center p-8 space-y-4">
                 <p className="text-5xl">✅</p>
                 <h3 className="text-xl font-semibold text-gray-800">Pagamento Aprovado!</h3>
@@ -475,9 +458,9 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                 <p className="text-sm text-gray-500 mt-2">Você será redirecionado em alguns instantes...</p>
             </div>
         ) : (
-            // TELA NORMAL DE PAGAMENTO (seu conteúdo original)
+            // TELA NORMAL DE PAGAMENTO
             <div className="space-y-4">
-                 {/* Lógica de renderização para CARTAO (como no PRIMEIRO arquivo) */}
+                 {/* Lógica de renderização para CARTAO*/}
                 {paymentMethod === "cartao" && (
                     <CardPaymentForm 
                         amount={amount}
@@ -493,6 +476,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     <PixForm 
                         amount={amount}
                         onSubmit={handlePixSubmit}
+                        errorMessage={mensagem}
                         onClose={onClose}
                         isLoading={isLoading}
                     />
@@ -521,30 +505,14 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                         errorMessage={mensagem}
                     />
                 )}
-                {/* Lógica de renderização para MERCADOPAGO Wallet (como no PRIMEIRO arquivo) */}
+                {/* Lógica de renderização para MERCADOPAGO Wallet */}
                 {paymentMethod === "mercadopago" && (
                      <MercadoPagoWalletButton 
                         preferenceId={preferenceId}
-                        isLoading={isLoading} // isLoading já inclui internalLoading da geração da preferência
+                        isLoading={isLoading} 
                         onClose={onClose}
                     />
                 )}
-
-                {displayError && !isLoading && (
-                    <p className="text-red-600 text-center mt-4 bg-red-100 p-3 rounded border border-red-300 text-sm">
-                        {typeof displayError === 'object' ? JSON.stringify(displayError) : displayError}
-                    </p>
-                )}
-
-                {/* {mensagem && !displayError && !isLoading && (
-                     <div className={`text-center mt-4 p-3 rounded border text-sm ${
-                        mensagem.includes("✅") ? "bg-green-100 border-green-300 text-green-700" :
-                        mensagem.includes("⚠️") ? "bg-yellow-100 border-yellow-300 text-yellow-700" :
-                        "bg-blue-100 border-blue-300 text-blue-700" 
-                     }`}>
-                        {mensagem}
-                    </div>
-                )} */}
             </div>
         )}
         </Modal>

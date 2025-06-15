@@ -7,9 +7,8 @@ import { useSignalR } from '../../../services/SignalRContext';
 import OrderAnalyticsDashboard from './components/OrderAnalyticsDashboard';
 
 const OrderDashboard = () => {
-    const { connection, isConnected } = useSignalR();
+    const { connection, isConnected, setNotification  } = useSignalR();
     const { orders, setOrders, fetchOrders, processOrders } = useOrders();
-
     const [activeFilters, setActiveFilters] = useState({
         searchTerm: '',
         startDate: null,
@@ -20,7 +19,7 @@ const OrderDashboard = () => {
         setActiveFilters(newFilters);
     }, []);
 
-    useSignalRListeners(connection, isConnected, setOrders, processOrders, fetchOrders);
+    useSignalRListeners(connection, isConnected, setOrders, processOrders, fetchOrders, setNotification);
 
     const handleOrderDrop = async (order, newStatusStringKey) => {
         const columnKeyToBackendNumericStatus = {
@@ -167,7 +166,7 @@ const OrderDashboard = () => {
 
     return (
         <div className="p-4 sm:p-6 max-w-full bg-gray-50 min-h-screen">
-            <div className="mb-6">
+            <div className="mb-6" >
                 <OrderAnalyticsDashboard
                     orders={orders} 
                     onFiltersChange={handleFiltersChange}

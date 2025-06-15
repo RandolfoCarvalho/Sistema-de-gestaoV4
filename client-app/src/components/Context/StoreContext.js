@@ -7,39 +7,50 @@ export function StoreProvider({ children }) {
         const savedStore = localStorage.getItem('currentStore');
         return savedStore || '';
     });
+    // Renomeei para seguir o padrão camelCase, mas é opcional
+    const [fantasyName, setFantasyName] = useState(''); 
     const [storeInfo, setStoreInfo] = useState(null);
+    
     useEffect(() => {
         if (currentStore) {
             localStorage.setItem('currentStore', currentStore);
             fetchStoreInfo(currentStore);
+        } else {
+            setStoreInfo(null);
+            setFantasyName('');
         }
     }, [currentStore]);
 
     const fetchStoreInfo = async (storeName) => {
         try {
             const response = await api.get(`/api/1.0/restaurante/GetRestauranteInfoByName/${storeName}`);
-            setStoreInfo(response.data);
-            console.log("Store info data" + JSON.stringify(response.data))
+            const data = response.data;
+            
+            setStoreInfo(data);
+            const nomeFantasiaDaApi = data?.empresa?.nomeFantasia;
+            setFantasyName(nomeFantasiaDaApi || ''); 
+
         } catch (error) {
             console.error('Erro ao obter informações da loja:', error);
             setStoreInfo(null);
+            setFantasyName('');
         }
     };
 
     const updateCurrentStore = (storeName) => {
         setCurrentStore(storeName);
     };
-
     const checkAndUpdateStoreFromURL = () => {
         const pathname = window.location.pathname;
         const pathParts = pathname.split('/');
         const lojaIndex = pathParts.indexOf('loja');
         if (lojaIndex !== -1 && pathParts[lojaIndex + 1]) {
             const storeName = pathParts[lojaIndex + 1];
-            setCurrentStore(storeName);
+            if (storeName !== currentStore) { 
+                setCurrentStore(storeName);
+            }
         }
     };
-
     useEffect(() => {
         checkAndUpdateStoreFromURL();
     }, []);
@@ -48,6 +59,8 @@ export function StoreProvider({ children }) {
         <StoreContext.Provider value={{
             currentStore,
             storeInfo,
+            fantasyName,
+            setCurrentStore,
             updateCurrentStore,
             checkAndUpdateStoreFromURL
         }}>

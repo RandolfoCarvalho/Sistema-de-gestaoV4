@@ -49,7 +49,6 @@ const LoginSection = ({ onSessionStatusChange, currentStatus }) => {
     } catch (error) {
       if (isMounted.current) {
         onSessionStatusChange('disconnected');
-        console.log('Sessão não encontrada ou desconectada.');
       }
     }
   };
@@ -79,7 +78,6 @@ const LoginSection = ({ onSessionStatusChange, currentStatus }) => {
           const res = await axios.get(`${baseUrl}/qrcode/${sessionName}`);
           if (res.data && res.data.qrCode) {
             if (isMounted.current) {
-              console.log('QR Code recebido!');
               setQrCode(res.data.qrCode);
               setLoading(false);
               clearInterval(intervalo);
@@ -95,7 +93,6 @@ const LoginSection = ({ onSessionStatusChange, currentStatus }) => {
                   if (statusRes.data.status === 'connected') {
                     clearInterval(statusCheck);
                     if (isMounted.current) {
-                      console.log('Sessão conectada com sucesso!');
                       onSessionStatusChange('connected', sessionName);
                       setQrCode(null);
                     }
@@ -106,7 +103,6 @@ const LoginSection = ({ onSessionStatusChange, currentStatus }) => {
               }, 2000);
             }
           } else {
-            console.log(`Tentativa ${tentativas + 1}/${maxTentativas}: QR Code ainda não disponível`);
             tentativas++;
             if (tentativas >= maxTentativas) {
               clearInterval(intervalo);

@@ -7,7 +7,6 @@ using SistemaDeGestao.Services.Interfaces;
 namespace SistemaDeGestao.Areas.Admin.Controllers
 {
     [Route("api/1.0/[controller]")]
-    [Area("Admin")]
     public class AuthController : Controller
     {
         private ILoginService _loginService;
@@ -28,17 +27,17 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             }
             if (ModelState.IsValid)
             {
-                var token = _loginService.ValidateCredentials(user);
-                if (token != null)
+                var result = _loginService.ValidateCredentials(user);
+                if (result != null)
                 {
-                    return Ok(new { token = token.AccessToken });
+                    return Ok(new { token = result.Token.AccessToken });
                 }
             }
             return Unauthorized(new { message = "Credenciais inválidas." });
         }
         [HttpGet]
-        [Route("validateToken")]
         [Authorize]
+        [Route("validateToken")]
         public IActionResult ValidateToken()
         {
             return Ok(new { valid = true, user = User.Identity.Name });
@@ -49,9 +48,19 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
         public IActionResult Signin([FromBody] Restaurante user)
         {
             if (user == null) return BadRequest("Invalid request");
-            var token = _loginService.ValidateCredentials(user);
-            if (token == null) return BadRequest("Invalid request");
-            return Ok(token);
+            var result = _loginService.ValidateCredentials(user);
+            if (result == null)
+            {
+                return Unauthorized("Credenciais inválidas.");
+            }
+            var response = new
+            {
+                result.Token.AccessToken,
+                result.Token.RefreshToken,
+                StoreName = result.UserData.NomeDaLoja
+            };
+
+            return Ok(response);
         }
         [HttpPost]
         [Route("refresh")]

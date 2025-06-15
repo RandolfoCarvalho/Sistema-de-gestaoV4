@@ -47,7 +47,6 @@ const FinalUserModal = ({ isOpen, onClose, onSuccess }) => {
                 localStorage.setItem("isAuthenticated", "true");
                 localStorage.setItem("FinalUserTelefone", response.data.telefone);
                 localStorage.setItem("FinalUserName", response.data.nome);
-                console.log(response.data);
                 onSuccess({
                     ...response.data,
                     FinalUserName: response.data.nome,

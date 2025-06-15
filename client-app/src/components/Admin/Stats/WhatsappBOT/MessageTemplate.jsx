@@ -60,10 +60,8 @@ const MessageTemplate = () => {
         stage: item.etapa,
         channel: 'whatsapp' // default
       }));
-      console.log("formattedTemplates", formattedTemplates)
       setTemplates(formattedTemplates);
       setTemplates(formattedTemplates || []);
-      console.log('Templates carregados: ', response.data);
     } catch (error) {
       console.error('Erro ao carregar templates:', error);
       showNotification('Erro ao carregar templates', 'error');
@@ -89,8 +87,6 @@ const MessageTemplate = () => {
 
   const handleSave = async (templateId) => {
     const template = templates.find((t) => t.id === templateId);
-    console.log('Salvando template: ', template);
-    console.log('Dados do template: ', template.title, template.template, template.stage);
     if (!template) return;
   
     // Mapeamento de etapa para templateId

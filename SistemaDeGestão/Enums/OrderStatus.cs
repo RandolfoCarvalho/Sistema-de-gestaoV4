@@ -1,4 +1,5 @@
-﻿public enum OrderStatus
+﻿
+public enum OrderStatus
 {
     NOVO = 0,           // Correspondente a 'Novo'
     EM_PRODUCAO = 1,    // Correspondente a 'Em Produção'

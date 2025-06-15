@@ -44,10 +44,6 @@ const OrderHistory = () => {
         navigate(`/pedidos/${order.id}`, { state: { orderData: order } });
     };
 
-    const repeatOrder = (orderId) => {
-        console.log("Repetir pedido", orderId);
-    };
-
     const formatDate = (dateString) => {
         if (!dateString) return { date: "N/A", time: "N/A" };
         const date = new Date(dateString);

@@ -84,6 +84,34 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
         }
 
         /// <summary>
+        /// Endpoint para verificar disponibilidade do pedido.
+        /// </summary>
+        [HttpPost("verificar-estoque-pedido")]
+        public async Task<IActionResult> VerificarEstoquePedido([FromBody] PedidoDTO pedidoDTO)
+        {
+            if (pedidoDTO == null || !pedidoDTO.Itens.Any())
+                return BadRequest("Pedido inválido.");
+
+            var produtoIds = pedidoDTO.Itens.Select(i => i.ProdutoId).ToList();
+
+            var produtos = await _context.Produtos
+                .Where(p => produtoIds.Contains(p.Id))
+                .ToListAsync();
+
+            foreach (var item in pedidoDTO.Itens)
+            {
+                var produto = produtos.FirstOrDefault(p => p.Id == item.ProdutoId);
+                if (produto == null || !produto.Ativo)
+                    return BadRequest($"Produto {item.ProdutoId} está indisponível.");
+
+                if (produto.EstoqueAtual < item.Quantidade)
+                    return BadRequest($"Produto '{produto.Nome}' sem estoque suficiente.");
+            }
+
+            return Ok("Estoque e produtos válidos.");
+        }
+
+        /// <summary>
         /// Endpoint para registrar o cancelamento de um pedido.
         /// </summary>
         [HttpPost("registrarCancelamento")]

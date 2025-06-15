@@ -4,12 +4,11 @@ import HeaderPublic from '../HeaderPublic/HeaderPublic';
 import StoreInfo from '../HeaderPublic/StoreInfo'; // Importação do StoreInfo, necessária para o layout
 import BottomNav from '../BottomNav';
 import useLojaData from './hooks/useLojaData';
-import FuturisticLoadingSpinner from '../ui/FuturisticLoadingSpinner';
 import CategoryFilter from './CategoryFilter';
 import FeaturedProducts from './FeaturedProducts';
 import CategorySection from './CategorySection';
 import EmptyResults from './EmptyResults';
-import BackToTopButton from './BackToTopButton';
+import ProductPageSkeleton from '../ui/skeleton/ProductPageSkeleton';
 
 const Produtos = () => {
   const { nomeDaLoja } = useParams();
@@ -65,16 +64,9 @@ const Produtos = () => {
 
   // Guarda para o estado de carregamento
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <FuturisticLoadingSpinner message="Carregando..." />
-      </div>
-    );
+    return <ProductPageSkeleton />;
   }
 
-  // AQUI ESTÁ A CORREÇÃO CRUCIAL
-  // Esta "guarda" impede que o código continue se lojaInfo for nulo,
-  // prevenindo o erro "Cannot read properties of null".
   if (!lojaInfo) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4 text-center">

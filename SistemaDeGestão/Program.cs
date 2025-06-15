@@ -27,6 +27,7 @@ using System.Globalization;
 using SistemaDeGestao.Interfaces;
 using StackExchange.Redis;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,7 +73,8 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = tokenConfigurations.Issuer ?? "DefaultIssuer",
         ValidAudience = tokenConfigurations.Audience ?? "DefaultAudience",
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+        NameClaimType = ClaimTypes.Name,
     };
         // Evento para capturar o token do cookie
         options.Events = new JwtBearerEvents

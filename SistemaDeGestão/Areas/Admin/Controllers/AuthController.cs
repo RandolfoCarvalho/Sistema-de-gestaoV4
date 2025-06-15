@@ -7,7 +7,6 @@ using SistemaDeGestao.Services.Interfaces;
 namespace SistemaDeGestao.Areas.Admin.Controllers
 {
     [Route("api/1.0/[controller]")]
-    [Area("Admin")]
     public class AuthController : Controller
     {
         private ILoginService _loginService;
@@ -37,8 +36,8 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             return Unauthorized(new { message = "Credenciais inválidas." });
         }
         [HttpGet]
-        [Route("validateToken")]
         [Authorize]
+        [Route("validateToken")]
         public IActionResult ValidateToken()
         {
             return Ok(new { valid = true, user = User.Identity.Name });

@@ -1,18 +1,39 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BottomNav from '../BottomNav';
+import BottomNav from '@/components/ui/BottomNav';
 import axios from 'axios';
 import { useStore } from '../Context/StoreContext';
 import FinalUserModal from '../Modals/FinalUserModal';
 
-const OrderHistory = () => {
-    const { currentStore } = useStore();
+// Interface para definir a estrutura de um objeto de pedido
+interface Order {
+  id: number | string;
+  dataPedido: string;
+  status: number;
+  numero: string;
+  finalUserName?: string;
+  observacoes?: string;
+  pagamento?: {
+    valorTotal: number;
+  };
+  itens?: any[]; // Pode ser tipado de forma mais específica se necessário
+}
+
+// Interface para os dados do usuário retornados no sucesso do login
+interface UserData {
+    FinalUserTelefone: string;
+    // Adicione outras propriedades do usuário que você recebe
+}
+
+const OrderHistory: React.FC = () => {
+    const { currentStore, storeInfo } = useStore();
     const navigate = useNavigate();
-    const [orders, setOrders] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [showModal, setShowModal] = useState(false);
-    const [userPhone, setUserPhone] = useState(localStorage.getItem("FinalUserTelefone"));
-    const { storeInfo } = useStore();
+
+    // Tipagem explícita para os estados
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const [userPhone, setUserPhone] = useState<string | null>(localStorage.getItem("FinalUserTelefone"));
 
     useEffect(() => {
         if (userPhone) {
@@ -22,13 +43,15 @@ const OrderHistory = () => {
         }
     }, [userPhone]);
     
-    const fetchOrders = async (phone) => {
+    // Tipando o argumento da função
+    const fetchOrders = async (phone: string) => {
         try {
             const restauranteResponse = await axios.get(
                 `${process.env.REACT_APP_API_URL}/api/1.0/Restaurante/BuscarRestauranteIdPorNome/${currentStore}`
             );
             const restauranteId = restauranteResponse.data;
-            const response = await axios.get(
+            // Informa ao Axios o tipo de dado esperado na resposta
+            const response = await axios.get<Order[]>(
                 `${process.env.REACT_APP_API_URL}/api/1.0/FinalUser/GetPedidosByUser/${phone}/${restauranteId}`
             );
             setOrders(Array.isArray(response.data) ? response.data : []);
@@ -40,11 +63,12 @@ const OrderHistory = () => {
         }
     };
 
-    const viewOrderDetails = (order) => {
+    // Tipando o argumento da função
+    const viewOrderDetails = (order: Order) => {
         navigate(`/pedidos/${order.id}`, { state: { orderData: order } });
     };
 
-    const formatDate = (dateString) => {
+    const formatDate = (dateString: string) => {
         if (!dateString) return { date: "N/A", time: "N/A" };
         const date = new Date(dateString);
         return {
@@ -53,8 +77,9 @@ const OrderHistory = () => {
         };
     };
 
-    const getStatusInfo = (statusCode) => {
-        const statusMap = {
+    const getStatusInfo = (statusCode: number) => {
+        // Tipando o mapa de status para maior segurança
+        const statusMap: { [key: number]: { text: string; color: string } } = {
             0: { text: "Pendente", color: "bg-yellow-500" },
             1: { text: "Em preparo", color: "bg-orange-500" },
             2: { text: "Saiu para entrega", color: "bg-blue-500" },
@@ -64,17 +89,23 @@ const OrderHistory = () => {
         return statusMap[statusCode] || { text: "Desconhecido", color: "bg-gray-500" };
     };
 
-    const formatOrderNumber = (numero) => {
+    const formatOrderNumber = (numero: string | null | undefined): string => {
         return numero && numero.startsWith("PED: ")
             ? numero.substring(5)
             : numero || "N/A";
     };
 
-    const formatCurrency = (value) => {
-        const amount = parseFloat(value);
+    const formatCurrency = (value: number | null | undefined): string => {
+        const amount = parseFloat(String(value));
         return !isNaN(amount)
             ? `R$ ${amount.toFixed(2).replace('.', ',')}`
             : 'R$ 0,00';
+    };
+
+    // Função para lidar com o sucesso do login no modal
+    const handleLoginSuccess = (userData: UserData) => {
+        setUserPhone(userData.FinalUserTelefone);
+        setShowModal(false);
     };
 
     return (
@@ -191,9 +222,13 @@ const OrderHistory = () => {
             {/* Bottom Navigation */}
             <BottomNav />
 
-            {/* Modal de telefone */}
+            {/* Modal de telefone com todas as props obrigatórias */}
             {showModal && (
-                <FinalUserModal onClose={() => setShowModal(false)} />
+                <FinalUserModal 
+                    isOpen={showModal}
+                    onClose={() => setShowModal(false)}
+                    onSuccess={handleLoginSuccess}
+                />
             )}
         </div>
     );

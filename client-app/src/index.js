@@ -1,14 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import ReactModal from 'react-modal';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import axios from 'axios'; // Certifique-se de importar o Axios
 
-// Recupera o token do localStorage, se disponível
+ReactModal.setAppElement('#root'); 
+// Recupera o token do localStorage, se disponï¿½vel
 const token = localStorage.getItem('token');
 if (token) {
-    // Configura o cabeçalho padrão de Authorization com o token
+    // Configura o cabeÃ§alho padrÃ£o de Authorization com o token
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
 

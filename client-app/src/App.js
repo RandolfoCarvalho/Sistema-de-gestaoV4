@@ -26,7 +26,6 @@ import PerfilLoja from "./components/Perfil/PerfilLoja";
 import Sidebar from './components/Admin/Sidebar/Sidebar';
 import HeaderAdmin from './components/Admin/Header/Header';
 //import RestaurantDashboard from './components/Admin/Stats/RestaurantDashboard';
-import ProtectedStore from './components/ProtectedStore';
 import RestaurantDashboard from './components/Admin/Dashboard/OrderDashboard';
 import Create from './components/Admin/Stats/CreateProduct';
 import CriarGrupoAdicionais from './components/Admin/Stats/CreateAddGroup';
@@ -66,55 +65,53 @@ const App = () => {
                             <div className={darkMode ? "dark" : ""}>
                                 <Routes>
                                  <Route path="/" element={<Produtos />} />
-                                    <Route element={<ProtectedStore/>}>
-                                        {/* Public Routes */}
-                                        <Route path="/loja/:nomeDaLoja" element={<Produtos />} />
-                                        <Route path="/product/:id" element={<ProductDetails />} />
-                                        <Route path="/checkout" element={<CheckoutPage />} />
-                                        <Route path="/auth/login" element={<Autenticacao />} />
-                                        <Route path="/pedidos" element={<Pedidos />} />
-                                        <Route path="/pedidos/:numeroPedido" element={<PedidosDetalhes />} />
-                                        <Route path="/promo" element={<Promocoes />} />
-                                        <Route path='/loja/:nomeDaLoja/perfil' element={<PerfilLoja />} />
-                                    </Route>
-                                    {/* Admin Routes */}
-                                    <Route element={<AdminLayout />}>
-                                        <Route path="/admin" element={
-                                            <div className={`${darkMode ? 'dark' : ''} flex bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400`}>
-                                                <Sidebar isSidebarOpen={isSidebarOpen} />
-                                                
-                                                {/* AQUI ESTÁ A CORREÇÃO. Adicione 'min-w-0' a este div. */}
-                                                <div className={`flex-1 min-h-screen min-w-0 transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
-                                                    <HeaderAdmin
-                                                        isSidebarOpen={isSidebarOpen}
-                                                        toggleSidebar={toggleSidebar}
-                                                        darkMode={darkMode}
-                                                        toggleDarkMode={toggleDarkMode}
-                                                    />
-                                                    <main className="p-4 h-[calc(100vh-theme(height.16))] overflow-y-auto" style={{ paddingTop: '55px' }}>
-                                                        {/* O Outlet renderiza seu dashboard aqui dentro */}
-                                                        <Outlet /> 
-                                                    </main>
-                                                </div>
+                                    {/* Public Routes */}
+                                    <Route path="/loja/:nomeDaLoja" element={<Produtos />} />
+                                    <Route path="/product/:id" element={<ProductDetails />} />
+                                    <Route path="/checkout" element={<CheckoutPage />} />
+                                    <Route path="/auth/login" element={<Autenticacao />} />
+                                    <Route path="/pedidos" element={<Pedidos />} />
+                                    <Route path="/pedidos/:numeroPedido" element={<PedidosDetalhes />} />
+                                    <Route path="/promo" element={<Promocoes />} />
+                                    <Route path='/loja/:nomeDaLoja/perfil' element={<PerfilLoja />} />
+                                {/* Admin Routes */}
+                                <Route element={<AdminLayout />}>
+                                    <Route path="/admin" element={
+                                        <div className={`${darkMode ? 'dark' : ''} flex bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400`}>
+                                            <Sidebar isSidebarOpen={isSidebarOpen} />
+                                            
+                                            {/* AQUI ESTÁ A CORREÇÃO. Adicione 'min-w-0' a este div. */}
+                                            <div className={`flex-1 min-h-screen min-w-0 transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+                                                <HeaderAdmin
+                                                    isSidebarOpen={isSidebarOpen}
+                                                    toggleSidebar={toggleSidebar}
+                                                    darkMode={darkMode}
+                                                    toggleDarkMode={toggleDarkMode}
+                                                />
+                                                <main className="p-4 h-[calc(100vh-theme(height.16))] overflow-y-auto" style={{ paddingTop: '55px' }}>
+                                                    {/* O Outlet renderiza seu dashboard aqui dentro */}
+                                                    <Outlet /> 
+                                                </main>
                                             </div>
-                                        }>
-                                            <Route index element={<RestaurantDashboard />} />
-                                            <Route path="dashboard" element={<RestaurantDashboard />} />
-                                            <Route path="CriarProduto" element={<Create />} />
-                                            <Route path="CriarGrupoAdicionais" element={<CriarGrupoAdicionais />} />
-                                            <Route path="CriarComplemento" element={<CriarComplemento />} />
-                                            <Route path="MeusProdutos" element={<MeusProdutos />} />
-                                            <Route path="Perfil" element={<Perfil />} />
-                                            <Route path="WhatsappBOT" element={<WhatsappBOT />} />
-                                            <Route path="Sair" element={<Sair />} />
-                                        </Route>
+                                        </div>
+                                    }>
+                                        <Route index element={<RestaurantDashboard />} />
+                                        <Route path="dashboard" element={<RestaurantDashboard />} />
+                                        <Route path="CriarProduto" element={<Create />} />
+                                        <Route path="CriarGrupoAdicionais" element={<CriarGrupoAdicionais />} />
+                                        <Route path="CriarComplemento" element={<CriarComplemento />} />
+                                        <Route path="MeusProdutos" element={<MeusProdutos />} />
+                                        <Route path="Perfil" element={<Perfil />} />
+                                        <Route path="WhatsappBOT" element={<WhatsappBOT />} />
+                                        <Route path="Sair" element={<Sair />} />
                                     </Route>
-                                </Routes>
-                            </div>
-                        </Router>
-                    </CartProvider>
-            </StoreProvider>
-        </SignalRProvider>
+                                </Route>
+                            </Routes>
+                        </div>
+                    </Router>
+                </CartProvider>
+        </StoreProvider>
+    </SignalRProvider>
     );
 };
 

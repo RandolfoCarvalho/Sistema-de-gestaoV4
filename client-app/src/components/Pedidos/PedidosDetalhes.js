@@ -3,10 +3,10 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useStore } from '../Context/StoreContext';
 import axios from "axios";
 import {
-    ChevronLeft, PackageCheck, ChefHat, Bike, PartyPopper, Wallet, User,
-    MapPin, Hash, Calendar, Clock, RefreshCw, ShoppingCart, XCircle
+    PackageCheck, ChefHat, Bike, PartyPopper, Wallet, User,
+    MapPin, Hash, ShoppingCart, XCircle
 } from 'lucide-react';
-import BottomNav from '../BottomNav';
+import BottomNav from '@/components/ui/BottomNav';
 
 // --- Funções Helper ---
 const formatCurrency = (value) =>
@@ -235,19 +235,8 @@ const OrderDetails = () => {
                             <p>{orderData.finalUserTelefone}</p>
                         </InfoBlock>
                     </div>
-
-                    <div className="pt-4 flex justify-center">
-                        <button
-                            onClick={() => alert("Funcionalidade 'Repetir Pedido' a ser implementada.")}
-                            className="flex items-center gap-2 bg-blue-100 text-blue-700 px-6 py-3 rounded-lg font-semibold text-sm hover:bg-blue-200 transition-colors"
-                        >
-                            <RefreshCw size={16} />
-                            Repetir Pedido
-                        </button>
-                    </div>
                 </div>
             </main>
-
             <BottomNav />
         </div>
     );

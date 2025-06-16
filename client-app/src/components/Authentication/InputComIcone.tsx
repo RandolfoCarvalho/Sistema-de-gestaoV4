@@ -1,15 +1,25 @@
 // src/components/InputComIcone.tsx
 import * as React from "react";
 
-// Tipagem das props para garantir segurança e autocompletar no editor
 interface InputComIconeProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label: string;
-  icon: React.ReactNode; // Permite passar qualquer componente React como ícone
+  icon: React.ReactNode;
 }
-
 const InputComIcone = React.forwardRef<HTMLInputElement, InputComIconeProps>(
   ({ id, label, icon, ...props }, ref) => {
+    
+    const renderClonedIcon = () => {
+      if (React.isValidElement(icon)) {
+        return React.cloneElement(
+          icon,
+          {
+            className: "h-5 w-5 text-gray-400",
+          } as React.HTMLAttributes<HTMLElement>
+        );
+      }
+      return icon;
+    };
     return (
       <div>
         <label htmlFor={id} className="block text-sm font-medium leading-6 text-gray-900">
@@ -17,10 +27,7 @@ const InputComIcone = React.forwardRef<HTMLInputElement, InputComIconeProps>(
         </label>
         <div className="mt-2 relative rounded-md shadow-sm">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            {/* Clona o ícone para adicionar classes de estilo sem modificar o original */}
-            {React.cloneElement(icon as React.ReactElement, {
-              className: "h-5 w-5 text-gray-400",
-            })}
+            {renderClonedIcon()}
           </div>
           <input
             id={id}

@@ -2,7 +2,7 @@
 import { useParams } from 'react-router-dom';
 import HeaderPublic from '../HeaderPublic/HeaderPublic';
 import StoreInfo from '../HeaderPublic/StoreInfo';
-import BottomNav from '../BottomNav';
+import BottomNav from '@/components/ui/BottomNav';
 import useLojaData from './hooks/useLojaData';
 import CategoryFilter from './CategoryFilter';
 import FeaturedProducts from './FeaturedProducts';

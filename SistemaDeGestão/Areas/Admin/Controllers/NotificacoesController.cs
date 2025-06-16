@@ -133,23 +133,6 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             await _context.SaveChangesAsync();
             return Ok(new { success = true });
         }
-
-        [HttpPost("enviar")]
-        public async Task<IActionResult> EnviarMensagem(string telefone, string mensagem)
-        {
-            // Garante que o número está no formato correto com @c.us
-            if (!telefone.EndsWith("@c.us"))
-            {
-                telefone = telefone + "@c.us";
-            }
-
-            var sucesso = await _whatsAppBot.EnviarMensagemAsync("cliente1", telefone, mensagem);
-
-            if (sucesso)
-                return Ok("Mensagem enviada com sucesso!");
-            else
-                return StatusCode(500, "Erro ao enviar a mensagem.");
-        }
     }
 
 }

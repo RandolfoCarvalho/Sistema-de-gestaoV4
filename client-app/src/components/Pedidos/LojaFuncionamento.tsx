@@ -1,27 +1,30 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, CSSProperties } from 'react';
 import api from '../../axiosConfig';
 
-const LojaFuncionamento = () => {
-    const [status, setStatus] = useState({
+// Interface para definir a estrutura do estado de status
+interface StatusState {
+    isOpen: boolean;
+    mensagem: string;
+    manualmenteFechado: boolean;
+}
+
+const LojaFuncionamento: React.FC = () => {
+    // Tipando o estado
+    const [status, setStatus] = useState<StatusState>({
         isOpen: false,
         mensagem: 'Verificando...',
         manualmenteFechado: false
     });
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
-    // Verifica se a loja está aberta baseado nos horários e dias configurados
     const verificarFuncionamento = async () => {
         try {
             setLoading(true);
+            // Idealmente, você deve ter uma interface para a resposta da API
             const response = await api.get('/api/1.0/Restaurante/GetRestauranteInfo');
 
-            // Obtém dados da empresa
             const empresa = response.data.empresa;
-
-            // Verifica se está manualmente fechada
-            // Esta verificação precisaria de um endpoint específico ou um campo no modelo
-            // Para este exemplo, assumiremos que essa informação está em algum lugar na API
             const manualmenteFechado = response.data.manualmenteFechado || false;
 
             if (manualmenteFechado) {
@@ -34,19 +37,12 @@ const LojaFuncionamento = () => {
                 return;
             }
 
-            // Obtém a data e hora atual
             const agora = new Date();
-            const diaDaSemana = agora.getDay(); // 0 = Domingo, 1 = Segunda, etc.
-
-            // Mapeia o dia da semana para a propriedade correspondente no objeto DiasFuncionamento
-            const diasDaSemana = [
-                'Domingo', 'Segunda', 'Terca', 'Quarta', 'Quinta', 'Sexta', 'Sabado'
-            ];
+            const diaDaSemana = agora.getDay();
+            const diasDaSemana = ['Domingo', 'Segunda', 'Terca', 'Quarta', 'Quinta', 'Sexta', 'Sabado'];
             const diaAtual = diasDaSemana[diaDaSemana];
 
-            // Verifica se a loja funciona no dia atual
-            const funcionaHoje = empresa.diasFuncionamento &&
-                empresa.diasFuncionamento[diaAtual.toLowerCase()];
+            const funcionaHoje = empresa.diasFuncionamento && empresa.diasFuncionamento[diaAtual.toLowerCase()];
 
             if (!funcionaHoje) {
                 setStatus({
@@ -58,22 +54,15 @@ const LojaFuncionamento = () => {
                 return;
             }
 
-            // Verifica se está dentro do horário de funcionamento
-            const horaAtual = agora.getHours();
-            const minutosAtual = agora.getMinutes();
-            const horaAtualEmMinutos = horaAtual * 60 + minutosAtual;
+            const horaAtualEmMinutos = agora.getHours() * 60 + agora.getMinutes();
 
-            // Converte horários de funcionamento para minutos para facilitar comparação
-            const horarioAberturaArray = empresa.horarioAbertura.split(':');
-            const horarioFechamentoArray = empresa.horarioFechamento.split(':');
+            const [horaAbertura, minAbertura] = empresa.horarioAbertura.split(':').map(Number);
+            const [horaFechamento, minFechamento] = empresa.horarioFechamento.split(':').map(Number);
 
-            const aberturaEmMinutos = parseInt(horarioAberturaArray[0]) * 60 +
-                parseInt(horarioAberturaArray[1]);
-            const fechamentoEmMinutos = parseInt(horarioFechamentoArray[0]) * 60 +
-                parseInt(horarioFechamentoArray[1]);
+            const aberturaEmMinutos = horaAbertura * 60 + minAbertura;
+            const fechamentoEmMinutos = horaFechamento * 60 + minFechamento;
 
-            const dentroDoPeriodo = horaAtualEmMinutos >= aberturaEmMinutos &&
-                horaAtualEmMinutos <= fechamentoEmMinutos;
+            const dentroDoPeriodo = horaAtualEmMinutos >= aberturaEmMinutos && horaAtualEmMinutos <= fechamentoEmMinutos;
 
             if (dentroDoPeriodo) {
                 setStatus({
@@ -82,8 +71,7 @@ const LojaFuncionamento = () => {
                     manualmenteFechado: false
                 });
             } else {
-                // Calcula tempo para abertura ou para fechamento
-                let mensagem;
+                let mensagem: string;
                 if (horaAtualEmMinutos < aberturaEmMinutos) {
                     const minutosParaAbrir = aberturaEmMinutos - horaAtualEmMinutos;
                     const horasParaAbrir = Math.floor(minutosParaAbrir / 60);
@@ -101,24 +89,21 @@ const LojaFuncionamento = () => {
                 });
             }
 
-        } catch (error) {
-            console.error('Erro ao verificar funcionamento da loja:', error);
+        } catch (err) {
+            console.error('Erro ao verificar funcionamento da loja:', err);
             setError('Não foi possível verificar o status de funcionamento');
         } finally {
             setLoading(false);
         }
     };
 
-    // Alternar estado da loja (abrir/fechar manualmente)
     const alternarEstadoLoja = async () => {
         try {
             setLoading(true);
-            // Este endpoint precisaria ser implementado na API
             await api.post('/api/1.0/Restaurante/ToggleStatus', {
                 manualmenteFechado: !status.manualmenteFechado
             });
 
-            // Atualiza o estado local após a alteração
             setStatus(prevStatus => ({
                 ...prevStatus,
                 isOpen: !prevStatus.manualmenteFechado,
@@ -126,8 +111,8 @@ const LojaFuncionamento = () => {
                 mensagem: !prevStatus.manualmenteFechado ? 'Loja fechada manualmente' : 'Loja aberta'
             }));
 
-        } catch (error) {
-            console.error('Erro ao alterar estado da loja:', error);
+        } catch (err) {
+            console.error('Erro ao alterar estado da loja:', err);
             setError('Não foi possível alterar o estado da loja');
         } finally {
             setLoading(false);
@@ -137,10 +122,7 @@ const LojaFuncionamento = () => {
     useEffect(() => {
         verificarFuncionamento();
 
-        // Verificar a cada minuto
-        const intervalo = setInterval(() => {
-            verificarFuncionamento();
-        }, 60000);
+        const intervalo = setInterval(verificarFuncionamento, 60000);
 
         return () => clearInterval(intervalo);
     }, []);
@@ -181,7 +163,8 @@ const LojaFuncionamento = () => {
     );
 };
 
-const styles = {
+// Tipando o objeto de estilos para que o TypeScript valide as propriedades CSS
+const styles: { [key: string]: CSSProperties } = {
     container: {
         padding: '1rem',
         borderRadius: '8px',

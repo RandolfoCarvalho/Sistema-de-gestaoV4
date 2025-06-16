@@ -1,77 +1,100 @@
 ﻿import React, { useState } from 'react';
-import Modal from 'react-modal';
-import axios from 'axios';
+import ReactModal from 'react-modal';
+import axios, { AxiosError } from 'axios'; // Importe AxiosError para tipar o erro
 import { ArrowLeft } from 'lucide-react';
 
-const FinalUserModal = ({ isOpen, onClose, onSuccess }) => {
-    const [formData, setFormData] = useState({
-        nome: '',
-        telefone: '',
-        dataCriacao: new Date().toISOString()
-    });
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+// 1. Definindo a interface para as props do componente
+interface FinalUserModalProps {
+  isOpen: boolean;
+  onClose: () => void; 
+  onSuccess: (data: any) => void;
+}
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+interface FormDataState {
+  nome: string;
+  telefone: string;
+  dataCriacao: string;
+}
+
+// 3. Use React.FC (Functional Component) e passe a interface das props
+const FinalUserModal: React.FC<FinalUserModalProps> = ({ isOpen, onClose, onSuccess }) => {
+  // 4. Tipando o estado
+  const [formData, setFormData] = useState<FormDataState>({
+    nome: '',
+    telefone: '',
+    dataCriacao: new Date().toISOString()
+  });
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+
+  // 5. Tipando o evento do 'onChange'
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // 6. Tipando o evento do 'onSubmit'
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    const telefoneNumerico = formData.telefone.replace(/\D/g, '');
+    if (!/^\d{11}$/.test(telefoneNumerico)) {
+      setError('Número de telefone inválido. Use o formato (DDD) 9XXXXXXXX.');
+      setLoading(false);
+      return;
+    }
+    const sanitizedData = {
+      ...formData,
+      telefone: telefoneNumerico
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError('');
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/VerificarTelefone`,
+        sanitizedData
+      );
 
-        const telefoneNumerico = formData.telefone.replace(/\D/g, '');
-        if (!/^\d{11}$/.test(telefoneNumerico)) {
-            setError('Número de telefone inválido. Use o formato (DDD) 9XXXXXXXX.');
-            setLoading(false);
-            return;
-        }
-        const sanitizedData = {
-            ...formData,
-            telefone: telefoneNumerico
-        };
-
-        try {
-            const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/VerificarTelefone`,
-                sanitizedData
-            );
-
-            if (response.data) {
-                localStorage.setItem("userId", response.data.id);
-                localStorage.setItem("isAuthenticated", "true");
-                localStorage.setItem("FinalUserTelefone", response.data.telefone);
-                localStorage.setItem("FinalUserName", response.data.nome);
-                onSuccess({
-                    ...response.data,
-                    FinalUserName: response.data.nome,
-                    FinalUserTelefone: response.data.telefone
-                });
-            } else {
-                setError('Erro ao cadastrar usuário. Tente novamente.');
-            }
-        } catch (err) {
-            setError(err.response?.data?.message || 'Erro ao cadastrar usuário');
-        } finally {
-            setLoading(false);
-        }
-    };
+      if (response.data) {
+        localStorage.setItem("userId", response.data.id);
+        localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("FinalUserTelefone", response.data.telefone);
+        localStorage.setItem("FinalUserName", response.data.nome);
+        onSuccess({
+          ...response.data,
+          FinalUserName: response.data.nome,
+          FinalUserTelefone: response.data.telefone
+        });
+      } else {
+        setError('Erro ao cadastrar usuário. Tente novamente.');
+      }
+    } catch (err) {
+      // 7. Tipando o erro do catch de forma segura
+      if (axios.isAxiosError(err)) {
+        const axiosError = err as AxiosError<any>;
+        setError(axiosError.response?.data?.message || 'Erro de comunicação com o servidor.');
+      } else {
+        setError('Ocorreu um erro inesperado.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
-    return (
-        <Modal
-            isOpen={isOpen}
-            onRequestClose={() => { }} 
-            shouldCloseOnOverlayClick={false}
-            contentLabel="Identifique-se"
-            className="bg-white p-6 rounded-lg max-w-md mx-auto mt-20"
-            overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-        >
+  return (
+    <ReactModal
+      isOpen={isOpen}
+      onRequestClose={onClose} // Agora você pode usar o onClose aqui também
+      shouldCloseOnOverlayClick={true} // Permitir fechar ao clicar fora
+      contentLabel="Identifique-se"
+      className="bg-white p-6 rounded-lg max-w-md mx-auto mt-20 focus:outline-none"
+      overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+    >
             <div className="space-y-4">
                 <div className="flex items-center space-x-4 mb-6">
                     <button
@@ -137,7 +160,7 @@ const FinalUserModal = ({ isOpen, onClose, onSuccess }) => {
                     </p>
                 </form>
             </div>
-        </Modal>
+        </ReactModal>
     );
 };
 

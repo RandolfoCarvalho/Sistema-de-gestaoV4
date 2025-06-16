@@ -1,8 +1,8 @@
 ﻿import { useState } from "react";
 import { Home, ShoppingBag, Tag, ShoppingCart } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import FinalUserModal from "./Modals/FinalUserModal"; // Importe o modal de login
-import { useStore } from './Context/StoreContext';
+import FinalUserModal from "@/components/Modals/FinalUserModal"; 
+import { useStore } from '@/components/Context/StoreContext';
 
 const BottomNav = () => {
     const { currentStore } = useStore();

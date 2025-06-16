@@ -58,7 +58,7 @@ const MessageTemplate = () => {
         title: item.titulo,
         template: item.texto,
         stage: item.etapa,
-        channel: 'whatsapp' // default
+        channel: 'whatsapp'
       }));
       setTemplates(formattedTemplates);
       setTemplates(formattedTemplates || []);

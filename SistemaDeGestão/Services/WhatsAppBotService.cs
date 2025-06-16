@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SistemaDeGestao.Data;
 using SistemaDeGestao.Migrations;
 using SistemaDeGestao.Models;
+using System.Globalization;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -60,18 +61,19 @@ namespace SistemaDeGestao.Services
                 if (modeloMensagem.Etapa == "Pedido Recebido") return false;
                 var clienteNome = pedido.FinalUserName ?? "Cliente";
                 var numeroDoPedido = pedido.Numero;
-                var valor = pedido.Itens.Sum(i => i.PrecoUnitario * i.Quantidade).ToString("C");
+                var valor = pedido.Pagamento.SubTotal.ToString("C", new CultureInfo("pt-BR"));
+                var nomesProdutos = string.Join(", ", pedido.Itens.Select(i => i.Produto.Nome));
                 var data = DateTime.Now.ToString("dd/MM/yyyy");
                 var status = pedido.Status.ToString();
 
                 // Substituir variáveis no template
                 var mensagem = modeloMensagem.Texto
                     .Replace("{{cliente}}", clienteNome)
+                    .Replace("{{produto}}", nomesProdutos)
                     .Replace("{{status}}", status)
                     .Replace("{{pedido}}", numeroDoPedido)
                     .Replace("{{valor}}", valor)
                     .Replace("{{data}}", data);
-
                 // Enviar via Venom Bot
                 await EnviarMensagemAsync(pedido.NomeDaLoja, pedido.FinalUserTelefone + "@c.us", mensagem);
                 return true;

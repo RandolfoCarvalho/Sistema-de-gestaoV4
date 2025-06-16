@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStore } from '../Context/StoreContext';
 import { Clock, MapPin, Phone, Calendar, Info } from 'lucide-react';
-import BottomNav from '../BottomNav';
+import BottomNav from '@/components/ui/BottomNav';
 import PerfilLojaSkeleton from '../ui/skeleton/PerfilLojaSkeleton';
 
 const InfoItem = ({ icon: Icon, title, children }) => (

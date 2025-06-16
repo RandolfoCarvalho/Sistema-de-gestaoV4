@@ -1,11 +1,38 @@
 ﻿{
   "compilerOptions": {
-    "jsx": "react",
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    // --- AS CORREÇÕES ESTÃO AQUI ---
+
+    // 1. Resolve o erro TS1259: Permite 'import React from "react"'
+    "esModuleInterop": true, 
+    "allowSyntheticDefaultImports": true,
+
+    // 2. Resolve o erro TS2307: Ensina o que o '@' significa
     "baseUrl": "src",
-    "moduleResolution": "Node",
     "paths": {
-      "@/*": [ "./*" ],
-      "@admin-components/*": [ "src/Admin/src/components/dashboard/*" ] // Ajuste para apontar para src/Admin/src/components
+      "@/*": ["*"],
+      "@admin-components/*": [ "src/Admin/src/components/dashboard/*" ]
+      
     }
-  }
+  },
+  "include": [
+    "src"
+  ]
 }

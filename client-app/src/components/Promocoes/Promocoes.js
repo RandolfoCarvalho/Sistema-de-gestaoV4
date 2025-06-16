@@ -1,6 +1,6 @@
 import React from 'react';
 import HeaderPublic from '../HeaderPublic/HeaderPublic';
-import BottomNav from '../BottomNav';
+import BottomNav from '@/components/ui/BottomNav';
 
 export default function PromocoesPage() {
   return (

@@ -14,7 +14,6 @@ namespace SistemaDeGestao.Services
         {
             _context = context;
         }
-
         public async Task<IEnumerable<ComplementoDTO>> ListarComplementos()
         {
             var complementos = await _context.Complementos.ToListAsync();
@@ -29,7 +28,6 @@ namespace SistemaDeGestao.Services
                 GrupoComplementoId = c.GrupoComplementoId
             });
         }
-
         public async Task<ComplementoDTO> CriarComplemento(Complemento complemento)
         {
             _context.Complementos.Add(complemento);
@@ -85,19 +83,14 @@ namespace SistemaDeGestao.Services
                 GrupoComplementoId = complementoExistente.GrupoComplementoId
             };
         }
-
         // Deletar Grupo complemento sem delete em cascata
         public async Task DeletarComplemento(int id)
         {
-            var complemento = await _context.Complementos
-                .FirstOrDefaultAsync(c => c.Id == id);
-
-            if (complemento == null)
-                return;
-            _context.Complementos.Remove(complemento);
+            var complemento = await _context.Complementos.FindAsync(id);
+            if (complemento == null) return;
+            _context.Remove(complemento);
             await _context.SaveChangesAsync();
         }
-
 
         //-------------------------------------------------------------------------------//
 
@@ -217,6 +210,10 @@ namespace SistemaDeGestao.Services
                 .Where(c => !grupoComplemento.Complementos.Any(nc => nc.Id == c.Id))
                 .ToList();
 
+            foreach (var complementoRemovido in complementosRemovidos)
+            {
+                _context.Complementos.Remove(complementoRemovido);
+            }
             foreach (var complemento in grupoComplemento.Complementos)
             {
                 var complementoExistente = grupoExistente.Complementos

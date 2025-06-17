@@ -29,7 +29,7 @@ namespace SistemaDeGestao.Models
 
         [ForeignKey("GrupoAdicionalId")]
         //public virtual GrupoAdicional GrupoAdicional { get; set; }
-
+        public GrupoAdicional GrupoAdicional { get; set; }
         public int? EstoqueAtual { get; set; }
 
         public DateTime DataCadastro { get; set; }

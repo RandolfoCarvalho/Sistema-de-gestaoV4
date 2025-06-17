@@ -38,6 +38,8 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             {
                 nome = pedido.FinalUserName,
                 numero = pedido.Numero,
+                nomeDaLoja = pedido.Restaurante.NomeDaLoja,
+                numeroDaLoja = pedido.Restaurante.PhoneNumber,
                 status = pedido.Status.ToString(),
                 RestauranteId = pedido.RestauranteId,
                 data = pedido.DataPedido,

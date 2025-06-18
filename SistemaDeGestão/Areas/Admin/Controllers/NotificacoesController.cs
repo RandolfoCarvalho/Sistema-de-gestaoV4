@@ -27,6 +27,7 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
         public async Task<IActionResult> ObterPedidoPorTelefone(string telefone)
         {
             var pedido = await _context.Pedidos
+                .Include(r => r.Restaurante)
                 .Where(p => p.FinalUserTelefone.Contains(telefone))
                 .OrderByDescending(p => p.DataPedido)
                 .FirstOrDefaultAsync();
@@ -38,10 +39,10 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             {
                 nome = pedido.FinalUserName,
                 numero = pedido.Numero,
-                nomeDaLoja = pedido.Restaurante.NomeDaLoja,
+                nomeDaLoja = pedido.NomeDaLoja,
                 numeroDaLoja = pedido.Restaurante.PhoneNumber,
                 status = pedido.Status.ToString(),
-                RestauranteId = pedido.RestauranteId,
+                restauranteId = pedido.RestauranteId,
                 data = pedido.DataPedido,
                 valor = pedido.Pagamento.ValorTotal 
             });
@@ -78,7 +79,6 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
                 texto = template.Texto
             });
         }
-
 
         [HttpGet]
         [Route("ListarMensagens")]

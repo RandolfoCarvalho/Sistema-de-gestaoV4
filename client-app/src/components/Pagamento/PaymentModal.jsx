@@ -29,6 +29,27 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     const amountForDisplay = parseFloat(cartTotal) || 0;
 
     useEffect(() => {
+        const restauranteId = localStorage.getItem("restauranteId");
+        if (!restauranteId) {
+            console.error("RestauranteId não encontrado no localStorage");
+            return;
+        }
+        fetch(`${process.env.REACT_APP_API_URL}/api/1.0/CredenciaisMercadoPago/GetCredentialByRestauranteId/${restauranteId}`)
+        .then(res => {
+            if (!res.ok) throw new Error("Erro ao buscar credencial");
+            return res.json();
+        })
+        .then(data => {
+            if (data.publicKey) {
+            initMercadoPago(data.publicKey, { locale: 'pt-BR' });
+            }
+        })
+        .catch(err => {
+            console.error("Erro ao buscar credencial do restaurante:", err);
+        });
+    }, []);
+
+    useEffect(() => {
         if (setIsSubmitting) {
             setIsSubmitting(paymentLoading || internalLoading);
         }
@@ -97,11 +118,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         setInternalError(null);
         setMensagem("Validando pedido e processando pagamento...");
 
-        /**
-         * 👇 CORREÇÃO APLICADA AQUI 👇
-         * Passamos a prop `paymentMethod` para a função. Esta prop é a fonte da verdade
-         * para a sessão atual do modal.
-         */
         const pedidoDTO = preparePedidoDTO(paymentMethod);
 
         if (!pedidoDTO) {

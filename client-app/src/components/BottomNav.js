@@ -25,44 +25,16 @@ const BottomNav = () => {
         }
     };
 
-    const handleLoginSuccess = async (userData) => {
+    const handleLoginSuccess = (userDataWithToken) => {
+        // A userDataWithToken já contém id, nome, telefone e o TOKEN
+        const { id, nome, telefone, token } = userDataWithToken;
+        localStorage.setItem("userId", id);
+        localStorage.setItem("FinalUserName", nome);
+        localStorage.setItem("FinalUserTelefone", telefone);
+        localStorage.setItem("jwtToken", token);
+
         setIsModalOpen(false);
-        Swal.fire({
-            title: 'Verificando dados...',
-            allowOutsideClick: false,
-            didOpen: () => Swal.showLoading()
-        });
-
-        try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/login`, { Telefone: userData.telefone });
-            const { id, nome, telefone } = response.data;
-
-            localStorage.setItem("userId", id);
-            localStorage.setItem("FinalUserName", nome);
-            localStorage.setItem("FinalUserTelefone", telefone);
-            
-            Swal.close();
-            navigate("/pedidos");
-
-        } catch (error) {
-            if (error.response && error.response.status === 404) {
-                try {
-                    const registerResponse = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/register`, { Nome: userData.nome, Telefone: userData.telefone });
-                    const { id, nome, telefone } = registerResponse.data;
-
-                    localStorage.setItem("userId", id);
-                    localStorage.setItem("FinalUserName", nome);
-                    localStorage.setItem("FinalUserTelefone", telefone);
-
-                    Swal.close();
-                    navigate("/pedidos");
-                } catch (registerError) {
-                    Swal.fire({ title: "Erro no Cadastro", text: "Não foi possível realizar seu cadastro.", icon: "error" });
-                }
-            } else {
-                Swal.fire({ title: "Erro", text: "Não foi possível verificar seus dados.", icon: "error" });
-            }
-        }
+        navigate("/pedidos");
     };
 
     return (

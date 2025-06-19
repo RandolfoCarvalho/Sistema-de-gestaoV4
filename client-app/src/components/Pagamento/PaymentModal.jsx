@@ -126,12 +126,16 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             return;
         }
 
-        try {
+       try {
             const response = await paymentProcessor(paymentData, pedidoDTO);
-            const isSuccess = response?.ok || response?.id || (response?.data?.status === "approved") || response?.data?.idPagamento;
-            
-            if (isSuccess) {
-                 if (paymentMethod === "pix" && response.data?.qrCodeBase64) {
+
+            // Verificação de sucesso mais específica e segura
+            const isPaymentApproved = response.ok && response.data?.status === "approved";
+            const isDinheiroSuccess = response.ok && paymentMethod === "dinheiro"; // Pagamento em dinheiro não tem status 'approved'
+            const isPixSuccess = response.ok && response.data?.qrCodeBase64;
+
+            if (isPaymentApproved || isDinheiroSuccess || isPixSuccess) {
+                if (paymentMethod === "pix" && isPixSuccess) {
                     setPixData({
                         qrCodeBase64: response.data.qrCodeBase64,
                         qrCodeCopyPaste: response.data.qrCodeString || response.data.qr_code,
@@ -144,7 +148,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                     setPaymentSuccessState(true);
                 }
             } else {
-                const errorMessage = response?.error?.message || response?.message || `Falha no pagamento com ${paymentMethod}.`;
+                const errorMessage = response?.error?.message || response?.data?.message || `Falha no pagamento com ${paymentMethod}.`;
                 setInternalError(`❌ ${errorMessage}`);
                 setMensagem(`❌ ${errorMessage}`);
             }
@@ -164,11 +168,15 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         const firstName = nameParts.join(" ");
 
         const paymentData = {
-            ...formData,
+            // Objeto construído explicitamente, como no código antigo
+            Amount: parseFloat(formData.transaction_amount), 
+            Token: formData.token,
+            PaymentMethodId: formData.payment_method_id,
+            Installments: formData.installments,
+            IssuerId: formData.issuer_id,
             PayerFirstName: firstName,
             PayerLastName: lastName,
             PayerEmail: formData.payer.email,
-            IssuerId: formData.issuer_id,
             PayerIdentificationType: formData.payer.identification.type,
             PayerIdentificationNumber: formData.payer.identification.number,
             FormaPagamento: "cartao"

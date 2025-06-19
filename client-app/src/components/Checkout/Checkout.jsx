@@ -20,7 +20,7 @@ const Checkout = () => {
     const { cart, cartTotal, clearCart, updateQuantity, removeFromCart } = useCart();
     const navigate = useNavigate();
     const { currentStore } = useStore();
-    
+    const { taxaEntrega } = useStore(); 
     const {
         formData,
         setFormData,
@@ -134,6 +134,7 @@ const Checkout = () => {
                             <CheckoutForm formData={formData} setFormData={setFormData} />
                         </div>
                         <OrderSummary
+                            taxaEntrega={taxaEntrega} 
                             cart={cart}
                             cartTotal={cartTotal}
                             updateQuantity={updateQuantity}

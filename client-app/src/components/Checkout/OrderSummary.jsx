@@ -2,7 +2,8 @@
 import React from "react";
 import { Package, Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
 
-const OrderSummary = ({ cart, cartTotal, updateQuantity, removeFromCart }) => {
+const OrderSummary = ({ taxaEntrega, cart, cartTotal, updateQuantity, removeFromCart }) => {
+    const totalComTaxa = Number(cartTotal) + Number(taxaEntrega);
     const formatCurrency = (value) => {
         const numericValue = Number(value);
         if (isNaN(numericValue)) return "R$ 0,00";
@@ -104,7 +105,7 @@ const OrderSummary = ({ cart, cartTotal, updateQuantity, removeFromCart }) => {
                 </div>
                 <div className="flex justify-between text-gray-600">
                     <span>Taxa de Entrega</span>
-                    <span className="text-green-600">Grátis</span>
+                    <span>{formatCurrency(taxaEntrega)}</span>
                 </div>
                 <div className="flex justify-between font-bold text-lg pt-2 border-t mt-2">
                     <span>Total</span>

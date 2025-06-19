@@ -10,7 +10,8 @@ export function StoreProvider({ children }) {
     // Renomeei para seguir o padrão camelCase, mas é opcional
     const [fantasyName, setFantasyName] = useState(''); 
     const [storeInfo, setStoreInfo] = useState(null);
-    
+    const [taxaEntrega, setTaxaEntrega] = useState(0); 
+
     useEffect(() => {
         if (currentStore) {
             localStorage.setItem('currentStore', currentStore);
@@ -18,6 +19,7 @@ export function StoreProvider({ children }) {
         } else {
             setStoreInfo(null);
             setFantasyName('');
+            setTaxaEntrega(0);
         }
     }, [currentStore]);
 
@@ -28,12 +30,15 @@ export function StoreProvider({ children }) {
             
             setStoreInfo(data);
             const nomeFantasiaDaApi = data?.empresa?.nomeFantasia;
+            const taxaEntregaDaApi = data?.empresa?.taxaEntrega;
             setFantasyName(nomeFantasiaDaApi || ''); 
+            setTaxaEntrega(taxaEntregaDaApi || 0);
 
         } catch (error) {
             console.error('Erro ao obter informações da loja:', error);
             setStoreInfo(null);
             setFantasyName('');
+            setTaxaEntrega(0);
         }
     };
 
@@ -60,6 +65,7 @@ export function StoreProvider({ children }) {
             currentStore,
             storeInfo,
             fantasyName,
+            taxaEntrega,
             setCurrentStore,
             updateCurrentStore,
             checkAndUpdateStoreFromURL

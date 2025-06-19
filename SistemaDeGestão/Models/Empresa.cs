@@ -1,4 +1,6 @@
-﻿namespace SistemaDeGestao.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SistemaDeGestao.Models
 {
     public class Empresa
     {
@@ -11,6 +13,8 @@
         public string? Bairro { get; set; }
         public string? Cidade { get; set; }
         public string? Estado { get; set; }
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal? TaxaEntrega { get; set; }
         public string? Cep { get; set; }
         public TimeSpan HorarioAbertura { get; set; }
         public TimeSpan HorarioFechamento { get; set; }

@@ -122,6 +122,7 @@ namespace SistemaDeGestao.Services
                 empresaExistente.Estado = empresaAtualizada.Estado ?? empresaExistente.Estado;
                 empresaExistente.Cep = empresaAtualizada.Cep ?? empresaExistente.Cep;
                 empresaExistente.Observacoes = empresaAtualizada.Observacoes ?? empresaExistente.Observacoes;
+                empresaExistente.TaxaEntrega = empresaAtualizada.TaxaEntrega ?? empresaExistente.TaxaEntrega;
 
                 if (empresaAtualizada.HorarioAbertura != TimeSpan.Zero)
                     empresaExistente.HorarioAbertura = empresaAtualizada.HorarioAbertura;

@@ -16,14 +16,13 @@ namespace SistemaDeGestao.Services
             _context = context;
         }
 
-        public async Task<FinalUser?> BuscarPorTelefone(string telefone, string nome)
+        public async Task<FinalUser?> BuscarPorTelefone(string telefone)
         {
             var finalUser = await _context.FinalUsers
                 .FirstOrDefaultAsync(c => c.Telefone == telefone);
 
             if (finalUser != null)
             {
-                finalUser.Nome = nome; 
                 _context.Update(finalUser);
                 await _context.SaveChangesAsync();
             }

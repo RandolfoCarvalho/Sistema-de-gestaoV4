@@ -32,6 +32,9 @@ namespace SistemaDeGestao.AutoMapper
             CreateMap<ItemPedidoOpcaoDTO, ItemPedidoOpcao>();
             CreateMap<EnderecoEntregaDTO, EnderecoEntrega>();
 
+            // --- MAPEAMENTOS DE CANCELAMENTO (Entidade -> DTO) ---
+            CreateMap<CancelamentoPedidoRequest, PedidoCancelado>();
+
             // --- MAPEAMENTOS DE NOTIFICATION (Entidade -> DTO) ---
             // Mapeamento principal: Pedido -> PedidoNotificationDTO
             CreateMap<Pedido, PedidoNotificationDTO>()

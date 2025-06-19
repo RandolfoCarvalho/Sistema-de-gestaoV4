@@ -1,23 +1,39 @@
 ﻿import React, { useState } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
-import { ArrowLeft } from 'lucide-react';
 
 const FinalUserModal = ({ isOpen, onClose, onSuccess }) => {
-    const [formData, setFormData] = useState({
-        nome: '',
-        telefone: '',
-        dataCriacao: new Date().toISOString()
-    });
+    const [nome, setNome] = useState('');
+    const [telefone, setTelefone] = useState('');
+    const [isNomeRequired, setIsNomeRequired] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+    const handleTelefoneChange = (e) => {
+        setTelefone(e.target.value);
+        if (isNomeRequired) {
+            setIsNomeRequired(false);
+            setNome('');
+        }
+    };
+
+    const handleTelefoneBlur = async () => {
+        const telefoneNumerico = telefone.replace(/\D/g, '');
+        if (telefoneNumerico.length !== 11) return;
+
+        setLoading(true);
+        setError('');
+        try {
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/login`, { Telefone: telefoneNumerico });
+        } catch (err) {
+            if (err.response && err.response.status === 404) {
+                setIsNomeRequired(true);
+            } else {
+                setError('Não foi possível verificar o telefone. Tente novamente.');
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -25,115 +41,120 @@ const FinalUserModal = ({ isOpen, onClose, onSuccess }) => {
         setLoading(true);
         setError('');
 
-        const telefoneNumerico = formData.telefone.replace(/\D/g, '');
+        const telefoneNumerico = telefone.replace(/\D/g, '');
+
         if (!/^\d{11}$/.test(telefoneNumerico)) {
-            setError('Número de telefone inválido. Use o formato (DDD) 9XXXXXXXX.');
+            setError('Formato de telefone inválido. Deve conter exatamente 11 dígitos (DDD + número).');
             setLoading(false);
             return;
         }
-        const sanitizedData = {
-            ...formData,
+
+        if (isNomeRequired && !nome.trim()) {
+            setError('Por favor, informe seu nome para o cadastro.');
+            setLoading(false);
+            return;
+        }
+
+        const userData = {
+            nome: nome,
             telefone: telefoneNumerico
         };
 
-        try {
-            const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/VerificarTelefone`,
-                sanitizedData
-            );
-
-            if (response.data) {
-                localStorage.setItem("userId", response.data.id);
-                localStorage.setItem("isAuthenticated", "true");
-                localStorage.setItem("FinalUserTelefone", response.data.telefone);
-                localStorage.setItem("FinalUserName", response.data.nome);
-                onSuccess({
-                    ...response.data,
-                    FinalUserName: response.data.nome,
-                    FinalUserTelefone: response.data.telefone
-                });
-            } else {
-                setError('Erro ao cadastrar usuário. Tente novamente.');
-            }
-        } catch (err) {
-            setError(err.response?.data?.message || 'Erro ao cadastrar usuário');
-        } finally {
-            setLoading(false);
+        if (onSuccess) {
+            onSuccess(userData);
         }
     };
 
+    const handleClose = () => {
+        setNome('');
+        setTelefone('');
+        setIsNomeRequired(false);
+        setError('');
+        onClose();
+    };
 
     return (
         <Modal
             isOpen={isOpen}
-            onRequestClose={() => { }} 
-            shouldCloseOnOverlayClick={false}
+            onRequestClose={handleClose}
+            shouldCloseOnOverlayClick={true}
             contentLabel="Identifique-se"
-            className="bg-white p-6 rounded-lg max-w-md mx-auto mt-20"
-            overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+            className="bg-white p-6 rounded-lg shadow-xl max-w-md w-11/12 mx-auto my-20 focus:outline-none"
+            overlayClassName="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+            appElement={document.getElementById('root') || undefined}
         >
-            <div className="space-y-4">
-                <div className="flex items-center space-x-4 mb-6">
+            <div className="flex flex-col">
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-semibold text-gray-800">Identifique-se para continuar</h2>
                     <button
-                        onClick={onClose}
-                        className="text-gray-600 hover:text-gray-800"
+                        onClick={handleClose}
+                        className="text-gray-500 hover:text-gray-800"
                     >
-                        <ArrowLeft size={24} />
+                        ✕
                     </button>
-                    <h2 className="text-xl font-medium">Identifique-se</h2>
                 </div>
-                <div> <h1 className="text-xl font-medium">Finalize seu pedido em instantes</h1> </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="space-y-2">
-                        <label htmlFor="telefone" className="block text-sm font-medium">
-                            Seu número de WhatsApp é:
+                <p className="text-gray-600 mb-6">
+                    Para finalizar seu pedido, precisamos de algumas informações.
+                </p>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label htmlFor="telefone" className="block text-sm font-medium text-gray-700">
+                            Número de WhatsApp (DDD + Número)
                         </label>
                         <input
                             type="tel"
                             id="telefone"
                             name="telefone"
-                            value={formData.telefone}
-                            onChange={handleChange}
-                            placeholder="(__) _____-____"
-                            className="w-full p-2 border rounded-md bg-gray-50"
+                            value={telefone}
+                            onChange={handleTelefoneChange}
+                            onBlur={handleTelefoneBlur}
+                            placeholder="Ex: 64992094652"
+                            className="mt-1 w-full p-3 border border-gray-300 rounded-md bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                             required
+                            disabled={loading}
                         />
                     </div>
 
-                    <div className="space-y-2">
-                        <label htmlFor="nome" className="block text-sm font-medium">
-                            Seu nome e sobrenome:
-                        </label>
-                        <input
-                            type="text"
-                            id="nome"
-                            name="nome"
-                            value={formData.nome}
-                            onChange={handleChange}
-                            placeholder="Nome e sobrenome"
-                            className="w-full p-2 border rounded-md bg-gray-50"
-                            required
-                        />
-                    </div>
+                    {isNomeRequired && (
+                        <div className="animate-fade-in">
+                            <label htmlFor="nome" className="block text-sm font-medium text-gray-700">
+                                Parece que é sua primeira vez! Qual seu nome?
+                            </label>
+                            <input
+                                type="text"
+                                id="nome"
+                                name="nome"
+                                value={nome}
+                                onChange={(e) => setNome(e.target.value)}
+                                placeholder="Nome e Sobrenome"
+                                className="mt-1 w-full p-3 border border-gray-300 rounded-md bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                                required
+                                disabled={loading}
+                                autoFocus
+                            />
+                        </div>
+                    )}
 
                     {error && (
-                        <p className="text-red-500 text-sm">{error}</p>
+                        <p className="text-red-600 text-sm text-center">{error}</p>
                     )}
 
                     <button
                         type="submit"
                         disabled={loading}
-                        className={`w-full py-3 rounded-md text-center ${loading
-                            ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                            : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                            }`}
+                        className={`w-full py-3 rounded-md font-semibold text-white transition-colors duration-200 ${
+                            loading
+                                ? 'bg-gray-400 cursor-not-allowed'
+                                : 'bg-blue-600 hover:bg-blue-700'
+                        }`}
                     >
-                        {loading ? 'Aguarde...' : 'Avançar'}
+                        {loading ? 'Aguarde...' : 'Continuar'}
                     </button>
 
-                    <p className="text-sm text-center text-gray-600">
-                        Para realizar seu pedido vamos precisar de suas informações, este é um ambiente protegido.
+                    <p className="text-xs text-center text-gray-500 pt-2">
+                        Seus dados estão seguros conosco e serão usados apenas para o seu pedido.
                     </p>
                 </form>
             </div>

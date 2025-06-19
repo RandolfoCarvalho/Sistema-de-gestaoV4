@@ -1,10 +1,12 @@
-import React, { useState, useRef } from 'react';
-import { Phone, CheckCircle } from 'lucide-react';
+// WhatsappBOT.js
+import React, { useState, useRef, useEffect } from 'react';
+import { CheckCircle } from 'lucide-react';
 import MessageTemplate from './MessageTemplate';
 import LoginSection from './LoginSection';
+import ChatInterface from './ChatInterface'; // Importamos o novo componente
 import axios from 'axios';
 
-const baseUrl = process.env.REACT_APP_WHATSAPPBOT_VPS; // Ajuste conforme necessário
+const baseUrl = process.env.REACT_APP_WHATSAPPBOT_VPS;
 
 const WhatsappBOT = () => {
   const [sessionStatus, setSessionStatus] = useState('disconnected');
@@ -14,30 +16,42 @@ const WhatsappBOT = () => {
 
   const isMounted = useRef(true);
 
+  // Garantir que a referência de montagem seja atualizada corretamente
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   const handleSessionStatusChange = (status, name) => {
     setSessionStatus(status);
     if (name) setSessionName(name);
     if (status === 'connected') {
-      setActiveTab('templates');
+      setActiveTab('chat');
     }
   };
 
-  const desconectarSessao = async () => {
+const desconectarSessao = async () => {
     if (sessionStatus !== 'connected') return;
-    handleSessionStatusChange('disconnected');
     setLoading(true);
     try {
       await axios.get(`${baseUrl}/logout/${sessionName}`);
-      
+      // Força um reload para garantir que a interface seja reiniciada para o estado de "desconectado"
+      window.location.reload();
     } catch (error) {
       console.error('Erro ao desconectar:', error);
-      alert('Erro ao tentar desconectar.');
+      alert('Erro ao tentar desconectar. A página será recarregada para garantir o estado correto.');
+      // Recarrega mesmo em caso de erro para evitar uma UI inconsistente
+      window.location.reload();
     } finally {
+      // O setLoading não é mais estritamente necessário por causa do reload, mas mantemos por segurança
       if (isMounted.current) {
         setLoading(false);
       }
     }
-  };
+};
+
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="">
@@ -45,7 +59,7 @@ const WhatsappBOT = () => {
           <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
             WhatsApp Bot - Gestão de Mensagens
           </h1>
-          <p className="text-gray-600">Configure e envie notificações automáticas para seus clientes</p>
+          <p className="text-gray-600">Configure, automatize e converse com seus clientes</p>
         </div>
 
         {sessionStatus === 'connected' && (
@@ -69,7 +83,7 @@ const WhatsappBOT = () => {
         <div className="flex border-b mb-6">
           <button
             onClick={() => setActiveTab('connection')}
-            className={`py-2 px-4 font-medium text-sm mr-4 border-b-2 ${
+            className={`py-2 px-4 font-medium text-sm mr-2 border-b-2 ${
               activeTab === 'connection'
                 ? 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -80,7 +94,7 @@ const WhatsappBOT = () => {
           <button
             onClick={() => setActiveTab('templates')}
             disabled={sessionStatus !== 'connected'}
-            className={`py-2 px-4 font-medium text-sm border-b-2 ${
+            className={`py-2 px-4 font-medium text-sm mr-2 border-b-2 ${
               sessionStatus !== 'connected'
                 ? 'border-transparent text-gray-400 cursor-not-allowed'
                 : activeTab === 'templates'
@@ -89,6 +103,20 @@ const WhatsappBOT = () => {
             }`}
           >
             Modelos de Mensagem
+          </button>
+          {/* BOTÃO DA NOVA ABA DE CHAT */}
+          <button
+            onClick={() => setActiveTab('chat')}
+            disabled={sessionStatus !== 'connected'}
+            className={`py-2 px-4 font-medium text-sm mr-2 border-b-2 ${
+              sessionStatus !== 'connected'
+                ? 'border-transparent text-gray-400 cursor-not-allowed'
+                : activeTab === 'chat'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            Chat em Tempo Real
           </button>
         </div>
 
@@ -101,6 +129,15 @@ const WhatsappBOT = () => {
 
         {activeTab === 'templates' && (
           <MessageTemplate
+            sessionName={sessionName}
+            sessionStatus={sessionStatus}
+          />
+        )}
+        
+        {/* RENDERIZAÇÃO CONDICIONAL DO COMPONENTE DE CHAT */}
+        {activeTab === 'chat' && (
+          <ChatInterface
+            onSessionStatusChange={handleSessionStatusChange}
             sessionName={sessionName}
             sessionStatus={sessionStatus}
           />

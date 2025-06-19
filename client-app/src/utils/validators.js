@@ -1,66 +1,57 @@
-//Validações
+/**
+ * Valida o objeto de endereço.
+ * @param {object} endereco - O objeto de endereço do formulário.
+ * @param {string[]} errors - O array de erros para adicionar novas mensagens.
+ */
+const validateAddress = (endereco, errors) => {
+    const requiredFields = {
+        Logradouro: 'A rua/avenida é obrigatória.',
+        Numero: 'O número do endereço é obrigatório.',
+        Bairro: 'O bairro é obrigatório.',
+        Cidade: 'A cidade é obrigatória.',
+        CEP: 'O CEP é obrigatório.'
+    };
 
-import Swal from "sweetalert2";
-
-//validates address in checkout
-export const validateAddress = (endereco) => {
-    const requiredFields = ['Logradouro', 'Numero', 'Bairro', 'Cidade', 'CEP'];
-    const missingFields = [];
-
-    requiredFields.forEach(field => {
-        if (!endereco?.[field]) {
-            missingFields.push(field);
+    for (const field in requiredFields) {
+        if (!endereco?.[field]?.trim()) {
+            errors.push(requiredFields[field]);
         }
-    });
+    }
 
     const cepRegex = /^\d{5}-?\d{3}$/;
     if (endereco?.CEP && !cepRegex.test(endereco.CEP)) {
-        Swal.fire({
-            title: "CEP Inválido",
-            text: "Por favor, digite um CEP válido no formato 12345-678",
-            icon: "warning",
-            confirmButtonText: "Entendi",
-            confirmButtonColor: "#ff5733"
-        });
-        return false;
+        errors.push("O formato do CEP é inválido (ex: 12345-678).");
     }
-
-    if (missingFields.length > 0) {
-        const fieldNames = {
-            Logradouro: 'Rua',
-            Numero: 'Número',
-            Bairro: 'Bairro',
-            Cidade: 'Cidade',
-            CEP: 'CEP'
-        };
-
-        Swal.fire({
-            title: "Campos obrigatórios",
-            text: `Por favor, preencha os seguintes campos: ${missingFields.map(f => fieldNames[f]).join(', ')}`,
-            icon: "warning",
-            confirmButtonText: "Entendi",
-            confirmButtonColor: "#ff5733"
-        });
-        return false;
-    }
-
-    return true;
 };
 
-//Validates the Form in checkout
+/**
+ * Valida o formulário completo de checkout.
+ * Esta função NÃO mostra alertas, apenas retorna o resultado da validação.
+ * @param {object} formData - O estado completo do formulário.
+ * @returns {{isValid: boolean, errors: string[]}} - Um objeto com o status da validação e uma lista de mensagens de erro.
+ */
 export const validateForm = (formData) => {
-    if (!validateAddress(formData.endereco)) return false;
+    const errors = [];
 
-    if (!formData.pagamento || !formData.pagamento.FormaPagamento) {
-        Swal.fire({
-            title: "Forma de pagamento",
-            text: "Por favor, selecione uma forma de pagamento",
-            icon: "warning",
-            confirmButtonText: "Entendi",
-            confirmButtonColor: "#ff5733"
-        });
-        return false;
+    // 1. Valida o endereço (passando o array de erros para ser preenchido)
+    validateAddress(formData.endereco, errors);
+
+    // 2. Valida o pagamento (pode adicionar mais validações aqui se precisar)
+    // OBS: A forma de pagamento geralmente é selecionada em um passo posterior (PaymentModal),
+    // então essa validação pode não ser necessária aqui, mas vamos mantê-la por segurança.
+    if (!formData.pagamento?.FormaPagamento) {
+        errors.push("A forma de pagamento não foi definida.");
     }
 
-    return true;
+    // 3. Retorna o objeto padronizado
+    return {
+        isValid: errors.length === 0,
+        errors: errors,
+    };
 };
+
+// Se você ainda precisar da validação de endereço que mostra o Swal em outro lugar, pode mantê-la exportada
+// mas a nomeie de forma diferente para evitar confusão.
+/*
+export const validateAddressWithAlert = (endereco) => { ... }
+*/

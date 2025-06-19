@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using SistemaDeGestao.Data;
-using SistemaDeGestao.Migrations;
 using SistemaDeGestao.Models;
 using SistemaDeGestao.Models.DTOs;
 using SistemaDeGestao.Models.DTOs.Resquests;
@@ -12,45 +11,51 @@ using System.Text.Json;
 namespace SistemaDeGestao.Areas.Admin.Controllers
 {
     [Route("api/1.0/[controller]")]
-    public class PedidoController : Controller
+    [ApiController] 
+    public class PedidoController : ControllerBase
     {
         private readonly PedidoService _pedidoService;
-        private readonly ILogger<PedidoService> _logger;
+        private readonly ILogger<PedidoController> _logger;
         private readonly DataBaseContext _context;
-        private readonly IHubContext<OrderHub> _hubContext;
-        private readonly WhatsAppBotService _whatsappBot;
 
-        public PedidoController(PedidoService pedidoService, ILogger<PedidoService> logger, DataBaseContext context, 
-            IHubContext<OrderHub> hubContext, WhatsAppBotService whatsappBot)
+        public PedidoController(PedidoService pedidoService, ILogger<PedidoController> logger, DataBaseContext context)
         {
             _pedidoService = pedidoService;
             _logger = logger;
             _context = context;
-            _hubContext = hubContext;
-            _whatsappBot = whatsappBot;
         }
-        [HttpGet("ListarPedidos/{status?}")]
+
+        [HttpGet("ListarPedidos")]
         public async Task<ActionResult<IEnumerable<Pedido>>> ListarPedidos()
         {
             var pedidos = await _pedidoService.ListarPedidosAsync();
             return Ok(pedidos);
         }
-        [HttpGet]
-        [Route("ObterPedido/{id}")]
+
+        [HttpGet("ObterPedido/{id}")]
+        [ProducesResponseType(typeof(Pedido), 200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> ObterPedido(int id)
         {
-            var pedido = await _pedidoService.ObterPedido(id);
-            if (pedido == null) return NotFound("Pedido não encontrado");
-            return Ok(pedido);
+            try
+            {
+                var pedido = await _pedidoService.ObterPedido(id);
+                return Ok(pedido);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
-        [HttpGet]
-        [Route("ObterPedidoPorIdeRestauranteId/{id}/{restauranteId}")]
+
+        [HttpGet("ObterPedidoPorIdeRestauranteId/{id}/{restauranteId}")]
         public async Task<IActionResult> ObterPedidoPorIdeRestauranteId(int id, int restauranteId)
         {
             var pedido = await _pedidoService.ObterPedidoPorIdeRestauranteId(id, restauranteId);
-            if (pedido == null) return NotFound("Pedido não encontrado");
+            if (pedido == null) return NotFound("Pedido não encontrado para este restaurante.");
             return Ok(pedido);
         }
+
         [HttpPut("AtualizarStatusPedido/{id}/{novoStatus}")]
         public async Task<IActionResult> AtualizarStatusPedido(int id, OrderStatus novoStatus)
         {
@@ -58,34 +63,44 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             {
                 var pedido = await _pedidoService.AtualizarStatusPedidoAsync(id, novoStatus);
                 if (pedido == null)
-                    return NotFound(new { message = "Pedido não encontrado" });
+                    return NotFound(new { message = "Pedido não encontrado." });
                 return Ok(pedido);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Erro ao atualizar status do pedido {PedidoId}", id);
                 return BadRequest(new { message = ex.Message });
             }
         }
-        [HttpPost]
-        [Route("CriarPedido")]
-        public async Task<ActionResult<Pedido>> CriarPedido([FromBody] PedidoDTO pedido)
+
+        [HttpPost("CriarPedido")]
+        [ProducesResponseType(typeof(Pedido), 201)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 500)]
+        public async Task<IActionResult> CriarPedido([FromBody] PedidoDTO pedidoDto)
         {
             try
             {
-                if (pedido == null) return null;
-                var pedidoNovo = await _pedidoService.CriarPedidoAsync(pedido);
-                return Ok(pedidoNovo);
+                var pedidoNovo = await _pedidoService.CriarPedidoAsync(pedidoDto);
+                return CreatedAtAction(nameof(ObterPedido), new { id = pedidoNovo.Id }, pedidoNovo);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Argumento inválido ao criar pedido.");
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogWarning(ex, "Operação inválida ao criar pedido (ex: estoque, loja fechada).");
+                return BadRequest(new { success = false, message = ex.Message });
             }
             catch (Exception ex)
             {
-                var bad = ex.InnerException?.Message ?? ex.Message;
-                return BadRequest(bad);
+                _logger.LogError(ex, "Erro inesperado ao criar pedido.");
+                return StatusCode(500, new { success = false, message = "Ocorreu um erro inesperado. Tente novamente." });
             }
         }
 
-        /// <summary>
-        /// Endpoint para verificar disponibilidade do pedido.
-        /// </summary>
         [HttpPost("verificar-estoque-pedido")]
         public async Task<IActionResult> VerificarEstoquePedido([FromBody] PedidoDTO pedidoDTO)
         {
@@ -93,7 +108,6 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
                 return BadRequest("Pedido inválido.");
 
             var produtoIds = pedidoDTO.Itens.Select(i => i.ProdutoId).ToList();
-
             var produtos = await _context.Produtos
                 .Where(p => produtoIds.Contains(p.Id))
                 .ToListAsync();
@@ -102,7 +116,7 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             {
                 var produto = produtos.FirstOrDefault(p => p.Id == item.ProdutoId);
                 if (produto == null || !produto.Ativo)
-                    return BadRequest($"Produto {item.ProdutoId} está indisponível.");
+                    return BadRequest($"Produto {item.NomeProduto ?? item.ProdutoId.ToString()} está indisponível.");
 
                 if (produto.EstoqueAtual < item.Quantidade)
                     return BadRequest($"Produto '{produto.Nome}' sem estoque suficiente.");
@@ -111,183 +125,40 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             return Ok("Estoque e produtos válidos.");
         }
 
-        /// <summary>
-        /// Endpoint para registrar o cancelamento de um pedido.
-        /// </summary>
         [HttpPost("registrarCancelamento")]
-        [ProducesResponseType(typeof(object), 200)]
-        [ProducesResponseType(typeof(object), 400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> RegistrarCancelamento([FromBody] CancelamentoPedidoRequest request)
         {
-            try
+            var (sucesso, mensagem) = await _pedidoService.RegistrarCancelamentoAsync(request);
+            if (sucesso)
             {
-                // O controlador apenas DELEGA a lógica para o serviço
-                var (sucesso, mensagem) = await _pedidoService.RegistrarCancelamentoAsync(request);
-
-                // E então, traduz o resultado do serviço em uma resposta HTTP
-                if (sucesso)
-                {
-                    return Ok(new { Sucesso = true, Mensagem = mensagem });
-                }
-
-                // Se a mensagem indica que não foi encontrado, retorna 404
-                if (mensagem.Contains("não encontrado"))
-                {
-                    return NotFound(new { Sucesso = false, Mensagem = mensagem });
-                }
-
-                // Para outros erros de negócio, retorna 400
-                return BadRequest(new { Sucesso = false, Mensagem = mensagem });
+                return Ok(new { Sucesso = true, Mensagem = mensagem });
             }
-            catch (Exception ex)
-            {
-                // Captura exceções inesperadas que possam não ter sido tratadas no serviço
-                _logger.LogError(ex, "Erro não tratado no endpoint de cancelamento de pedido.");
-                return StatusCode(500, new { Sucesso = false, Mensagem = "Ocorreu um erro inesperado no servidor." });
-            }
+            return BadRequest(new { Sucesso = false, Mensagem = mensagem });
         }
 
-        /*[HttpPost]
-        [Route("AdicionarItemAoPedido")]
-        public async Task<IActionResult> AdicionarItemAoPedido([FromBody] ItemPedido item)
-        {
-            var resultado = await _pedidoService.AdicionarItemAoPedido(item);
-            if (resultado == null) return BadRequest("Erro ao adicionar item ao pedido");
-            return Ok(resultado);
-        }
-
-        [HttpPut]
-        [Route("AtualizarOpcoesDoItem/{itemId}")]
-        public async Task<IActionResult> AtualizarOpcoesDoItem(int itemId, [FromBody] Dictionary<string, List<OpcoesItemPedido>> opcoes)
-        {
-            var resultado = await _pedidoService.AtualizarOpcoesDoItem(itemId, opcoes);
-            if (resultado == null) return BadRequest("Erro ao atualizar opções do item");
-            return Ok(resultado);
-        }
-
-        [HttpDelete]
-        [Route("RemoverItemDoPedido/{pedidoId}/{itemId}")]
-        public async Task<IActionResult> RemoverItemDoPedido(int pedidoId, int itemId)
-        {
-            var resultado = await _pedidoService.RemoverItemDoPedido(pedidoId, itemId);
-            if (!resultado) return BadRequest("Erro ao remover item do pedido");
-            return NoContent();
-        }*/
-
-        //Item pedido
-
-        [HttpGet]
-        [Route("ListarItensPedido/{pedidoId}")]
+        [HttpGet("ListarItensPedido/{pedidoId}")]
         public async Task<IActionResult> ListarItensPedido(int pedidoId)
         {
-            return Ok(await _pedidoService.ListarItensPedido(pedidoId));
+            var itens = await _pedidoService.ListarItensPedido(pedidoId);
+            return Ok(itens);
         }
 
-        [HttpGet]
-        [Route("ObterItemPedido/{id}")]
-        public async Task<IActionResult> ObterItemPedido(int id)
-        {
-            var item = await _pedidoService.ObterItemPedido(id);
-            if (item == null) return NotFound("Item não encontrado");
-            return Ok(item);
-        }
-
-        /*[HttpGet]
-        [Route("ObterOpcoesDoItem/{id}")]
-        public async Task<IActionResult> ObterOpcoesDoItem(int id)
-        {
-            var opcoes = await _pedidoService.ObterOpcoesDoItem(id);
-            if (opcoes == null) return NotFound("Item não encontrado");
-            return Ok(opcoes);
-        }*/
-
-        /*[HttpPost]
-        [Route("CriarItemPedido")]
-        public async Task<IActionResult> CriarItemPedido([FromBody] ItemPedidoDTO itemDTO)
-        {
-            try
-            {
-                _logger.LogInformation("Recebendo request para criar item pedido: {@Item}", itemDTO);
-
-                if (!ModelState.IsValid)
-                {
-                    var erros = ModelState.Values
-                        .SelectMany(v => v.Errors)
-                        .Select(e => e.ErrorMessage)
-                        .ToList();
-                    _logger.LogWarning("Erros de validação encontrados: {@Erros}", erros);
-                    return BadRequest(new
-                    {
-                        Message = "Dados inválidos para criar item do pedido",
-                        Errors = erros
-                    });
-                }
-
-                // Criar o ItemPedido a partir do DTO
-                var item = new ItemPedido
-                {
-                    ProdutoId = itemDTO.ProdutoId,
-                    Quantidade = itemDTO.Quantidade,
-                    PrecoUnitario = itemDTO.PrecoUnitario,
-                    SubTotal = itemDTO.SubTotal,
-                    Observacoes = itemDTO.Observacoes
-                };
-
-                // Resto do código permanece igual...
-                var resultado = await _pedidoService.CriarItemPedido(item);
-                return Ok(new
-                {
-                    Message = "Item do pedido criado com sucesso",
-                    Data = resultado
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Erro ao criar item do pedido");
-                return StatusCode(500, new
-                {
-                    Message = "Erro ao processar a requisição",
-                    Error = ex.Message
-                });
-            }
-        }*/
-        [HttpPut]
-        [Route("AtualizarObservacoes/{id}")]
+        [HttpPut("AtualizarObservacoes/{id}")]
         public async Task<IActionResult> AtualizarObservacoes(int id, [FromBody] ItemPedidoDTO itemPedidoDTO)
         {
-            if (itemPedidoDTO == null || string.IsNullOrEmpty(itemPedidoDTO.Observacoes))
-            {
-                return BadRequest("Observações não podem ser nulas ou vazias");
-            }
-
+            if (itemPedidoDTO == null) return BadRequest("Dados inválidos.");
             var resultado = await _pedidoService.AtualizarObservacoes(id, itemPedidoDTO.Observacoes);
-            if (resultado == null) return BadRequest("Erro ao atualizar observações");
-            return Ok(resultado);
-        }
-        /*[HttpPut]
-        [Route("AtualizarOpcoesExtras/{id}")]
-        public async Task<IActionResult> AtualizarOpcoesExtras(int id, [FromBody] Dictionary<string, List<OpcoesItemPedido>> opcoes)
-        {
-            var resultado = await _pedidoService.AtualizarOpcoesExtras(id, opcoes);
-            if (resultado == null) return BadRequest("Erro ao atualizar opções extras");
+            if (resultado == null) return NotFound("Item não encontrado para atualizar observações.");
             return Ok(resultado);
         }
 
-        [HttpDelete]
-        [Route("RemoverItemPedido/{id}")]
-        public async Task<IActionResult> RemoverItemPedido(int id)
-        {
-            var resultado = await _pedidoService.RemoverItemPedido(id);
-            if (!resultado) return BadRequest("Erro ao remover item");
-            return NoContent();
-        }*/
-        [HttpDelete]
-        [Route("DeleteAll")]
+        [HttpDelete("DeleteAll")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> DeleteAll()
         {
+            // ATENÇÃO: Endpoint perigoso para produção.
             await _pedidoService.DeleteAll();
-            return Ok();
+            return Ok(new { message = "Todos os pedidos foram deletados." });
         }
     }
 }

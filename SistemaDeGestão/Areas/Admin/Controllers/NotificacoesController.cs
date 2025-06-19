@@ -27,6 +27,7 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
         public async Task<IActionResult> ObterPedidoPorTelefone(string telefone)
         {
             var pedido = await _context.Pedidos
+                .Include(r => r.Restaurante)
                 .Where(p => p.FinalUserTelefone.Contains(telefone))
                 .OrderByDescending(p => p.DataPedido)
                 .FirstOrDefaultAsync();
@@ -36,13 +37,26 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
 
             return Ok(new
             {
+                id = pedido.Id,
                 nome = pedido.FinalUserName,
                 numero = pedido.Numero,
+                nomeDaLoja = pedido.NomeDaLoja,
+                numeroDaLoja = pedido.Restaurante.PhoneNumber,
                 status = pedido.Status.ToString(),
-                RestauranteId = pedido.RestauranteId,
+                restauranteId = pedido.RestauranteId,
                 data = pedido.DataPedido,
                 valor = pedido.Pagamento.ValorTotal 
             });
+        }
+
+        [HttpPost("AtivarAcompanhamento")]
+        public async Task AtivarAcompanhamentoAsync(int pedidoId)
+        {
+            var pedido = await _context.Pedidos.FindAsync(pedidoId);
+            if (pedido == null) return;
+
+            pedido.AcompanhamentoAtivo = true;
+            await _context.SaveChangesAsync();
         }
         //todo fazer a mensagem retornar, tratar acentos e espacos para buscar o modelo no banco
         [Route("templates/{restauranteId}/{status}")]
@@ -76,7 +90,6 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
                 texto = template.Texto
             });
         }
-
 
         [HttpGet]
         [Route("ListarMensagens")]

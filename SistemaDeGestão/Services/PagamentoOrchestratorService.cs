@@ -82,32 +82,23 @@ public class PagamentoOrchestratorService : IPagamentoOrchestratorService
         var lockKey = $"lock:pedido:{telefone}";
         var lockValue = Guid.NewGuid().ToString();
 
-        // 1. Rate Limit com Cache Distribuído
         if (await _cache.GetStringAsync(rateLimitKey) != null)
         {
-            _logger.LogWarning("Rate limit atingido para o telefone {Telefone}", telefone);
-            throw new InvalidOperationException("Aguarde 1 minuto entre pedidos.");
+            _logger.LogWarning("Rate limit de 1 minuto ativo para o telefone {Telefone}", telefone);
+            throw new InvalidOperationException("Você acabou de fazer um pedido. Aguarde 1 minuto para tentar novamente.");
         }
 
-        // 2. Lock Distribuído Simulado (versão corrigida e mais segura)
+        // 2. Tenta adquirir um Lock de Concorrência para garantir que apenas uma requisição processe por vez.
         bool lockAcquired = false;
         try
         {
-            // Tenta obter o lock lendo primeiro
-            var existingLock = await _cache.GetStringAsync(lockKey);
-            if (existingLock == null)
+            if (await _cache.GetStringAsync(lockKey) == null)
             {
-                // O lock parece estar livre, vamos tentar adquiri-lo.
                 await _cache.SetStringAsync(lockKey, lockValue, new DistributedCacheEntryOptions
                 {
-                    // Damos uma validade curta para o lock para evitar que ele fique "preso" para sempre se algo der errado.
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30)
                 });
-
-                // Verificação final: lemos novamente para garantir que fomos nós que pegamos o lock.
-                // Isso resolve a "race condition" de duas requisições tentando pegar o lock ao mesmo tempo.
-                var finalLockValue = await _cache.GetStringAsync(lockKey);
-                if (finalLockValue == lockValue)
+                if (await _cache.GetStringAsync(lockKey) == lockValue)
                 {
                     lockAcquired = true;
                 }
@@ -115,21 +106,37 @@ public class PagamentoOrchestratorService : IPagamentoOrchestratorService
 
             if (!lockAcquired)
             {
-                _logger.LogWarning("Tentativa de pedido concorrente para o telefone {Telefone}. Lock já estava em uso.", telefone);
-                throw new InvalidOperationException("Um pedido para este telefone já está em processamento. Tente novamente em alguns segundos.");
+                _logger.LogWarning("Tentativa de pedido concorrente para o telefone {Telefone}. Lock já em uso.", telefone);
+                throw new InvalidOperationException("Seu pedido já está em processamento. Tente novamente em alguns segundos.");
             }
 
-            // 3. Define o rate limit para a próxima tentativa (só se tivermos o lock)
-            await _cache.SetStringAsync(rateLimitKey, "true", new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
+            // --- INÍCIO DA LÓGICA DE NEGÓCIO ---
 
-            // 4. Lógica de Negócio
+            // 3. Processa a criação do pedido.
             request.PedidoDTO.Pagamento.TrocoPara = request.DadosPagamento.TrocoPara;
             var result = await _pedidoService.CriarPedidoAsync(request.PedidoDTO);
-            if (result == null) throw new Exception("Falha ao criar pedido no serviço de pedidos.");
+
+            // 4. Validação do resultado do pedido.
+            if (result == null)
+            {
+                // FALHA: Se a criação do pedido falhou, não fazemos nada com o rate limit.
+                // Apenas lançamos o erro. O lock de concorrência será liberado no `finally`.
+                _logger.LogError("Falha ao criar pedido no serviço de pedidos para o telefone {Telefone}", telefone);
+                throw new Exception("Falha ao criar pedido no serviço de pedidos.");
+            }
+
+            // SUCESSO! O pedido foi criado.
+            // AGORA, e somente agora, aplicamos o rate limit de 1 minuto.
+            await _cache.SetStringAsync(rateLimitKey, "true", new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1)
+            });
+
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("Pedido em dinheiro {NumeroPedido} criado com sucesso para o telefone {Telefone}", request.PedidoDTO.Numero, telefone);
+            _logger.LogInformation("Pedido {NumeroPedido} criado e rate limit de 1 min aplicado para {Telefone}", request.PedidoDTO.Numero, telefone);
 
+            // 5. Retorna a resposta de sucesso.
             return new PagamentoDinheiroResponseDTO
             {
                 Timestamp = DateTime.UtcNow,
@@ -140,7 +147,6 @@ public class PagamentoOrchestratorService : IPagamentoOrchestratorService
         }
         finally
         {
-            // 5. Libera o Lock, mas APENAS se fomos nós que o adquirimos.
             if (lockAcquired && await _cache.GetStringAsync(lockKey) == lockValue)
             {
                 await _cache.RemoveAsync(lockKey);
@@ -174,8 +180,6 @@ public class PagamentoOrchestratorService : IPagamentoOrchestratorService
         });
         try
         {
-            // O nome do método antigo foi trocado para refletir a nova lógica.
-            // A lógica de `ProcessarPagamentoAprovadoAsync` foi movida para dentro deste novo método.
             await VerificarStatusEProcessarPedidoAsync(transactionId);
         }
         finally
@@ -205,7 +209,7 @@ public class PagamentoOrchestratorService : IPagamentoOrchestratorService
 
         if (statusPagamento == "approved")
         {
-            await ProcessarPagamentoAprovadoAsync(transactionId, false); // Não precisa de retry aqui, pois é iniciado pelo cliente
+            await ProcessarPagamentoAprovadoAsync(transactionId, false);
             return new { status = "approved", message = "Pedido criado com sucesso" };
         }
 
@@ -215,7 +219,6 @@ public class PagamentoOrchestratorService : IPagamentoOrchestratorService
     // Este novo método centraliza a lógica de verificação e criação do pedido.
     private async Task VerificarStatusEProcessarPedidoAsync(string transactionId)
     {
-        // 1. Garante que o pedido não foi criado ainda.
         if (await _context.Pedidos.AsNoTracking().AnyAsync(p => p.Pagamento != null && p.Pagamento.TransactionId == transactionId))
         {
             _logger.LogInformation("Pedido para transação {TransactionId} já foi processado. Ignorando.", transactionId);

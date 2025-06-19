@@ -5,7 +5,6 @@ using SistemaDeGestao.Models.DTOs.Resquests;
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
-// O "using Hangfire;" foi removido
 using SistemaDeGestao.Data;
 using Microsoft.EntityFrameworkCore;
 using SistemaDeGestao.Interfaces;
@@ -79,7 +78,7 @@ namespace SistemaDeGestao.Controllers
                 var response = await _orchestrator.ProcessarPagamentoDinheiroAsync(request);
                 return Ok(response);
             }
-            catch (InvalidOperationException ex) // Captura rate limit ou lock
+            catch (InvalidOperationException ex)
             {
                 return StatusCode(429, new { status = "rate_limited", message = ex.Message });
             }
@@ -238,8 +237,6 @@ namespace SistemaDeGestao.Controllers
                     _logger.LogWarning(ex, "Não foi possível parsear o corpo do webhook como JSON.");
                 }
             }
-
-            // Se nada funcionou, retorna nulo
             return null;
         }
     }

@@ -49,6 +49,9 @@ namespace SistemaDeGestao.Models
         // Itens do pedido
 
         public virtual ICollection<ItemPedido> Itens { get; set; }
+        //controla se o cliente quer receber mensagens
+        public bool? AcompanhamentoAtivo { get; set; } = false;
+
 
         public string Observacoes { get; set; }
 

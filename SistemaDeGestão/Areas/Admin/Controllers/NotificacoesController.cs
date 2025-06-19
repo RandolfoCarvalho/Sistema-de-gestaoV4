@@ -37,6 +37,7 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
 
             return Ok(new
             {
+                id = pedido.Id,
                 nome = pedido.FinalUserName,
                 numero = pedido.Numero,
                 nomeDaLoja = pedido.NomeDaLoja,
@@ -46,6 +47,16 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
                 data = pedido.DataPedido,
                 valor = pedido.Pagamento.ValorTotal 
             });
+        }
+
+        [HttpPost("AtivarAcompanhamento")]
+        public async Task AtivarAcompanhamentoAsync(int pedidoId)
+        {
+            var pedido = await _context.Pedidos.FindAsync(pedidoId);
+            if (pedido == null) return;
+
+            pedido.AcompanhamentoAtivo = true;
+            await _context.SaveChangesAsync();
         }
         //todo fazer a mensagem retornar, tratar acentos e espacos para buscar o modelo no banco
         [Route("templates/{restauranteId}/{status}")]

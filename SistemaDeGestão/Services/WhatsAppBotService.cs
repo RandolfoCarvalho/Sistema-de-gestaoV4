@@ -46,6 +46,9 @@ namespace SistemaDeGestao.Services
 
         public async Task<bool> MontarMensagemAsync(Pedido pedido)
         {
+            if (!pedido.AcompanhamentoAtivo ?? false)
+                return false;
+
             // Mapear status para etapa
             if (!StatusParaEtapaMensagem.TryGetValue(pedido.Status.ToString(), out var etapa))
             {

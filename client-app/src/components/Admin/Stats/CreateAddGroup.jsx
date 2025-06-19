@@ -314,7 +314,11 @@ const GerenciamentoAdicionais = () => {
                                     <div className="space-y-2">
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2"><input type="text" name="nome" value={novoAdicional.nome} onChange={handleNovoAdicionalChange} placeholder="Nome do item *" className="p-2 border border-gray-300 rounded-md text-sm"/><input type="number" name="precoBase" value={novoAdicional.precoBase} onChange={handleNovoAdicionalChange} placeholder="Preço *" step="0.01" className="p-2 border border-gray-300 rounded-md text-sm"/></div>
                                         <textarea name="descricao" value={novoAdicional.descricao} onChange={handleNovoAdicionalChange} placeholder="Descrição" rows="2" className="w-full p-2 border border-gray-300 rounded-md text-sm"></textarea>
-                                        <button type="button" onClick={adicionarItemAdicional} className="w-full mt-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors flex items-center justify-center"><Plus size={16} className="mr-2"/> Adicionar à Lista</button>
+                                        <button 
+                                            type="button" 
+                                            onClick={adicionarItemAdicional} 
+                                            disabled={!novoAdicional.nome || !novoAdicional.precoBase}
+                                            className="w-full mt-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center"></button>
                                     </div>
                                 </div>
                             </div>

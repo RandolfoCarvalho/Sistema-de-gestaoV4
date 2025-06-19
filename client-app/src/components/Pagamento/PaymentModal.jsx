@@ -168,6 +168,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             PayerFirstName: firstName,
             PayerLastName: lastName,
             PayerEmail: formData.payer.email,
+            IssuerId: formData.issuer_id,
             PayerIdentificationType: formData.payer.identification.type,
             PayerIdentificationNumber: formData.payer.identification.number,
             FormaPagamento: "cartao"

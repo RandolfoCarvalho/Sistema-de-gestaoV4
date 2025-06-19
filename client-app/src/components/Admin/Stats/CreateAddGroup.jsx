@@ -318,7 +318,7 @@ const GerenciamentoAdicionais = () => {
                                             type="button" 
                                             onClick={adicionarItemAdicional} 
                                             disabled={!novoAdicional.nome || !novoAdicional.precoBase}
-                                            className="w-full mt-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center"></button>
+                                            className="w-full mt-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center"> Adicionar à Lista</button>
                                     </div>
                                 </div>
                             </div>

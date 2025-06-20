@@ -3,7 +3,7 @@ import { Home, ShoppingBag, Tag, ShoppingCart } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import FinalUserModal from "./Modals/FinalUserModal";
 import { useStore } from './Context/StoreContext';
-import { useCart } from "./Carrinho/CartContext";
+import { useCart } from "./Context/CartContext";
 import axios from "axios";
 import Swal from 'sweetalert2';
 

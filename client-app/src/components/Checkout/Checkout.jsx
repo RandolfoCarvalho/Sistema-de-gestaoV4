@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from "react";
-import { useCart } from "../Carrinho/CartContext";
+import { useCart } from "../Context/CartContext";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "../Context/StoreContext";
 import { IsLojaOpen } from '../../services/lojaService';

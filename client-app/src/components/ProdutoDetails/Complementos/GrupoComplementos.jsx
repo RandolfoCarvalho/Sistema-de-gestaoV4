@@ -16,33 +16,31 @@ const GrupoComplementos = ({
         return null;
     }
 
-    // Função para calcular a soma das quantidades máximas 
-    const calcularQuantidadeMaximaGrupo = (items) => {
-        if (!items || items.length === 0) return 0;
-        return items.reduce((total, item) => total + (item.maximoPorProduto || 1), 0);
-    };
     const minQuantity = grupo.quantidadeMinima || 0;
+    const maxQuantity = grupo.quantidadeMaxima || 0;
     const isSingleChoice = !grupo.multiplaEscolha;
 
-    // Define o texto de informação do grupo
-    let infoText = '';
+    // CORREÇÃO: Volta a somar as quantidades dos itens
+    const totalQuantidadeNoGrupo = isSingleChoice ? 0 : grupo.complementos.reduce((acc, comp) => {
+        const key = `complemento_${comp.id}`;
+        return acc + (selectedExtrasQuantities[key] || 0);
+    }, 0);
+    
+    const isGroupMaxReached = maxQuantity > 0 && totalQuantidadeNoGrupo >= maxQuantity;
 
-    if (grupo.obrigatorio) {
-        infoText += 'Obrigatório';
-        if (minQuantity > 0) {
-            infoText += ` • Mín: ${minQuantity}`;
-        }
-        if (grupo.quantidadeMaxima) {
-            infoText += ` • Máx: ${grupo.quantidadeMaxima}`;
-        }
+    let infoText = '';
+    if (isSingleChoice) {
+        infoText = grupo.obrigatorio ? 'Obrigatório • Escolha 1' : 'Escolha 1';
     } else {
-        if (minQuantity === 1 || (minQuantity === 0 && isSingleChoice)) {
-            infoText = 'Escolha até 1';
-        } else if (grupo.quantidadeMaxima) {
-            infoText = `Escolha até ${grupo.quantidadeMaxima}`;
-        } else if (minQuantity > 1 || !isSingleChoice) {
-            const quantidadeMaximaTotal = calcularQuantidadeMaximaGrupo(grupo.complementos);
-            infoText = `Escolha até ${quantidadeMaximaTotal}`;
+        const parts = [];
+        if (minQuantity > 0) {
+            parts.push(`mín. ${minQuantity}`);
+        }
+        if (maxQuantity > 0) {
+            parts.push(`máx. ${maxQuantity}`);
+        }
+        if (parts.length > 0) {
+            infoText = (grupo.obrigatorio ? 'Obrigatório • ' : '') + `Escolha ${parts.join(' e ')} itens`;
         }
     }
 
@@ -58,11 +56,12 @@ const GrupoComplementos = ({
                     {infoText && (
                         <div className="text-xs text-gray-500 mt-1">
                             {infoText}
+                            {!isSingleChoice && maxQuantity > 0 && ` (${totalQuantidadeNoGrupo} de ${maxQuantity} selecionados)`}
                         </div>
                     )}
                 </div>
-                {isOpen ? 
-                    <ChevronUp size={20} className="text-gray-500" /> : 
+                {isOpen ?
+                    <ChevronUp size={20} className="text-gray-500" /> :
                     <ChevronDown size={20} className="text-gray-500" />
                 }
             </button>
@@ -79,14 +78,13 @@ const GrupoComplementos = ({
                             />
                         ))
                         : grupo.complementos.map(complemento => (
-                             <MultipleChoiceItem
+                            <MultipleChoiceItem
                                 key={complemento.id}
                                 item={complemento}
                                 isComplemento={true}
-                                // Lê a quantidade com a chave correta
                                 currentQuantity={selectedExtrasQuantities[`complemento_${complemento.id}`] || 0}
-                                // Passa uma função que já inclui o tipo 'complemento'
                                 onQuantityChange={(item, isIncrement) => handleQuantityChange(item, isIncrement, 'complemento')}
+                                isGroupMaxReached={isGroupMaxReached}
                             />
                         ))
                     }

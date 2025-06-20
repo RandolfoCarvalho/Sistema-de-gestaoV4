@@ -21,8 +21,10 @@ const GerenciamentoComplementos = () => {
         nome: '',
         descricao: '',
         ativo: true,
-        obrigatorio: false, // Campo crucial
+        obrigatorio: false,
         multiplaEscolha: false,
+        quantidadeMinima: '',
+        quantidadeMaxima: '',
         complementos: []
     });
     const [novoComplemento, setNovoComplemento] = useState({ nome: '', preco: '', descricao: '', maximoPorProduto: '', estoqueAtual: '', ativo: true });
@@ -57,6 +59,8 @@ const GerenciamentoComplementos = () => {
                 ativo: grupo.ativo,
                 obrigatorio: grupo.obrigatorio,
                 multiplaEscolha: grupo.multiplaEscolha,
+                quantidadeMinima: grupo.quantidadeMinima !== null ? grupo.quantidadeMinima.toString() : '',
+                quantidadeMaxima: grupo.quantidadeMaxima !== null ? grupo.quantidadeMaxima.toString() : '',
                 complementos: grupo.complementos.map(comp => ({
                     id: comp.id,
                     nome: comp.nome || '',
@@ -126,7 +130,17 @@ const GerenciamentoComplementos = () => {
     const iniciarCriacao = () => {
         setGrupoSelecionadoId(null);
         setIsCreating(true);
-        setFormData({ id: null, nome: '', descricao: '', ativo: true, obrigatorio: false, multiplaEscolha: false, complementos: [] });
+        setFormData({ 
+            id: null, 
+            nome: '', 
+            descricao: '', 
+            ativo: true, 
+            obrigatorio: false, 
+            multiplaEscolha: false, 
+            quantidadeMinima: '',
+            quantidadeMaxima: '',
+            complementos: [] 
+        });
     };
 
     const cancelarEdicao = () => {
@@ -141,18 +155,55 @@ const GerenciamentoComplementos = () => {
             showError("Nome obrigatório", "O nome do grupo não pode ser vazio.");
             return;
         }
+
+        const min = formData.quantidadeMinima ? parseInt(formData.quantidadeMinima, 10) : NaN;
+        const max = formData.quantidadeMaxima ? parseInt(formData.quantidadeMaxima, 10) : NaN;
         
+        // --- SEÇÃO MODIFICADA ---
+        // Calcula a soma máxima de itens selecionáveis com base nos complementos
+        const somaMaximaPossivel = formData.complementos.reduce((soma, comp) => {
+            // Se maximoPorProduto não for definido, considera-se 1, replicando a lógica da UI do cliente.
+            const maxDoItem = parseInt(comp.maximoPorProduto, 10) || 1;
+            return soma + maxDoItem;
+        }, 0);
+
+        // Validação 1: Máximo do grupo não pode ser menor que o mínimo do grupo
+        if (!isNaN(min) && !isNaN(max) && max < min) {
+            showError("Valores inválidos", "A quantidade máxima do grupo não pode ser menor que a mínima.");
+            return;
+        }
+        
+        // Validação 2: Mínimo do grupo não pode ser maior que a soma total possível de itens
+        if (!isNaN(min) && min > somaMaximaPossivel) {
+            showError(
+                "Mínimo Inválido", 
+                `A quantidade mínima (${min}) não pode ser maior que a soma máxima de itens permitida nos complementos (${somaMaximaPossivel}).`
+            );
+            return;
+        }
+
+        // Validação 3: Máximo do grupo não pode ser maior que a soma total possível de itens
+        if (!isNaN(max) && max > somaMaximaPossivel) {
+            showError(
+                "Máximo Inválido",
+                `A quantidade máxima (${max}) não pode ser maior que a soma máxima de itens permitida nos complementos (${somaMaximaPossivel}).`
+            );
+            return;
+        }
+        // --- FIM DA SEÇÃO MODIFICADA ---
+
         setIsSubmitting(true);
         setError(null);
 
-        // O payload agora não inclui mais os campos de quantidade mínima/máxima a nível de grupo
         const payload = {
             Id: formData.id || 0,
             Nome: formData.nome.trim(),
             Descricao: formData.descricao.trim(),
             Ativo: formData.ativo,
-            Obrigatorio: formData.obrigatorio, // Campo corrigido
+            Obrigatorio: formData.obrigatorio,
             MultiplaEscolha: formData.multiplaEscolha,
+            QuantidadeMinima: formData.quantidadeMinima === '' ? null : min,
+            QuantidadeMaxima: formData.quantidadeMaxima === '' ? null : max,
             Complementos: formData.complementos.map(comp => ({
                 Id: comp.id || 0,
                 Nome: comp.nome.trim(),
@@ -248,10 +299,26 @@ const GerenciamentoComplementos = () => {
                             <div className="flex-grow overflow-y-auto p-6 space-y-6">
                                 <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                                     <h3 className="font-semibold text-gray-700 mb-4">Regras do Grupo</h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                        <div><label htmlFor="nome" className="block text-sm font-medium text-gray-600 mb-1">Nome do Grupo *</label><input type="text" id="nome" name="nome" value={formData.nome} onChange={handleFormChange} required className="w-full p-2 border border-gray-300 rounded-md" /></div>
-                                        <div className="lg:col-span-2"><label htmlFor="descricao" className="block text-sm font-medium text-gray-600 mb-1">Descrição</label><input type="text" id="descricao" name="descricao" value={formData.descricao} onChange={handleFormChange} className="w-full p-2 border border-gray-300 rounded-md" /></div>
-                                        <div className="flex flex-col justify-end space-y-2 pt-2 md:col-span-3">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                        <div>
+                                            <label htmlFor="nome" className="block text-sm font-medium text-gray-600 mb-1">Nome do Grupo *</label>
+                                            <input type="text" id="nome" name="nome" value={formData.nome} onChange={handleFormChange} required className="w-full p-2 border border-gray-300 rounded-md" />
+                                        </div>
+                                        <div className="lg:col-span-3">
+                                            <label htmlFor="descricao" className="block text-sm font-medium text-gray-600 mb-1">Descrição</label>
+                                            <input type="text" id="descricao" name="descricao" value={formData.descricao} onChange={handleFormChange} className="w-full p-2 border border-gray-300 rounded-md" />
+                                        </div>
+
+                                        <div>
+                                            <label htmlFor="quantidadeMinima" className="block text-sm font-medium text-gray-600 mb-1">Qtd. Mínima</label>
+                                            <input type="number" id="quantidadeMinima" name="quantidadeMinima" value={formData.quantidadeMinima} onChange={handleFormChange} placeholder="Opcional" min="0" className="w-full p-2 border border-gray-300 rounded-md" />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="quantidadeMaxima" className="block text-sm font-medium text-gray-600 mb-1">Qtd. Máxima</label>
+                                            <input type="number" id="quantidadeMaxima" name="quantidadeMaxima" value={formData.quantidadeMaxima} onChange={handleFormChange} placeholder="Opcional" min="0" className="w-full p-2 border border-gray-300 rounded-md" />
+                                        </div>
+                                        
+                                        <div className="flex flex-col justify-end space-y-2 pt-2 md:col-span-2">
                                             <div className="flex items-center"><input type="checkbox" id="ativo" name="ativo" checked={formData.ativo} onChange={handleFormChange} className="h-4 w-4 rounded" /><label htmlFor="ativo" className="ml-2 text-sm">Grupo Ativo</label></div>
                                             <div className="flex items-center"><input type="checkbox" id="obrigatorio" name="obrigatorio" checked={formData.obrigatorio} onChange={handleFormChange} className="h-4 w-4 rounded" /><label htmlFor="obrigatorio" className="ml-2 text-sm">Obrigatório</label></div>
                                             <div className="flex items-center"><input type="checkbox" id="multiplaEscolha" name="multiplaEscolha" checked={formData.multiplaEscolha} onChange={handleFormChange} className="h-4 w-4 rounded" /><label htmlFor="multiplaEscolha" className="ml-2 text-sm">Múltipla Escolha</label></div>

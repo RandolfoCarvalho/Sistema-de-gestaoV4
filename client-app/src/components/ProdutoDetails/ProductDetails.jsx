@@ -1,5 +1,5 @@
 ﻿import { useParams } from 'react-router-dom';
-import { ChevronLeft, Heart, Info, Clock, Star } from 'lucide-react';
+import { ChevronLeft, Info } from 'lucide-react';
 import ProductImage from './ProductImage';
 import ProductInfo from './ProductInfo';
 import QuantitySelector from './QuantitySelector';
@@ -7,7 +7,7 @@ import TotalPrice from './TotalPrice';
 import AddToCartButton from './AddToCartButton';
 import ErrorDisplay from './ErrorDisplay';
 import ComplementosSection from './Complementos/ComplementosSection';
-import ProductDetailsSkeleton from '../ui/skeleton/ProductDetailsSkeleton'; 
+import ProductDetailsSkeleton from '../ui/skeleton/ProductDetailsSkeleton';
 import AdicionaisSection from './Adicionais/AdicionaisSection';
 import { useCart } from '../Context/CartContext';
 import CartActionModal from '../Modals/CartActionModal';
@@ -39,6 +39,7 @@ const ProductDetails = () => {
 
     const { quantity, incrementQuantity, decrementQuantity } = useQuantity();
     const { addToCart, showCartModal, setShowCartModal, lastAddedItem } = useCart();
+
     const { calculateTotalPrice, handleAddToCartWithValidation } = usePriceCalculator(
         product,
         gruposComplementos,
@@ -58,11 +59,10 @@ const ProductDetails = () => {
     }
     return (
         <div className="bg-gray-50 min-h-screen">
-            {/* Cabeçalho fixo com sombra suave */}
             <div className="fixed top-0 left-0 right-0 bg-white shadow-sm z-30">
                 <div className="max-w-2xl mx-auto flex items-center px-4 py-3">
-                    <button 
-                        className="p-1 rounded-full hover:bg-gray-100" 
+                    <button
+                        className="p-1 rounded-full hover:bg-gray-100"
                         onClick={() => window.history.back()}
                     >
                         <ChevronLeft size={24} className="text-gray-700" />

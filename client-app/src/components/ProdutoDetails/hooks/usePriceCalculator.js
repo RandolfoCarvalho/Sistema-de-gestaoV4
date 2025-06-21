@@ -11,21 +11,12 @@ export const usePriceCalculator = (
     addToCart,
     setShowCartModal
 ) => {
-    // Função auxiliar para pegar o preço correto do item
-    const getItemPrice = (item, isComplemento) => {
-        if (isComplemento) {
-            return item.preco || 0;
-        }
-        return item.precoAdicional || item.precoBase || 0;
-    };
 
-    // Calcula o preço total do produto incluindo adicionais e complementos
     const calculateTotalPrice = useCallback(() => {
         if (!product) return 0;
         let unitPrice = product.precoVenda || 0;
-        // 2. Itera sobre os complementos de ESCOLHA ÚNICA (radio)
+
         gruposComplementos.forEach(grupo => {
-            // Apenas grupos que NÃO são de múltipla escolha e têm uma seleção
             if (!grupo.multiplaEscolha && selectedRadioComplementos[grupo.id]) {
                 const selectedId = selectedRadioComplementos[grupo.id];
                 const complemento = grupo.complementos.find(c => c.id === selectedId);
@@ -35,7 +26,6 @@ export const usePriceCalculator = (
             }
         });
 
-        // 3. Itera sobre os itens de MÚLTIPLA ESCOLHA (complementos e adicionais)
         Object.entries(selectedExtrasQuantities).forEach(([key, itemQuantity]) => {
             if (itemQuantity > 0) {
                 const [type, id] = key.split('_');
@@ -50,92 +40,98 @@ export const usePriceCalculator = (
                 if (item) {
                     const itemPrice = item.preco ?? item.precoAdicional ?? item.precoBase ?? 0;
                     unitPrice += itemPrice * itemQuantity;
-                } else {
-                    console.warn(`Item com chave ${key} não foi encontrado nos dados.`); // LOG
                 }
             }
         });
         return unitPrice * quantity;
 
-}, [product, gruposComplementos, gruposAdicionais, selectedExtrasQuantities, selectedRadioComplementos, quantity]);
+    }, [product, gruposComplementos, gruposAdicionais, selectedExtrasQuantities, selectedRadioComplementos, quantity]);
 
     const handleAddToCartWithValidation = useCallback(() => {
-    // A lógica de validação de grupos obrigatórios está correta.
-    const gruposObrigatoriosNaoAtendidos = gruposComplementos.filter(grupo => {
-        if (!grupo.obrigatorio) return false;
+        // --- VALIDAÇÃO ---
+        for (const grupo of gruposComplementos) {
+            // Caso 1: Grupo de ESCOLHA ÚNICA
+            if (!grupo.multiplaEscolha) {
+                if (grupo.obrigatorio && !selectedRadioComplementos[grupo.id]) {
+                    Swal.fire({
+                        title: "Seleção obrigatória!",
+                        text: `Você precisa selecionar uma opção no grupo "${grupo.nome}".`,
+                        icon: "warning",
+                        confirmButtonText: "OK",
+                        confirmButtonColor: "#d33",
+                    });
+                    return; 
+                }
+            } 
+            // Caso 2: Grupo de MÚLTIPLA ESCOLHA
+            else {
+                const minimoExigido = grupo.quantidadeMinima > 0 ? grupo.quantidadeMinima : (grupo.obrigatorio ? 1 : 0);
 
-        // Para grupos de escolha única (radio)
-        if (!grupo.multiplaEscolha) {
-            return (!selectedRadioComplementos[grupo.id]);
+                if (minimoExigido === 0) continue;
+
+                // CORREÇÃO: Volta a somar as quantidades dos itens
+                const totalQuantidadeNoGrupo = grupo.complementos.reduce((acc, comp) => {
+                    const key = `complemento_${comp.id}`;
+                    return acc + (selectedExtrasQuantities[key] || 0); // Soma a quantidade
+                }, 0);
+
+                if (totalQuantidadeNoGrupo < minimoExigido) {
+                    const mensagemMinimo = minimoExigido === 1 ? "pelo menos 1 item" : `no mínimo ${minimoExigido} itens`;
+                    Swal.fire({
+                        title: "Itens insuficientes!",
+                        text: `O grupo "${grupo.nome}" exige a seleção de ${mensagemMinimo}. Você selecionou ${totalQuantidadeNoGrupo}.`,
+                        icon: "warning",
+                        confirmButtonText: "OK",
+                        confirmButtonColor: "#d33",
+                    });
+                    return; 
+                }
+            }
         }
-        if (grupo.multiplaEscolha) {
-            const totalSelecionadoNoGrupo = grupo.complementos.reduce((acc, comp) => {
-                const key = `complemento_${comp.id}`;
-                return acc + (selectedExtrasQuantities[key] || 0);
-            }, 0);
-            return totalSelecionadoNoGrupo <= 0;
-        }
-        return false;
-    });
-    // Mostra o erro APENAS se o array tiver um ou mais grupos não atendidos.
-    if (gruposObrigatoriosNaoAtendidos.length > 0) { 
-        Swal.fire({
-            title: "Seleção obrigatória!",
-            text: `Por favor, atenda aos requisitos do(s) grupo(s): ${gruposObrigatoriosNaoAtendidos
-                .map((g) => g.nome)
-                .join(", ")}`,
-            icon: "warning",
-            confirmButtonText: "OK",
-            confirmButtonColor: "#d33",
+
+        // --- SE A VALIDAÇÃO PASSAR, MONTA O ARRAY DE ITENS SELECIONADOS ---
+        const selectedItems = [];
+
+        gruposComplementos.forEach(grupo => {
+            if (!grupo.multiplaEscolha && selectedRadioComplementos[grupo.id]) {
+                const selectedId = selectedRadioComplementos[grupo.id];
+                const complemento = grupo.complementos.find(c => c.id === selectedId);
+                if (complemento) {
+                    selectedItems.push({ ...complemento, quantity: 1, grupoNome: grupo.nome });
+                }
+            }
         });
-        return; 
-    }
-    // --- Coleta os complementos e adicionais selecionados ---
-    const selectedItems = [];
-    // 1. Coleta complementos de escolha única (radio)
-    gruposComplementos.forEach(grupo => {
-        if (!grupo.multiplaEscolha && selectedRadioComplementos[grupo.id]) {
-            const selectedId = selectedRadioComplementos[grupo.id];
-            const complemento = grupo.complementos.find(c => c.id === selectedId);
-            if (complemento) {
-                selectedItems.push({ ...complemento, quantity: 1, grupoNome: grupo.nome });
-            }
-        }
-    });
 
-    // 2. Coleta itens de múltipla escolha (complementos e adicionais)
-    Object.entries(selectedExtrasQuantities).forEach(([key, itemQuantity]) => {
-        if (itemQuantity > 0) {
-            const [type, id] = key.split('_');
-            const numericId = parseInt(id, 10);
-            let itemData = null;
-            let grupoNome = '';
+        Object.entries(selectedExtrasQuantities).forEach(([key, itemQuantity]) => {
+            if (itemQuantity > 0) {
+                const [type, id] = key.split('_');
+                const numericId = parseInt(id, 10);
+                let itemData = null;
+                let grupoNome = '';
 
-            if (type === 'complemento') {
-                const grupoPai = gruposComplementos.find(g => g.complementos.some(c => c.id === numericId));
-                if (grupoPai) {
-                    itemData = grupoPai.complementos.find(c => c.id === numericId);
-                    grupoNome = grupoPai.nome;
+                if (type === 'complemento') {
+                    const grupoPai = gruposComplementos.find(g => g.complementos.some(c => c.id === numericId));
+                    if (grupoPai) {
+                        itemData = grupoPai.complementos.find(c => c.id === numericId);
+                        grupoNome = grupoPai.nome;
+                    }
+                } else if (type === 'adicional') {
+                    const grupoPai = gruposAdicionais.find(g => g.adicionais.some(a => a.id === numericId));
+                    if (grupoPai) {
+                        itemData = grupoPai.adicionais.find(a => a.id === numericId);
+                        grupoNome = grupoPai.nome;
+                    }
                 }
-            } else if (type === 'adicional') {
-                const grupoPai = gruposAdicionais.find(g => g.adicionais.some(a => a.id === numericId));
-                if (grupoPai) {
-                    itemData = grupoPai.adicionais.find(a => a.id === numericId);
-                    grupoNome = grupoPai.nome;
+                if (itemData) {
+                    selectedItems.push({ ...itemData, quantity: itemQuantity, grupoNome: grupoNome });
                 }
             }
-            if (itemData) {
-                selectedItems.push({ ...itemData, quantity: itemQuantity, grupoNome: grupoNome });
-            }
-        }
-    });
+        });
+        
+        addToCart(product, quantity, selectedItems);
+        setShowCartModal(true);
 
-    // Adiciona ao carrinho e exibe o modal
-    addToCart(product, quantity, selectedItems);
-    setShowCartModal(true);
-    
-}, [product, gruposComplementos, gruposAdicionais, selectedExtrasQuantities, selectedRadioComplementos, quantity, addToCart, setShowCartModal]);
+    }, [product, gruposComplementos, gruposAdicionais, selectedExtrasQuantities, selectedRadioComplementos, quantity, addToCart, setShowCartModal]);
 
     return { calculateTotalPrice, handleAddToCartWithValidation };
 };
-

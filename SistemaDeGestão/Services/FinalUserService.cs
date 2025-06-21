@@ -21,6 +21,10 @@ namespace SistemaDeGestao.Services
             var finalUser = await _context.FinalUsers
                 .FirstOrDefaultAsync(c => c.Telefone == telefone);
 
+            if (finalUser == null)
+            {
+                return null;
+            }
             if (finalUser != null)
             {
                 _context.Update(finalUser);

@@ -261,9 +261,10 @@ namespace SistemaDeGestao.Services
             }
 
             // --- PASSO 4: Calcular o valor final do pagamento ---
+            var taxaEntregaReal = await _restauranteService.ObterTaxaDeEntregaAsync(pedido.RestauranteId);
 
             pedido.Pagamento.SubTotal = subTotalPedido;
-            pedido.Pagamento.TaxaEntrega = pedidoDTO.Pagamento.TaxaEntrega ?? 0;
+            pedido.Pagamento.TaxaEntrega = taxaEntregaReal;
             pedido.Pagamento.Desconto = pedidoDTO.Pagamento.Desconto ?? 0;
             pedido.Pagamento.ValorTotal = pedido.Pagamento.SubTotal + pedido.Pagamento.TaxaEntrega - pedido.Pagamento.Desconto;
         }

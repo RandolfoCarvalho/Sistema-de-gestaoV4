@@ -58,7 +58,6 @@ export const SignalRProvider = ({ children }) => {
 // Hook para usar o SignalRContext
 const useSignalR = () => useContext(SignalRContext);
 
-// Certifique-se de que não há outras exportações para esses identificadores
-export { useSignalR }; // Mantém a exportação apenas do hook
+export { useSignalR };
 
-export default SignalRProvider; // Exportação padrão do provider
+export default SignalRProvider;

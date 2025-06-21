@@ -4,7 +4,7 @@ import axios from 'axios';
 import Modal from 'react-modal';
 
 // Context Providers
-import { CartProvider } from './components/Carrinho/CartContext';
+import { CartProvider } from './components/Context/CartContext';
 import { SignalRProvider } from './services/SignalRContext';
 import { StoreProvider } from './components/Context/StoreContext';
 
@@ -26,7 +26,6 @@ import PerfilLoja from "./components/Perfil/PerfilLoja";
 import Sidebar from './components/Admin/Sidebar/Sidebar';
 import HeaderAdmin from './components/Admin/Header/Header';
 //import RestaurantDashboard from './components/Admin/Stats/RestaurantDashboard';
-import ProtectedStore from './components/ProtectedStore';
 import RestaurantDashboard from './components/Admin/Dashboard/OrderDashboard';
 import Create from './components/Admin/Stats/CreateProduct';
 import CriarGrupoAdicionais from './components/Admin/Stats/CreateAddGroup';
@@ -66,17 +65,14 @@ const App = () => {
                             <div className={darkMode ? "dark" : ""}>
                                 <Routes>
                                  <Route path="/" element={<Produtos />} />
-                                    <Route element={<ProtectedStore/>}>
-                                        {/* Public Routes */}
-                                        <Route path="/loja/:nomeDaLoja" element={<Produtos />} />
-                                        <Route path="/product/:id" element={<ProductDetails />} />
-                                        <Route path="/checkout" element={<CheckoutPage />} />
-                                        <Route path="/auth/login" element={<Autenticacao />} />
-                                        <Route path="/pedidos" element={<Pedidos />} />
-                                        <Route path="/pedidos/:numeroPedido" element={<PedidosDetalhes />} />
-                                        <Route path="/promo" element={<Promocoes />} />
-                                        <Route path='/loja/:nomeDaLoja/perfil' element={<PerfilLoja />} />
-                                    </Route>
+                                    <Route path="/loja/:nomeDaLoja" element={<Produtos />} />
+                                    <Route path="/product/:id" element={<ProductDetails />} />
+                                    <Route path="/checkout" element={<CheckoutPage />} />
+                                    <Route path="/auth/login" element={<Autenticacao />} />
+                                    <Route path="/pedidos" element={<Pedidos />} />
+                                    <Route path="/pedidos/:numeroPedido" element={<PedidosDetalhes />} />
+                                    <Route path="/promo" element={<Promocoes />} />
+                                    <Route path='/loja/:nomeDaLoja/perfil' element={<PerfilLoja />} />
                                     {/* Admin Routes */}
                                     <Route element={<AdminLayout />}>
                                         <Route path="/admin" element={

@@ -50,40 +50,19 @@ const OrderHistory = () => {
         }
     };
     
-    const handleLoginSuccess = async (userData) => {
-        setShowModal(false);
-        Swal.fire({
-            title: 'Verificando dados...',
-            allowOutsideClick: false,
-            didOpen: () => Swal.showLoading()
-        });
+    const handleLoginSuccess = (userDataWithToken) => {
+        // A userDataWithToken já contém id, nome, telefone e o TOKEN
+        const { id, nome, telefone, token } = userDataWithToken;
+        // Salvar os dados e o token
+        localStorage.setItem("userId", id);
+        localStorage.setItem("FinalUserName", nome);
+        localStorage.setItem("FinalUserTelefone", telefone);
+        localStorage.setItem("jwtToken", token);
 
-        try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/login`, { Telefone: userData.telefone });
-            const { id, nome, telefone } = response.data;
-            localStorage.setItem("userId", id);
-            localStorage.setItem("FinalUserName", nome);
-            localStorage.setItem("FinalUserTelefone", telefone);
-            setUser({ id, nome, telefone });
-            Swal.close();
+        setUser({ id, nome, telefone });
 
-        } catch (error) {
-            if (error.response && error.response.status === 404) {
-                try {
-                    const registerResponse = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/register`, { Nome: userData.nome, Telefone: userData.telefone });
-                    const { id, nome, telefone } = registerResponse.data;
-                    localStorage.setItem("userId", id);
-                    localStorage.setItem("FinalUserName", nome);
-                    localStorage.setItem("FinalUserTelefone", telefone);
-                    setUser({ id, nome, telefone });
-                    Swal.close();
-                } catch (registerError) {
-                    Swal.fire({ title: "Erro no Cadastro", text: "Não foi possível realizar seu cadastro.", icon: "error" });
-                }
-            } else {
-                Swal.fire({ title: "Erro", text: "Não foi possível verificar seus dados.", icon: "error" });
-            }
-        }
+        setShowModal(false); 
+        navigate("/pedidos");
     };
 
     const viewOrderDetails = (order) => {
@@ -148,10 +127,15 @@ const OrderHistory = () => {
                         const { date, time } = formatDate(order.dataPedido);
                         const statusInfo = getStatusInfo(order.status);
                         const orderNumber = formatOrderNumber(order.numero);
+
+                        const whatsappMessage = `Acompanhar pedido número ${orderNumber}`;
+
+                        const encodedWhatsappMessage = encodeURIComponent(whatsappMessage);
+
                         return (
                             <div key={order.id} className="bg-white rounded-lg shadow mb-4 p-4">
                                <div className="flex justify-between items-center mb-2">
-                                    <h2 className="text-lg font-bold">Pedido #{orderNumber}</h2>
+                                    <h2 className="text-lg font-bold">Pedido {orderNumber}</h2>
                                     <span className={`${statusInfo.color} text-white px-2 py-1 rounded text-sm`}>{statusInfo.text}</span>
                                 </div>
                                 <p className="text-sm text-gray-600 mb-3">Em {date} às {time}</p>
@@ -165,7 +149,8 @@ const OrderHistory = () => {
                                 <div className="grid grid-cols-2 gap-3">
                                     <button onClick={() => viewOrderDetails(order)} className="border border-blue-500 text-blue-500 py-3 rounded-lg font-medium flex items-center justify-center gap-2">Detalhes</button>
                                     {storeInfo?.phoneNumber && (
-                                        <a href={`https://wa.me/55${storeInfo.phoneNumber}?text=Acompanhar pedido número ${orderNumber}`} target="_blank" rel="noopener noreferrer" className="bg-green-500 text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 text-base">
+                                        // 3. Use a variável com a mensagem codificada no link.
+                                        <a href={`https://wa.me/55${storeInfo.phoneNumber}?text=${encodedWhatsappMessage}`} target="_blank" rel="noopener noreferrer" className="bg-green-500 text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 text-base">
                                             Acompanhar
                                         </a>
                                     )}

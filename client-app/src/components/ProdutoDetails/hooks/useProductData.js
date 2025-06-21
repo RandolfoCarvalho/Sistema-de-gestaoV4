@@ -30,9 +30,8 @@ export const useProductData = (productId) => {
                 setGruposComplementos(complementos);
                 const adicionais = gruposAdicionaisResponse.data || [];
                 setGruposAdicionais(adicionais);
-                // Inicializa estados de visibilidade
+                
                 initializeOpenStates(complementos, adicionais);
-                // Inicializa estados de seleção
                 initializeSelectionStates(complementos, adicionais);
                 setError(null);
             } catch (error) {
@@ -47,14 +46,12 @@ export const useProductData = (productId) => {
     }, [productId, currentStore]);
 
     const initializeOpenStates = (complementos, adicionais) => {
-        // Inicializa estados de visibilidade para grupos de adicionais
         const initialOpenStateAdicionais = {};
         adicionais.forEach(grupo => {
             initialOpenStateAdicionais[grupo.id] = true;
         });
         setGruposAdicionaisOpen(initialOpenStateAdicionais);
 
-        // Inicializa estados de visibilidade para grupos de complementos
         const initialOpenStateComplementos = {};
         complementos.forEach(grupo => {
             initialOpenStateComplementos[grupo.id] = true;
@@ -65,22 +62,20 @@ export const useProductData = (productId) => {
     const initializeSelectionStates = (complementos, adicionais) => {
         const initialQuantities = {};
 
-         // Adiciona prefixo para ADICIONAIS
         adicionais.forEach(grupo => {
             if (grupo.adicionais && grupo.adicionais.length > 0) {
                 grupo.adicionais.forEach(adicional => {
-                    const key = `adicional_${adicional.id}`; // <-- MUDANÇA
+                    const key = `adicional_${adicional.id}`;
                     initialQuantities[key] = 0;
                 });
             }
         });
 
-        // Adiciona prefixo para COMPLEMENTOS
         complementos.forEach(grupo => {
             if (grupo.multiplaEscolha) {
                 if (grupo.complementos && grupo.complementos.length > 0) {
                     grupo.complementos.forEach(complemento => {
-                        const key = `complemento_${complemento.id}`; // <-- MUDANÇA
+                        const key = `complemento_${complemento.id}`;
                         initialQuantities[key] = 0;
                     });
                 }
@@ -88,11 +83,9 @@ export const useProductData = (productId) => {
         });
 
         setSelectedExtrasQuantities(initialQuantities);
-
-        // Inicializa seleções para complementos de escolha única
         const initialRadioSelections = {};
         complementos.forEach(grupo => {
-            if ((grupo.quantidadeMinima || 0) <= 1) {
+            if (!grupo.multiplaEscolha) {
                 initialRadioSelections[grupo.id] = null;
             }
         });
@@ -100,40 +93,45 @@ export const useProductData = (productId) => {
     };
 
     const toggleGrupoAdicional = (grupoId) => {
-        setGruposAdicionaisOpen(prev => ({
-            ...prev,
-            [grupoId]: !prev[grupoId]
-        }));
+        setGruposAdicionaisOpen(prev => ({ ...prev, [grupoId]: !prev[grupoId] }));
     };
 
     const toggleGrupoComplemento = (grupoId) => {
-        setGruposComplementosOpen(prev => ({
-            ...prev,
-            [grupoId]: !prev[grupoId]
-        }));
+        setGruposComplementosOpen(prev => ({ ...prev, [grupoId]: !prev[grupoId] }));
     };
 
-    const handleQuantityChange = (item, increment, type) => { // <-- MUDANÇA: adicionado 'type'
-        // Cria a chave única com o prefixo
-        const uniqueKey = `${type}_${item.id}`; // <-- MUDANÇA
+    const handleQuantityChange = (item, increment, type) => {
+        const uniqueKey = `${type}_${item.id}`;
 
         setSelectedExtrasQuantities(prev => {
-            const currentQuantity = prev[uniqueKey] || 0; // <-- MUDANÇA: usa a chave única
-            const maxQuantity = item.maximoPorProduto || 1;
-            let newQuantity;
+            // CORREÇÃO: Lógica para bloquear incremento se a SOMA das quantidades do grupo for atingida
+            if (increment && type === 'complemento') {
+                const parentGroup = gruposComplementos.find(g => g.complementos.some(c => c.id === item.id));
+                if (parentGroup && parentGroup.multiplaEscolha && parentGroup.quantidadeMaxima > 0) {
+                    const totalQuantityInGroup = parentGroup.complementos.reduce((acc, comp) => {
+                        return acc + (prev[`complemento_${comp.id}`] || 0);
+                    }, 0);
+                    
+                    if (totalQuantityInGroup >= parentGroup.quantidadeMaxima) {
+                        return prev; // Bloqueia o incremento
+                    }
+                }
+            }
 
+            const currentQuantity = prev[uniqueKey] || 0;
+            const maxItemQuantity = item.maximoPorProduto || 1;
+            let newQuantity;
             if (increment) {
-                newQuantity = Math.min(currentQuantity + 1, maxQuantity);
+                newQuantity = Math.min(currentQuantity + 1, maxItemQuantity);
             } else {
                 newQuantity = Math.max(0, currentQuantity - 1);
             }
-            
-            const newQuantities = { ...prev };
 
+            const newQuantities = { ...prev };
             if (newQuantity > 0) {
-                newQuantities[uniqueKey] = newQuantity; // <-- MUDANÇA: atualiza a chave única
+                newQuantities[uniqueKey] = newQuantity;
             } else {
-                delete newQuantities[uniqueKey]; // Opcional, mas bom para limpar o estado
+                delete newQuantities[uniqueKey];
             }
 
             return newQuantities;
@@ -143,7 +141,7 @@ export const useProductData = (productId) => {
     const handleRadioComplementoChange = (grupoId, complementoId) => {
         setSelectedRadioComplementos(prev => ({
             ...prev,
-            [grupoId]: complementoId
+            [grupoId]: prev[grupoId] === complementoId ? null : complementoId
         }));
     };
 

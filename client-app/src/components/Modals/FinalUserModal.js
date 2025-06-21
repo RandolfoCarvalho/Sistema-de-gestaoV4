@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
 
@@ -9,30 +9,39 @@ const FinalUserModal = ({ isOpen, onClose, onSuccess }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    // Efeito para limpar o estado quando o modal abre
+    useEffect(() => {
+        if (isOpen) {
+            setNome('');
+            setTelefone('');
+            setIsNomeRequired(false);
+            setError('');
+            setLoading(false);
+        }
+    }, [isOpen]);
+
     const handleTelefoneChange = (e) => {
         setTelefone(e.target.value);
+        // Se o usuário mexer no telefone, a verificação anterior pode não ser mais válida.
         if (isNomeRequired) {
             setIsNomeRequired(false);
-            setNome('');
         }
     };
 
+    // A função onBlur agora só serve para UX, para mostrar o campo de nome.
     const handleTelefoneBlur = async () => {
         const telefoneNumerico = telefone.replace(/\D/g, '');
         if (telefoneNumerico.length !== 11) return;
 
-        setLoading(true);
-        setError('');
+        // Não precisa de loading aqui para não travar a UI
         try {
+            // Verifica silenciosamente. Não faz login aqui.
             await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/login`, { Telefone: telefoneNumerico });
+            setIsNomeRequired(false); // Garante que se o usuário existir, o campo nome não aparece
         } catch (err) {
             if (err.response && err.response.status === 404) {
-                setIsNomeRequired(true);
-            } else {
-                setError('Não foi possível verificar o telefone. Tente novamente.');
+                setIsNomeRequired(true); // Usuário não existe, precisa de nome
             }
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -44,7 +53,7 @@ const FinalUserModal = ({ isOpen, onClose, onSuccess }) => {
         const telefoneNumerico = telefone.replace(/\D/g, '');
 
         if (!/^\d{11}$/.test(telefoneNumerico)) {
-            setError('Formato de telefone inválido. Deve conter exatamente 11 dígitos (DDD + número).');
+            setError('Formato de telefone inválido (DDD + 9 dígitos).');
             setLoading(false);
             return;
         }
@@ -55,21 +64,46 @@ const FinalUserModal = ({ isOpen, onClose, onSuccess }) => {
             return;
         }
 
-        const userData = {
-            nome: nome,
-            telefone: telefoneNumerico
-        };
+        try {
+            let response;
+            if (isNomeRequired) {
+                // Cenário de REGISTRO
+                response = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/register`, { 
+                    Nome: nome, 
+                    Telefone: telefoneNumerico 
+                });
+            } else {
+                // Cenário de LOGIN
+                response = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/login`, { 
+                    Telefone: telefoneNumerico 
+                });
+            }
+            
+            // Se chegou aqui, a API retornou 200 (login) ou 201 (register)
+            const userDataWithToken = response.data; // A resposta já contém id, nome, telefone e token
 
-        if (onSuccess) {
-            onSuccess(userData);
+            if (onSuccess) {
+                onSuccess(userDataWithToken); // Passa os dados JÁ AUTENTICADOS para o pai
+            }
+            
+            // Não precisa mais chamar handleClose, o pai fará isso.
+
+        } catch (err) {
+            if (err.response && err.response.status === 404) {
+                // Se o login falhou com 404, o onBlur pode ter falhado, então pedimos o nome
+                setIsNomeRequired(true);
+                setError('Parece que é sua primeira vez! Por favor, informe seu nome.');
+            } else {
+                 const errorMessage = err.response?.data?.message || 'Ocorreu um erro. Tente novamente.';
+                 setError(errorMessage);
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
+    // handleClose foi simplificado, pois a limpeza de estado agora é feita pelo useEffect
     const handleClose = () => {
-        setNome('');
-        setTelefone('');
-        setIsNomeRequired(false);
-        setError('');
         onClose();
     };
 
@@ -77,7 +111,7 @@ const FinalUserModal = ({ isOpen, onClose, onSuccess }) => {
         <Modal
             isOpen={isOpen}
             onRequestClose={handleClose}
-            shouldCloseOnOverlayClick={true}
+            shouldCloseOnOverlayClick={!loading}
             contentLabel="Identifique-se"
             className="bg-white p-6 rounded-lg shadow-xl max-w-md w-11/12 mx-auto my-20 focus:outline-none"
             overlayClassName="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
@@ -86,10 +120,7 @@ const FinalUserModal = ({ isOpen, onClose, onSuccess }) => {
             <div className="flex flex-col">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-semibold text-gray-800">Identifique-se para continuar</h2>
-                    <button
-                        onClick={handleClose}
-                        className="text-gray-500 hover:text-gray-800"
-                    >
+                    <button onClick={handleClose} className="text-gray-500 hover:text-gray-800" disabled={loading}>
                         ✕
                     </button>
                 </div>
@@ -145,17 +176,11 @@ const FinalUserModal = ({ isOpen, onClose, onSuccess }) => {
                         type="submit"
                         disabled={loading}
                         className={`w-full py-3 rounded-md font-semibold text-white transition-colors duration-200 ${
-                            loading
-                                ? 'bg-gray-400 cursor-not-allowed'
-                                : 'bg-blue-600 hover:bg-blue-700'
+                            loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
                         }`}
                     >
                         {loading ? 'Aguarde...' : 'Continuar'}
                     </button>
-
-                    <p className="text-xs text-center text-gray-500 pt-2">
-                        Seus dados estão seguros conosco e serão usados apenas para o seu pedido.
-                    </p>
                 </form>
             </div>
         </Modal>

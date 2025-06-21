@@ -54,39 +54,73 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
         });
 
         try {
-            // Tenta fazer login
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/login`, { Telefone: userData.telefone });
-            const { id, nome, telefone } = response.data;
-            
-            // Atualiza TUDO após o sucesso
-            setUserId(id);
-            localStorage.setItem("userId", id);
-            localStorage.setItem("FinalUserName", nome);
-            localStorage.setItem("FinalUserTelefone", telefone);
-            setFormData(prev => ({ ...prev, FinalUserName: nome, FinalUserTelefone: telefone, FinalUserId: id }));
-
-            Swal.fire({ title: "Bem-vindo(a) de volta!", text: "Seus dados foram carregados. Continue com seu pedido.", icon: "success", timer: 2000, showConfirmButton: false });
-        } catch (error) {
-            if (error.response && error.response.status === 404) {
-                // Se não encontrou, tenta registrar
-                try {
-                    const registerResponse = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/register`, { Nome: userData.nome, Telefone: userData.telefone });
-                    const { id, nome, telefone } = registerResponse.data;
-
-                    // Atualiza TUDO após o sucesso
-                    setUserId(id);
-                    localStorage.setItem("userId", id);
-                    localStorage.setItem("FinalUserName", nome);
-                    localStorage.setItem("FinalUserTelefone", telefone);
-                    setFormData(prev => ({ ...prev, FinalUserName: nome, FinalUserTelefone: telefone, FinalUserId: id }));
-
-                    Swal.fire({ title: "Cadastro realizado!", text: "Seja bem-vindo(a)! Continue com seu pedido.", icon: "success", timer: 2000, showConfirmButton: false });
-                } catch (registerError) {
-                    Swal.fire({ title: "Erro no Cadastro", text: "Não foi possível realizar seu cadastro. Verifique os dados e tente novamente.", icon: "error" });
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/login`,
+                { Telefone: userData.telefone },
+                {
+                    validateStatus: () => true,
                 }
-            } else {
-                Swal.fire({ title: "Erro", text: "Não foi possível verificar seus dados. Tente novamente mais tarde.", icon: "error" });
+            );
+            if (response.status === 200) {
+                const { id, nome, telefone } = response.data;
+                setUserId(id);
+                localStorage.setItem("userId", id);
+                localStorage.setItem("FinalUserName", nome);
+                localStorage.setItem("FinalUserTelefone", telefone);
+                setFormData(prev => ({
+                    ...prev,
+                    FinalUserName: nome,
+                    FinalUserTelefone: telefone,
+                    FinalUserId: id
+                }));
+                Swal.fire({
+                    title: "Bem-vindo(a) de volta!",
+                    text: "Seus dados foram carregados. Continue com seu pedido.",
+                    icon: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
             }
+            else if (response.status === 404) {
+                // Usuário não encontrado, faz o registro
+                const registerResponse = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/register`, {
+                    Nome: userData.nome,
+                    Telefone: userData.telefone
+                });
+                const { id, nome, telefone } = registerResponse.data;
+                setUserId(id);
+                localStorage.setItem("userId", id);
+                localStorage.setItem("FinalUserName", nome);
+                localStorage.setItem("FinalUserTelefone", telefone);
+                setFormData(prev => ({
+                    ...prev,
+                    FinalUserName: nome,
+                    FinalUserTelefone: telefone,
+                    FinalUserId: id
+                }));
+
+                Swal.fire({
+                    title: "Cadastro realizado!",
+                    text: "Seja bem-vindo(a)! Continue com seu pedido.",
+                    icon: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+            else {
+                Swal.fire({
+                    title: "Erro",
+                    text: "Não foi possível verificar seus dados. Tente novamente mais tarde.",
+                    icon: "error"
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: "Erro inesperado",
+                text: "Algo deu errado na verificação de login.",
+                icon: "error"
+            });
+            console.error("Erro inesperado:", error);
         }
     };
 
@@ -95,7 +129,7 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
         return {
             FinalUserName: formData.FinalUserName,
             FinalUserTelefone: formData.FinalUserTelefone,
-            FinalUserId: userId, // Garante que o ID do estado seja usado
+            FinalUserId: userId,
             NomeDaLoja: currentStore,
             RestauranteId: Number(localStorage.getItem('restauranteId')),
             Observacoes: formData.observacoes || '',

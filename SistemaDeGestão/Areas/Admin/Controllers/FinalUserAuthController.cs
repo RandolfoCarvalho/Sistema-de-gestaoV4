@@ -91,6 +91,26 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
         }
 
         /// <summary>
+        /// Verifica se o usuario existe.
+        /// </summary>
+        /// <returns>se foi encontrado.</returns>
+        [HttpPost("Exists")]
+        [ProducesResponseType(typeof(object), 200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> Exists([FromBody] string telefone)
+        {
+            if (string.IsNullOrWhiteSpace(telefone))
+                return BadRequest("O telefone é obrigatório.");
+
+            var finalUser = await _clienteService.BuscarPorTelefone(telefone);
+            if (finalUser == null)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
+
+        /// <summary>
         /// Gera um token JWT real e seguro.
         /// </summary>
         private string GerarTokenJwt(FinalUser user)

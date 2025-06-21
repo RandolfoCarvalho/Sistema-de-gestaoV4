@@ -122,6 +122,7 @@ namespace SistemaDeGestao.Services
                 empresaExistente.Estado = empresaAtualizada.Estado ?? empresaExistente.Estado;
                 empresaExistente.Cep = empresaAtualizada.Cep ?? empresaExistente.Cep;
                 empresaExistente.Observacoes = empresaAtualizada.Observacoes ?? empresaExistente.Observacoes;
+                empresaExistente.TaxaEntrega = empresaAtualizada.TaxaEntrega ?? empresaExistente.TaxaEntrega;
 
                 if (empresaAtualizada.HorarioAbertura != TimeSpan.Zero)
                     empresaExistente.HorarioAbertura = empresaAtualizada.HorarioAbertura;
@@ -273,6 +274,20 @@ namespace SistemaDeGestao.Services
             }
         }
 
+        /// <summary>
+        /// Busca a taxa de entrega configurada para um restaurante específico.
+        /// </summary>
+        /// <param name="restauranteId">O ID do restaurante.</param>
+        /// <returns>O valor da taxa de entrega ou 0 se não estiver configurada.</returns>
+        public async Task<decimal> ObterTaxaDeEntregaAsync(int restauranteId)
+        {
+            var taxa = await _context.Empresas
+                .AsNoTracking()
+                .Where(e => e.RestauranteId == restauranteId)
+                .Select(e => e.TaxaEntrega)
+                .FirstOrDefaultAsync();
+            return taxa ?? 0.0m;
+        }
         public async Task<Restaurante?> GetRestauranteByUserIdAsync(ClaimsPrincipal user)
         {
             var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);

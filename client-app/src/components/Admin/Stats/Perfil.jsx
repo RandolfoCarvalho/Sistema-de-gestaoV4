@@ -48,7 +48,8 @@ const Perfil = () => {
                 sexta: true,
                 sabado: false
             },
-            observacoes: ''
+            observacoes: '',
+            taxaEntrega: 0
         },
         mercadoPago: {
             publicKey: '',
@@ -94,7 +95,8 @@ const Perfil = () => {
                         ...empresa,
                         horarioAbertura,
                         horarioFechamento,
-                        diasFuncionamento
+                        diasFuncionamento,
+                        taxaEntrega: empresa.taxaEntrega || 0
                     },
                     mercadoPago: {
                         publicKey: response.data.credenciaisMercadoPago?.publicKey || '',
@@ -525,6 +527,23 @@ const Perfil = () => {
                 onChange={handleEmpresaChange}
               />
             </div>
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="taxaEntrega">
+                  Taxa de Entrega (R$)
+                </label>
+                <input
+                  className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-lg 
+                  focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
+                  id="taxaEntrega"
+                  name="taxaEntrega"
+                  type="number" // Use type="number" para facilitar a entrada
+                  step="0.01"   // Permite centavos
+                  min="0"       // Não permite valores negativos
+                  value={restaurante.empresa?.taxaEntrega || ''}
+                  onChange={handleEmpresaChange}
+                  placeholder="Ex: 5.50"
+                />
+              </div>
           </div>
         );
 

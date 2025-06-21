@@ -33,7 +33,11 @@ const Checkout = () => {
         setIsUserModalOpen, 
         handleUserSuccess, 
         userId,
-    } = useCheckout(cart, cartTotal, currentStore, clearCart, navigate);
+    } = useCheckout(cart, cartTotal, taxaEntrega, currentStore, clearCart, navigate);
+
+    const totalGeral = React.useMemo(() => {
+        return Number(cartTotal) + Number(taxaEntrega);
+    }, [cartTotal, taxaEntrega]);
 
     const [blockCheckoutMessage, setBlockCheckoutMessage] = useState('');
 
@@ -146,7 +150,7 @@ const Checkout = () => {
                             isOpen={showPaymentModal}
                             onClose={() => setShowPaymentModal(false)}
                             paymentMethod={formData.pagamento?.FormaPagamento}
-                            cartTotal={formData.pagamento.ValorTotal}
+                            cartTotal={totalGeral} 
                             onPaymentSuccess={handlePaymentSuccess}
                             preparePedidoDTO={preparePedidoDTO}
                             setIsSubmitting={setIsSubmitting}

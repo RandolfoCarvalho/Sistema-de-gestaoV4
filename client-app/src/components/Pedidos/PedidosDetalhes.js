@@ -3,8 +3,8 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useStore } from '../Context/StoreContext';
 import axios from "axios";
 import {
-    ChevronLeft, PackageCheck, ChefHat, Bike, PartyPopper, Wallet, User,
-    MapPin, Hash, Calendar, Clock, RefreshCw, ShoppingCart, XCircle
+    PackageCheck, ChefHat, Bike, PartyPopper, Wallet, User,
+    MapPin, Hash, RefreshCw, ShoppingCart, XCircle
 } from 'lucide-react';
 import BottomNav from '../BottomNav';
 

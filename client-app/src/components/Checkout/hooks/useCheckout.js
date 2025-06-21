@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) => {
+export const useCheckout = (cart, cartTotal, taxaEntrega, currentStore, clearCart, navigate) => {
     // 👇 Este 'userId' é a nossa chave. Se for null, o usuário não está autenticado.
     const [userId, setUserId] = useState(localStorage.getItem('userId') || null);
     const [isUserModalOpen, setIsUserModalOpen] = useState(false);
@@ -14,7 +14,7 @@ export const useCheckout = (cart, cartTotal, currentStore, clearCart, navigate) 
         RestauranteId: localStorage.getItem('restauranteId') || 1,
         observacoes: '',
         endereco: { Logradouro: '', Numero: '', Complemento: '', Bairro: '', Cidade: '', CEP: '' },
-        pagamento: { SubTotal: cartTotal, TaxaEntrega: 0, Desconto: 0, ValorTotal: cartTotal, FormaPagamento: 'dinheiro' }
+        pagamento: { SubTotal: cartTotal, TaxaEntrega: taxaEntrega, Desconto: 0, ValorTotal: cartTotal + taxaEntrega , FormaPagamento: 'dinheiro' }
     });
     
     const [isSubmitting, setIsSubmitting] = useState(false);

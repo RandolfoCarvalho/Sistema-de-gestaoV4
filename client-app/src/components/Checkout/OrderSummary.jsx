@@ -109,7 +109,7 @@ const OrderSummary = ({ taxaEntrega, cart, cartTotal, updateQuantity, removeFrom
                 </div>
                 <div className="flex justify-between font-bold text-lg pt-2 border-t mt-2">
                     <span>Total</span>
-                    <span className="text-blue-600">{formatCurrency(cartTotal)}</span>
+                    <span className="text-blue-600">{formatCurrency(totalComTaxa)}</span>
                 </div>
             </div>
         </div>

@@ -19,7 +19,6 @@ const useAuthentication = () => {
                 headers: { "Content-Type": "application/json" },
                 withCredentials: true
             });
-
             if (response.status === 200) {
                 // 3. Desestruture a nova resposta do backend
                 const { accessToken, storeName } = response.data;
@@ -40,7 +39,6 @@ const useAuthentication = () => {
             setError("Credenciais inválidas. Por favor, tente novamente.");
         }
     };
-
     return { userName, setUserName, password, setPassword, error, handleSubmit };
 };
 

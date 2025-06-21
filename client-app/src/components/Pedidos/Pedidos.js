@@ -4,7 +4,6 @@ import BottomNav from '../BottomNav';
 import axios from 'axios';
 import { useStore } from '../Context/StoreContext';
 import FinalUserModal from '../Modals/FinalUserModal';
-import Swal from 'sweetalert2';
 
 const OrderHistory = () => {
     const { currentStore, storeInfo } = useStore();

@@ -222,6 +222,14 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .CreateLogger();
 
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.File("Logs/log-.txt",
+                  rollingInterval: RollingInterval.Day,
+                  fileSizeLimitBytes: 10_000_000,
+                  rollOnFileSizeLimit: true,
+                  retainedFileCountLimit: 5) 
+    .CreateLogger();
 builder.Host.UseSerilog();
 
 //OrderHub

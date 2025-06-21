@@ -219,6 +219,7 @@ namespace SistemaDeGestao.Services
                 // Sobrescreve os dados do item com valores seguros do banco
                 item.PrecoUnitario = produtoDb.PrecoVenda;
                 item.NomeProduto = produtoDb.Nome;
+                item.PrecoCusto = produtoDb.PrecoCusto;
                 decimal subTotalItem = item.Quantidade * item.PrecoUnitario;
 
                 // Validação das opções extras do item

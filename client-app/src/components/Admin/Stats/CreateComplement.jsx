@@ -377,6 +377,6 @@ const GerenciamentoComplementos = () => {
             </main>
         </div>
     );
-};
+}; 
 
 export default GerenciamentoComplementos;

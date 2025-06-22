@@ -113,13 +113,6 @@ const Produtos = () => {
                         </div>
                     )}
 
-                    {/* ========================================================= */}
-                    {/* SEÇÃO "MAIS VENDIDOS" RESTAURADA E MELHORADA           */}
-                    {/* ========================================================= */}
-                    {/* Ela só aparece se:
-                        1. Tiver produtos em 'maisVendidos'.
-                        2. O usuário NÃO estiver digitando na busca.
-                    */}
                     {maisVendidos.length > 0 && !searchTerm && (
                         <div className="my-8">
                             <FeaturedProducts products={maisVendidos} />

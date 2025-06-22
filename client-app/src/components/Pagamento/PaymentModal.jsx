@@ -184,7 +184,12 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     };
 
     const handlePixSubmit = (formData) => {
-        const paymentData = { ...formData, FormaPagamento: "pix" };
+        // Arredonda o valor para 2 casas decimas e converte para número
+        const amountArredondado = parseFloat(cartTotal.toFixed(2))
+        const paymentData = { ...formData, 
+            amount: amountArredondado,
+            FormaPagamento: "pix" };
+        console.log("Dados do PIX a serem enviados:", paymentData);
         handleSubmit(processPaymentPix, paymentData);
     };
 

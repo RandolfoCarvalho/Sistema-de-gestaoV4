@@ -150,13 +150,29 @@ namespace SistemaDeGestao.Controllers
 
                 if (resultadoProcessamento.Sucesso)
                 {
-                    _logger.LogInformation("Notificação para TransactionId {TransactionId} processada. Pagamento aprovado. Enviando notificação via SignalR.", transactionId);
+                    _logger.LogInformation("Notificação para TransactionId {TransactionId} processada. [...]", transactionId);
 
-                    await _hubContext.Clients.Group(transactionId).SendAsync("PagamentoAprovado", new
+                    // --- MAPEAMENTO PARA DTO ---
+                    var pedidoEntidade = resultadoProcessamento.Pedido;
+
+                    var notificacaoPayload = new NotificacaoPagamentoAprovadoDTO
                     {
-                        message = "Pagamento aprovado com sucesso!",
-                        pedido = resultadoProcessamento.Pedido
-                    });
+                        Message = "Pagamento aprovado com sucesso!",
+                        Pedido = new PedidoAprovadoDTO
+                        {
+                            Id = pedidoEntidade.Id,
+                            ValorTotal = pedidoEntidade.Pagamento.ValorTotal,
+                            Status = pedidoEntidade.Status.ToString(),
+                            Itens = pedidoEntidade.Itens.Select(item => new ItemPedidoAprovadoDTO
+                            {
+                                NomeProduto = item.Produto.Nome,
+                                Quantidade = item.Quantidade,
+                                PrecoUnitario = item.PrecoUnitario
+                            }).ToList()
+                        }
+                    };
+
+                    await _hubContext.Clients.Group(transactionId).SendAsync("PagamentoAprovado", notificacaoPayload);
                 }
                 else
                 {
@@ -353,6 +369,27 @@ public class ReembolsoRequest
     {
         public bool Sucesso { get; set; }
         public string Mensagem { get; set; }
-        public Pedido Pedido { get; set; } // A entidade Pedido, não o DTO
+        public Pedido Pedido { get; set; } 
     }
 
+    public class NotificacaoPagamentoAprovadoDTO
+    {
+        public string Message { get; set; }
+        public PedidoAprovadoDTO Pedido { get; set; }
+    }
+
+    public class PedidoAprovadoDTO
+    {
+        public int Id { get; set; }
+        public decimal ValorTotal { get; set; }
+        public string Status { get; set; }
+        // Adicione apenas os campos que o frontend precisa ver na confirmação
+        public List<ItemPedidoAprovadoDTO> Itens { get; set; }
+    }
+
+    public class ItemPedidoAprovadoDTO
+    {
+        public string NomeProduto { get; set; }
+        public int Quantidade { get; set; }
+        public decimal PrecoUnitario { get; set; }
+    }

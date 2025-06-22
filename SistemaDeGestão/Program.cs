@@ -28,6 +28,7 @@ using SistemaDeGestao.Interfaces;
 using StackExchange.Redis;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using SistemaDeGestao.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -195,7 +196,7 @@ builder.Services.AddControllers()
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowSpecificOrigin", builder => {
         builder
-            .WithOrigins("https://fomedique.com.br", "https://sistema-de-gestao-v3.vercel.app", "http://localhost:5000")
+            .WithOrigins("https://fomedique.com.br", "https://sistema-de-gestao-v4.vercel.app", "http://localhost:5000")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials()
@@ -214,13 +215,6 @@ builder.Services.AddCors(options => {
             .AllowCredentials();
     });
 }); */
-
-//logs
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
-    .Enrich.FromLogContext()
-    .CreateLogger();
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -286,13 +280,13 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowSpecificOrigin");
 app.UseStaticFiles();
-app.UseCors();
 app.UseAuthentication(); // Adicione isso
 app.UseAuthorization();  // E isso tamb�m
 app.UseSession();
 app.MapControllers();
 //Order Hub
 app.MapHub<OrderHub>("/orderHub");
+app.MapHub<PagamentoPixHub>("/pagamentoPixHub");
 
 app.MapControllerRoute(
     name: "loja",

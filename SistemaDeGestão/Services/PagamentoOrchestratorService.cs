@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using SistemaDeGestao.Controllers;
 using System.Collections.Concurrent;
 using SistemaDeGestao.Interfaces;
+using System.Net.Http.Headers;
 // Esta classe agora contém a lógica de negócio que estava no Controller.
 public class PagamentoOrchestratorService : IPagamentoOrchestratorService
 {
@@ -28,6 +29,7 @@ public class PagamentoOrchestratorService : IPagamentoOrchestratorService
     private readonly ILogger<PagamentoOrchestratorService> _logger;
     private readonly IDistributedCache _cache;
     private readonly IMercadoPagoApiClient _mercadoPagoApiClient;
+    private readonly IHttpClientFactory _httpClientFactory;
 
     // Usaremos um semáforo local para travar o processamento de um mesmo ID de transação *dentro de uma única instância*.
     // O lock distribuído evitará que instâncias diferentes processem ao mesmo tempo.
@@ -41,7 +43,8 @@ public class PagamentoOrchestratorService : IPagamentoOrchestratorService
         IEncryptionService encryptionService,
         ILogger<PagamentoOrchestratorService> logger,
         IDistributedCache cache,
-        IMercadoPagoApiClient mercadoPagoApiClient)
+        IMercadoPagoApiClient mercadoPagoApiClient,
+        IHttpClientFactory httpClientFactory)
     {
         _context = context;
         _mercadoPagoService = mercadoPagoService;
@@ -51,6 +54,7 @@ public class PagamentoOrchestratorService : IPagamentoOrchestratorService
         _logger = logger;
         _cache = cache;
         _mercadoPagoApiClient = mercadoPagoApiClient;
+        _httpClientFactory = httpClientFactory;
     }
 
     #region Métodos de Iniciação de Pagamento
@@ -415,4 +419,73 @@ public class PagamentoOrchestratorService : IPagamentoOrchestratorService
     }
 
     #endregion
+
+    //Mercado Pago pix notification
+    public async Task<WebhookProcessamentoResult> ProcessarNotificacaoPixWebhookAsync(string transactionId)
+    {
+        var pedidoPendente = await _context.PedidosPendentes
+            .FirstOrDefaultAsync(p => p.TransactionId == transactionId);
+
+        if (pedidoPendente == null)
+        {
+            var pedidoExistente = await _context.Pedidos
+                                                .Include(p => p.Pagamento)
+                                                .AnyAsync(p => p.Pagamento.TransactionId == transactionId);
+            if (pedidoExistente)
+            {
+                _logger.LogInformation("Webhook para transactionId {TransactionId} já processado (idempotência).", transactionId);
+                return new WebhookProcessamentoResult { Sucesso = true, Mensagem = "Pedido já existe." };
+            }
+
+            _logger.LogWarning("Pedido pendente com TransactionId {TransactionId} não encontrado no webhook.", transactionId);
+            return new WebhookProcessamentoResult { Sucesso = false, Mensagem = "Pedido pendente não encontrado." };
+        }
+
+        var pedidoDTO = JsonSerializer.Deserialize<PedidoDTO>(pedidoPendente.PedidoJson);
+        if (pedidoDTO == null)
+        {
+            _logger.LogError("Falha ao desserializar PedidoDTO do PedidoPendente com TransactionId {TransactionId}.", transactionId);
+            return new WebhookProcessamentoResult { Sucesso = false, Mensagem = "Erro interno ao ler dados do pedido." };
+        }
+
+        var accessToken = await BuscaCredenciaisAsync(pedidoDTO.RestauranteId);
+        if (string.IsNullOrEmpty(accessToken))
+        {
+            _logger.LogError("Access Token não encontrado para o restaurante {RestauranteId}.", pedidoDTO.RestauranteId);
+            return new WebhookProcessamentoResult { Sucesso = false, Mensagem = "Credenciais de pagamento não configuradas." };
+        }
+
+        var client = _httpClientFactory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+        var response = await client.GetAsync($"https://api.mercadopago.com/v1/payments/{transactionId}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Erro ao verificar status do pagamento {TransactionId} com Mercado Pago. Resposta: {ErrorContent}", transactionId, errorContent);
+            return new WebhookProcessamentoResult { Sucesso = false, Mensagem = "Falha ao confirmar pagamento com o provedor." };
+        }
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+        using var jsonDoc = System.Text.Json.JsonDocument.Parse(responseContent);
+        var status = jsonDoc.RootElement.GetProperty("status").GetString();
+
+        if (status == "approved")
+        {
+            _logger.LogInformation("Pagamento {TransactionId} confirmado como 'approved'. Processando pedido.", transactionId);
+
+            var pedidoFinal = await _pedidoService.CriarPedidoAsync(pedidoDTO);
+
+            _context.PedidosPendentes.Remove(pedidoPendente);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Pedido {PedidoId} criado e pedido pendente {TransactionId} removido com sucesso.", pedidoFinal.Id, transactionId);
+
+            return new WebhookProcessamentoResult { Sucesso = true, Pedido = pedidoFinal };
+        }
+        
+        return new WebhookProcessamentoResult { Sucesso = false, Mensagem = $"Pagamento não aprovado. Status: {status}" };
+        
+    }
 }

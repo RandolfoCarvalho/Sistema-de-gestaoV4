@@ -43,8 +43,7 @@ namespace SistemaDeGestao.Services
                     transaction_amount = pagamento.Amount,
                     payment_method_id = "pix",
                     description = "Pedido via PIX",
-                    // URL de notificação completa e correta
-                    //notification_url = "https://api.fomedique.com.br/api/1.0/MercadoPago/notificacaoMercadoPago",
+                    notification_url = "https://api.fomedique.com.br/api/1.0/MercadoPago/notificacao",
                     payer = new
                     {
                         email = pagamento.PayerEmail,
@@ -70,7 +69,6 @@ namespace SistemaDeGestao.Services
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var doc = JsonDocument.Parse(responseContent);
 
-                // Obtém o ID do pagamento - esta é a referência principal
                 var paymentId = doc.RootElement.GetProperty("id").GetInt64().ToString();
                 var valor = doc.RootElement.GetProperty("transaction_amount").GetDecimal();
 
@@ -84,10 +82,8 @@ namespace SistemaDeGestao.Services
                     .GetProperty("transaction_data")
                     .GetProperty("qr_code").GetString();
 
-                // Importante: Sempre usar o ID do pagamento como TransactionId para consistência
                 pedidoDTO.Pagamento.TransactionId = paymentId;
 
-                // Salva o pedido pendente com o ID do pagamento
                 var pedidoPendente = new PedidoPendente
                 {
                     TransactionId = paymentId,
@@ -106,11 +102,11 @@ namespace SistemaDeGestao.Services
                     QrCodeBase64 = qrCodeBase64,
                     QrCodeString = qrCode,
                     ValorTotal = valor,
-                    // Usar sempre o mesmo ID para evitar confusão
                     TransactionId = paymentId
                 };
             }
         }
+        
         public async Task<PaymentResponseDTO> ProcessPayment(PagamentoCartaoDTO paymentData, PedidoDTO pedidoDTO, string accessToken)
         {
             await VerificarDisponbilidadeProduto(pedidoDTO);

@@ -14,6 +14,7 @@ namespace SistemaDeGestao.Interfaces
         Task<object> ObterStatusPagamentoClienteAsync(long pagamentoId, int restauranteId);
         Task ProcessarNotificacaoWebhookAsync(string transactionId);
         Task<object> VerificarStatusPagamentoPollingAsync(string transactionId);
+        Task<WebhookProcessamentoResult> ProcessarNotificacaoPixWebhookAsync(string transactionId);
     }
 }
 

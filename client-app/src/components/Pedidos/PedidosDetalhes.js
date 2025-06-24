@@ -100,14 +100,14 @@ const OrderItemCard = ({ item }) => (
         <div className="flex-1">
             <div className="flex justify-between">
                 <h4 className="font-semibold text-gray-800 pr-2">{item.quantidade}x {item.nomeProduto}</h4>
-                <p className="font-semibold text-gray-800">{formatCurrency(item.precoUnitario * item.quantidade)}</p>
+                <p className="font-semibold text-gray-800">{formatCurrency(item.precoUnitario)}</p>
             </div>
             {item.opcoesExtras && item.opcoesExtras.length > 0 && (
                 <div className="mt-2 p-2 bg-gray-50 rounded-md text-xs text-gray-600 space-y-1">
                     {item.opcoesExtras.map((extra, idx) => (
                         <div key={idx} className="flex justify-between">
                            <span>+ {extra.quantidade}x {extra.nome}</span>
-                           {extra.preco > 0 && <span>{formatCurrency(extra.preco)}</span>}
+                           {extra.precoUnitario > 0 && <span>{formatCurrency(extra.precoUnitario)}</span>}
                         </div>
                     ))}
                 </div>
@@ -164,7 +164,6 @@ const OrderDetails = () => {
     if (loading) {
         return <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-500">Carregando detalhes...</div>;
     }
-
     if (!orderData) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4 text-center">

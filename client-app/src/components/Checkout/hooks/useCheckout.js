@@ -135,7 +135,7 @@ export const useCheckout = (cart, cartTotal, taxaEntrega, currentStore, clearCar
             Observacoes: formData.observacoes || '',
             Endereco: { Logradouro: formData.endereco?.Logradouro || '', Numero: formData.endereco?.Numero || '', Complemento: formData.endereco?.Complemento || '', Bairro: formData.endereco?.Bairro || '', Cidade: formData.endereco?.Cidade || '', CEP: formData.endereco?.CEP || '' },
             Pagamento: { SubTotal: cartTotal, TaxaEntrega: formData.pagamento?.TaxaEntrega || 0, Desconto: formData.pagamento?.Desconto || 0, ValorTotal: valorTotalCalculadoFrontend, FormaPagamento: currentPaymentMethod },
-            Itens: cart.map(item => ({ ProdutoId: item.id, NomeProduto: item.nome || item.title || '', Quantidade: item.quantity, PrecoUnitario: 0, SubTotal: 0, PrecoCusto: 0, Observacoes: item.observacoes || '', OpcoesExtras: Array.isArray(item.selectedExtras) ? item.selectedExtras.map(extra => ({ TipoOpcao: extra.type === 'adicional' ? 1 : 0, ReferenciaId: extra.id, Nome: extra.nome, Quantidade: extra.quantity, PrecoUnitario: 0 })) : [] }))
+            Itens: cart.map(item => ({ ProdutoId: item.id, NomeProduto: item.nome || item.title || '', Quantidade: item.quantity, PrecoUnitario: 0, SubTotal: 0, PrecoCusto: 0, Observacoes: item.observacoes || '', OpcoesExtras: Array.isArray(item.selectedExtras) ? item.selectedExtras.map(extra => ({ TipoOpcao: extra.type === 'adicional' ? 1 : 0, ReferenciaId: extra.id, Nome: extra.nome, Quantidade: extra.quantity * item.quantity, PrecoUnitario: 0 })) : [] }))
         };
     };
 

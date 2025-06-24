@@ -1,6 +1,4 @@
-﻿// Arquivo: OrderSummary.js
-import React from "react";
-import { Package, Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
+﻿import { Package, Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
 
 const OrderSummary = ({ taxaEntrega, cart, cartTotal, updateQuantity, removeFromCart }) => {
     const totalComTaxa = Number(cartTotal) + Number(taxaEntrega);
@@ -9,7 +7,6 @@ const OrderSummary = ({ taxaEntrega, cart, cartTotal, updateQuantity, removeFrom
         if (isNaN(numericValue)) return "R$ 0,00";
         return `R$ ${numericValue.toFixed(2).replace('.', ',')}`;
     };
-
     return (
         <div className="bg-white rounded-xl shadow-lg p-6 space-y-6 sticky top-6 border border-gray-100">
             {/* ... cabeçalho do resumo ... */}
@@ -38,7 +35,7 @@ const OrderSummary = ({ taxaEntrega, cart, cartTotal, updateQuantity, removeFrom
                                     <Trash2 size={16} />
                                 </button>
                             </div>
-                            
+
                             {/* --- CONTROLES DE QUANTIDADE E PREÇO DO PRODUTO BASE --- */}
                             <div className="flex justify-between items-center mt-2">
                                 {/* MUDANÇA: Exibe apenas o preço base do produto, sem os extras. */}
@@ -63,17 +60,20 @@ const OrderSummary = ({ taxaEntrega, cart, cartTotal, updateQuantity, removeFrom
                                     </button>
                                 </div>
                             </div>
-                            
+
                             {/* --- SEÇÃO PARA EXIBIR ITENS SELECIONADOS --- */}
                             {item.selectedExtras && item.selectedExtras.length > 0 && (
                                 <div className="mt-3 pt-2 border-t border-dashed border-gray-200 space-y-1">
                                     {item.selectedExtras.map((extra, index) => {
                                         const extraPrice = extra.preco ?? extra.precoBase ?? 0;
-                                        
+                                        // --- MUDANÇA AQUI: Calcule a quantidade total do extra para exibição ---
+                                        const totalExtraQuantity = extra.quantity * item.quantity;
+
                                         return (
                                             <div key={`${item.cartItemId}-${extra.id}-${index}`} className="flex justify-between items-center text-xs text-gray-500 pl-2">
                                                 <span>
-                                                    {extra.quantity > 1 && `${extra.quantity}x `}
+                                                    {/* Use totalExtraQuantity para a exibição */}
+                                                    {totalExtraQuantity > 1 && `${totalExtraQuantity}x `}
                                                     {extra.nome}
                                                 </span>
                                                 {extraPrice > 0 && (

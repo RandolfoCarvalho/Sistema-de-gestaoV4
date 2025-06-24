@@ -213,14 +213,15 @@ namespace SistemaDeGestao.Services
                 if (!produtoDb.Ativo)
                     throw new InvalidOperationException($"O produto '{produtoDb.Nome}' não está disponível.");
 
-                if (produtoDb.EstoqueAtual < item.Quantidade)
+                // O estoque deve ser verificado após o cálculo da quantidade total do produto principal
+                if (produtoDb.EstoqueAtual < item.Quantidade) // item.Quantidade é a quantidade do produto principal
                     throw new InvalidOperationException($"Estoque insuficiente para '{produtoDb.Nome}'.");
 
                 // Sobrescreve os dados do item com valores seguros do banco
                 item.PrecoUnitario = produtoDb.PrecoVenda;
                 item.NomeProduto = produtoDb.Nome;
                 item.PrecoCusto = produtoDb.PrecoCusto;
-                decimal subTotalItem = item.Quantidade * item.PrecoUnitario;
+                decimal subTotalItemAtual = item.Quantidade * item.PrecoUnitario; // Preço base do item principal
 
                 // Validação das opções extras do item
                 if (item.OpcoesExtras != null && item.OpcoesExtras.Any())
@@ -238,7 +239,9 @@ namespace SistemaDeGestao.Services
                             // Sobrescreve o preço e nome com o valor seguro do banco
                             opcao.PrecoUnitario = adicionalDb.PrecoBase;
                             opcao.Nome = adicionalDb.Nome;
-                            subTotalItem += opcao.PrecoTotal;
+                            // **** AQUI ESTÁ A MUDANÇA CRÍTICA PARA O BACKEND ****
+                            // Recalcula o PrecoTotal do adicional com base na sua Quantidade e PrecoUnitario
+                            subTotalItemAtual += opcao.PrecoTotal;
                         }
                         else if (opcao.TipoOpcao == TipoOpcaoExtra.Complemento)
                         {
@@ -251,13 +254,15 @@ namespace SistemaDeGestao.Services
                             // Garante que complementos não têm custo e atualiza o nome
                             opcao.PrecoUnitario = complementoDb.Preco;
                             opcao.Nome = complementoDb.Nome;
-                            subTotalItem += opcao.PrecoTotal;
+                            // **** AQUI ESTÁ A MUDANÇA CRÍTICA PARA O BACKEND ****
+                            // Recalcula o PrecoTotal do complemento com base na sua Quantidade e PrecoUnitario
+                            subTotalItemAtual += opcao.PrecoTotal; 
                         }
                     }
                 }
 
                 // Define o subtotal final do item e o acumula no total do pedido
-                item.SubTotal = subTotalItem;
+                item.SubTotal = subTotalItemAtual;
                 subTotalPedido += item.SubTotal;
             }
 
@@ -382,7 +387,6 @@ namespace SistemaDeGestao.Services
 
         public async Task DeleteAll()
         {
-            // Cuidado: Este método apaga TODOS os pedidos. Use apenas em ambiente de desenvolvimento.
             await _context.Database.ExecuteSqlRawAsync("DELETE FROM [PedidosCancelados]");
             await _context.Database.ExecuteSqlRawAsync("DELETE FROM [OpcoesExtrasItemPedido]");
             await _context.Database.ExecuteSqlRawAsync("DELETE FROM [ItensPedido]");

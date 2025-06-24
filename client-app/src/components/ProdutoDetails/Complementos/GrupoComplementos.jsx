@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+﻿import { ChevronDown, ChevronUp } from 'lucide-react';
 import SingleChoiceItem from './SingleChoiceItem';
 import MultipleChoiceItem from './MultipleChoiceItem';
 
@@ -20,7 +19,6 @@ const GrupoComplementos = ({
     const maxQuantity = grupo.quantidadeMaxima || 0;
     const isSingleChoice = !grupo.multiplaEscolha;
 
-    // CORREÇÃO: Volta a somar as quantidades dos itens
     const totalQuantidadeNoGrupo = isSingleChoice ? 0 : grupo.complementos.reduce((acc, comp) => {
         const key = `complemento_${comp.id}`;
         return acc + (selectedExtrasQuantities[key] || 0);
@@ -43,7 +41,6 @@ const GrupoComplementos = ({
             infoText = (grupo.obrigatorio ? 'Obrigatório • ' : '') + `Escolha ${parts.join(' e ')} itens`;
         }
     }
-
     return (
         <div className="mb-4">
             <button
@@ -51,7 +48,7 @@ const GrupoComplementos = ({
                 className="w-full py-3 flex justify-between items-center hover:bg-gray-50 transition-colors rounded-lg"
                 onClick={() => toggleGrupo(grupo.id)}
             >
-                <div>
+                <div className="flex-grow text-left"> 
                     <div className="font-semibold text-gray-800">{grupo.nome}</div>
                     {infoText && (
                         <div className="text-xs text-gray-500 mt-1">

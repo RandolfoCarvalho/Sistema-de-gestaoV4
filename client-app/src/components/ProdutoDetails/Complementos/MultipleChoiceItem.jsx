@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import { Plus, Minus } from 'lucide-react';
+﻿import { Plus, Minus } from 'lucide-react';
 
 const MultipleChoiceItem = ({ item, isComplemento, currentQuantity, onQuantityChange, isGroupMaxReached }) => {
     const maxItemQuantity = item.maximoPorProduto || 1;

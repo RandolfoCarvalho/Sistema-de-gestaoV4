@@ -11,6 +11,7 @@ export function StoreProvider({ children }) {
     const [fantasyName, setFantasyName] = useState(''); 
     const [storeInfo, setStoreInfo] = useState(null);
     const [taxaEntrega, setTaxaEntrega] = useState(0); 
+    const [loadingStoreInfo, setLoadingStoreInfo] = useState(false);
 
     useEffect(() => {
         if (currentStore) {
@@ -25,6 +26,7 @@ export function StoreProvider({ children }) {
 
     const fetchStoreInfo = async (storeName) => {
         try {
+            setLoadingStoreInfo(true);
             const response = await api.get(`/api/1.0/restaurante/GetRestauranteInfoByName/${storeName}`);
             const data = response.data;
             
@@ -39,6 +41,8 @@ export function StoreProvider({ children }) {
             setStoreInfo(null);
             setFantasyName('');
             setTaxaEntrega(0);
+        } finally {
+            setLoadingStoreInfo(false); 
         }
     };
 
@@ -68,6 +72,7 @@ export function StoreProvider({ children }) {
             taxaEntrega,
             setCurrentStore,
             updateCurrentStore,
+            loadingStoreInfo,
             checkAndUpdateStoreFromURL
         }}>
             {children}

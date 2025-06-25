@@ -18,6 +18,9 @@ using SistemaDeGestao.Controllers;
 using System.Collections.Concurrent;
 using SistemaDeGestao.Interfaces;
 using System.Net.Http.Headers;
+using MercadoPago.Resource.Payment;
+using System.Data;
+using Microsoft.EntityFrameworkCore.Storage;
 // Esta classe agora contém a lógica de negócio que estava no Controller.
 public class PagamentoOrchestratorService : IPagamentoOrchestratorService
 {
@@ -72,13 +75,68 @@ public class PagamentoOrchestratorService : IPagamentoOrchestratorService
         return resultado;
     }
 
-    public async Task<PaymentResponseDTO> IniciarPagamentoCartaoAsync(PagamentoRequest request)
+    public async Task<PaymentResponseDTO> IniciarPagamentoCartaoAsync(PagamentoRequest req)
     {
-        await ValidarDisponibilidadeProdutosAsync(request.PedidoDTO);
-        var accessToken = await BuscaCredenciaisAsync(request.PedidoDTO.RestauranteId);
-        return await _mercadoPagoService.ProcessPayment(request.DadosPagamento, request.PedidoDTO, accessToken);
-    }
+        await ValidarDisponibilidadeProdutosAsync(req.PedidoDTO);
+        var token = await BuscaCredenciaisAsync(req.PedidoDTO.RestauranteId);
 
+        await using var tx = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
+        Payment pg = null;
+        try
+        {
+            var pedido = await _pedidoService.CriarPedidoAsync(req.PedidoDTO, string.Empty);
+            await _context.SaveChangesAsync();
+
+            pg = await _mercadoPagoService.CriarPagamentoAsync(req.DadosPagamento, req.PedidoDTO, token);
+            if (pg.Status != "approved")
+            {
+                await tx.RollbackAsync();
+                throw new Exception();
+            }
+
+            pedido.Pagamento.TransactionId = pg.Id.ToString();
+            pedido.Pagamento.PagamentoAprovado = true;
+            pedido.Pagamento.DataAprovacao = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            if(pedido.Observacoes.Contains("ROLLBACK"))
+                throw new Exception("Rollback Simulado");
+            await tx.CommitAsync();
+
+            return new PaymentResponseDTO
+            {
+                Status = "approved",
+                TransactionId = pg.Id.ToString(),
+                Message = pg.StatusDetail,
+                Timestamp = DateTime.UtcNow
+            };
+        }
+        catch (Exception)
+        {
+            if (tx.GetDbTransaction()?.Connection != null)
+                await tx.RollbackAsync();
+
+            if (pg is { Status: "approved" })
+            {
+                await _mercadoPagoService.ReverterPagamentoAsync(pg.Id.Value, token);
+                return new PaymentResponseDTO
+                {
+                    Status = "error",
+                    TransactionId = pg?.Id.ToString(),
+                    Message = "Erro critico ao criar pedido após pagamento: reembolso em andamento!",
+                    Timestamp = DateTime.UtcNow
+                };
+            }
+            return new PaymentResponseDTO
+            {
+                Status = "error",
+                TransactionId = pg?.Id.ToString(),
+                Message = pg?.Status == "rejected"
+                               ? "Pagamento rejeitado pelo emissor."
+                               : "Pedido falhou; pagamento cancelado",
+                Timestamp = DateTime.UtcNow
+            };
+        }
+    }
     public async Task<PagamentoDinheiroResponseDTO> ProcessarPagamentoDinheiroAsync(PagamentoRequestDinheiro request)
     {
         var telefone = request.PedidoDTO.FinalUserTelefone;

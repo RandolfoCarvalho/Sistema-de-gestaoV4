@@ -7,6 +7,7 @@ using SistemaDeGestao.Models.DTOs;
 using SistemaDeGestao.Models.DTOs.Notification;
 using SistemaDeGestao.Models.DTOs.Resquests;
 using System.Numerics;
+using System.Data;
 
 namespace SistemaDeGestao.Services
 {
@@ -95,7 +96,54 @@ namespace SistemaDeGestao.Services
                 .ThenInclude(i => i.Produto)
                 .FirstOrDefaultAsync(p => p.Id == id && p.RestauranteId == restauranteId);
         }
+        public async Task<Pedido> CriarPedidoAsync(PedidoDTO dto, string transactionId)
+        {
+            try
+            {
+                // 1. validações de loja
+                var empresa = await _context.Empresas
+                    .AsNoTracking()
+                    .Include(e => e.DiasFuncionamento)
+                    .FirstOrDefaultAsync(e => e.RestauranteId == dto.RestauranteId);
+                if (empresa == null || !_restauranteService.IsLojaOpen(empresa))
+                    throw new InvalidOperationException("Loja fechada ou indisponível.");
 
+                // 2. DÉFICIT DE ESTOQUE ATÔMICO
+                await DebitarEstoqueAsync(dto.Itens);
+
+                // 3. criar entidade Pedido
+                var pedido = _mapper.Map<Pedido>(dto);
+                await ValidarERecalcularPedido(pedido, dto);
+                pedido.Numero = GerarNumeroPedido();
+                pedido.Status = OrderStatus.NOVO;
+                pedido.Pagamento.TransactionId = transactionId;
+                pedido.Pagamento.PagamentoAprovado = true;
+                pedido.Pagamento.DataAprovacao = DateTime.UtcNow;
+
+                _context.Pedidos.Add(pedido);
+                await _context.SaveChangesAsync();
+
+                await NotificarNovoPedido(pedido.Id);
+                return pedido;
+            } catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        private async Task DebitarEstoqueAsync(IEnumerable<ItemPedidoDTO> itens)
+        {
+            foreach (var i in itens)
+            {
+                var linhas = await _context.Database.ExecuteSqlInterpolatedAsync($@"
+            UPDATE Produtos
+            SET    EstoqueAtual = EstoqueAtual - {i.Quantidade}
+            WHERE  Id = {i.ProdutoId}
+            AND    EstoqueAtual >= {i.Quantidade}");
+                if (linhas == 0)
+                    throw new InvalidOperationException($"Estoque insuficiente para o produto {i.ProdutoId}");
+            }
+        }
         /// <summary>
         /// BOA PRÁTICA: Cria um novo pedido de forma segura.
         /// IGNORA os preços do DTO e RECALCULA tudo com base nos dados do banco.
@@ -134,7 +182,6 @@ namespace SistemaDeGestao.Services
                 _context.Pedidos.Add(pedido);
                 await _context.SaveChangesAsync();
 
-                await ReduzirEstoqueAsync(pedido);
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
@@ -317,24 +364,6 @@ namespace SistemaDeGestao.Services
                 _logger.LogError(ex, "Falha ao cancelar o pedido {PedidoId}.", request.PedidoId);
                 return (false, "Erro interno ao processar o cancelamento.");
             }
-        }
-
-        private async Task ReduzirEstoqueAsync(Pedido pedido)
-        {
-            var produtoIds = pedido.Itens.Select(i => i.ProdutoId).ToList();
-            var produtos = await _context.Produtos
-                .Where(p => produtoIds.Contains(p.Id))
-                .ToListAsync();
-
-            foreach (var item in pedido.Itens)
-            {
-                var produto = produtos.FirstOrDefault(p => p.Id == item.ProdutoId);
-                if (produto != null)
-                {
-                    produto.EstoqueAtual -= item.Quantidade;
-                }
-            }
-            // As alterações serão salvas pelo SaveChangesAsync no método principal
         }
 
         private async Task NotificarNovoPedido(int pedidoId)

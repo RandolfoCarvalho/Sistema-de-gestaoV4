@@ -1,16 +1,7 @@
 // src/components/Produtos/ProductCard.jsx
-
-import React from 'react';
 import { Link } from 'react-router-dom';
+import { formatPrice } from '../../utils/formatters'
 
-// Função auxiliar para formatar preço em Reais (BRL) - sem alterações
-const formatPrice = (price) => {
-  const numericPrice = Number(price) || 0;
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  }).format(numericPrice);
-};
 
 const ProductCard = ({ product }) => {
   // Desestruturação dos dados do produto - sem alterações

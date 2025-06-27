@@ -9,6 +9,11 @@ using SistemaDeGestao.Data;
 using Microsoft.EntityFrameworkCore;
 using SistemaDeGestao.Interfaces;
 using System.Text;
+using SistemaDeGestao.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using SistemaDeGestao.Services;
+using SistemaDeGestao.Models;
+
 namespace SistemaDeGestao.Controllers
 {
     [ApiController]
@@ -17,16 +22,19 @@ namespace SistemaDeGestao.Controllers
     {
         private readonly IPagamentoOrchestratorService _orchestrator;
         private readonly ILogger<MercadoPagoController> _logger;
+        private readonly IHubContext<PagamentoPixHub> _hubContext;
         private readonly DataBaseContext _context;
 
         public MercadoPagoController(
             IPagamentoOrchestratorService orchestrator,
             ILogger<MercadoPagoController> logger,
-            DataBaseContext context)
+            DataBaseContext context, 
+            IHubContext<PagamentoPixHub> hubContext)
         {
             _orchestrator = orchestrator;
             _logger = logger;
             _context = context;
+            _hubContext = hubContext;
         }
 
         [HttpPost]
@@ -118,6 +126,65 @@ namespace SistemaDeGestao.Controllers
             {
                 _logger.LogError(ex, "Erro ao obter status de pagamento para {PagamentoId}", pagamentoId);
                 return StatusCode(500, new { status = "error", message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [Route("notificacao")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ReceberNotificacao([FromBody] NotificacaoMercadoPago payload)
+        {
+            _logger.LogInformation("Webhook recebido. Tipo: {Type}, ID do Dado: {DataId}", payload?.Type, payload?.Data?.Id);
+
+            if (payload?.Type != "payment" || string.IsNullOrEmpty(payload.Data?.Id))
+            {
+                _logger.LogWarning("Webhook ignorado: tipo não é 'payment' ou ID está ausente.");
+                return Ok("Notificação recebida mas não é de pagamento ou falta ID.");
+            }
+
+            var transactionId = payload.Data.Id;
+
+            try
+            {
+                var resultadoProcessamento = await _orchestrator.ProcessarNotificacaoPixWebhookAsync(transactionId);
+
+                if (resultadoProcessamento.Sucesso)
+                {
+                    _logger.LogInformation("Notificação para TransactionId {TransactionId} processada. [...]", transactionId);
+
+                    // --- MAPEAMENTO PARA DTO ---
+                    var pedidoEntidade = resultadoProcessamento.Pedido;
+
+                    var notificacaoPayload = new NotificacaoPagamentoAprovadoDTO
+                    {
+                        Message = "Pagamento aprovado com sucesso!",
+                        Pedido = new PedidoAprovadoDTO
+                        {
+                            Id = pedidoEntidade.Id,
+                            ValorTotal = pedidoEntidade.Pagamento.ValorTotal,
+                            Status = pedidoEntidade.Status.ToString(),
+                            Itens = pedidoEntidade.Itens.Select(item => new ItemPedidoAprovadoDTO
+                            {
+                                NomeProduto = item.Produto.Nome,
+                                Quantidade = item.Quantidade,
+                                PrecoUnitario = item.PrecoUnitario
+                            }).ToList()
+                        }
+                    };
+
+                    await _hubContext.Clients.Group(transactionId).SendAsync("PagamentoAprovado", notificacaoPayload);
+                }
+                else
+                {
+                    _logger.LogWarning("Processamento do webhook para o TransactionId {TransactionId} não resultou em aprovação. Motivo: {Motivo}", transactionId, resultadoProcessamento.Mensagem);
+                }
+
+                return Ok("Notificação processada.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro crítico ao processar webhook para a transação {TransactionId}", transactionId);
+                return StatusCode(500, new { message = "Erro interno ao processar a notificação." });
             }
         }
 
@@ -288,5 +355,41 @@ public class ReembolsoRequest
     {
         public string Id { get; set; }
     }
+    public class NotificacaoMercadoPago
+    {
+        public string Type { get; set; }
+        public NotificationData Data { get; set; }
+    }
 
+    public class NotificationData
+    {
+        public string Id { get; set; }
+    }
+    public class WebhookProcessamentoResult
+    {
+        public bool Sucesso { get; set; }
+        public string Mensagem { get; set; }
+        public Pedido Pedido { get; set; } 
+    }
 
+    public class NotificacaoPagamentoAprovadoDTO
+    {
+        public string Message { get; set; }
+        public PedidoAprovadoDTO Pedido { get; set; }
+    }
+
+    public class PedidoAprovadoDTO
+    {
+        public int Id { get; set; }
+        public decimal ValorTotal { get; set; }
+        public string Status { get; set; }
+        // Adicione apenas os campos que o frontend precisa ver na confirmação
+        public List<ItemPedidoAprovadoDTO> Itens { get; set; }
+    }
+
+    public class ItemPedidoAprovadoDTO
+    {
+        public string NomeProduto { get; set; }
+        public int Quantidade { get; set; }
+        public decimal PrecoUnitario { get; set; }
+    }

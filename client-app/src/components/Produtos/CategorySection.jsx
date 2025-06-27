@@ -1,6 +1,4 @@
-﻿// Exemplo de uso em CategorySection.js
-import React from 'react';
-import ProductCard from './ProductCard';
+﻿import ProductCard from './ProductCard';
 
 const CategorySection = ({ categoryName, products }) => {
   return (
@@ -8,7 +6,7 @@ const CategorySection = ({ categoryName, products }) => {
       <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
         {categoryName}
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> {/* Layout de lista */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {products.map(product => (
           <ProductCard key={product.id} product={product} />
         ))}

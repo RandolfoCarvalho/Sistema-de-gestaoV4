@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 // O Header aceita props opcionais para o modo de "busca dinâmica"
 const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
     const navigate = useNavigate();
-    const { fantasyName, currentStore, storeInfo } = useStore();
+    const { fantasyName, currentStore, storeInfo, loadingStoreInfo } = useStore();
     const [isSearchActive, setIsSearchActive] = useState(false);
     const logoUrl = storeInfo?.imagemUrl;
     const inputRef = useRef(null);
@@ -18,7 +18,7 @@ const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
         const shareData = {
             title: `Confira a loja: ${currentStore}`,
             text: `Encontrei produtos incríveis na ${currentStore}!`,
-            url: window.location.href, // Compartilha a URL da página atual
+            url: window.location.href,
         };
 
         // Verifica se a Web Share API está disponível no navegador
@@ -101,7 +101,17 @@ const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [isSearchActive]);
 
-
+    
+    if (loadingStoreInfo) {
+        return (
+        <header className="w-full bg-gray-900 h-16 flex items-center px-4">
+            <div className="animate-pulse flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gray-700 rounded-full" />
+            <div className="h-4 w-28 bg-gray-700 rounded" />
+            </div>
+        </header>
+        );
+    }
     return (
         <div ref={headerRef} className="w-full bg-gray-900 relative z-30 border-b border-gray-200">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

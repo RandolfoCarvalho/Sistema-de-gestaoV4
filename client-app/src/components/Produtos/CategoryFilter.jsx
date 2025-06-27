@@ -1,6 +1,4 @@
-﻿import React from 'react';
-
-const CategoryFilter = ({ categories, activeCategory, setActiveCategory }) => (
+﻿const CategoryFilter = ({ categories, activeCategory, setActiveCategory }) => (
     <div
         className="flex items-center space-x-3 overflow-x-auto no-scrollbar py-3 px-4 md:px-6"
     >

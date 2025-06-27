@@ -9,13 +9,12 @@ import PixPaymentSection from "./PixPaymentSection";
 import DinheiroPaymentForm from "./DinheiroPaymentForm";
 import PixForm from "./PixForm";
 import axios from "axios";
-import MercadoPagoWalletButton from "./MercadoPagoWalletButton";
+import * as signalR from '@microsoft/signalr';
 
 const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSuccess, preparePedidoDTO, setIsSubmitting }) => {
     const { processPayment, processPaymentPix, processPaymentDinheiro, loading: paymentLoading, error: paymentError } = usePayment();
     const navigate = useNavigate();
     const [troco, setTroco] = useState("");
-    const [preferenceId, setPreferenceId] = useState(null);
     const [internalLoading, setInternalLoading] = useState(false);
     const [internalError, setInternalError] = useState(null);
     const [pixData, setPixData] = useState(null);
@@ -67,51 +66,44 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     }, [paymentSuccessState, paymentResponseData, onPaymentSuccess]);
 
     useEffect(() => {
-        if (!restauranteId) {
-            console.error("RestauranteId não encontrado no localStorage");
-            return;
-        }
-        axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/CredenciaisMercadoPago/GetCredentialByRestauranteId/${restauranteId}`)
-        .then(res => {
-            if (res.data.publicKey) {
-                initMercadoPago(res.data.publicKey, { locale: 'pt-BR' });
-            }
-        })
-        .catch(err => console.error("Erro ao buscar credencial do restaurante:", err));
-    }, [restauranteId]);
+        if (!transactionId || paymentSuccessState) return;
 
-    useEffect(() => {
-        if (!pixData || !transactionId || !restauranteId || paymentSuccessState) return;
-        
-        let attempts = 0;
-        const maxAttempts = 60; 
         setMensagem("⏳ Aguardando confirmação do pagamento PIX...");
-        const interval = setInterval(async () => {
+        console.log("Conectando ao SignalR em:", `${process.env.REACT_APP_API_URL}/pagamentoPixHub`);
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl(`${process.env.REACT_APP_API_URL}/pagamentoPixHub`)
+            .withAutomaticReconnect()
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+        
+        const startConnection = async () => {
             try {
-                attempts++;
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/ObterPagamentoAsync/${transactionId}/${restauranteId}`);
-                const isApproved = response.data?.status === "approved" || response.data?.message?.toLowerCase().includes("pedido ja existe");
-                
-                if (isApproved) {
-                    clearInterval(interval);
-                    setMensagem("✅ Pagamento aprovado com sucesso!");
-                    setPaymentResponseData(response.data); 
-                    setPaymentSuccessState(true);
-                } else if (attempts >= maxAttempts) {
-                    clearInterval(interval);
-                    setMensagem("⏳ Tempo de espera expirado. Verifique o status na tela de pedidos ou tente novamente.");
-                }
-            } catch (err) {
-                console.error("Erro ao verificar status do pagamento PIX:", err);
-                if (attempts >= maxAttempts) {
-                    clearInterval(interval);
-                    setMensagem("⚠️ Não foi possível confirmar o pagamento PIX. Verifique na tela de pedidos.");
-                }
-            }
-        }, 5000); 
+                await connection.start();
+                console.log("Conectado ao SignalR.");
+                await connection.invoke("JoinPaymentGroup", transactionId);
 
-        return () => clearInterval(interval);
-    }, [pixData, transactionId, restauranteId, paymentSuccessState]);
+                connection.on("PagamentoAprovado", (response) => {
+                    console.log("Pagamento Aprovado recebido via SignalR:", response);
+                    setMensagem("✅ Pagamento aprovado com sucesso!");
+                    setPaymentResponseData(response); 
+                    setPaymentSuccessState(true);
+                    connection.stop();
+                });
+
+            } catch (err) {
+                console.error("Falha na conexão com SignalR: ", err);
+                setMensagem("⚠️ Erro de comunicação. Verifique o status na tela de pedidos.");
+            }
+        };
+
+        startConnection();
+
+        return () => {
+            if (connection.state === 'Connected') {
+                connection.stop();
+            }
+        };
+    }, [transactionId, paymentSuccessState]);
 
     const handleSubmit = async (paymentProcessor, paymentData) => {
         setInternalLoading(true);
@@ -128,10 +120,8 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
 
        try {
             const response = await paymentProcessor(paymentData, pedidoDTO);
-
-            // Verificação de sucesso mais específica e segura
             const isPaymentApproved = response.ok && response.data?.status === "approved";
-            const isDinheiroSuccess = response.ok && paymentMethod === "dinheiro"; // Pagamento em dinheiro não tem status 'approved'
+            const isDinheiroSuccess = response.ok && paymentMethod === "dinheiro";
             const isPixSuccess = response.ok && response.data?.qrCodeBase64;
 
             if (isPaymentApproved || isDinheiroSuccess || isPixSuccess) {
@@ -140,8 +130,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                         qrCodeBase64: response.data.qrCodeBase64,
                         qrCodeCopyPaste: response.data.qrCodeString || response.data.qr_code,
                     });
-                    setTransactionId(response.data.idPagamento.toString());
-                    setMensagem("⏳ PIX gerado. Realize o pagamento para confirmar.");
+                    setTransactionId(response.data.transactionId.toString());
                 } else {
                     setMensagem(`✅ Pagamento com ${paymentMethod} processado com sucesso!`);
                     setPaymentResponseData(response);
@@ -168,7 +157,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         const firstName = nameParts.join(" ");
 
         const paymentData = {
-            // Objeto construído explicitamente, como no código antigo
             Amount: parseFloat(formData.transaction_amount), 
             Token: formData.token,
             PaymentMethodId: formData.payment_method_id,
@@ -190,13 +178,21 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             setInternalError("❌ O valor do troco deve ser maior que o total a pagar.");
             return;
         }
-        const paymentData = { FormaPagamento: "dinheiro", trocoPara: troco ? parseFloat(troco) : null };
+        const paymentData = { 
+            FormaPagamento: "dinheiro", 
+            trocoPara: troco 
+        };
+
         handleSubmit(processPaymentDinheiro, paymentData);
     };
 
     const handlePixSubmit = (formData) => {
-        const paymentData = { ...formData, FormaPagamento: "pix" };
-        console.log("Entrou no pix e vai chamar o handleSubmit");
+        // Arredonda o valor para 2 casas decimas e converte para número
+        const amountArredondado = parseFloat(cartTotal.toFixed(2))
+        const paymentData = { ...formData, 
+            amount: amountArredondado,
+            FormaPagamento: "pix" };
+        console.log("Dados do PIX a serem enviados:", paymentData);
         handleSubmit(processPaymentPix, paymentData);
     };
 
@@ -223,7 +219,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         setMensagem("");
         setPixData(null);
         setTransactionId(null);
-        setPreferenceId(null);
         setCountdown(300);
         setPaymentSuccessState(false);
         setPaymentResponseData(null);
@@ -291,10 +286,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
                             isLoading={isLoading}
                             errorMessage={internalError}
                         />
-                    )}
-                    {paymentMethod === "mercadopago" && (
-                        /* Lógica para Carteira Mercado Pago viria aqui */
-                        <p>Pagamento com carteira Mercado Pago em breve.</p>
                     )}
                 </div>
             )}

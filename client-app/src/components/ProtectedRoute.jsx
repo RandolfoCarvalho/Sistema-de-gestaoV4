@@ -9,6 +9,7 @@ const ProtectedRoute = ({ redirectTo = "/auth/login" }) => {
     const [successMessage, setSuccessMessage] = useState("");
     const { currentStore } = useStore(); 
 
+    //TODO, MUDAR A LOGICA DISSO AQUI
     const navigate = useNavigate();
 
     useEffect(() => {

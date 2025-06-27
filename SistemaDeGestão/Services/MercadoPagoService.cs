@@ -18,6 +18,7 @@ using MercadoPago.Resource.Payment;
 using Microsoft.AspNetCore.SignalR;
 using SistemaDeGestao.Controllers;
 using SistemaDeGestao.Interfaces;
+using Serilog;
 
 namespace SistemaDeGestao.Services
 {
@@ -43,8 +44,7 @@ namespace SistemaDeGestao.Services
                     transaction_amount = pagamento.Amount,
                     payment_method_id = "pix",
                     description = "Pedido via PIX",
-                    // URL de notificação completa e correta
-                    //notification_url = "https://api.fomedique.com.br/api/1.0/MercadoPago/notificacaoMercadoPago",
+                    notification_url = "https://api.fomedique.com.br/api/1.0/MercadoPago/notificacao",
                     payer = new
                     {
                         email = pagamento.PayerEmail,
@@ -70,7 +70,6 @@ namespace SistemaDeGestao.Services
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var doc = JsonDocument.Parse(responseContent);
 
-                // Obtém o ID do pagamento - esta é a referência principal
                 var paymentId = doc.RootElement.GetProperty("id").GetInt64().ToString();
                 var valor = doc.RootElement.GetProperty("transaction_amount").GetDecimal();
 
@@ -84,10 +83,8 @@ namespace SistemaDeGestao.Services
                     .GetProperty("transaction_data")
                     .GetProperty("qr_code").GetString();
 
-                // Importante: Sempre usar o ID do pagamento como TransactionId para consistência
                 pedidoDTO.Pagamento.TransactionId = paymentId;
 
-                // Salva o pedido pendente com o ID do pagamento
                 var pedidoPendente = new PedidoPendente
                 {
                     TransactionId = paymentId,
@@ -106,275 +103,95 @@ namespace SistemaDeGestao.Services
                     QrCodeBase64 = qrCodeBase64,
                     QrCodeString = qrCode,
                     ValorTotal = valor,
-                    // Usar sempre o mesmo ID para evitar confusão
                     TransactionId = paymentId
                 };
             }
         }
-        public async Task<PaymentResponseDTO> ProcessPayment(PagamentoCartaoDTO paymentData, PedidoDTO pedidoDTO, string accessToken)
+
+        public async Task<Payment> CriarPagamentoAsync(PagamentoCartaoDTO paymentData, PedidoDTO pedidoDTO, string accessToken)
         {
             await VerificarDisponbilidadeProduto(pedidoDTO);
-            Console.WriteLine("==================== INÍCIO DO PROCESSAMENTO DE PAGAMENTO ====================");
+            var requestOptions = new RequestOptions
+            {
+                AccessToken = accessToken,
+                CustomHeaders = { { "x-idempotency-key", Guid.NewGuid().ToString() } }
+            };
+            var items = pedidoDTO.Itens.Select(item => new PaymentItemRequest
+            {
+                Id = item.ProdutoId.ToString(),
+                Title = item.NomeProduto ?? $"Produto {item.ProdutoId}",
+                Quantity = item.Quantidade,
+                UnitPrice = item.PrecoUnitario
+            }).ToList();
+            var paymentPayerRequest = new PaymentPayerRequest
+            {
+                EntityType = "individual",
+                Type = "customer",
+                Email = paymentData.PayerEmail,
+                FirstName = paymentData.PayerFirstName,
+                LastName = paymentData.PayerLastName,
+                Identification = new IdentificationRequest
+                {
+                    Type = paymentData.PayerIdentificationType,
+                    Number = paymentData.PayerIdentificationNumber
+                }
+            };
+            var request = new PaymentCreateRequest
+            {
+                TransactionAmount = paymentData.Amount,
+                Installments = 1,
+                Capture = true,
+                BinaryMode = true,
+                PaymentMethodId = paymentData.PaymentMethodId,
+                Token = paymentData.Token,
+                Payer = paymentPayerRequest,
+                Description = "Pedido",
+                StatementDescriptor = pedidoDTO.NomeDaLoja.Length > 10 ? pedidoDTO.NomeDaLoja.Substring(0, 10) : pedidoDTO.NomeDaLoja
+            };
+            var client = new PaymentClient();
+            return await client.CreateAsync(request, requestOptions);
+        }
+        public async Task ReverterPagamentoAsync(long paymentId, string accessToken)
+        {
+            var opts = new RequestOptions { AccessToken = accessToken };
+            var payCli = new PaymentClient();
+            var info = await payCli.GetAsync(paymentId, opts);
+
             try
             {
-                try
+                switch (info.Status)
                 {
-                    var canConnect = await _context.Database.CanConnectAsync();
-                    if (!canConnect)
-                    {
-                        return new PaymentResponseDTO
-                        {
-                            Status = "error",
-                            Message = "Erro de conexão com o banco de dados",
-                            Timestamp = DateTime.UtcNow
-                        };
-                    }
+                    case "approved": 
+                        var refundCli = new PaymentRefundClient();
+                        await refundCli.RefundAsync(paymentId, opts);
+                        break;
+
+                    case "authorized":
+                    case "pending":
+                    case "in_process":                  // autorizou mas não capturou
+                        await payCli.CancelAsync(paymentId, opts);
+                        break;
+                    default:                           
+                        break;
                 }
-                catch (Exception dbEx)
-                {
-                    throw;
-                }
-
-                // Card token é enviado diretamente do frontend
-                string cardToken = paymentData.Token;
-
-                // Validar se o token ou amount
-                if (string.IsNullOrWhiteSpace(cardToken))
-                {
-                    throw new ArgumentException("O token do cartão é obrigatório.", nameof(paymentData.Token));
-                }
-                if (paymentData.Amount <= 0)
-                {
-                    throw new ArgumentException("O valor da transação deve ser positivo.", nameof(paymentData.Amount));
-                }
-
-                // Configurar o SDK
-
-                var requestOptions = new RequestOptions
-                {
-                    AccessToken = accessToken,
-                    CustomHeaders = { { "x-idempotency-key", Guid.NewGuid().ToString() } }
-                };
-                _logger.LogInformation("RequestOptions com AccessToken e Idempotency Key criados para a requisição.");
-                // Criar itens para additional info
-                var items = pedidoDTO.Itens.Select(item => new PaymentItemRequest
-                {
-                    Id = item.ProdutoId.ToString(),
-                    Title = item.NomeProduto ?? $"Produto {item.ProdutoId}",
-                    CategoryId = "food",
-                    Description = "Descricao item",
-                    Quantity = item.Quantidade,
-                    UnitPrice = item.PrecoUnitario
-                }).ToList();
-
-                string ddd = pedidoDTO.FinalUserTelefone.Substring(0, 2);           // "64"
-                string numero = pedidoDTO.FinalUserTelefone.Substring(2);
-                // Payer info para additional info
-                var payerInfo = new PaymentAdditionalInfoPayerRequest
-                {
-                    FirstName = paymentData.PayerFirstName,
-                    LastName = paymentData.PayerLastName,
-                    IsFirstPurchaseOnline = true,
-                    Phone = new PhoneRequest
-                    {
-                        AreaCode = "64",
-                        Number = "987654321"
-                    },
-                    Address = new AddressRequest
-                    {
-                        ZipCode = pedidoDTO.Endereco.CEP,
-                        StreetName = pedidoDTO.Endereco.Logradouro,
-                        StreetNumber = pedidoDTO.Endereco.Numero
-                    }
-                };
-
-                // Shipments info
-                var shipmentsInfo = new PaymentShipmentsRequest
-                {
-                    ReceiverAddress = new PaymentReceiverAddressRequest
-                    {
-                        ZipCode = pedidoDTO.Endereco.CEP,
-                        StateName = "GO",
-                        CityName = pedidoDTO.Endereco.Cidade,
-                        StreetName = pedidoDTO.Endereco.Logradouro,
-                        StreetNumber = pedidoDTO.Endereco.Numero
-                    }
-                };
-
-                // Additional info
-                var additionalInfo = new PaymentAdditionalInfoRequest
-                {
-                    Items = items,
-                    Payer = payerInfo,
-                    Shipments = shipmentsInfo,
-                };
-
-                // Payer request
-                var paymentPayerRequest = new PaymentPayerRequest
-                {
-                    EntityType = "individual",
-                    Type = "customer",
-                    Id = null,
-                    Email = paymentData.PayerEmail,
-                    FirstName = paymentData.PayerFirstName,
-                    LastName = paymentData.PayerLastName,
-                    Identification = new IdentificationRequest
-                    {
-                        Type = paymentData.PayerIdentificationType,
-                        Number = paymentData.PayerIdentificationNumber
-                    }
-                };
-
-                // Statement descriptor (nome na fatura)
-                string statementDescriptor = pedidoDTO.NomeDaLoja.Length > 10
-                    ? pedidoDTO.NomeDaLoja.Substring(0, 10)
-                    : pedidoDTO.NomeDaLoja;
-
-                // Metadados
-                var metadata = new Dictionary<string, object>
+            }
+            catch (MercadoPagoApiException e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+        public async Task<Payment> CapturarPagamentoAsync(long paymentId, string accessToken)
         {
-            { "store_id", pedidoDTO.RestauranteId }
-        };
+            var client = new PaymentClient();
+            var opts = new RequestOptions { AccessToken = accessToken };
+            return await client.CaptureAsync(paymentId, opts);
+        }
 
-                // Criar o request de pagamento
-                var request = new PaymentCreateRequest
-                {
-                    TransactionAmount = paymentData.Amount,
-                    Installments = 1,
-                    Capture = true,
-                    BinaryMode = true,
-                    PaymentMethodId = paymentData.PaymentMethodId,
-                    Token = cardToken,
-                    ExternalReference = "1", // Usar um ID único do pedido do seu sistema
-                    NotificationUrl = "https://api.fomedique.com.br/api/1.0/MercadoPago/notificacaoMercadoPago",
-                    Metadata = metadata,
-                    Payer = paymentPayerRequest,
-                    StatementDescriptor = statementDescriptor,
-                    Description = "Pedido",
-                    AdditionalInfo = additionalInfo
-                };
-
-                var client = new PaymentClient();
-                Payment payment;
-                payment = await client.CreateAsync(request, requestOptions);
-                pedidoDTO.Pagamento.TransactionId = payment.Id.ToString();
-
-                // Criar JSON do pedido
-                string pedidoJson;
-                try
-                {
-                    pedidoJson = JsonConvert.SerializeObject(pedidoDTO);
-                }
-                catch (Exception jsonEx)
-                {
-                    throw;
-                }
-
-                // Verificar se o TimeZone está disponível
-                try
-                {
-                    var timeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
-                }
-                catch (TimeZoneNotFoundException tzEx)
-                {
-                    throw new TimeZoneNotFoundException("Erro em TimeZone: " + tzEx.Message);
-                }
-
-                // Salvar pedido pendente
-                var pedidoPendente = new PedidoPendente
-                {
-                    TransactionId = payment.Id.ToString(),
-                    PedidoJson = pedidoJson,
-                    DataCriacao = DateTime.UtcNow 
-                };
-
-                try
-                {
-                    _context.PedidosPendentes.Add(pedidoPendente);
-
-                    int registrosAfetados = await _context.SaveChangesAsync();
-                    // Verificar se o registro foi realmente salvo
-                    var verificacao = await _context.PedidosPendentes
-                        .AsNoTracking()
-                        .FirstOrDefaultAsync(p => p.TransactionId == payment.Id.ToString());
-
-                    if (verificacao != null)
-                    {
-                        Console.WriteLine($"Registro verificado com sucesso na base. ID: {verificacao.Id}");
-                    }
-                }
-                catch (DbUpdateException dbEx)
-                {
-                    throw new DbUpdateException("erro no update db: " + dbEx.Message);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("error: " + ex.Message);
-                }
-
-                // Retornar resposta
-                return new PaymentResponseDTO
-                {
-                    Status = payment.Status,
-                    TransactionId = payment.Id.ToString(),
-                    Message = payment.StatusDetail,
-                    Timestamp = DateTime.UtcNow
-                };
-            }
-            catch (ArgumentException argEx)
-            {
-                Console.WriteLine($"Erro de argumento ao processar pagamento: {argEx.Message}");
-                return new PaymentResponseDTO
-                {
-                    Status = "error",
-                    Message = $"Erro nos dados fornecidos: {argEx.Message}",
-                    Timestamp = DateTime.UtcNow
-                };
-            }
-            catch (MercadoPagoApiException mpEx)
-            {
-                Console.WriteLine($"Erro na API do Mercado Pago: {mpEx.Message}");
-                return new PaymentResponseDTO
-                {
-                    Status = "error",
-                    Message = $"Erro no processamento do pagamento: {mpEx.Message}",
-                    Timestamp = DateTime.UtcNow
-                };
-            }
-            catch (HttpRequestException httpEx)
-            {
-                Console.WriteLine($"Erro de HTTP ao chamar Mercado Pago: {httpEx.Message}");
-                return new PaymentResponseDTO
-                {
-                    Status = "error",
-                    Message = "Erro de comunicação ao processar pagamento.",
-                    Timestamp = DateTime.UtcNow
-                };
-            }
-            catch (Newtonsoft.Json.JsonException jsonEx)
-            {
-                Console.WriteLine($"Erro de JSON ao processar resposta do Mercado Pago: {jsonEx.Message}");
-                return new PaymentResponseDTO
-                {
-                    Status = "error",
-                    Message = "Erro ao interpretar a resposta do processador de pagamento.",
-                    Timestamp = DateTime.UtcNow
-                };
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erro inesperado ao processar pagamento: {ex.ToString()}");
-                return new PaymentResponseDTO
-                {
-                    Status = "error",
-                    Message = "Ocorreu um erro inesperado ao processar seu pagamento. Tente novamente mais tarde.",
-                    Timestamp = DateTime.UtcNow
-                };
-            }
-            finally
-            {
-                Console.WriteLine("==================== FIM DO PROCESSAMENTO DE PAGAMENTO ====================");
-            }
+        public async Task CancelarPagamentoAsync(long paymentId, string accessToken)
+        {
+            var client = new PaymentClient();
+            var opts = new RequestOptions { AccessToken = accessToken };
+            await client.CancelAsync(paymentId, opts);
         }
         public async Task<ReembolsoResponseDTO> ProcessarReembolso(ReembolsoRequest request, string accessToken)
         {

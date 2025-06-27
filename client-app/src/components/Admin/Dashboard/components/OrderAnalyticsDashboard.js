@@ -110,14 +110,8 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
 
     //filtro de pedido:
     const processOrdersData = useMemo(() => {
-        // Alterar a condição de guarda e a iteração para usar filteredOrders
-        if (!filteredOrders || filteredOrders.length === 0) { // MODIFICADO
-            // Retorna uma estrutura de dados vazia mas com os labels para os gráficos não quebrarem
-            // ou para mostrar "sem dados". A sua lógica atual de retornar [] para weekData etc.
-            // pode ser mantida, mas os labels precisam ser gerados para os eixos.
-            // Para simplificar, vamos manter a lógica de labels e zerar os dados.
-            
-            const nowForEmpty = new Date(); // Precisa de 'now' para gerar labels mesmo vazios
+        if (!filteredOrders || filteredOrders.length === 0) {
+            const nowForEmpty = new Date();
             const createEmptyLabels = (period) => {
                 const labels = [];
                 if (period === 'week') {
@@ -143,15 +137,12 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
         // A lógica de geração de labels (weekLabels, monthLabels, yearLabels) e createInitialData permanece AQUI DENTRO como está.
         const now = new Date();
         const weekLabels = [];
-        // ... (código original para weekLabels)
         for (let i = 6; i >= 0; i--) { const date = new Date(now); date.setDate(now.getDate() - i); date.setHours(0,0,0,0); weekLabels.push({date: date, label: date.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit' }), key: date.toISOString().split('T')[0] }); }
 
         const monthLabels = [];
-        // ... (código original para monthLabels)
         for (let i = 29; i >= 0; i--) { const date = new Date(now); date.setDate(now.getDate() - i); date.setHours(0,0,0,0); monthLabels.push({date: date, label: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }), key: date.toISOString().split('T')[0] }); }
         
         const yearLabels = [];
-        // ... (código original para yearLabels)
         for (let i = 11; i >= 0; i--) { const date = new Date(now.getFullYear(), now.getMonth() - i, 1); date.setHours(0,0,0,0); yearLabels.push({date: date, label: date.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }), key: date.toISOString().substring(0,7) }); }
 
 
@@ -167,21 +158,20 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
         const statusCounter = Object.fromEntries(Object.values(STATUS_MAP).map(s => [s.key, 0]));
 
         filteredOrders.forEach(order => { // MODIFICADO: itera sobre filteredOrders
-            // TODA A LÓGICA INTERNA DE PROCESSAMENTO DE `order` PERMANECE A MESMA
             if (!order.createdAt || !order.itens || !Array.isArray(order.itens)) return;
             const orderDate = new Date(order.createdAt);
             if (isNaN(orderDate.getTime())) return;
             orderDate.setHours(0,0,0,0);
 
             const orderValue = order.itens.reduce((total, item) => total + (item.subTotal || 0), 0);
-            const orderCost = order.itens.reduce((total, item) => total + (item.precoCusto || 0), 0);
+            const orderCost = order.itens.reduce((total, item) => total + ((item.precoCusto || 0) * (item.quantidade || 1)), 0);
             const statusInfo = STATUS_MAP[order.status] || STATUS_MAP.default;
             const statusKey = statusInfo.key;
             statusCounter[statusKey]++;
 
             const weekKey = orderDate.toISOString().split('T')[0];
             const weekIndex = weekData.findIndex(d => d.key === weekKey);
-            if (weekIndex >= 0) { /* ... (lógica original) ... */ 
+            if (weekIndex >= 0) {
                 weekData[weekIndex].orders += 1;
                 weekData[weekIndex].revenue += orderValue;
                 weekData[weekIndex].costs += orderCost;
@@ -190,7 +180,7 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
 
             const monthKey = orderDate.toISOString().split('T')[0];
             const monthIndex = monthData.findIndex(d => d.key === monthKey);
-            if (monthIndex >= 0) { /* ... (lógica original) ... */ 
+            if (monthIndex >= 0) {
                 monthData[monthIndex].orders += 1;
                 monthData[monthIndex].revenue += orderValue;
                 monthData[monthIndex].costs += orderCost;
@@ -576,7 +566,6 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
                     <div className="bg-gray-50 p-2 sm:p-4 rounded-lg shadow ">
                         {renderChart()}
                     </div>
-
                     {/* Insights section */}
                     <div className="mt-6">
                         <h3 className="text-lg font-semibold text-gray-800 mb-3">Insights Rápidos</h3>

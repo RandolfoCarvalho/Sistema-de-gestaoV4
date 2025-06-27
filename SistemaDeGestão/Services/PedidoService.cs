@@ -7,6 +7,7 @@ using SistemaDeGestao.Models.DTOs;
 using SistemaDeGestao.Models.DTOs.Notification;
 using SistemaDeGestao.Models.DTOs.Resquests;
 using System.Numerics;
+using System.Data;
 
 namespace SistemaDeGestao.Services
 {
@@ -95,7 +96,54 @@ namespace SistemaDeGestao.Services
                 .ThenInclude(i => i.Produto)
                 .FirstOrDefaultAsync(p => p.Id == id && p.RestauranteId == restauranteId);
         }
+        public async Task<Pedido> CriarPedidoAsync(PedidoDTO dto, string transactionId)
+        {
+            try
+            {
+                // 1. validações de loja
+                var empresa = await _context.Empresas
+                    .AsNoTracking()
+                    .Include(e => e.DiasFuncionamento)
+                    .FirstOrDefaultAsync(e => e.RestauranteId == dto.RestauranteId);
+                if (empresa == null || !_restauranteService.IsLojaOpen(empresa))
+                    throw new InvalidOperationException("Loja fechada ou indisponível.");
 
+                // 2. DÉFICIT DE ESTOQUE ATÔMICO
+                await DebitarEstoqueAsync(dto.Itens);
+
+                // 3. criar entidade Pedido
+                var pedido = _mapper.Map<Pedido>(dto);
+                await ValidarERecalcularPedido(pedido, dto);
+                pedido.Numero = GerarNumeroPedido();
+                pedido.Status = OrderStatus.NOVO;
+                pedido.Pagamento.TransactionId = transactionId;
+                pedido.Pagamento.PagamentoAprovado = true;
+                pedido.Pagamento.DataAprovacao = DateTime.UtcNow;
+
+                _context.Pedidos.Add(pedido);
+                await _context.SaveChangesAsync();
+
+                await NotificarNovoPedido(pedido.Id);
+                return pedido;
+            } catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        private async Task DebitarEstoqueAsync(IEnumerable<ItemPedidoDTO> itens)
+        {
+            foreach (var i in itens)
+            {
+                var linhas = await _context.Database.ExecuteSqlInterpolatedAsync($@"
+            UPDATE Produtos
+            SET    EstoqueAtual = EstoqueAtual - {i.Quantidade}
+            WHERE  Id = {i.ProdutoId}
+            AND    EstoqueAtual >= {i.Quantidade}");
+                if (linhas == 0)
+                    throw new InvalidOperationException($"Estoque insuficiente para o produto {i.ProdutoId}");
+            }
+        }
         /// <summary>
         /// BOA PRÁTICA: Cria um novo pedido de forma segura.
         /// IGNORA os preços do DTO e RECALCULA tudo com base nos dados do banco.
@@ -134,7 +182,6 @@ namespace SistemaDeGestao.Services
                 _context.Pedidos.Add(pedido);
                 await _context.SaveChangesAsync();
 
-                await ReduzirEstoqueAsync(pedido);
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
@@ -213,14 +260,15 @@ namespace SistemaDeGestao.Services
                 if (!produtoDb.Ativo)
                     throw new InvalidOperationException($"O produto '{produtoDb.Nome}' não está disponível.");
 
-                if (produtoDb.EstoqueAtual < item.Quantidade)
+                // O estoque deve ser verificado após o cálculo da quantidade total do produto principal
+                if (produtoDb.EstoqueAtual < item.Quantidade) // item.Quantidade é a quantidade do produto principal
                     throw new InvalidOperationException($"Estoque insuficiente para '{produtoDb.Nome}'.");
 
                 // Sobrescreve os dados do item com valores seguros do banco
                 item.PrecoUnitario = produtoDb.PrecoVenda;
                 item.NomeProduto = produtoDb.Nome;
                 item.PrecoCusto = produtoDb.PrecoCusto;
-                decimal subTotalItem = item.Quantidade * item.PrecoUnitario;
+                decimal subTotalItemAtual = item.Quantidade * item.PrecoUnitario; // Preço base do item principal
 
                 // Validação das opções extras do item
                 if (item.OpcoesExtras != null && item.OpcoesExtras.Any())
@@ -238,7 +286,9 @@ namespace SistemaDeGestao.Services
                             // Sobrescreve o preço e nome com o valor seguro do banco
                             opcao.PrecoUnitario = adicionalDb.PrecoBase;
                             opcao.Nome = adicionalDb.Nome;
-                            subTotalItem += opcao.PrecoTotal;
+                            // **** AQUI ESTÁ A MUDANÇA CRÍTICA PARA O BACKEND ****
+                            // Recalcula o PrecoTotal do adicional com base na sua Quantidade e PrecoUnitario
+                            subTotalItemAtual += opcao.PrecoTotal;
                         }
                         else if (opcao.TipoOpcao == TipoOpcaoExtra.Complemento)
                         {
@@ -251,13 +301,15 @@ namespace SistemaDeGestao.Services
                             // Garante que complementos não têm custo e atualiza o nome
                             opcao.PrecoUnitario = complementoDb.Preco;
                             opcao.Nome = complementoDb.Nome;
-                            subTotalItem += opcao.PrecoTotal;
+                            // **** AQUI ESTÁ A MUDANÇA CRÍTICA PARA O BACKEND ****
+                            // Recalcula o PrecoTotal do complemento com base na sua Quantidade e PrecoUnitario
+                            subTotalItemAtual += opcao.PrecoTotal; 
                         }
                     }
                 }
 
                 // Define o subtotal final do item e o acumula no total do pedido
-                item.SubTotal = subTotalItem;
+                item.SubTotal = subTotalItemAtual;
                 subTotalPedido += item.SubTotal;
             }
 
@@ -314,24 +366,6 @@ namespace SistemaDeGestao.Services
             }
         }
 
-        private async Task ReduzirEstoqueAsync(Pedido pedido)
-        {
-            var produtoIds = pedido.Itens.Select(i => i.ProdutoId).ToList();
-            var produtos = await _context.Produtos
-                .Where(p => produtoIds.Contains(p.Id))
-                .ToListAsync();
-
-            foreach (var item in pedido.Itens)
-            {
-                var produto = produtos.FirstOrDefault(p => p.Id == item.ProdutoId);
-                if (produto != null)
-                {
-                    produto.EstoqueAtual -= item.Quantidade;
-                }
-            }
-            // As alterações serão salvas pelo SaveChangesAsync no método principal
-        }
-
         private async Task NotificarNovoPedido(int pedidoId)
         {
             try
@@ -382,7 +416,6 @@ namespace SistemaDeGestao.Services
 
         public async Task DeleteAll()
         {
-            // Cuidado: Este método apaga TODOS os pedidos. Use apenas em ambiente de desenvolvimento.
             await _context.Database.ExecuteSqlRawAsync("DELETE FROM [PedidosCancelados]");
             await _context.Database.ExecuteSqlRawAsync("DELETE FROM [OpcoesExtrasItemPedido]");
             await _context.Database.ExecuteSqlRawAsync("DELETE FROM [ItensPedido]");

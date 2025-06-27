@@ -32,7 +32,6 @@ const usePayment = () => {
         setLoading(true);
         setError(null);
         try {
-            // Agora enviamos tanto os dados de pagamento quanto os dados do pedido
             const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/processaPagamentoDinheiro`,
                 {

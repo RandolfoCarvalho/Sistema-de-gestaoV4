@@ -16,6 +16,7 @@ namespace SistemaDeGestao.AutoMapper
                 .ForMember(dest => dest.Pagamento, opt => opt.MapFrom(src => new PedidoPagamento
                 {
                     FormaPagamento = src.Pagamento.FormaPagamento,
+                    TransactionId = src.Pagamento.TransactionId,
                     TrocoPara = src.Pagamento.TrocoPara,
                 }))
                 .ForMember(dest => dest.EnderecoEntrega, opt => opt.MapFrom(src => src.Endereco));

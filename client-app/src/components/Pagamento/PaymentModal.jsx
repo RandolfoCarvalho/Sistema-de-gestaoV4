@@ -120,7 +120,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
 
        try {
             const response = await paymentProcessor(paymentData, pedidoDTO);
-
             const isPaymentApproved = response.ok && response.data?.status === "approved";
             const isDinheiroSuccess = response.ok && paymentMethod === "dinheiro";
             const isPixSuccess = response.ok && response.data?.qrCodeBase64;
@@ -179,7 +178,11 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             setInternalError("❌ O valor do troco deve ser maior que o total a pagar.");
             return;
         }
-        const paymentData = { FormaPagamento: "dinheiro", trocoPara: troco ? parseFloat(troco) : null };
+        const paymentData = { 
+            FormaPagamento: "dinheiro", 
+            trocoPara: troco 
+        };
+
         handleSubmit(processPaymentDinheiro, paymentData);
     };
 

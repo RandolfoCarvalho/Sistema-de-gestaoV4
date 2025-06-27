@@ -193,7 +193,6 @@ namespace SistemaDeGestao.Services
             var opts = new RequestOptions { AccessToken = accessToken };
             await client.CancelAsync(paymentId, opts);
         }
-
         public async Task<ReembolsoResponseDTO> ProcessarReembolso(ReembolsoRequest request, string accessToken)
         {
             var httpClient = new HttpClient();

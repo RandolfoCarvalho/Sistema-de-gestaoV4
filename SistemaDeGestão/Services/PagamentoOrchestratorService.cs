@@ -98,8 +98,6 @@ public class PagamentoOrchestratorService : IPagamentoOrchestratorService
             pedido.Pagamento.PagamentoAprovado = true;
             pedido.Pagamento.DataAprovacao = DateTime.UtcNow;
             await _context.SaveChangesAsync();
-            if(pedido.Observacoes.Contains("ROLLBACK"))
-                throw new Exception("Rollback Simulado");
             await tx.CommitAsync();
 
             return new PaymentResponseDTO

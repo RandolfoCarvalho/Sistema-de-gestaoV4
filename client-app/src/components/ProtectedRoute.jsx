@@ -1,46 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import FuturisticLoadingSpinner from './ui/FuturisticLoadingSpinner'; 
-import { useStore } from './Context/StoreContext';
+import FuturisticLoadingSpinner from './ui/FuturisticLoadingSpinner';
+import { useAuth } from '../services/AuthContext';
 
 const ProtectedRoute = ({ redirectTo = "/auth/login" }) => {
-    const [checkingAuth, setCheckingAuth] = useState(true);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [successMessage, setSuccessMessage] = useState("");
-    const { currentStore } = useStore(); 
-
-    //TODO, MUDAR A LOGICA DISSO AQUI
+    const { isAuthenticated, loading } = useAuth();
     const navigate = useNavigate();
+    React.useEffect(() => {
+        if (!loading && !isAuthenticated) {
+            navigate(redirectTo, { replace: true });
+        }
+    }, [isAuthenticated, loading, navigate, redirectTo]);
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-
-        const timer = setTimeout(() => {
-            if (token) {
-                setIsAuthenticated(true);
-            } else {
-                setIsAuthenticated(false);
-                navigate(redirectTo, { replace: true });
-            }
-            setCheckingAuth(false); 
-        }, 1300);
-
-        return () => clearTimeout(timer);
-    }, [navigate, redirectTo]);
-
-    if (checkingAuth) {
+    if (loading) {
         return (
             <FuturisticLoadingSpinner
-                message="Carregando seus dados..."
+                message="Verificando autenticação..."
                 accentColor="blue"
                 secondaryColor="blue"
                 darkMode={false}
                 showBorder={true}
                 phaseMessages={["Preparando ambiente", "Carregando dados", "Verificando sistema", "Finalizando..."]}
-                />
+            />
         );
     }
-    return <Outlet />;
+    return isAuthenticated ? <Outlet /> : null;
 };
 
 export default ProtectedRoute;

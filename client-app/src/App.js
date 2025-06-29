@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import axios from 'axios';
 import Modal from 'react-modal';
 
@@ -7,12 +7,13 @@ import Modal from 'react-modal';
 import { CartProvider } from './components/Context/CartContext';
 import { SignalRProvider } from './services/SignalRContext';
 import { StoreProvider } from './components/Context/StoreContext';
+import { AuthProvider } from "./services/AuthContext";
 
 // Global Styles
 import './App.css';
 import './index.css';
 
-// Components
+// Customer-facing
 import Produtos from './components/Produtos/Produtos';
 import ProductDetails from './components/ProdutoDetails/ProductDetails';
 import CheckoutPage from './components/Checkout/Checkout';
@@ -22,10 +23,11 @@ import Promocoes from "./components/Promocoes/Promocoes";
 import PedidosDetalhes from "./components/Pedidos/PedidosDetalhes";
 import PerfilLoja from "./components/Perfil/PerfilLoja";
 
-// Admin Components
-import Sidebar from './components/Admin/Sidebar/Sidebar';
-import HeaderAdmin from './components/Admin/Header/Header';
-//import RestaurantDashboard from './components/Admin/Stats/RestaurantDashboard';
+// Admin Layout & Protected Route
+import AdminLayout from './components/Admin/AdminLayout';
+import ProtectedRoute from './components/ProtectedRoute';
+
+// Admin Pages (sub-rotas)
 import RestaurantDashboard from './components/Admin/Dashboard/OrderDashboard';
 import Create from './components/Admin/Stats/CreateProduct';
 import CriarGrupoAdicionais from './components/Admin/Stats/CreateAddGroup';
@@ -34,37 +36,25 @@ import MeusProdutos from './components/Admin/Stats/Products';
 import Perfil from './components/Admin/Stats/Perfil';
 import WhatsappBOT from './components/Admin/Stats/WhatsappBOT/whatsappBOT';
 import Sair from './components/Admin/Stats/logout';
-//protecao da rota admin
-import ProtectedRoute from './components/ProtectedRoute';
-import { AuthProvider } from "./services/AuthContext";
 
-// Axios Global Config
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
-Modal.setAppElement('#root');
-
-const AdminLayout = () => {
-  return (
-    // 1. O Provedor envolve tudo que precisa do contexto de autenticação do admin.
-    <AuthProvider>
-      {/* 2. O ProtectedRoute verifica se o usuário pode acessar e renderiza o <Outlet /> */}
-      <ProtectedRoute />
-    </AuthProvider>
-  );
-};
+Modal.setAppElement('#root'); 
 
 const App = () => {
     const [darkMode, setDarkMode] = useState(false);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const toggleDarkMode = () => setDarkMode(!darkMode);
-    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
     return (
-        <SignalRProvider>
-            <StoreProvider>
+        // AuthProvider deve envolver toda a aplicação ou as rotas que precisam de autenticação
+        <AuthProvider>
+            <SignalRProvider>
+                <StoreProvider>
                     <CartProvider>
                         <Router>
                             <div className={darkMode ? "dark" : ""}>
                                 <Routes>
-                                 <Route path="/" element={<Produtos />} />
+                                    {/* Rotas públicas */}
+                                    <Route path="/" element={<Produtos />} />
                                     <Route path="/loja/:nomeDaLoja" element={<Produtos />} />
                                     <Route path="/product/:id" element={<ProductDetails />} />
                                     <Route path="/checkout" element={<CheckoutPage />} />
@@ -73,28 +63,18 @@ const App = () => {
                                     <Route path="/pedidos/:numeroPedido" element={<PedidosDetalhes />} />
                                     <Route path="/promo" element={<Promocoes />} />
                                     <Route path='/loja/:nomeDaLoja/perfil' element={<PerfilLoja />} />
-                                    {/* Admin Routes */}
-                                    <Route element={<AdminLayout />}>
+                                    
+                                    {/* Rotas de Admin Protegidas */}
+                                    {/* O ProtectedRoute é o pai que verifica a autenticação */}
+                                    <Route element={<ProtectedRoute />}>
                                         <Route path="/admin" element={
-                                            <div className={`${darkMode ? 'dark' : ''} flex bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400`}>
-                                                <Sidebar isSidebarOpen={isSidebarOpen} />
-                                                
-                                                {/* AQUI ESTÁ A CORREÇÃO. Adicione 'min-w-0' a este div. */}
-                                                <div className={`flex-1 min-h-screen min-w-0 transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
-                                                    <HeaderAdmin
-                                                        isSidebarOpen={isSidebarOpen}
-                                                        toggleSidebar={toggleSidebar}
-                                                        darkMode={darkMode}
-                                                        toggleDarkMode={toggleDarkMode}
-                                                    />
-                                                    <main className="p-4 h-[calc(100vh-theme(height.16))] overflow-y-auto" style={{ paddingTop: '55px' }}>
-                                                        {/* O Outlet renderiza seu dashboard aqui dentro */}
-                                                        <Outlet /> 
-                                                    </main>
-                                                </div>
-                                            </div>
+                                            <AdminLayout 
+                                                darkMode={darkMode} 
+                                                toggleDarkMode={toggleDarkMode} 
+                                            />
                                         }>
-                                            <Route index element={<RestaurantDashboard />} />
+                                            {/* Sub-rotas do Admin */}
+                                            <Route index element={<RestaurantDashboard />} /> {/* /admin */}
                                             <Route path="dashboard" element={<RestaurantDashboard />} />
                                             <Route path="CriarProduto" element={<Create />} />
                                             <Route path="CriarGrupoAdicionais" element={<CriarGrupoAdicionais />} />
@@ -109,8 +89,9 @@ const App = () => {
                             </div>
                         </Router>
                     </CartProvider>
-            </StoreProvider>
-        </SignalRProvider>
+                </StoreProvider>
+            </SignalRProvider>
+        </AuthProvider>
     );
 };
 

@@ -184,6 +184,7 @@ namespace SistemaDeGestao.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Erro crítico ao processar webhook para a transação {TransactionId}", transactionId);
+                _logger.LogError($"[Webhook] StackTrace: {ex.StackTrace}");
                 return StatusCode(500, new { message = "Erro interno ao processar a notificação." });
             }
         }

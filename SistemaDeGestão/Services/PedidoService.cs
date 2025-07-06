@@ -181,14 +181,22 @@ namespace SistemaDeGestao.Services
 
                 _context.Pedidos.Add(pedido);
                 await _context.SaveChangesAsync();
+                var pedidoComRelacionamentos = await _context.Pedidos
+                        .Include(p => p.Itens)
+                            .ThenInclude(item => item.Produto)
+                        .Include(p => p.Pagamento)
+                        .FirstOrDefaultAsync(p => p.Id == pedido.Id);
 
-                await _context.SaveChangesAsync();
+                if (pedidoComRelacionamentos == null)
+                {
+                    throw new InvalidOperationException($"Pedido com ID {pedido.Id} não encontrado após salvar e recarregar.");
+                }
 
                 await transaction.CommitAsync();
 
-                await NotificarNovoPedido(pedido.Id);
+                await NotificarNovoPedido(pedidoComRelacionamentos.Id);
 
-                return pedido;
+                return pedidoComRelacionamentos;
             }
             catch (Exception ex)
             {

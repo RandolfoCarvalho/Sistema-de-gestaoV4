@@ -5,7 +5,6 @@ import SidebarHeader from './SidebarHeader';
 import NavigationLinks from './NavigationLinks';
 import SidebarFooter from './SidebarFooter';
 
-// Definindo constantes para classes pode ajudar na legibilidade se forem muito complexas ou condicionais
 const BASE_SIDEBAR_CLASSES = `
     fixed top-0 left-0 z-40 w-64 h-screen
     bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900

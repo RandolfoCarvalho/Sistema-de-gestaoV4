@@ -71,7 +71,7 @@ const RelatorioModal = ({ isOpen, onClose }) => {
         if (!element) return;
 
         const opt = {
-            margin: [0.5, 0.5, 0.5, 0.5], // top, left, bottom, right
+            margin: [0.5, 0.5, 0.5, 0.5],
             filename: `Relatorio_Detalhado_${startDate}_a_${endDate}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { 
@@ -91,13 +91,10 @@ const RelatorioModal = ({ isOpen, onClose }) => {
             },
             pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
         };
-
-        // Garantir que o elemento esteja visível antes da captura
         element.style.display = 'block';
         element.style.visibility = 'visible';
         
         html2pdf().from(element).set(opt).save().then(() => {
-            // Opcional: esconder novamente após a captura se necessário
         });
     };
 
@@ -276,16 +273,14 @@ const RelatorioModal = ({ isOpen, onClose }) => {
                     </div>
                 </div>
             </div>
-
-            {/* Container para geração do PDF - Corrigido */}
             {reportData && (
                 <div 
                     style={{ 
                         position: 'absolute', 
                         left: '-10000px', 
                         top: '0',
-                        width: '210mm', // A4 width
-                        minHeight: '297mm', // A4 height
+                        width: '210mm',
+                        minHeight: '297mm',
                         backgroundColor: 'white',
                         fontFamily: 'Arial, sans-serif'
                     }}
@@ -313,8 +308,6 @@ const RelatorioModal = ({ isOpen, onClose }) => {
                                 Gerado em: {new Date().toLocaleString('pt-BR')}
                             </p>
                         </div>
-
-                        {/* Resumo Geral */}
                         <div style={{ marginBottom: '30px' }}>
                             <h2 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '15px', color: '#333', borderBottom: '1px solid #ddd', paddingBottom: '5px' }}>
                                 RESUMO GERAL
@@ -381,8 +374,6 @@ const RelatorioModal = ({ isOpen, onClose }) => {
                                 </tbody>
                             </table>
                         </div>
-
-                        {/* Rodapé */}
                         <div style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid #ddd', textAlign: 'center', fontSize: '10px', color: '#666' }}>
                             <p style={{ margin: '0' }}>
                                 Este relatório foi gerado automaticamente pelo sistema em {new Date().toLocaleString('pt-BR')}

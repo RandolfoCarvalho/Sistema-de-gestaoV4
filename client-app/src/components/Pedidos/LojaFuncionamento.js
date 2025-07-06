@@ -9,19 +9,11 @@ const LojaFuncionamento = () => {
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    // Verifica se a loja está aberta baseado nos horários e dias configurados
     const verificarFuncionamento = async () => {
         try {
             setLoading(true);
             const response = await api.get('/api/1.0/Restaurante/GetRestauranteInfo');
-
-            // Obtém dados da empresa
             const empresa = response.data.empresa;
-
-            // Verifica se está manualmente fechada
-            // Esta verificação precisaria de um endpoint específico ou um campo no modelo
-            // Para este exemplo, assumiremos que essa informação está em algum lugar na API
             const manualmenteFechado = response.data.manualmenteFechado || false;
 
             if (manualmenteFechado) {
@@ -33,18 +25,12 @@ const LojaFuncionamento = () => {
                 setLoading(false);
                 return;
             }
-
-            // Obtém a data e hora atual
             const agora = new Date();
             const diaDaSemana = agora.getDay(); // 0 = Domingo, 1 = Segunda, etc.
-
-            // Mapeia o dia da semana para a propriedade correspondente no objeto DiasFuncionamento
             const diasDaSemana = [
                 'Domingo', 'Segunda', 'Terca', 'Quarta', 'Quinta', 'Sexta', 'Sabado'
             ];
             const diaAtual = diasDaSemana[diaDaSemana];
-
-            // Verifica se a loja funciona no dia atual
             const funcionaHoje = empresa.diasFuncionamento &&
                 empresa.diasFuncionamento[diaAtual.toLowerCase()];
 
@@ -57,13 +43,9 @@ const LojaFuncionamento = () => {
                 setLoading(false);
                 return;
             }
-
-            // Verifica se está dentro do horário de funcionamento
             const horaAtual = agora.getHours();
             const minutosAtual = agora.getMinutes();
             const horaAtualEmMinutos = horaAtual * 60 + minutosAtual;
-
-            // Converte horários de funcionamento para minutos para facilitar comparação
             const horarioAberturaArray = empresa.horarioAbertura.split(':');
             const horarioFechamentoArray = empresa.horarioFechamento.split(':');
 
@@ -82,7 +64,6 @@ const LojaFuncionamento = () => {
                     manualmenteFechado: false
                 });
             } else {
-                // Calcula tempo para abertura ou para fechamento
                 let mensagem;
                 if (horaAtualEmMinutos < aberturaEmMinutos) {
                     const minutosParaAbrir = aberturaEmMinutos - horaAtualEmMinutos;
@@ -109,16 +90,12 @@ const LojaFuncionamento = () => {
         }
     };
 
-    // Alternar estado da loja (abrir/fechar manualmente)
     const alternarEstadoLoja = async () => {
         try {
             setLoading(true);
-            // Este endpoint precisaria ser implementado na API
             await api.post('/api/1.0/Restaurante/ToggleStatus', {
                 manualmenteFechado: !status.manualmenteFechado
             });
-
-            // Atualiza o estado local após a alteração
             setStatus(prevStatus => ({
                 ...prevStatus,
                 isOpen: !prevStatus.manualmenteFechado,
@@ -136,8 +113,6 @@ const LojaFuncionamento = () => {
 
     useEffect(() => {
         verificarFuncionamento();
-
-        // Verificar a cada minuto
         const intervalo = setInterval(() => {
             verificarFuncionamento();
         }, 60000);

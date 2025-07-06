@@ -26,7 +26,6 @@ const BottomNav = () => {
     };
 
     const handleLoginSuccess = (userDataWithToken) => {
-        // A userDataWithToken já contém id, nome, telefone e o TOKEN
         const { id, nome, telefone, token } = userDataWithToken;
         localStorage.setItem("userId", id);
         localStorage.setItem("FinalUserName", nome);

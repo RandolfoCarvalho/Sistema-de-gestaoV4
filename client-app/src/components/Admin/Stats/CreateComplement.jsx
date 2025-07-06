@@ -158,22 +158,15 @@ const GerenciamentoComplementos = () => {
 
         const min = formData.quantidadeMinima ? parseInt(formData.quantidadeMinima, 10) : NaN;
         const max = formData.quantidadeMaxima ? parseInt(formData.quantidadeMaxima, 10) : NaN;
-        
-        // --- SEÇÃO MODIFICADA ---
-        // Calcula a soma máxima de itens selecionáveis com base nos complementos
         const somaMaximaPossivel = formData.complementos.reduce((soma, comp) => {
-            // Se maximoPorProduto não for definido, considera-se 1, replicando a lógica da UI do cliente.
             const maxDoItem = parseInt(comp.maximoPorProduto, 10) || 1;
             return soma + maxDoItem;
         }, 0);
 
-        // Validação 1: Máximo do grupo não pode ser menor que o mínimo do grupo
         if (!isNaN(min) && !isNaN(max) && max < min) {
             showError("Valores inválidos", "A quantidade máxima do grupo não pode ser menor que a mínima.");
             return;
         }
-        
-        // Validação 2: Mínimo do grupo não pode ser maior que a soma total possível de itens
         if (!isNaN(min) && min > somaMaximaPossivel) {
             showError(
                 "Mínimo Inválido", 
@@ -181,8 +174,6 @@ const GerenciamentoComplementos = () => {
             );
             return;
         }
-
-        // Validação 3: Máximo do grupo não pode ser maior que a soma total possível de itens
         if (!isNaN(max) && max > somaMaximaPossivel) {
             showError(
                 "Máximo Inválido",
@@ -190,8 +181,6 @@ const GerenciamentoComplementos = () => {
             );
             return;
         }
-        // --- FIM DA SEÇÃO MODIFICADA ---
-
         setIsSubmitting(true);
         setError(null);
 

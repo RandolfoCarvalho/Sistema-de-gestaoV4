@@ -1,5 +1,4 @@
-﻿// src/components/Admin/AdminLayout.js
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar/Sidebar'; 
 import HeaderAdmin from './Header/Header'; 

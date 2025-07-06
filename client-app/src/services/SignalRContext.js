@@ -7,8 +7,6 @@ const SignalRContext = createContext();
 export const SignalRProvider = ({ children }) => {
     const [connection, setConnection] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
-
-    // 👇 NOVO: Estado para a notificação, gerenciado globalmente
     const [notification, setNotification] = useState(null);
 
     useEffect(() => {
@@ -55,7 +53,6 @@ export const SignalRProvider = ({ children }) => {
         </SignalRContext.Provider>
     );
 };
-// Hook para usar o SignalRContext
 const useSignalR = () => useContext(SignalRContext);
 
 export { useSignalR };

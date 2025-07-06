@@ -117,7 +117,6 @@ const Perfil = () => {
     
         fetchRestaurante();
     }, []);
-    
 
     const handleMercadoPagoChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -129,9 +128,6 @@ const Perfil = () => {
             }
         }));
     };
-    
-    
-    // Atualizar valores do restaurante
     const handleRestauranteChange = (e) => {
         const { name, value } = e.target;
         setRestaurante(prev => ({
@@ -179,11 +175,9 @@ const Perfil = () => {
         }));
     };
 
-    // Salvar alterações
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        // Validação de senha
         if (senha && senha !== confirmarSenha) {
             setMensagemErro("As senhas não conferem.");
             return;
@@ -202,7 +196,6 @@ const Perfil = () => {
                     horarioAbertura: restaurante.empresa.horarioAbertura + ":00",
                     horarioFechamento: restaurante.empresa.horarioFechamento + ":00",
                     diasFuncionamento: restaurante.empresa.diasFuncionamento,
-                    // Remover campos nulos
                     ...(restaurante.empresa.cnpj && { cnpj: restaurante.empresa.cnpj }),
                     ...(restaurante.empresa.cpf && { cpf: restaurante.empresa.cpf }),
                     ...(restaurante.empresa.razaoSocial && { razaoSocial: restaurante.empresa.razaoSocial }),
@@ -248,7 +241,6 @@ const Perfil = () => {
             await api.put('/api/1.0/Restaurante/UpdateProfile', dadosParaEnviar);
 
             setMessage({ type: 'success', text: 'Perfil atualizado com sucesso!' });
-            // Limpar campos de senha após envio bem-sucedido
             setSenha("");
             setConfirmarSenha("");
         } catch (error) {
@@ -536,9 +528,9 @@ const Perfil = () => {
                   focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300"
                   id="taxaEntrega"
                   name="taxaEntrega"
-                  type="number" // Use type="number" para facilitar a entrada
-                  step="0.01"   // Permite centavos
-                  min="0"       // Não permite valores negativos
+                  type="number"
+                  step="0.01"
+                  min="0" 
                   value={restaurante.empresa?.taxaEntrega || ''}
                   onChange={handleEmpresaChange}
                   placeholder="Ex: 5.50"
@@ -803,7 +795,6 @@ const Perfil = () => {
     }
   };
 
-  // Ícones para as abas
   const getTabIcon = (tab) => {
     switch (tab) {
       case 'dados-restaurante':

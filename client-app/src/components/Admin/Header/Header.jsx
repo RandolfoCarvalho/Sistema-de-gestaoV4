@@ -14,14 +14,9 @@ const Header = ({ toggleSidebar, darkMode, toggleDarkMode }) => {
     };
 
     return (
-        // 1. HEADER: Sombra suave, altura fixa, padding e transição de cores
         <header className="fixed top-0 z-50 w-full bg-white dark:bg-gray-800 shadow-md transition-colors duration-300">
             <div className="flex items-center justify-between h-16 px-4 sm:px-6">
-                
-                {/* LADO ESQUERDO: Botão de menu e nome da loja */}
-                <div className="flex items-center gap-4"> {/* 2. GAP para espaçamento consistente */}
-                    
-                    {/* 3. BOTÃO DE ÍCONE UNIFICADO */}
+                <div className="flex items-center gap-4"> 
                     <button
                         onClick={toggleSidebar}
                         title="Abrir/Fechar menu"
@@ -29,8 +24,6 @@ const Header = ({ toggleSidebar, darkMode, toggleDarkMode }) => {
                     >
                         <HiOutlineMenuAlt2 className="w-6 h-6" />
                     </button>
-
-                    {/* 4. LINK DA LOJA REFINADO */}
                     <div
                         onClick={handleStoreClick}
                         title={`Abrir loja '${currentStore}' em nova aba`}
@@ -42,11 +35,7 @@ const Header = ({ toggleSidebar, darkMode, toggleDarkMode }) => {
                         </span>
                     </div>
                 </div>
-
-                {/* LADO DIREITO: Botão de Dark Mode */}
                 <div className="flex items-center">
-                    
-                    {/* 3. BOTÃO DE ÍCONE UNIFICADO */}
                     <button
                         onClick={toggleDarkMode}
                         title="Alterar tema"
@@ -54,7 +43,6 @@ const Header = ({ toggleSidebar, darkMode, toggleDarkMode }) => {
                     >
                         {darkMode ? <FaSun className="w-5 h-5" /> : <FaMoon className="w-5 h-5" />}
                     </button>
-                    {/* Futuramente, o menu de usuário poderia entrar aqui */}
                 </div>
             </div>
         </header>

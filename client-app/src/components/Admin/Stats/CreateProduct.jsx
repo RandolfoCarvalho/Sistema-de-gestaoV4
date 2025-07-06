@@ -3,9 +3,7 @@ import { Camera, Package, Tag, Layers, Check, X, Plus, Loader2, Pencil, XCircle 
 import { formatPriceToInvariantBackend } from '@utils/formatters'; // Ajuste o caminho se necessário
 import axios from 'axios';
 import MultiSelectDropdown from '../ui/MultiSelectDropdown';
-// Componente para o layout unificado de criação de produtos
 const CreateProductForm = () => {
-    // --- ESTADOS DO FORMULÁRIO ---
     const [formData, setFormData] = useState({
         nome: '',
         descricao: '',
@@ -27,8 +25,8 @@ const CreateProductForm = () => {
     const [gruposAdicionais, setGruposAdicionais] = useState([]);
     
     // --- ESTADOS DE CONTROLE DA UI ---
-    const [isLoading, setIsLoading] = useState(true); // Carregamento inicial da página
-    const [isSubmitting, setIsSubmitting] = useState(false); // Carregamento do envio do formulário
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const [dragActive, setDragActive] = useState(false);
@@ -267,9 +265,7 @@ const CreateProductForm = () => {
                 {success && <div className="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-md"><p className="font-semibold">{success}</p></div>}
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* --- COLUNA ESQUERDA (MAIOR) --- */}
                     <div className="lg:col-span-2 space-y-8">
-                        {/* CARD: INFORMAÇÕES BÁSICAS */}
                         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                             <h2 className="text-lg font-semibold text-gray-700 border-b border-gray-200 pb-3 mb-4"><Package size={20} className="inline-block mr-2" />Informações Básicas</h2>
                             <div className="space-y-4">
@@ -283,8 +279,6 @@ const CreateProductForm = () => {
                                 </div>
                             </div>
                         </div>
-
-                        {/* CARD: PREÇO E ESTOQUE */}
                         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                             <h2 className="text-lg font-semibold text-gray-700 border-b border-gray-200 pb-3 mb-4"><Tag size={20} className="inline-block mr-2" />Preço e Estoque</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
@@ -313,10 +307,7 @@ const CreateProductForm = () => {
                             </div>
                         </div>
                     </div>
-
-                    {/* --- COLUNA DIREITA (MENOR) --- */}
                     <div className="lg:col-span-1 space-y-8">
-                        {/* CARD: MÍDIA */}
                         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                             <h2 className="text-lg font-semibold text-gray-700 border-b border-gray-200 pb-3 mb-4"><Camera size={20} className="inline-block mr-2" />Mídia do Produto</h2>
                             {previewUrl ? (
@@ -337,12 +328,9 @@ const CreateProductForm = () => {
                                 </label>
                             )}
                         </div>
-
-                        {/* CARD: ORGANIZAÇÃO */}
                         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                             <h2 className="text-lg font-semibold text-gray-700 border-b border-gray-200 pb-3 mb-4"><Layers size={20} className="inline-block mr-2" />Organização</h2>
                             <div className="space-y-4">
-                                {/* Seção Categoria */}
                                 <div>
                                     <label htmlFor="categoriaId" className="block text-sm font-medium text-gray-600 mb-1">Categoria *</label>
                                     <select id="categoriaId" value={formData.categoriaId} onChange={(e) => setFormData({ ...formData, categoriaId: e.target.value ? parseInt(e.target.value) : '' })} className="w-full p-2 border border-gray-300 rounded-md bg-white" required>
@@ -364,23 +352,22 @@ const CreateProductForm = () => {
                                         </div>
                                     )}
                                 </div>
-                                {/* Seção Complementos e Adicionais com Dropdowns */}
                                 <div>
                                     <MultiSelectDropdown
                                         label="Grupos de Complementos"
-                                        items={complementos} // Sua lista de todos os complementos disponíveis
-                                        selectedIds={formData.gruposComplementosIds} // IDs atualmente selecionados
+                                        items={complementos}
+                                        selectedIds={formData.gruposComplementosIds}
                                         onChange={(selectedIds) => 
                                             setFormData(prev => ({ ...prev, gruposComplementosIds: selectedIds }))
                                         }
                                     />
                                 </div>
 
-                                <div className="mt-4"> {/* Adicionado um espaçamento para separar os dropdowns */}
+                                <div className="mt-4">
                                     <MultiSelectDropdown
                                         label="Grupos de Adicionais"
-                                        items={gruposAdicionais} // Sua lista de todos os adicionais disponíveis
-                                        selectedIds={formData.gruposAdicionaisIds} // IDs atualmente selecionados
+                                        items={gruposAdicionais}
+                                        selectedIds={formData.gruposAdicionaisIds}
                                         onChange={(selectedIds) => 
                                             setFormData(prev => ({ ...prev, gruposAdicionaisIds: selectedIds }))
                                         }
@@ -390,8 +377,6 @@ const CreateProductForm = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* --- BOTÕES DE AÇÃO NO RODAPÉ --- */}
                 <footer className="mt-8 pt-6 border-t border-gray-200 flex justify-end gap-4">
                     <button type="button" className="py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">Descartar</button>
                     <button type="submit" disabled={isSubmitting} className="py-2 px-8 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center gap-2">

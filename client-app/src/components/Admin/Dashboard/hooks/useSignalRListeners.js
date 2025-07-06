@@ -15,9 +15,7 @@ const useSignalRListeners = (connection, isConnected, setOrders, processOrders, 
             fetchOrders(connection, isConnected);
         });
         
-        //NOVO LISTENER PARA NOTIFICAÇÃO DE NOVO PEDIDO
         connection.on("ReceiveOrderNotification", (newOrder) => {
-            // 1. Atualiza o estado da notificação no contexto
             if (setNotification) {
                 setNotification(newOrder);
             }

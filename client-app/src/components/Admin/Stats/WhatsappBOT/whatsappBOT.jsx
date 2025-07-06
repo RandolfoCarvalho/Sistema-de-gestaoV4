@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { CheckCircle } from 'lucide-react';
 import MessageTemplate from './MessageTemplate';
 import LoginSection from './LoginSection';
-import ChatInterface from './ChatInterface'; // Importamos o novo componente
+import ChatInterface from './ChatInterface';
 import axios from 'axios';
 
 const baseUrl = process.env.REACT_APP_WHATSAPPBOT_VPS;
@@ -16,7 +16,6 @@ const WhatsappBOT = () => {
 
   const isMounted = useRef(true);
 
-  // Garantir que a referência de montagem seja atualizada corretamente
   useEffect(() => {
     isMounted.current = true;
     return () => {
@@ -37,15 +36,12 @@ const desconectarSessao = async () => {
     setLoading(true);
     try {
       await axios.get(`${baseUrl}/logout/${sessionName}`);
-      // Força um reload para garantir que a interface seja reiniciada para o estado de "desconectado"
       window.location.reload();
     } catch (error) {
       console.error('Erro ao desconectar:', error);
       alert('Erro ao tentar desconectar. A página será recarregada para garantir o estado correto.');
-      // Recarrega mesmo em caso de erro para evitar uma UI inconsistente
       window.location.reload();
     } finally {
-      // O setLoading não é mais estritamente necessário por causa do reload, mas mantemos por segurança
       if (isMounted.current) {
         setLoading(false);
       }

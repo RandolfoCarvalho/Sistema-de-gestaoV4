@@ -3,5 +3,4 @@
 interface Order {
     id: number;
     status: OrderStatus;
-    // outros campos
 }

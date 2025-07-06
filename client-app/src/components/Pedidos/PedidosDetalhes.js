@@ -23,7 +23,6 @@ const formatDate = (dateString) => {
 
 // --- Componentes de UI de Alta Qualidade ---
 const STATUS_CANCELADO = 4;
-// 1. Status Tracker Gráfico (O ponto focal da tela)
 const StatusTracker = ({ status, orderDate }) => {
     const statusSteps = useMemo(() => [
         { name: "Recebido", icon: PackageCheck },
@@ -33,8 +32,6 @@ const StatusTracker = ({ status, orderDate }) => {
     ], []);
 
     const currentStatusIndex = status > 4 ? 4 : status;
-
-    // Se o pedido foi cancelado, renderiza uma UI específica
     if (status === STATUS_CANCELADO) {
         return (
             <div className="bg-red-50 p-5 rounded-xl shadow-sm border border-red-200">
@@ -145,7 +142,6 @@ const OrderDetails = () => {
                 return;
             }
             try {
-                // Esta lógica de busca é mantida, pois é específica do seu backend
                 const restauranteResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/Restaurante/BuscarRestauranteIdPorNome/${currentStore}`);
                 const restauranteId = restauranteResponse.data;
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/1.0/FinalUser/GetPedidosByUser/${userPhone}/${restauranteId}`);
@@ -192,8 +188,6 @@ const OrderDetails = () => {
             <main className="flex-1 overflow-y-auto pb-28">
                 <div className="max-w-4xl mx-auto p-4 space-y-6">
                     <StatusTracker status={orderData.status} orderDate={orderData.dataPedido} />
-                    
-                    {/* Itens do Pedido e Resumo Financeiro */}
                     <div className="bg-white rounded-xl shadow-sm">
                         <div className="p-4 border-b border-gray-100 flex items-center space-x-3">
                             <ShoppingCart size={20} className="text-gray-500"/>
@@ -211,8 +205,6 @@ const OrderDetails = () => {
                             <div className="!mt-4 pt-3 border-t border-gray-200 flex justify-between font-bold text-base text-gray-900"><span>Total</span><span>{formatCurrency(orderData.pagamento.valorTotal)}</span></div>
                         </div>
                     </div>
-
-                    {/* Bloco de Informações Adicionais */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <InfoBlock icon={<Hash size={20} />} title="NÚMERO DO PEDIDO">
                             <p>#{orderData.numero}</p>

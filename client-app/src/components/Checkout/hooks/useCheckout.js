@@ -3,7 +3,6 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 export const useCheckout = (cart, cartTotal, taxaEntrega, currentStore, clearCart, navigate) => {
-    // 👇 Este 'userId' é a nossa chave. Se for null, o usuário não está autenticado.
     const [userId, setUserId] = useState(localStorage.getItem('userId') || null);
     const [isUserModalOpen, setIsUserModalOpen] = useState(false);
     
@@ -16,17 +15,14 @@ export const useCheckout = (cart, cartTotal, taxaEntrega, currentStore, clearCar
         endereco: { Logradouro: '', Numero: '', Complemento: '', Bairro: '', Cidade: '', CEP: '' },
         pagamento: { SubTotal: cartTotal, TaxaEntrega: taxaEntrega, Desconto: 0, ValorTotal: cartTotal + taxaEntrega , FormaPagamento: 'dinheiro' }
     });
-    
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showPaymentModal, setShowPaymentModal] = useState(false);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('dinheiro');
 
-    // Sincroniza o `FinalUserId` no formulário sempre que o `userId` do estado mudar.
     useEffect(() => {
         setFormData(prev => ({...prev, FinalUserId: userId}));
     }, [userId]);
 
-    // Lógica para carregar dados do localStorage na montagem inicial
     useEffect(() => {
         const nome = localStorage.getItem("FinalUserName");
         const telefone = localStorage.getItem("FinalUserTelefone");
@@ -40,10 +36,8 @@ export const useCheckout = (cart, cartTotal, taxaEntrega, currentStore, clearCar
         setFormData(prev => ({ ...prev, pagamento: { ...prev.pagamento, SubTotal: cartTotal, ValorTotal: newTotal } }));
     }, [cartTotal, formData.pagamento.TaxaEntrega, formData.pagamento.Desconto]);
 
-    // Função para tratar o sucesso da autenticação/registro
     const handleUserSuccess = async (userData) => {
-        setIsUserModalOpen(false); // Fecha o modal imediatamente
-        // Define um estado de carregamento para o Swal
+        setIsUserModalOpen(false);
         Swal.fire({
             title: 'Verificando dados...',
             text: 'Por favor, aguarde.',

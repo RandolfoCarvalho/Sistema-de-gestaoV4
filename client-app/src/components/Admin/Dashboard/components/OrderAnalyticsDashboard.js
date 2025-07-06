@@ -24,7 +24,6 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
     const [timeRange, setTimeRange] = useState('week');
     const [chartType, setChartType] = useState('overview');
     const [isChartVisible, setIsChartVisible] = useState(true);
-    // 2. CRIE O ESTADO PARA CONTROLAR O MODAL
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     //estado notificacao novo pedido
@@ -36,8 +35,6 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [startDate, setStartDate] = useState(null); 
     const [endDate, setEndDate] = useState(null); 
-
-     // Este useEffect comunica as mudanças dos filtros para o pai (OrderDashboard)
     useEffect(() => {
         if (onFiltersChange) {
             onFiltersChange({ searchTerm, startDate, endDate });
@@ -157,7 +154,7 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
         // O statusCounter é reinicializado aqui, o que é correto.
         const statusCounter = Object.fromEntries(Object.values(STATUS_MAP).map(s => [s.key, 0]));
 
-        filteredOrders.forEach(order => { // MODIFICADO: itera sobre filteredOrders
+        filteredOrders.forEach(order => {
             if (!order.createdAt || !order.itens || !Array.isArray(order.itens)) return;
             const orderDate = new Date(order.createdAt);
             if (isNaN(orderDate.getTime())) return;
@@ -189,7 +186,7 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
 
             const yearKey = orderDate.toISOString().substring(0, 7);
             const yearIndex = yearData.findIndex(d => d.key === yearKey);
-            if (yearIndex >= 0) { /* ... (lógica original) ... */ 
+            if (yearIndex >= 0) {
                 yearData[yearIndex].orders += 1;
                 yearData[yearIndex].revenue += orderValue;
                 yearData[yearIndex].costs += orderCost;
@@ -209,7 +206,7 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
             yearData: yearData.map(d => ({ ...d, profit: d.revenue - d.costs })),
             statusDistribution: finalStatusDistribution
         };
-    }, [filteredOrders]); // MODIFICADO: depende de filteredOrders
+    }, [filteredOrders]);
 
     const getChartData = () => {
         switch (timeRange) {
@@ -224,7 +221,7 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
         }
     };
 
-    const currentChartData = getChartData(); // Renomeado para evitar conflito com 'data' em escopos internos
+    const currentChartData = getChartData();
 
     const calculateSummary = (dataToSummarize) => {
         if (!dataToSummarize || dataToSummarize.length === 0) {
@@ -269,7 +266,7 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
                             <YAxis yAxisId="left" />
                             <YAxis yAxisId="right" orientation="right" />
                             <Tooltip formatter={(value, name) => {
-                                const valueName = String(name); // Garantir que 'name' seja string
+                                const valueName = String(name);
                                 if (valueName === 'revenue' || valueName === 'costs' || valueName === 'profit') {
                                     return [`R$ ${Number(value).toFixed(2)}`, valueName === 'revenue' ? 'Receita' : valueName === 'costs' ? 'Custos' : 'Lucro'];
                                 }
@@ -372,7 +369,7 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
                                 cy="50%"
                                 labelLine={false}
                                 outerRadius={150}
-                                fill="#8884d8" // Cor base, será sobrescrita pelas Cells
+                                fill="#8884d8"
                                 dataKey="value"
                                 nameKey="name"
                                 label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
@@ -395,7 +392,7 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
     // Calculate profit margin (prevent division by zero)
     const profitMargin = summary.totalRevenue > 0
         ? ((summary.profit / summary.totalRevenue) * 100).toFixed(1)
-        : "0.0"; // Retornar string para consistência com .toFixed()
+        : "0.0"; 
 
     // Calculate cancellation rate
     const cancellationRate = summary.totalOrders > 0
@@ -412,13 +409,12 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
     if (currentChartData && currentChartData.length > 0) {
         peakDayInfo = currentChartData.reduce((maxItem, currentItem) => {
             return (currentItem.orders || 0) > (maxItem.orders || 0) ? currentItem : maxItem;
-        }, currentChartData[0]); // Inicial seguro pois currentChartData.length > 0
+        }, currentChartData[0]); 
     }
 
 
     return (
         <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
-            {/* 👇 RENDERIZAÇÃO CONDICIONAL DO TOAST USANDO O ESTADO DO CONTEXTO */}
             {notification && (
                 <NotificationToast 
                     order={notification} 
@@ -428,10 +424,6 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
 
             <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
                 <h3 className="text-xl font-semibold text-gray-800 mb-2 sm:mb-0">Análise Detalhada de Pedidos</h3>
-                
-                
-
-                {/* 👇 8. AGRUPAR OS BOTÕES DO CABEÇALHO PARA ALINHAMENTO CORRETO */}
                 <div className="flex items-center gap-4">
                     <button
                         onClick={() => setIsChartVisible(!isChartVisible)}
@@ -439,14 +431,12 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
                     >
                         {isChartVisible ? 'Minimizar Gráficos ▲' : 'Expandir Gráficos ▼'}
                     </button>
-                    {/* Ícone do sino com indicador de notificação */}
                     <button className="relative p-2 text-gray-500 hover:text-blue-600 hover:bg-gray-100 rounded-full">
                         <Bell size={20} />
                         {notification && <span className="absolute top-1 right-1 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>}
                     </button>
                 </div>
             </div>
-            {/* SEÇÃO DE FILTROS ADICIONADA */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 border border-gray-200 rounded-lg">
                     <div>
                         <label htmlFor="searchTerm" className="block text-sm font-medium text-gray-700 mb-1">
@@ -469,9 +459,9 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
                             type="date"
                             id="startDate"
                             className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            value={startDate || ''} // Controlado e permite limpar
+                            value={startDate || ''}
                             onChange={(e) => setStartDate(e.target.value)}
-                            max={endDate || ''} // Não pode ser depois da data final
+                            max={endDate || ''}
                         />
                     </div>
                     <div>
@@ -482,20 +472,18 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
                             type="date"
                             id="endDate"
                             className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            value={endDate || ''} // Controlado e permite limpar
+                            value={endDate || ''}
                             onChange={(e) => setEndDate(e.target.value)}
-                            min={startDate || ''} // Não pode ser antes da data inicial
+                            min={startDate || ''}
                         />
                     </div>
                 </div>
             <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                {/* Chart type selector */}
                 <div className="flex flex-wrap justify-center md:justify-start space-x-1 sm:space-x-2 mb-4 md:mb-0">
                     {[
                         { type: 'overview', label: 'Visão Geral', icon: BarChart4 },
                         { type: 'finance', label: 'Financeiro', icon: DollarSign },
                         { type: 'orders', label: 'Pedidos', icon: TrendingUp },
-                        // { type: 'status', label: 'Status', icon: PieIconLucide } // Descomente se quiser reativar
                     ].map(item => (
                         <button
                             key={item.type}
@@ -512,7 +500,6 @@ const OrderAnalyticsDashboard = ({ orders, onFiltersChange }) => {
                             <span>{item.label}</span>
                         </button>
                     ))}
-                    {/* 3. O BOTÃO QUE ABRE O MODAL */}
                     <button
                         onClick={() => setIsModalOpen(true)}
                         className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700"

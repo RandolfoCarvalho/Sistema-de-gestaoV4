@@ -20,13 +20,9 @@ const Produtos = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const finalFilteredProducts = useMemo(() => {
     let filtered = produtos;
-
-    // 2. Primeiro, filtra pela categoria ativa
     if (activeCategory !== 'todos') {
       filtered = filtered.filter(prod => prod.categoriaId === Number(activeCategory));
     }
-
-    // 3. Depois, filtra pelo termo da busca (se existir)
     if (searchTerm) {
       filtered = filtered.filter(prod =>
         prod.nome.toLowerCase().includes(searchTerm.toLowerCase())
@@ -43,7 +39,6 @@ const Produtos = () => {
   }, [categorias, finalFilteredProducts]);
   
   useEffect(() => {
-    // Mantendo seu fetch original
     const fetchMaisVendidos = async () => {
       if (!nomeDaLoja) return;
       try {
@@ -55,7 +50,6 @@ const Produtos = () => {
   }, [nomeDaLoja]);
 
   useEffect(() => {
-    // Mantendo seu handleScroll original
     const handleScroll = () => setShowBackToTop(window.scrollY > 300);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -77,14 +71,12 @@ const Produtos = () => {
     );
   }
 
-  // Lógica de filtro mantida
   const filteredProducts = activeCategory === "todos" ? produtos : produtos.filter(prod => prod.categoriaId === Number(activeCategory));
   const categoriasComProdutos = categorias.filter(categoria => filteredProducts.some(produto => produto.categoriaId === categoria.id));
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <header className="sticky top-0 z-20 bg-white shadow-sm">
-        {/* 4. Passamos a função `setSearchTerm` como prop para o Header */}
         <HeaderPublic 
           onSearchChange={setSearchTerm} 
           searchTerm={searchTerm}
@@ -105,8 +97,6 @@ const Produtos = () => {
         <div className="max-w-screen-xl mx-auto px-4 md:px-6 lg:px-8">
           
           <div className="max-w-screen-xl mx-auto px-4 md:px-6 lg:px-8">
-
-                    {/* Exibe o banner apenas se não houver uma busca ativa */}
                     {lojaInfo.bannerUrl && !searchTerm && (
                         <div className="w-full h-40 md:h-56 rounded-lg overflow-hidden my-6">
                             <img src={lojaInfo.bannerUrl} alt="Banner" className="w-full h-full object-cover" />
@@ -125,8 +115,6 @@ const Produtos = () => {
               <img src={lojaInfo.bannerUrl} alt="Banner" className="w-full h-full object-cover" />
             </div>
           )}
-          
-          {/* Se estiver buscando, mostra um título com os resultados */}
           {searchTerm && (
             <div className="py-6">
                 <h2 className="text-2xl font-bold text-gray-800">
@@ -140,17 +128,14 @@ const Produtos = () => {
 
           <div className="space-y-8">
             {finalFilteredProducts.length > 0 ? (
-              // Usamos o novo array `categoriasComProdutosVisiveis`
               categoriasComProdutosVisiveis.map((categoria) => (
                 <CategorySection 
                   key={categoria.id} 
                   categoryName={categoria.nome} 
-                  // Passamos os produtos já filtrados para a seção
                   products={finalFilteredProducts.filter(p => p.categoriaId === categoria.id)} 
                 />
               ))
             ) : (
-              // Mostra uma mensagem se não houver resultados para a busca/filtro
               <EmptyResults 
                 message={searchTerm 
                     ? `Nenhum produto encontrado para "${searchTerm}".`

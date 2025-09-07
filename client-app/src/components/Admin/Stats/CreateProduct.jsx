@@ -1,6 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { Camera, Package, Tag, Layers, Check, X, Plus, Loader2, Pencil, XCircle } from 'lucide-react';
-import { formatPriceToInvariantBackend } from '@utils/formatters'; // Ajuste o caminho se necessário
 import axios from 'axios';
 import MultiSelectDropdown from '../ui/MultiSelectDropdown';
 const CreateProductForm = () => {

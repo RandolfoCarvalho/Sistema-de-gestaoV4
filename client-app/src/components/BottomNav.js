@@ -4,8 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import FinalUserModal from "./Modals/FinalUserModal";
 import { useStore } from './Context/StoreContext';
 import { useCart } from "./Context/CartContext";
-import axios from "axios";
-import Swal from 'sweetalert2';
 
 const BottomNav = () => {
     const { currentStore } = useStore();

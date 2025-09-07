@@ -1,7 +1,3 @@
-// Você pode criar este arquivo em uma pasta de componentes, ex: src/components/ui/CategoryPillsFilter.js
-
-import React from 'react';
-
 const CategoryPillsFilter = ({ categorias, categoriaSelecionada, onSelectCategory }) => {
     
     const basePillClasses = "px-4 py-2 text-sm font-medium rounded-full border transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 transform hover:scale-105";

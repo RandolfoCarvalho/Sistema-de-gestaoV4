@@ -49,9 +49,3 @@ export const validateForm = (formData) => {
         errors: errors,
     };
 };
-
-// Se você ainda precisar da validação de endereço que mostra o Swal em outro lugar, pode mantê-la exportada
-// mas a nomeie de forma diferente para evitar confusão.
-/*
-export const validateAddressWithAlert = (endereco) => { ... }
-*/

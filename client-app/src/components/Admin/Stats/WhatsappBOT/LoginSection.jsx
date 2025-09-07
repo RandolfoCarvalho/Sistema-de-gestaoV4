@@ -1,5 +1,3 @@
-// LoginSection.js - CORRIGIDO PARA ATUALIZAR APENAS UMA VEZ
-
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Phone, CheckCircle, PhoneOff, Slash, Loader } from 'lucide-react';

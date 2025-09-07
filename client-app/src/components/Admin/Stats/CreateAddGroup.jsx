@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { confirmAction, showSuccess, showError } from '@utils/alerts'; // Ajuste o caminho se necessário
-import api from '../../../axiosConfig'; // Ajuste o caminho se necessário
+import { confirmAction, showSuccess, showError } from '@utils/alerts';
+import api from '../../../axiosConfig';
 import { Plus, Trash2, Save, X, Loader2, List, ChevronsRight, Edit, Info, AlertTriangle } from 'lucide-react';
 
 const GerenciamentoAdicionais = () => {

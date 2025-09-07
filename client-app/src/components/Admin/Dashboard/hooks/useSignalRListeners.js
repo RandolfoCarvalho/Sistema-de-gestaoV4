@@ -19,7 +19,6 @@ const useSignalRListeners = (connection, isConnected, setOrders, processOrders, 
             if (setNotification) {
                 setNotification(newOrder);
             }
-
             // 2. Adiciona o novo pedido ao estado do Kanban
             setOrders(prevOrders => {
                 const newOrdersState = JSON.parse(JSON.stringify(prevOrders));

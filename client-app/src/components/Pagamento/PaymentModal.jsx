@@ -66,6 +66,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     }, [paymentSuccessState, paymentResponseData, onPaymentSuccess]);
 
     useEffect(() => {
+        console.log("Entrou no useEffect de pagamento")
         if (!transactionId || paymentSuccessState) return;
 
         setMensagem("⏳ Aguardando confirmação do pagamento PIX...");
@@ -75,11 +76,11 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             .withAutomaticReconnect()
             .configureLogging(signalR.LogLevel.Information)
             .build();
-        
+        console.log("Conexao para startar")
         const startConnection = async () => {
             try {
                 await connection.start();
-                console.log("Conectado ao SignalR.");
+                console.log("Conectado ao SignalR pix.");
                 await connection.invoke("JoinPaymentGroup", transactionId);
 
                 connection.on("PagamentoAprovado", (response) => {

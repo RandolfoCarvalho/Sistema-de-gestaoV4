@@ -1,8 +1,6 @@
 ﻿import React from 'react';
 import { Clock, MapPin, Package, Coffee, Info, DollarSign, ChevronsRight, PlusCircle } from 'lucide-react';
 
-// --- COMPONENTES AUXILIARES PARA MANTER O CÓDIGO LIMPO ---
-
 // Helper para formatar moeda
 const formatCurrency = (value) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -26,8 +24,6 @@ const OrderItem = ({ item }) => (
             <span>{item.quantidade}x {item.produtoNome || `Produto #${item.produtoId}`}</span>
             <span>{formatCurrency(item.precoUnitario * item.quantidade)}</span>
         </div>
-        
-        {/* NOVO: Detalhamento de adicionais */}
         {item.adicionais && item.adicionais.length > 0 && (
             <ul className="pl-4 mt-1 text-xs text-green-700">
                 {item.adicionais.map((adicional, index) => (
@@ -38,8 +34,6 @@ const OrderItem = ({ item }) => (
                 ))}
             </ul>
         )}
-
-        {/* NOVO: Detalhamento de complementos */}
         {item.complementos && item.complementos.length > 0 && (
             <ul className="pl-4 mt-1 text-xs text-slate-500">
                 {item.complementos.map((complemento, index) => (
@@ -62,8 +56,6 @@ const OrderItem = ({ item }) => (
 
 const OrderCard = ({ order }) => {
     if (!order) return null;
-
-    // --- LÓGICA DE FORMATAÇÃO E ESTADO ---
     const formattedDate = order.dataPedido
         ? new Date(order.dataPedido).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
         : 'Data não disponível';

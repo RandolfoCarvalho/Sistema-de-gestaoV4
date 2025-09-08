@@ -18,16 +18,11 @@ export function CartProvider({ children }) {
 
     const calculateTotal = () => {
         const total = cart.reduce((sum, item) => {
-            // Calcula o preço base do produto
             const basePrice = item.precoVenda * item.quantity;
-
-            // Calcula o total dos extras para este item
             const extrasTotal = item.selectedExtras.reduce((extraSum, extra) => {
                 const extraPrice = extra.preco || extra.precoAdicional || extra.precoBase || 0;
-                // Multiplica o preço do extra pela quantidade do extra E pela quantidade do item principal
                 return extraSum + (extraPrice * extra.quantity * item.quantity);
             }, 0);
-            // Retorna a soma do preço base mais os extras
             return sum + basePrice + extrasTotal;
         }, 0);
 
@@ -41,7 +36,6 @@ export function CartProvider({ children }) {
             id: extra.id,
             nome: extra.nome,
             quantity: extra.quantity,
-            // Normaliza o preço considerando todas as possibilidades
             price: extra.preco || extra.precoAdicional || extra.precoBase || 0,
             type: extra.preco ? 'complemento' : 'adicional'
         });
@@ -60,7 +54,6 @@ export function CartProvider({ children }) {
     };
 
     const addToCart = (product, quantity, selectedExtras) => {
-        // Normaliza os extras antes de adicionar ao carrinho
         const normalizedExtras = selectedExtras.map(extra => ({
             ...extra,
             quantity: extra.quantity || 1,
@@ -69,19 +62,15 @@ export function CartProvider({ children }) {
         }));
 
         setCart(prevCart => {
-            // Procura por um item idêntico no carrinho
             const existingItemIndex = prevCart.findIndex(item =>
                 item.id === product.id && areExtrasEqual(item.selectedExtras, normalizedExtras)
             );
 
             if (existingItemIndex >= 0) {
-                // Se encontrar um item idêntico, apenas atualiza a quantidade
                 const updatedCart = [...prevCart];
                 updatedCart[existingItemIndex].quantity += quantity;
                 return updatedCart;
             }
-
-            // Se não encontrar, cria um novo item
             const newItem = {
                 ...product,
                 quantity,

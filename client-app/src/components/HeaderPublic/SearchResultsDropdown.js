@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 const SearchResultsDropdown = ({ produtos, loading, onProdutoClick }) => {
     const navigate = useNavigate();
-
-    // Se não há produtos e não está carregando, não mostra nada.
     if (!loading && produtos.length === 0) {
         return null;
     }

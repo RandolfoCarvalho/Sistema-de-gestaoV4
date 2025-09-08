@@ -1,14 +1,4 @@
 ﻿import React, { useState, useEffect } from 'react';
-import {
-    LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
-    XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
-} from 'recharts';
-import {
-    FaClipboardList, FaCheckCircle, FaTimesCircle, FaCog,
-    FaTruck, FaPlusCircle, FaDollarSign, FaBox, FaCalendarDay,
-    FaChartLine, FaChartBar, FaChartPie, FaSync
-} from 'react-icons/fa';
-
 const FluidMetricsCard = ({ icon: Icon, title, value, trend, description }) => {
     const [wave1Offset, setWave1Offset] = useState(0);
     const [wave2Offset, setWave2Offset] = useState(0);

@@ -217,20 +217,16 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             var restauranteIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (restauranteIdClaim == null)
             {
-                // O token não contém a claim necessária.
                 return Unauthorized("A claim de identificação do restaurante não foi encontrada.");
             }
             if (string.IsNullOrEmpty(restauranteIdClaim) || !int.TryParse(restauranteIdClaim, out var restauranteId))
             {
                 return BadRequest("O ID do restaurante não foi encontrado ou não é válido.");
             }
-
-            // 1. Validação de Entrada
             if (request.DataInicio > request.DataFim)
             {
                 return BadRequest("A data de início não pode ser posterior à data de fim.");
             }
-
             // Ajusta a data final para incluir o dia inteiro
             var dataFimAjustada = request.DataFim.Date.AddDays(1).AddTicks(-1);
 
@@ -241,22 +237,16 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
                 .Include(p => p.Itens)
                 .Where(p => p.DataPedido >= request.DataInicio.Date && p.DataPedido <= dataFimAjustada);
 
-            // 3. Aplicação do Filtro de Status (se fornecido)
             if (request.Status != null && request.Status.Any())
             {
                 query = query.Where(p => request.Status.Contains(p.Status));
             }
 
-            // 4. Execução da Query
             var pedidosFiltrados = await query
-               .Include(p => p.Pagamento) // Garanta que Pagamento está incluído para o ValorTotal
+               .Include(p => p.Pagamento)
                .ToListAsync();
-
-            // ==========================================================
-            // NOVA SEÇÃO: Mapear os detalhes dos pedidos
-            // ==========================================================
             var pedidosDetalhes = pedidosFiltrados
-                .OrderByDescending(p => p.DataPedido) // Ordena os mais recentes primeiro
+                .OrderByDescending(p => p.DataPedido) 
                 .Select(p => new PedidoSimplificadoDto
                 {
                     Numero = p.Numero,
@@ -280,16 +270,13 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
                 });
             }
 
-            // ==========================================================
-            // CORREÇÃO APLICADA AQUI
-            // ==========================================================
             // Agrupa por dia
             var dailyData = pedidosFiltrados
                 .GroupBy(p => p.DataPedido.Date) // g.Key aqui é um objeto DateTime
                 .OrderBy(g => g.Key) // 1. Ordena pelo objeto DateTime real
-                .Select(g => new RelatorioPontoDeDadoDto // 2. Só depois formata para o DTO
+                .Select(g => new RelatorioPontoDeDadoDto
                 {
-                    Name = g.Key.ToString("ddd, dd/MM"), // String de exibição
+                    Name = g.Key.ToString("ddd, dd/MM"),
                     Orders = g.Count(),
                     Revenue = g.SelectMany(p => p.Itens).Sum(i => i.SubTotal),
                     Costs = g.SelectMany(p => p.Itens).Sum(i => i.PrecoCusto * i.Quantidade),
@@ -297,17 +284,13 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
                     Canceled = g.Count(p => p.Status == OrderStatus.CANCELADO)
                 })
                 .ToList();
-
-            // ==========================================================
-            // CORREÇÃO APLICADA AQUI
-            // ==========================================================
             // Agrupa por mês
             var monthlyData = pedidosFiltrados
                 .GroupBy(p => new { p.DataPedido.Year, p.DataPedido.Month }) // g.Key aqui é um objeto com Year e Month
                 .OrderBy(g => g.Key.Year).ThenBy(g => g.Key.Month) // 1. Ordena pela data real
-                .Select(g => new RelatorioPontoDeDadoDto // 2. Só depois formata para o DTO
+                .Select(g => new RelatorioPontoDeDadoDto
                 {
-                    Name = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMM, yy"), // String de exibição
+                    Name = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMM, yy"),
                     Orders = g.Count(),
                     Revenue = g.SelectMany(p => p.Itens).Sum(i => i.SubTotal),
                     Costs = g.SelectMany(p => p.Itens).Sum(i => i.PrecoCusto * i.Quantidade),
@@ -327,7 +310,6 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
                 })
                 .ToList();
 
-            // 6. Cálculo do Sumário e Insights (esta parte já estava correta)
             var summary = new RelatorioSumarioDto
             {
                 TotalOrders = pedidosFiltrados.Count,

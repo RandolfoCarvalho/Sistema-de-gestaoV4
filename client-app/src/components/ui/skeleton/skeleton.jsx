@@ -1,6 +1,4 @@
-// 💎 ARQUIVO: src/components/ui/skeleton.js
-
-import { cn } from "@/utils/utils"; // Importa a função utilitária
+import { cn } from "@/utils/utils";
 
 function Skeleton({
   className,

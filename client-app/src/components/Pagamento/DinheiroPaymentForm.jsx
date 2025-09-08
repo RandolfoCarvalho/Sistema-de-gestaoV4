@@ -1,18 +1,12 @@
 import React, { useState } from "react";
 
 const DinheiroPaymentForm = ({ amount, troco, setTroco, onSubmit, onClose, isLoading, errorMessage }) => {
-    // Estado para controlar se o campo de input customizado deve ser exibido
     const [showCustomInput, setShowCustomInput] = useState(false);
-
-    // Valores comuns de notas para oferecer como opção de troco
     const trocoOptions = [20, 50, 100, 200];
-    
-    // Converte o valor do pedido para número para garantir a comparação
     const amountAsNumber = parseFloat(amount || 0);
 
     // Função para lidar com o clique em um botão de opção
     const handleOptionClick = (value) => {
-        // Se o usuário clicar na mesma opção novamente, desmarca (sem troco)
         if (troco === value.toString()) {
             setTroco("");
         } else {
@@ -22,14 +16,10 @@ const DinheiroPaymentForm = ({ amount, troco, setTroco, onSubmit, onClose, isLoa
         setShowCustomInput(false);
     };
 
-    // Função para lidar com o clique no botão "Outro Valor"
     const handleCustomClick = () => {
         setShowCustomInput(true);
-        // Limpa o valor do troco para que o usuário possa digitar um novo
         setTroco("");
     };
-
-    // ---- Estilos para os botões (para facilitar a leitura) ----
     const baseButtonClasses = "w-full text-center p-3 border rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400";
     const selectedClasses = "bg-blue-600 text-white border-blue-700";
     const defaultClasses = "bg-white text-gray-800 border-gray-300 hover:bg-gray-100";
@@ -58,7 +48,6 @@ const DinheiroPaymentForm = ({ amount, troco, setTroco, onSubmit, onClose, isLoa
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Precisa de troco para?</label>
                 <div className="grid grid-cols-3 gap-3">
-                    {/* Mapeia as opções de notas comuns */}
                     {trocoOptions.map((value) => {
                         const isDisabled = value <= amountAsNumber;
                         const isSelected = troco === value.toString() && !showCustomInput;
@@ -77,7 +66,6 @@ const DinheiroPaymentForm = ({ amount, troco, setTroco, onSubmit, onClose, isLoa
                             </button>
                         );
                     })}
-                    {/* Botão para valor customizado */}
                     <button
                         type="button"
                         onClick={handleCustomClick}
@@ -91,7 +79,6 @@ const DinheiroPaymentForm = ({ amount, troco, setTroco, onSubmit, onClose, isLoa
                 </div>
             </div>
             
-            {/* Campo de input que aparece condicionalmente */}
             {showCustomInput && (
                 <div>
                     <label htmlFor="troco" className="block text-sm font-medium text-gray-700">Digite o valor para troco (R$):</label>
@@ -99,7 +86,7 @@ const DinheiroPaymentForm = ({ amount, troco, setTroco, onSubmit, onClose, isLoa
                         id="troco"
                         type="number"
                         step="0.01"
-                        min={amountAsNumber.toFixed(2)} // O valor mínimo deve ser o do pedido
+                        min={amountAsNumber.toFixed(2)}
                         value={troco}
                         onChange={(e) => setTroco(e.target.value)}
                         className="w-full border border-gray-300 p-2 rounded-lg mt-1 focus:ring-blue-500 focus:border-blue-500"

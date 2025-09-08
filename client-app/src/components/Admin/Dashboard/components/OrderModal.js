@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { X, Printer, Coins, PlusCircle, ChevronsRight, Loader2, AlertTriangle } from 'lucide-react';
 
-// --- HELPERS E SUB-COMPONENTES PARA UM CÓDIGO LIMPO E ELEGANTE ---
-
 const formatCurrency = (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
 const formatDate = (dateString) => dateString ? new Date(dateString).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Data indisponível';
 
@@ -47,8 +45,6 @@ const ItemDetailRow = ({ item }) => (
         <div className="flex justify-between items-start">
             <div className="flex-1 pr-4">
                 <p className="font-semibold text-slate-800">{item.quantidade}x {item.produtoNome}</p>
-                
-                {/* --- NOVO BLOCO DE RESUMO --- */}
                 <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
                     {item.totalAdicionais > 0 && (
                         <span className="flex items-center gap-1">
@@ -64,8 +60,6 @@ const ItemDetailRow = ({ item }) => (
             </div>
             <span className="font-mono text-sm">{formatCurrency(item.subTotal)}</span>
         </div>
-        
-        {/* As listas detalhadas permanecem as mesmas, mas podem ser ocultadas por padrão se você quiser */}
         {item.adicionais?.length > 0 && (
             <ul className="pl-5 mt-2 space-y-1 text-xs text-green-700">
                 {item.adicionais.map((ad, i) => <li key={i} className="flex items-center gap-1.5"><PlusCircle size={12} />{ad.nome} (+{formatCurrency(ad.preco)})</li>)}
@@ -80,18 +74,12 @@ const ItemDetailRow = ({ item }) => (
     </div>
 );
 
-
-// --- COMPONENTE PRINCIPAL ---
-
 const OrderModal = ({ order, onClose }) => {
-    // --- CORREÇÃO APLICADA AQUI ---
-    // Todos os hooks são declarados no nível superior, ANTES de qualquer retorno condicional.
     const [showConfirm, setShowConfirm] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [motivoCancelamento, setMotivoCancelamento] = useState('');
     const [activeTab, setActiveTab] = useState('detalhes');
-    // Agora o retorno condicional pode ser usado com segurança.
     if (!order) return null;
 
     const handleCancelOrder = async () => {
@@ -99,7 +87,6 @@ const OrderModal = ({ order, onClose }) => {
             setError('Por favor, informe o motivo do cancelamento.');
             return;
         }
-
         setLoading(true);
         setError('');
 
@@ -127,20 +114,16 @@ const OrderModal = ({ order, onClose }) => {
         }
     };
 
-    // --- CORREÇÃO APLICADA AQUI ---
-    // Função para cancelamento simples (DINHEIRO) - agora envia todos os campos com valores padrão.
     const cancelOrderWithoutRefund = async (pedido) => {
         try {
             await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/Pedido/registrarCancelamento`, {
                 pedidoId: pedido.id,
                 motivoCancelamento: motivoCancelamento,
+                codigoReembolso: '',
+                valorReembolsado: 0, 
+                transacaoReembolsoId: '',
                 
-                // Enviando valores padrão para os campos opcionais para evitar erro de nulo no backend
-                codigoReembolso: '', // String vazia em vez de nulo
-                valorReembolsado: 0, // Zero em vez de nulo
-                transacaoReembolsoId: '', // String vazia em vez de nulo
-                
-                estaReembolsado: false, // Define explicitamente como false
+                estaReembolsado: false,
                 finalUserId: pedido.finalUserId,
             });
 
@@ -151,7 +134,6 @@ const OrderModal = ({ order, onClose }) => {
         }
     };
 
-    // Função para cancelamento com reembolso - agora recebe o objeto completo
     const cancelOrderWithRefund = async (pedido) => {
         try {
             const transactionId = pedido.pagamento?.transactionId;
@@ -166,13 +148,10 @@ const OrderModal = ({ order, onClose }) => {
                 Amount: pedido.pagamento?.valorTotal || 0,
                 RestauranteId: pedido.restauranteId,
             });
-
-            // --- CORREÇÃO APLICADA AQUI TAMBÉM ---
-            // Garante que todos os campos sejam enviados, usando valores padrão se a API de reembolso falhar em retornar algo
             await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/Pedido/registrarCancelamento`, {
                 pedidoId: pedido.id,
                 motivoCancelamento: motivoCancelamento,
-                codigoReembolso: reembolsoResult.data?.id || '', // Usa o ID do reembolso ou uma string vazia
+                codigoReembolso: reembolsoResult.data?.id || '',
                 valorReembolsado: pedido.pagamento?.valorTotal || 0,
                 transacaoReembolsoId: transactionId,
                 estaReembolsado: true,
@@ -187,7 +166,6 @@ const OrderModal = ({ order, onClose }) => {
         }
     };
 
-    // Função auxiliar para notificações (para evitar repetição de código)
     const showSuccessNotification = (message) => {
         setShowConfirm(false);
         const notificacao = document.createElement('div');
@@ -197,7 +175,7 @@ const OrderModal = ({ order, onClose }) => {
 
         setTimeout(() => {
             notificacao.remove();
-            onClose(); // Fecha o modal principal após o sucesso
+            onClose();
         }, 3000);
     };
     const statusInfo = getStatusInfo(order.status);

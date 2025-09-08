@@ -24,7 +24,6 @@ const ChatInterface = ({ sessionName, sessionStatus, onSessionStatusChange  }) =
         socketRef.current.emit('requestHistory', sessionName);
       });
 
-      //listener para saber se a sessao foi conectada
       socketRef.current.on('sessionConnected', (data) => {
         console.log('Sessão conectada via Socket.IO:', data.session);
         if (data.session === sessionName) {
@@ -32,17 +31,12 @@ const ChatInterface = ({ sessionName, sessionStatus, onSessionStatusChange  }) =
         }
       });
       
-      // ================================================================
-      // CORREÇÃO: Recebe e formata o histórico de estados corretamente
-      // ================================================================
       socketRef.current.on('historyResponse', (history) => {
         console.log("Histórico recebido:", history);
         setConversations(history.messages || {});
         
         const formattedStates = {};
         for (const key in history.states) {
-            // A chave do estado vem como 'state:session:55xxxxxxxx@c.us'
-            // A chave da conversa é '55xxxxxxxx'
             const phoneWithoutSuffix = key.split('@')[0];
             formattedStates[phoneWithoutSuffix] = history.states[key];
         }
@@ -105,7 +99,6 @@ const ChatInterface = ({ sessionName, sessionStatus, onSessionStatusChange  }) =
   const getDisplayName = (phone) => phone;
   const isHumanServiceActive = conversationStates[activeConversation] === 'transferred_to_agent';
 
-  // O JSX do componente permanece o mesmo.
   return (
     <div className="flex h-[70vh] bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl shadow-2xl border border-slate-200/50">
       <div className="w-1/3 bg-white/80 backdrop-blur-sm border-r border-slate-200/50 rounded-l-2xl overflow-hidden flex flex-col">

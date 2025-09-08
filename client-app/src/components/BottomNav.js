@@ -4,8 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import FinalUserModal from "./Modals/FinalUserModal";
 import { useStore } from './Context/StoreContext';
 import { useCart } from "./Context/CartContext";
-import axios from "axios";
-import Swal from 'sweetalert2';
 
 const BottomNav = () => {
     const { currentStore } = useStore();
@@ -26,7 +24,6 @@ const BottomNav = () => {
     };
 
     const handleLoginSuccess = (userDataWithToken) => {
-        // A userDataWithToken já contém id, nome, telefone e o TOKEN
         const { id, nome, telefone, token } = userDataWithToken;
         localStorage.setItem("userId", id);
         localStorage.setItem("FinalUserName", nome);

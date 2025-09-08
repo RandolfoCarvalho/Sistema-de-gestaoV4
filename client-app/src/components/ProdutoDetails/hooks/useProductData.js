@@ -104,7 +104,6 @@ export const useProductData = (productId) => {
         const uniqueKey = `${type}_${item.id}`;
 
         setSelectedExtrasQuantities(prev => {
-            // CORREÇÃO: Lógica para bloquear incremento se a SOMA das quantidades do grupo for atingida
             if (increment && type === 'complemento') {
                 const parentGroup = gruposComplementos.find(g => g.complementos.some(c => c.id === item.id));
                 if (parentGroup && parentGroup.multiplaEscolha && parentGroup.quantidadeMaxima > 0) {
@@ -113,7 +112,7 @@ export const useProductData = (productId) => {
                     }, 0);
                     
                     if (totalQuantityInGroup >= parentGroup.quantidadeMaxima) {
-                        return prev; // Bloqueia o incremento
+                        return prev;
                     }
                 }
             }

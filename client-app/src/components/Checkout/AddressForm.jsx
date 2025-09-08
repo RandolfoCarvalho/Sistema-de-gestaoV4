@@ -2,38 +2,27 @@
 import { MapPin } from "lucide-react";
 
 const AddressForm = ({ formData, setFormData }) => {
-    // State to track validation errors
     const [errors, setErrors] = useState({});
-
-    // Brazilian CEP format: 12345-678 or 12345678
     const cepRegex = /^\d{5}-?\d{3}$/;
 
     const validateField = (name, value) => {
         if (!value && name !== 'endereco.Complemento') {
             return 'Este campo é obrigatório';
         }
-        
-        // Special validation for CEP
         if (name === 'endereco.CEP' && value) {
             if (!cepRegex.test(value)) {
                 return 'CEP inválido. Use o formato: 12345-678';
             }
         }
-        
         return '';
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         const fieldName = name.replace('endereco.', '');
-        
-        // Format CEP as user types (12345678 -> 12345-678)
         let formattedValue = value;
         if (name === 'endereco.CEP' && value) {
-            // Remove any non-digit characters
             const digitsOnly = value.replace(/\D/g, '');
-            
-            // Format with hyphen if we have more than 5 digits
             if (digitsOnly.length > 5) {
                 formattedValue = `${digitsOnly.slice(0, 5)}-${digitsOnly.slice(5, 8)}`;
             } else {
@@ -49,7 +38,6 @@ const AddressForm = ({ formData, setFormData }) => {
             }
         }));
 
-        // Validate field and update errors
         const error = validateField(name, formattedValue);
         setErrors(prev => ({
             ...prev,

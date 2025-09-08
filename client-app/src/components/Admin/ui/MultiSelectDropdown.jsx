@@ -4,10 +4,7 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
 const MultiSelectDropdown = ({ label, items, selectedIds, onChange }) => {
 
-  // Encontra os objetos completos dos itens selecionados para exibição
   const selectedItems = items.filter(item => selectedIds.includes(item.id));
-
-  // Texto a ser exibido no botão do dropdown
   const getButtonLabel = () => {
     if (selectedItems.length === 0) {
       return `Selecione...`;
@@ -22,10 +19,7 @@ const MultiSelectDropdown = ({ label, items, selectedIds, onChange }) => {
     <div className="w-full">
       <Listbox value={selectedIds} onChange={onChange} multiple>
         <div className="relative mt-1">
-          {/* Label do campo */}
           <label className="block text-sm font-medium text-gray-600 mb-1">{label}</label>
-          
-          {/* Botão que abre o dropdown */}
           <Listbox.Button className="relative w-full cursor-pointer rounded-md bg-white py-2 pl-3 pr-10 text-left border border-gray-200 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-blue-300 sm:text-sm">
             <span className="block truncate">{getButtonLabel()}</span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -35,8 +29,6 @@ const MultiSelectDropdown = ({ label, items, selectedIds, onChange }) => {
               />
             </span>
           </Listbox.Button>
-
-          {/* Painel com as opções */}
           <Transition
             as={React.Fragment}
             leave="transition ease-in duration-100"

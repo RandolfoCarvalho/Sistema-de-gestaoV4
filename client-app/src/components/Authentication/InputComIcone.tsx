@@ -1,11 +1,8 @@
-// src/components/InputComIcone.tsx
 import * as React from "react";
-
-// Tipagem das props para garantir segurança e autocompletar no editor
 interface InputComIconeProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label: string;
-  icon: React.ReactElement<{ className?: string }>; // <- Tipo ajustado
+  icon: React.ReactElement<{ className?: string }>;
 }
 
 const InputComIcone = React.forwardRef<HTMLInputElement, InputComIconeProps>(

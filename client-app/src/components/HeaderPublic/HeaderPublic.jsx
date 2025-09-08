@@ -2,10 +2,9 @@
 import { Search, Share2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../Context/StoreContext';
-import { useSearchProducts } from './hooks/useSearchProducts'; // Agora usado internamente
-import SearchResultsDropdown from './SearchResultsDropdown'; // Componente de UI para os resultados
+import { useSearchProducts } from './hooks/useSearchProducts'; 
+import SearchResultsDropdown from './SearchResultsDropdown';
 import Swal from 'sweetalert2';
-// O Header aceita props opcionais para o modo de "busca dinâmica"
 const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
     const navigate = useNavigate();
     const { fantasyName, currentStore, storeInfo, loadingStoreInfo } = useStore();
@@ -21,7 +20,6 @@ const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
             url: window.location.href,
         };
 
-        // Verifica se a Web Share API está disponível no navegador
         if (navigator.share) {
             try {
                 await navigator.share(shareData);
@@ -29,10 +27,8 @@ const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
                 console.error('Erro ao compartilhar:', err);
             }
         } else {
-            // Fallback para navegadores que não suportam a API (a maioria dos desktops)
             try {
                 await navigator.clipboard.writeText(shareData.url);
-                // Usando SweetAlert2 para um feedback mais elegante
                 Swal.fire({
                     toast: true,
                     position: 'top-end',
@@ -56,20 +52,15 @@ const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
         }
     };
 
-    // --- LÓGICA DE CONTROLE ---
-    // Verifica se está no modo "dinâmico" (controlado pela página Produtos)
     const isDynamicSearchMode = onSearchChange !== undefined;
-
-    // --- LÓGICA DE BUSCA INTERNA (para páginas como Checkout) ---
-    // Usa o hook useSearchProducts somente se NÃO estiver no modo dinâmico
     const internalSearch = useSearchProducts();
     
     // --- SELEÇÃO DE ESTADO E FUNÇÕES ---
     // Se estiver no modo dinâmico, usa as props. Senão, usa a busca interna.
     const searchTerm = isDynamicSearchMode ? controlledSearchTerm : internalSearch.searchTerm;
     const setSearchTerm = isDynamicSearchMode ? onSearchChange : internalSearch.setSearchTerm;
-    const produtos = isDynamicSearchMode ? [] : internalSearch.produtos; // Só precisamos dos produtos no modo dropdown
-    const loading = isDynamicSearchMode ? false : internalSearch.loading; // E do loading também
+    const produtos = isDynamicSearchMode ? [] : internalSearch.produtos;
+    const loading = isDynamicSearchMode ? false : internalSearch.loading;
 
 
     // --- Handlers de UI ---
@@ -77,7 +68,7 @@ const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
     const handleActivateSearch = () => setIsSearchActive(true);
     const handleDeactivateSearch = () => {
         setIsSearchActive(false);
-        setSearchTerm(''); // Limpa tanto o estado do pai quanto o interno
+        setSearchTerm('');
     };
 
     const handleProdutoClick = (id) => {
@@ -116,8 +107,6 @@ const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
         <div ref={headerRef} className="w-full bg-gray-900 relative z-30 border-b border-gray-200">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="relative flex items-center justify-between h-16">
-                    
-                    {/* Logo e Nome da Loja */}
                     <div
                         onClick={handleStoreClick}
                         className={`flex items-center space-x-3 cursor-pointer transition-opacity duration-300 ${isSearchActive ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
@@ -127,8 +116,6 @@ const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
                         </div>
                         <h1 className="text-lg font-bold text-white sm:block">{fantasyName || "Loja"}</h1>
                     </div>
-
-                    {/* Barra de Busca que se expande */}
                     <div className={`absolute left-0 right-0 flex items-center transition-all duration-300 ease-in-out ${isSearchActive ? 'w-full' : 'w-10 h-10 justify-end ml-auto'}`}>
                         <div className="relative flex-1">
                             <input
@@ -142,19 +129,16 @@ const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
                             />
                             <Search onClick={handleActivateSearch} className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-white cursor-pointer" />
                         </div>
-
-                        {/* Botões de Ação */}
                         <div className="flex items-center space-x-2 pl-3">
                             {isSearchActive ? (
                                 <button onClick={handleDeactivateSearch} className="text-sm font-semibold text-blue-600 hover:text-blue-800 whitespace-nowrap">
                                     Cancelar
                                 </button>
                             ) : (
-                                // CONECTANDO A FUNÇÃO AO BOTÃO
                                 <button
                                     onClick={handleShare}
                                     className="p-2 text-white hover:bg-gray-100 rounded-full"
-                                    title="Compartilhar loja" // Boa prática para acessibilidade
+                                    title="Compartilhar loja"
                                 >
                                     <Share2 size={18} />
                                 </button>
@@ -163,12 +147,6 @@ const HeaderPublic = ({ onSearchChange, searchTerm: controlledSearchTerm }) => {
                     </div>
                 </div>
             </div>
-
-            {/* O Dropdown só é renderizado se:
-                1. A busca estiver ativa.
-                2. NÃO estivermos no modo dinâmico (ou seja, estamos no Checkout, etc.).
-                3. Houver um termo de busca.
-            */}
             {isSearchActive && !isDynamicSearchMode && searchTerm && (
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
                     <SearchResultsDropdown

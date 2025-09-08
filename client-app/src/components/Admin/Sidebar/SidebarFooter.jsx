@@ -8,16 +8,12 @@ const SidebarFooter = ({ logoUrl }) => {
     const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
 
     useEffect(() => {
-        // Se a atualização deve ser apenas na montagem inicial do footer
-        // ou se o footer pode ser remontado e deve refletir esse novo momento.
         setLastUpdateTime(new Date());
-    }, []); // Array vazio para rodar apenas na montagem deste componente
+    }, []);
 
     const handleProfileClick = () => {
         navigate('/admin/Perfil');
     };
-
-    // Para acessibilidade em elementos clicáveis que não são botões ou links nativos
     const handleProfileKeyPress = (event) => {
         if (event.key === 'Enter' || event.key === ' ') {
             handleProfileClick();
@@ -25,7 +21,7 @@ const SidebarFooter = ({ logoUrl }) => {
     };
 
     return (
-        <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700"> {/* mt-auto para empurrar para o fim */}
+        <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between px-2 mb-4">
                 <div className="flex items-center">
                     <Clock3 className="h-4 w-4 text-gray-500 dark:text-gray-400" />
@@ -41,12 +37,12 @@ const SidebarFooter = ({ logoUrl }) => {
                 onClick={handleProfileClick}
                 onKeyPress={handleProfileKeyPress}
                 role="button"
-                tabIndex={0} // Torna a div focável
+                tabIndex={0}
                 aria-label="Acessar perfil e configurações"
             >
                 <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
                     <img
-                        src={logoUrl || 'path/to/default-placeholder.png'} // Usar um placeholder local ou uma URL mais genérica
+                        src={logoUrl || 'path/to/default-placeholder.png'}
                         alt="Logo da loja"
                         className="w-full h-full object-cover"
                     />

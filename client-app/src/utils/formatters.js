@@ -20,7 +20,6 @@ export function formatPriceToInvariantBackend(preco) {
   return valorStr;
 }
 
-// Função auxiliar para formatar preço em Reais (BRL) - sem alterações
 export function formatPrice(price) {
   const numericPrice = Number(price) || 0;
   return new Intl.NumberFormat('pt-BR', {

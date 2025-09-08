@@ -20,7 +20,6 @@ export const formatDisplayDateTime = (dateInstance) => {
         const dateString = dateInstance.toLocaleDateString('pt-BR', {
             day: '2-digit',
             month: '2-digit',
-            // year: '2-digit' // Descomente se quiser o ano
         });
         return `${dateString}, ${timeString}`;
     }

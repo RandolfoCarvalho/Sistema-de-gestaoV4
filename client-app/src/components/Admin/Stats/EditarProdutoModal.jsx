@@ -29,40 +29,28 @@ const TabButton = ({ label, isActive, onClick }) => (
     </button>
 );
 
-// --- COMPONENTE PRINCIPAL DO MODAL ---
-
 const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) => {
-    // --- ESTADOS ---
     const [produtoEditando, setProdutoEditando] = useState(null);
     const [categorias, setCategorias] = useState([]);
     const [gruposComplemento, setGruposComplemento] = useState([]);
     const [gruposAdicional, setGruposAdicional] = useState([]);
     const [complementosSelecionados, setComplementosSelecionados] = useState([]);
     const [adicionaisSelecionados, setAdicionaisSelecionados] = useState([]);
-    const [loading, setLoading] = useState(false); // Inicia como false
+    const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('info');
-
-    // --- EFEITOS (DATA FETCHING) ---
     useEffect(() => {
-        // Se o modal for fechado, limpa o estado e para.
         if (!modalAberto) {
             setProdutoEditando(null);
             setActiveTab('info');
             return;
         }
 
-        // Se o modal abrir, executa a lógica.
         if (produto) {
-            // =======================================================================
-            // AQUI ESTÁ A CORREÇÃO PRINCIPAL
-            // Sincroniza o estado interno com a prop *imediatamente*.
-            // Isso garante que `produtoEditando` nunca seja `null` durante a renderização.
             setProdutoEditando({ ...produto });
-            // =======================================================================
 
             const fetchData = async () => {
                 try {
-                    setLoading(true); // Ativa o loading apenas para a busca de dados.
+                    setLoading(true);
                     const [
                         categoriasRes,
                         gruposComplementoRes, 
@@ -143,19 +131,16 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
         }
     };
 
-    // --- RENDERIZAÇÃO ---
-    if (!modalAberto || !produtoEditando) return null; // Guarda de segurança
+    if (!modalAberto || !produtoEditando) return null;
 
     return (
         <div className="fixed inset-0 bg-black/60 z-50 flex justify-center items-center p-4 animate-fade-in">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col animate-zoom-in">
-                {/* Cabeçalho */}
                 <div className="p-6 border-b border-slate-200">
                     <h2 className="text-xl font-bold text-slate-800">Editar Produto</h2>
                     <p className="text-sm text-slate-500 mt-1">{produtoEditando.nome}</p>
                 </div>
 
-                {/* Corpo com Abas e Conteúdo */}
                 <div className="flex-grow overflow-y-auto">
                     <div className="border-b border-slate-200 sticky top-0 bg-white z-10">
                         <div className="px-6 flex items-center space-x-4">
@@ -216,8 +201,6 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
                         </div>
                     )}
                 </div>
-
-                {/* Rodapé com Botões */}
                 <div className="p-6 border-t border-slate-200 flex justify-end gap-3 bg-slate-50 rounded-b-xl">
                     <button onClick={() => setModalAberto(false)} disabled={loading} className="px-5 py-2.5 bg-white text-slate-700 border border-slate-300 rounded-lg text-sm font-semibold hover:bg-slate-100 transition-colors">Cancelar</button>
                     <button onClick={salvarEdicao} disabled={loading} className="px-5 py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 disabled:bg-indigo-400 transition-colors flex items-center">

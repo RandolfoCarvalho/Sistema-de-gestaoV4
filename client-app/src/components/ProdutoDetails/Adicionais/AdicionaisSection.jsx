@@ -10,7 +10,6 @@ const AdicionaisSection = ({
     selectedExtrasQuantities,
     handleQuantityChange
 }) => {
-    // Renderizar diretamente os grupos de adicionais sem o cabeçalho "Adicionais"
     return (
         <div className="mb-6">
             {gruposAdicionais.map(grupo => (
@@ -20,7 +19,6 @@ const AdicionaisSection = ({
                     isOpen={gruposOpen[grupo.id]}
                     toggleGrupo={toggleGrupo}
                     selectedExtrasQuantities={selectedExtrasQuantities}
-                    // Passa o handleQuantityChange modificado para o AdicionalItem usar
                     handleQuantityChange={(item, isIncrement) => handleQuantityChange(item, isIncrement, 'adicional')}
                 />
             ))}

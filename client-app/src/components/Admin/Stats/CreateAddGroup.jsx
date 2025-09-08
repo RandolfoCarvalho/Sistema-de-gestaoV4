@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { confirmAction, showSuccess, showError } from '@utils/alerts'; // Ajuste o caminho se necessário
-import api from '../../../axiosConfig'; // Ajuste o caminho se necessário
+import { confirmAction, showSuccess, showError } from '@utils/alerts';
+import api from '../../../axiosConfig';
 import { Plus, Trash2, Save, X, Loader2, List, ChevronsRight, Edit, Info, AlertTriangle } from 'lucide-react';
 
 const GerenciamentoAdicionais = () => {
@@ -80,7 +80,6 @@ const GerenciamentoAdicionais = () => {
         if (grupoSelecionadoId) {
             buscarDetalhesDoGrupo(grupoSelecionadoId);
         } else {
-            // Limpa o formulário se nada estiver selecionado
             setFormData({ id: null, nome: '', ativo: true, limiteSelecao: '', adicionais: [] });
         }
     }, [grupoSelecionadoId]);
@@ -193,8 +192,6 @@ const GerenciamentoAdicionais = () => {
             }
         }
     };
-    
-    // FUNCIONALIDADE RESTAURADA: Excluir um adicional específico da base de dados.
     const handleDeleteAdicionalPermanently = async (adicionalId) => {
         if (!formData.id || !adicionalId) return;
 
@@ -204,7 +201,6 @@ const GerenciamentoAdicionais = () => {
             try {
                 await api.delete(`/api/1.0/Adicional/ExcluirAdicionalDeGrupo/${formData.id}/${adicionalId}`);
                 showSuccess('Item Excluído', 'O adicional foi removido permanentemente.');
-                // Recarrega os dados do grupo para atualizar a lista de adicionais
                 buscarDetalhesDoGrupo(formData.id);
             } catch (err) {
                 showError("Erro ao excluir", err.response?.data || "Não foi possível remover o item.");
@@ -223,7 +219,6 @@ const GerenciamentoAdicionais = () => {
             </header>
 
             <main className="flex-grow grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 min-h-0">
-                {/* COLUNA DA ESQUERDA: LISTA DE GRUPOS */}
                 <aside className="md:col-span-1 lg:col-span-1 h-full min-h-0 bg-white border-r border-gray-200 flex flex-col">
                     <div className="p-4 border-b border-gray-200">
                         <h2 className="text-lg font-bold text-gray-800 flex items-center"><List size={20} className="mr-2" />Grupos</h2>

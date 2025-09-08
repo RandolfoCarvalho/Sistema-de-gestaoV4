@@ -1,5 +1,3 @@
-// LoginSection.js - CORRIGIDO PARA ATUALIZAR APENAS UMA VEZ
-
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Phone, CheckCircle, PhoneOff, Slash, Loader } from 'lucide-react';
@@ -10,9 +8,6 @@ const LoginSection = ({ onSessionStatusChange, currentStatus }) => {
   const [sessionName, setSessionName] = useState('');
   const baseUrl = process.env.REACT_APP_WHATSAPPBOT_VPS;
   const isMounted = useRef(true);
-  // ================================================================
-  // NOVO: Referência para controlar se o reload já foi feito
-  // ================================================================
   const hasReloaded = useRef(false);
 
   useEffect(() => {
@@ -50,7 +45,6 @@ const LoginSection = ({ onSessionStatusChange, currentStatus }) => {
       const res = await axios.get(`${baseUrl}/status/${name}`);
       if (res.data.status === 'connected' && isMounted.current) {
         setQrCode(null);
-        // Não chama a função de reload aqui, apenas atualiza o status inicial
         onSessionStatusChange('connected', name);
       }
     } catch (error) {
@@ -60,8 +54,6 @@ const LoginSection = ({ onSessionStatusChange, currentStatus }) => {
     }
   };
 
-  // LoginSection.js -> DENTRO DO SEU COMPONENTE
-
 const iniciarSessao = async () => {
   if (!sessionName) {
     alert('Nome da sessão não disponível. Tente novamente.');
@@ -70,13 +62,11 @@ const iniciarSessao = async () => {
 
   setLoading(true);
   setQrCode(null);
-  onSessionStatusChange('connecting'); // Esta é a função que você passou do WhatsappBOT
+  onSessionStatusChange('connecting');
 
   try {
-    // Dispara a inicialização da sessão no backend
     await axios.post(`${baseUrl}/start-session`, { session: sessionName });
 
-    // --- ETAPA 1: Tentar reconexão automática por 8 segundos ---
     console.log("Tentando reconexão automática por 8 segundos...");
     let autoConnectAttempts = 0;
     const maxAutoConnectAttempts = 4;
@@ -125,17 +115,15 @@ const iniciarSessao = async () => {
   }
 };
 
-// Função centralizada para lidar com a conexão bem-sucedida
 const handleSuccessfulConnection = (name) => {
   if (isMounted.current) {
-    onSessionStatusChange('connected', name); // Esta é a função que você passou do WhatsappBOT
+    onSessionStatusChange('connected', name); 
     setQrCode(null);
   }
 };
-  // Função auxiliar para buscar o QR Code
   const fetchQrCode = () => {
     let qrAttempts = 0;
-    const maxQrAttempts = 20; // Tenta por mais 40 segundos
+    const maxQrAttempts = 20;
 
     const qrInterval = setInterval(async () => {
       if (!isMounted.current) {
@@ -151,7 +139,6 @@ const handleSuccessfulConnection = (name) => {
             console.log("QR Code encontrado. Exibindo na tela.");
             setQrCode(res.data.qrCode);
             setLoading(false);
-            // Inicia a verificação de status APÓS o QR Code ser escaneado
             waitForScan();
           }
           return;
@@ -181,7 +168,6 @@ const handleSuccessfulConnection = (name) => {
     }, 2000);
   };
 
-  // Função auxiliar para esperar o scan do QR Code
   const waitForScan = () => {
     const statusCheck = setInterval(async () => {
       if (!isMounted.current) {
@@ -204,7 +190,7 @@ const handleSuccessfulConnection = (name) => {
 const desconectarSessao = async () => {
     if (currentStatus !== 'connected') return;
 
-    setLoading(true); // Mostra o feedback de carregamento
+    setLoading(true);
 
     try {
       await axios.get(`${baseUrl}/logout/${sessionName}`);
@@ -221,7 +207,6 @@ const desconectarSessao = async () => {
     } 
 };
 
-  // O JSX (a parte visual) permanece o mesmo
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-6">
       <div className="flex justify-between items-center mb-4">

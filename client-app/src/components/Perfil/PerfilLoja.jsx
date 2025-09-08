@@ -17,12 +17,10 @@ const InfoItem = ({ icon: Icon, title, children }) => (
 );
 
 const PerfilLoja = () => {
-    // Pega as informações da loja do seu contexto
     const { storeInfo } = useStore();
     if (!storeInfo || !storeInfo.empresa) {
         return <PerfilLojaSkeleton />;
     }
-    // --- Desestruturando os dados REAIS do seu objeto storeInfo ---
     const { empresa, imagemUrl, phoneNumber } = storeInfo;
     const { 
         nomeFantasia, 
@@ -51,7 +49,6 @@ const PerfilLoja = () => {
     return (
         <div className="bg-gray-50 dark:bg-gray-900 min-h-screen pb-20">
             <div className="max-w-md mx-auto">
-                {/* --- Header com Logo e Nome --- */}
                 <div className="p-6 bg-white dark:bg-gray-800 shadow-lg rounded-b-3xl">
                     <img
                         src={imagemUrl} 
@@ -66,7 +63,6 @@ const PerfilLoja = () => {
                     </h1>
                 </div>
 
-                {/* --- Corpo com as Informações --- */}
                 <div className="px-4 space-y-6">
                     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-5 space-y-4">
                         {observacoes && (

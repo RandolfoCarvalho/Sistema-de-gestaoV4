@@ -1,9 +1,8 @@
 ﻿// src/components/LoginForm.tsx
 import * as React from "react";
 import { User, Lock, AlertCircle } from "lucide-react";
-import InputComIcone from "./InputComIcone"; // Importamos o novo componente
+import InputComIcone from "./InputComIcone";
 
-// Tipagem forte para as props do formulário
 interface LoginFormProps {
   userName: string;
   setUserName: (value: string) => void;
@@ -11,7 +10,7 @@ interface LoginFormProps {
   setPassword: (value: string) => void;
   error: string | null;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  isLoading?: boolean; // Nova prop para feedback de carregamento
+  isLoading?: boolean;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({
@@ -21,13 +20,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
   setPassword,
   error,
   handleSubmit,
-  isLoading = false, // Valor padrão para a nova prop
+  isLoading = false,
 }) => {
   return (
-    // Container principal com melhor espaçamento e sombra mais sutil
     <div className="bg-white py-8 px-6 shadow-xl rounded-lg sm:px-10">
       <div className="sm:mx-auto sm:w-full sm:max-w-md mb-8 text-center">
-        {/* Título mais amigável */}
         <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Acesse sua conta
         </h2>
@@ -37,7 +34,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
       </div>
 
       <form className="space-y-6" onSubmit={handleSubmit} noValidate>
-        {/* Campo de Usuário usando o componente reutilizável */}
         <InputComIcone
           id="username"
           name="username"
@@ -51,7 +47,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
           disabled={isLoading}
         />
 
-        {/* Campo de Senha usando o componente reutilizável */}
         <InputComIcone
           id="password"
           name="password"
@@ -65,7 +60,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
           disabled={isLoading}
         />
 
-        {/* Mensagem de erro aprimorada */}
         {error && (
           <div 
             className="flex items-center gap-x-3 rounded-md bg-red-50 p-3 text-sm leading-6 text-red-700 border border-red-200"
@@ -76,7 +70,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
           </div>
         )}
 
-        {/* Botão de login com estado de loading e melhor estilo */}
         <div>
           <button
             type="submit"
@@ -87,7 +80,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
           </button>
         </div>
 
-        {/* Links adicionais comuns em telas de login */}
         <div className="text-sm text-center">
           <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
             Esqueceu sua senha?

@@ -37,6 +37,7 @@ namespace SistemaDeGestao.Controllers
             _hubContext = hubContext;
         }
 
+        //Recebe pagamento Pix
         [HttpPost]
         [Route("processaPagamentoPix")]
         public async Task<IActionResult> ProcessaPagamentoPix([FromBody] PagamentoRequestPix request)
@@ -46,9 +47,9 @@ namespace SistemaDeGestao.Controllers
 
             try
             {
-                var resultado = await _orchestrator.IniciarPagamentoPixAsync(request);
-                return Ok(resultado);
-            }
+            var resultado = await _orchestrator.IniciarPagamentoPixAsync(request);
+            return Ok(resultado);
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Erro ao processar pagamento PIX no controller.");
@@ -56,6 +57,7 @@ namespace SistemaDeGestao.Controllers
             }
         }
 
+        //Recebe pagamento Cartao
         [HttpPost]
         [Route("processaPagamento")]
         public async Task<IActionResult> ProcessaPagamento([FromBody] PagamentoRequest request)
@@ -74,6 +76,7 @@ namespace SistemaDeGestao.Controllers
             }
         }
 
+        //Recebe pagamento Dinheiro
         [HttpPost]
         [Route("processaPagamentoDinheiro")]
         public async Task<IActionResult> ProcessaPagamentoDinheiro([FromBody] PagamentoRequestDinheiro request)
@@ -194,18 +197,13 @@ namespace SistemaDeGestao.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ReceiveMercadoPagoWebhook()
         {
-            // Vamos ler o corpo da requisição manualmente
             string rawJsonBody;
             using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
             {
                 rawJsonBody = await reader.ReadToEndAsync();
             }
-
-            // Logamos tudo que temos: query string e corpo
             _logger.LogInformation("Recebida notificação do Mercado Pago. QueryString: {Query}, RawBody: {RawBody}",
                 Request.QueryString.Value, rawJsonBody);
-
-            // Agora, usamos um método auxiliar para extrair o ID de qualquer lugar possível
             var transactionId = ObterTransactionIdDaRequisicao(Request, rawJsonBody);
 
             if (string.IsNullOrEmpty(transactionId))
@@ -263,36 +261,26 @@ namespace SistemaDeGestao.Controllers
             return Ok(pedido);
         }
 
-        // Método auxiliar robusto para extrair o ID de qualquer formato de notificação
         private string? ObterTransactionIdDaRequisicao(HttpRequest request, string jsonBody)
         {
-            // Prioridade 1: Query param simples como 'id' ou 'ID'
             if (request.Query.TryGetValue("id", out var idFromQuery) || request.Query.TryGetValue("ID", out idFromQuery))
             {
                 return idFromQuery.FirstOrDefault();
             }
-
-            // Prioridade 2: Query param no formato 'data.id'
             if (request.Query.TryGetValue("data.id", out var dataIdFromQuery))
             {
                 return dataIdFromQuery.FirstOrDefault();
             }
-
-            // Prioridade 3: Ler do corpo JSON, se ele não for vazio
             if (!string.IsNullOrEmpty(jsonBody))
             {
                 try
                 {
                     using var jsonDoc = JsonDocument.Parse(jsonBody);
                     var root = jsonDoc.RootElement;
-
-                    // Tenta pegar de "data.id"
                     if (root.TryGetProperty("data", out var dataElement) && dataElement.TryGetProperty("id", out var idElement))
                     {
                         return idElement.GetString();
                     }
-
-                    // Tenta pegar de "id" na raiz do objeto
                     if (root.TryGetProperty("id", out var rootIdElement))
                     {
                         return rootIdElement.ValueKind == JsonValueKind.Number
@@ -384,7 +372,6 @@ public class ReembolsoRequest
         public int Id { get; set; }
         public decimal ValorTotal { get; set; }
         public string Status { get; set; }
-        // Adicione apenas os campos que o frontend precisa ver na confirmação
         public List<ItemPedidoAprovadoDTO> Itens { get; set; }
     }
 

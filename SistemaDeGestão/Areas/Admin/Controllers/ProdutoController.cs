@@ -153,55 +153,30 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
         }
 
         [HttpPut("AtualizarProdutoV2")]
-        public async Task<IActionResult> AtualizarProdutoV2([FromForm] ProdutoDTO produto)
+        public async Task<IActionResult> AtualizarProdutoV2([FromForm] AtualizarProdutoRequestDto request)
         {
             try
             {
-                List<int> complementosIds = new List<int>();
-                foreach (var key in Request.Form.Keys)
-                {
-                    if (key.StartsWith("ComplementosIds["))
-                    {
-                        if (int.TryParse(Request.Form[key], out int complementoId))
-                        {
-                            complementosIds.Add(complementoId);
-                        }
-                    }
-                }
-                List<int> adicionaisIds = new List<int>();
-                foreach (var key in Request.Form.Keys)
-                {
-                    if (key.StartsWith("AdicionaisIds["))
-                    {
-                        if (int.TryParse(Request.Form[key], out int adicionalId))
-                        {
-                            adicionaisIds.Add(adicionalId);
-                        }
-                    }
-                }
-
                 var restaurante = await _restauranteService.GetRestauranteByUserIdAsync(User);
-                if (restaurante == null) return null;
-
+                if (restaurante == null)
+                {
+                    return Unauthorized("Restaurante não encontrado para o usuário autenticado.");
+                }
                 var produtoExistente = await _context.Produtos
-                .Include(p => p.Categoria) 
-                .FirstOrDefaultAsync(p => p.Id == produto.Id);
+                    .Include(p => p.Categoria)
+                    .FirstOrDefaultAsync(p => p.Id == request.Id);
 
                 if (produtoExistente == null)
                     return NotFound("Produto não encontrado");
 
                 var categoriaNome = produtoExistente.Categoria?.Nome;
-
                 var produtoAtualizado = await _produtoService.AtualizarProdutoV2(
-                    produto,
-                    complementosIds,
-                    adicionaisIds,
+                    request,
                     restaurante.NomeDaLoja,
                     categoriaNome);
 
                 if (produtoAtualizado == null)
-                    return NotFound("Produto não encontrado");
-
+                    return NotFound("Produto não encontrado durante a atualização.");
                 return Ok(produtoAtualizado);
             }
             catch (Exception ex)

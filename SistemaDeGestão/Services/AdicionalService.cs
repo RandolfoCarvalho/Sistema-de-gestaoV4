@@ -13,21 +13,6 @@ namespace SistemaDeGestao.Services
         {
             _context = context;
         }
-
-        public async Task<IEnumerable<Adicional>> ListarAdicionais()
-        {
-            return await _context.Adicionais
-                //.Include(a => a.GrupoAdicional)
-                .Include(a => a.Produtos)
-                .ToListAsync();
-        }
-
-        public async Task<Adicional> CriarAdicional(Adicional adicional)
-        {
-            _context.Adicionais.Add(adicional);
-            await _context.SaveChangesAsync();
-            return adicional;
-        }
         public async Task<List<Adicional>> ObterAdicionaisPorProdutoId(int produtoId)
         {
             var adicionais = await _context.ProdutoAdicionais

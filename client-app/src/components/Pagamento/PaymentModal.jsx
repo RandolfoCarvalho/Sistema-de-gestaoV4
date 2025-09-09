@@ -23,8 +23,6 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     const [countdown, setCountdown] = useState(300);
     const [paymentSuccessState, setPaymentSuccessState] = useState(false);
     const [paymentResponseData, setPaymentResponseData] = useState(null); 
-
-    const restauranteId = localStorage.getItem("restauranteId");
     const amountForDisplay = parseFloat(cartTotal) || 0;
 
     useEffect(() => {

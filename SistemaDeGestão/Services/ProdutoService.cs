@@ -9,6 +9,8 @@ using SistemaDeGestao.Models;
 using SistemaDeGestao.Models.DTOs;
 using System.Security.Claims;
 using Amazon.S3.Model;
+using System.Linq;
+using SistemaDeGestao.Models.DTOs.Resquests;
 
 namespace SistemaDeGestao.Services
 {
@@ -268,30 +270,86 @@ namespace SistemaDeGestao.Services
             }
         }
 
-        public async Task<Produto> AtualizarProdutoV2(ProdutoDTO produto, List<int> complementosIds, List<int> adicionaisIds,
-            string NomeDaLoja, string categoriaNome)
+        public async Task<Produto> AtualizarProdutoV2(AtualizarProdutoRequestDto requestDto, string NomeDaLoja, string categoriaNome)
         {
-            // Carrega o produto com seus relacionamentos
             var produtoExistente = await _context.Produtos
                 .Include(p => p.Complementos)
                 .Include(p => p.Adicionais)
-                .FirstOrDefaultAsync(p => p.Id == produto.Id);
+                .FirstOrDefaultAsync(p => p.Id == requestDto.Id);
 
             if (produtoExistente == null)
                 return null;
-            produtoExistente.Nome = produto.Nome;
-            produtoExistente.PrecoVenda = produto.PrecoVenda;
-            produtoExistente.Descricao = produto.Descricao;
-            produtoExistente.CategoriaId = produto.CategoriaId;
-            produtoExistente.EstoqueAtual = produto.EstoqueAtual;
-            produtoExistente.EstoqueMinimo = produto.EstoqueMinimo;
-            produtoExistente.UnidadeMedida = produto.UnidadeMedida;
-            produtoExistente.PrecoCusto = produto.PrecoCusto;
-            produtoExistente.Ativo = produto.Ativo;
+            produtoExistente.Nome = requestDto.Nome;
+            produtoExistente.PrecoVenda = requestDto.PrecoVenda;
+            produtoExistente.Descricao = requestDto.Descricao;
+            produtoExistente.CategoriaId = requestDto.CategoriaId;
+            produtoExistente.EstoqueAtual = requestDto.EstoqueAtual;
+            produtoExistente.EstoqueMinimo = requestDto.EstoqueMinimo;
+            produtoExistente.UnidadeMedida = requestDto.UnidadeMedida;
+            produtoExistente.PrecoCusto = requestDto.PrecoCusto;
+            produtoExistente.Ativo = requestDto.Ativo;
             string? imagemAnteriorUrl = produtoExistente.ImagemPrincipalUrl;
-            if (produto.ImagemPrincipalUrl != null) 
+            if (requestDto.ImagemPrincipalUrl != null && requestDto.ImagemPrincipalUrl.Length > 0)
             {
-                produtoExistente.ImagemPrincipalUrl = await UploadImagemParaS3(produto.ImagemPrincipalUrl, NomeDaLoja, categoriaNome, imagemAnteriorUrl);
+                // Passamos o IFormFile para o método de upload
+                produtoExistente.ImagemPrincipalUrl = await UploadImagemParaS3(requestDto.ImagemPrincipalUrl, NomeDaLoja, categoriaNome, imagemAnteriorUrl);
+            }
+            var idsDoFrontend = requestDto.AdicionaisIds ?? new List<int>();
+
+            var idsVinculadosAtualmente = produtoExistente.Adicionais
+                .Select(pa => pa.AdicionalId)
+                .ToList();
+
+            var idsParaRemover = idsVinculadosAtualmente.Except(idsDoFrontend).ToList();
+            if (idsParaRemover.Any())
+            {
+                var vinculosParaRemover = produtoExistente.Adicionais
+                    .Where(pa => idsParaRemover.Contains(pa.AdicionalId))
+                    .ToList();
+                _context.RemoveRange(vinculosParaRemover);
+            }
+
+            var idsParaAdicionar = idsDoFrontend.Except(idsVinculadosAtualmente).ToList();
+            if (idsParaAdicionar.Any())
+            {
+                foreach (var idAdicional in idsParaAdicionar)
+                {
+                    var novoVinculo = new ProdutoAdicional
+                    {
+                        ProdutoId = produtoExistente.Id,
+                        AdicionalId = idAdicional
+                    };
+                    produtoExistente.Adicionais.Add(novoVinculo);
+                }
+            }
+
+            var complementosIdsDoFrontend = requestDto.ComplementosIds ?? new List<int>();
+
+            var complementosIdsVinculadosAtualmente = produtoExistente.Complementos
+                .Select(pc => pc.ComplementoId)
+                .ToList();
+
+            var complementosIdsParaRemover = complementosIdsVinculadosAtualmente.Except(complementosIdsDoFrontend).ToList();
+            if (complementosIdsParaRemover.Any())
+            {
+                var vinculosParaRemover = produtoExistente.Complementos
+                    .Where(pc => complementosIdsParaRemover.Contains(pc.ComplementoId))
+                    .ToList();
+                _context.RemoveRange(vinculosParaRemover);
+            }
+
+            var complementosIdsParaAdicionar = complementosIdsDoFrontend.Except(complementosIdsVinculadosAtualmente).ToList();
+            if (complementosIdsParaAdicionar.Any())
+            {
+                foreach (var idComplemento in complementosIdsParaAdicionar)
+                {
+                    var novoVinculo = new ProdutoComplemento
+                    {
+                        ProdutoId = produtoExistente.Id,
+                        ComplementoId = idComplemento
+                    };
+                    produtoExistente.Complementos.Add(novoVinculo);
+                }
             }
             await _context.SaveChangesAsync();
             return produtoExistente;
@@ -301,7 +359,7 @@ namespace SistemaDeGestao.Services
         {
             var fileTransferUtility = new TransferUtility(_s3Client);
 
-            //Se houver uma URL da imagem anterior, excluímos a imagem do S3
+            //Se houver uma URL da imagem anterior, exclui a imagem do S3
             if (!string.IsNullOrEmpty(imagemAnteriorUrl))
             {
                 var imagemAnteriorKey = imagemAnteriorUrl?.Replace("https://sistemadegestao.s3.us-east-1.amazonaws.com/", "");
@@ -333,8 +391,6 @@ namespace SistemaDeGestao.Services
                 return $"https://sistemadegestao.s3.us-east-1.amazonaws.com/{key}";
             }
         }
-
-
         public async Task DeletarProduto(int id)
         {
             var produto = await _context.Produtos.FindAsync(id);

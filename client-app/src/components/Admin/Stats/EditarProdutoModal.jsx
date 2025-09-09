@@ -38,6 +38,7 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
     const [adicionaisSelecionados, setAdicionaisSelecionados] = useState([]);
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('info');
+
     useEffect(() => {
         if (!modalAberto) {
             setProdutoEditando(null);
@@ -69,6 +70,7 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
                     setGruposComplemento(gruposComplementoRes.data || []);
                     setGruposAdicional(gruposAdicionalRes.data || []);
                     setComplementosSelecionados(complementosProdutoRes.data || []);
+                    // Certifique-se de que adicionaisSelecionados seja um array de objetos com 'id'
                     setAdicionaisSelecionados(adicionaisProdutoRes.data || []);
                     
                 } catch (error) {
@@ -90,9 +92,40 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
         setProdutoEditando(prev => (prev ? { ...prev, [field]: value } : null));
     };
 
+    // --- [NOVO] FUNÇÃO PARA CONTROLAR SELEÇÃO DE ADICIONAIS ---
+    const handleAdicionalChange = (adicional, isChecked) => {
+        setAdicionaisSelecionados(prevSelecionados => {
+            if (isChecked) {
+                // Adiciona o adicional se ele ainda não estiver na lista
+                return [...prevSelecionados, adicional];
+            } else {
+                // Remove o adicional da lista filtrando pelo ID
+                return prevSelecionados.filter(item => item.id !== adicional.id);
+            }
+        });
+    };
+
+    // --- [NOVO] FUNÇÃO PARA CONTROLAR SELEÇÃO DE COMPLEMENTOS ---
+    const handleComplementoChange = (complemento, isChecked) => {
+        setComplementosSelecionados(prevSelecionados => {
+            if (isChecked) {
+                // Adiciona o complemento se ele ainda não estiver na lista
+                return [...prevSelecionados, complemento];
+            } else {
+                // Remove o complemento da lista filtrando pelo ID
+                return prevSelecionados.filter(item => item.id !== complemento.id);
+            }
+        });
+    };
+
     const salvarEdicao = async () => {
         if (!produtoEditando) return;
-        
+        console.log('Adicionais selecionados no momento do envio:', adicionaisSelecionados);
+
+        const formDataDebug = new FormData();
+        (adicionaisSelecionados || []).forEach(add => formDataDebug.append('AdicionaisIds', add.id));
+        console.log('Dados que serão enviados no FormData:', Array.from(formDataDebug.entries()));
+
         try {
             setLoading(true);
             const formData = new FormData();
@@ -113,6 +146,7 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
             }
             
             (complementosSelecionados || []).forEach(comp => formData.append('ComplementosIds', comp.id));
+            // A lógica de salvar já está correta, pois lê de `adicionaisSelecionados`
             (adicionaisSelecionados || []).forEach(add => formData.append('AdicionaisIds', add.id));
 
             const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/1.0/Produto/AtualizarProdutoV2`, formData, { headers: { "Content-Type": "multipart/form-data" } });
@@ -197,7 +231,86 @@ const EditarProdutoModal = ({ produto, modalAberto, setModalAberto, onSave }) =>
                                     </label>
                                 </div>
                             )}
-                            {/* O restante do conteúdo das abas (complementos/adicionais) será renderizado aqui */}
+
+                            {/* --- [NOVO] CONTEÚDO DA ABA DE ADICIONAIS --- */}
+                            {activeTab === 'adicionais' && (
+                                <div className="space-y-6">
+                                    {gruposAdicional.length > 0 ? (
+                                        gruposAdicional.map(grupo => (
+                                            <div key={grupo.id} className="p-4 border border-slate-200 rounded-lg bg-white">
+                                                <h3 className="text-md font-semibold text-slate-800 mb-3 pb-2 border-b border-slate-200">{grupo.nome}</h3>
+                                                <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+                                                    {(grupo.adicionais && grupo.adicionais.length > 0) ? (
+                                                        grupo.adicionais.map(adicional => {
+                                                            const isChecked = adicionaisSelecionados.some(a => a.id === adicional.id);
+                                                            return (
+                                                                <label key={adicional.id} className="flex items-center justify-between space-x-3 p-2 rounded-md hover:bg-slate-50 cursor-pointer transition-colors">
+                                                                    <div className="flex items-center">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                                                            checked={isChecked}
+                                                                            onChange={(e) => handleAdicionalChange(adicional, e.target.checked)}
+                                                                        />
+                                                                        <span className="ml-3 text-sm text-slate-700">{adicional.nome}</span>
+                                                                    </div>
+                                                                    <span className="text-sm font-medium text-slate-900">
+                                                                        + {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(adicional.precoBase || 0)}
+                                                                    </span>
+                                                                </label>
+                                                            );
+                                                        })
+                                                    ) : (
+                                                        <p className="text-sm text-slate-500 px-2">Nenhum adicional cadastrado neste grupo.</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <p className="text-sm text-center text-slate-500 py-8">Nenhum grupo de adicionais foi encontrado.</p>
+                                    )}
+                                </div>
+                            )}
+                            
+                            {/* --- [ATUALIZADO] CONTEÚDO DA ABA DE COMPLEMENTOS --- */}
+                            {activeTab === 'complementos' && (
+                                <div className="space-y-6">
+                                    {gruposComplemento.length > 0 ? (
+                                        gruposComplemento.map(grupo => (
+                                            <div key={grupo.id} className="p-4 border border-slate-200 rounded-lg bg-white">
+                                                <h3 className="text-md font-semibold text-slate-800 mb-3 pb-2 border-b border-slate-200">{grupo.nome}</h3>
+                                                <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+                                                    {(grupo.complementos && grupo.complementos.length > 0) ? (
+                                                        grupo.complementos.map(complemento => {
+                                                            const isChecked = complementosSelecionados.some(c => c.id === complemento.id);
+                                                            return (
+                                                                <label key={complemento.id} className="flex items-center justify-between space-x-3 p-2 rounded-md hover:bg-slate-50 cursor-pointer transition-colors">
+                                                                    <div className="flex items-center">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                                                            checked={isChecked}
+                                                                            onChange={(e) => handleComplementoChange(complemento, e.target.checked)}
+                                                                        />
+                                                                        <span className="ml-3 text-sm text-slate-700">{complemento.nome}</span>
+                                                                    </div>
+                                                                    <span className="text-sm font-medium text-slate-900">
+                                                                        + {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(complemento.preco || 0)}
+                                                                    </span>
+                                                                </label>
+                                                            );
+                                                        })
+                                                    ) : (
+                                                        <p className="text-sm text-slate-500 px-2">Nenhum complemento cadastrado neste grupo.</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <p className="text-sm text-center text-slate-500 py-8">Nenhum grupo de complementos foi encontrado.</p>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

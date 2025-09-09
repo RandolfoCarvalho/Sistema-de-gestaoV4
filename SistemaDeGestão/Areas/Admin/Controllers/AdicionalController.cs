@@ -15,26 +15,6 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             _adicionalService = adicionalService;
         }
 
-        [HttpGet]
-        [Route("ListarAdicionais")]
-        public async Task<IActionResult> ListarAdicionais()
-        {
-            return Ok(await _adicionalService.ListarAdicionais());
-        }
-
-        [HttpPost]
-        [Route("CriarAdicional")]
-        public async Task<IActionResult> CriarAdicional([FromBody] Adicional adicional)
-        {
-            if (adicional == null)
-            {
-                throw new ArgumentNullException(nameof(adicional), "O adicional não pode ser nulo.");
-            }
-
-            var adicionalResult = await _adicionalService.CriarAdicional(adicional);
-            if (adicionalResult == null) return BadRequest("Erro ao criar adicional");
-            return Ok(adicionalResult);
-        }
         [HttpGet("ObterAdicionais/{produtoId}")]
         public async Task<ActionResult<List<Adicional>>> ObterAdicionais(int produtoId)
         {

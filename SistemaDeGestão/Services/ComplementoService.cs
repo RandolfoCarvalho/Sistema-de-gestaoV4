@@ -14,36 +14,6 @@ namespace SistemaDeGestao.Services
         {
             _context = context;
         }
-        public async Task<IEnumerable<ComplementoDTO>> ListarComplementos()
-        {
-            var complementos = await _context.Complementos.ToListAsync();
-            return complementos.Select(c => new ComplementoDTO
-            {
-                Id = c.Id,
-                Nome = c.Nome,
-                Descricao = c.Descricao,
-                Preco = c.Preco,
-                Ativo = c.Ativo,
-                MaximoPorProduto = c.MaximoPorProduto,
-                GrupoComplementoId = c.GrupoComplementoId
-            });
-        }
-        public async Task<ComplementoDTO> CriarComplemento(Complemento complemento)
-        {
-            _context.Complementos.Add(complemento);
-            await _context.SaveChangesAsync();
-
-            return new ComplementoDTO
-            {
-                Id = complemento.Id,
-                Nome = complemento.Nome,
-                Descricao = complemento.Descricao,
-                Preco = complemento.Preco,
-                Ativo = complemento.Ativo,
-                MaximoPorProduto = complemento.MaximoPorProduto,
-                GrupoComplementoId = complemento.GrupoComplementoId
-            };
-        }
         public async Task<List<ComplementoDTO>> ObterComplementosPorProdutoId(int produtoId)
         {
             var complementos = await _context.ProdutoComplementos

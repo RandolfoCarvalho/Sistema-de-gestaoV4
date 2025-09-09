@@ -34,18 +34,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-//db connection 
 
 //Mysql Prod
 var connection = builder.Configuration["ConnectionStrings:DefaultConnection"];
 builder.Services.AddDbContext<DataBaseContext>(options => options.UseMySql(connection,
     new MySqlServerVersion(
         new Version(8, 0, 0)))); 
-
-//sqlServer Prod
-/*var connection = builder.Configuration["ConnectionStrings:DefaultConnection"];
-builder.Services.AddDbContext<DataBaseContext>(options =>
-    options.UseSqlServer(connection));*/
 
 //Seguranca
 var tokenConfigurations = new TokenConfiguration();
@@ -151,8 +145,6 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.SupportedUICultures = supportedCultures;
 });
 
-
-
 builder.Services.AddScoped<IImageUploadService, ImageUploadService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
@@ -188,11 +180,6 @@ builder.Services.AddControllers()
                  return new BadRequestObjectResult(problemDetails);
              };
          });
-/*builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.LoginPath = "/Auth/Login";  // Caminho para o redirecionamento de login
-}); */
-
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowSpecificOrigin", builder => {
         builder
@@ -200,21 +187,10 @@ builder.Services.AddCors(options => {
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials()
-            .SetIsOriginAllowed(_ => true) // Para testes - remova em produ��o!
-            .WithExposedHeaders("Content-Disposition"); // Se necess�rio
+            .SetIsOriginAllowed(_ => true)
+            .WithExposedHeaders("Content-Disposition");
     });
 });
-
-//Usar em prod
-/*builder.Services.AddCors(options => {
-    options.AddPolicy("AllowSpecificOrigin", builder => {
-        builder
-            .WithOrigins("https://sistema-de-gestao-v3.vercel.app") // More secure than allowing any origin
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials();
-    });
-}); */
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -280,10 +256,11 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowSpecificOrigin");
 app.UseStaticFiles();
-app.UseAuthentication(); // Adicione isso
-app.UseAuthorization();  // E isso tamb�m
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseSession();
 app.MapControllers();
+
 //Order Hub
 app.MapHub<OrderHub>("/orderHub");
 app.MapHub<PagamentoPixHub>("/pagamentoPixHub");

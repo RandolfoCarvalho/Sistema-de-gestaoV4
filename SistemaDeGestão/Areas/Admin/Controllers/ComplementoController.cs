@@ -18,54 +18,6 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             _complementoService = complementoService;
         }
 
-        [HttpGet]
-        [Route("ListarComplementos")]
-        public async Task<IActionResult> ListarComplementos()
-        {
-            var complementos = await _complementoService.ListarComplementos();
-            var complementosDto = complementos.Select(c => new ComplementoDTO
-            {
-                Id = c.Id,
-                Nome = c.Nome,
-                Descricao = c.Descricao,
-                Preco = c.Preco,
-                Ativo = c.Ativo,
-                MaximoPorProduto = c.MaximoPorProduto,
-                GrupoComplementoId = c.GrupoComplementoId // Se necessário
-            });
-
-            return Ok(complementosDto);
-        }
-
-        [HttpPost]
-        [Route("CriarComplemento")]
-        public async Task<IActionResult> CriarComplemento([FromBody] ComplementoDTO complementoDto)
-        {
-            var complemento = new Complemento
-            {
-                Nome = complementoDto.Nome,
-                Descricao = complementoDto.Descricao,
-                Ativo = complementoDto.Ativo,
-                MaximoPorProduto = complementoDto.MaximoPorProduto,
-                GrupoComplementoId = complementoDto.GrupoComplementoId
-            };
-
-            var complementoResult = await _complementoService.CriarComplemento(complemento);
-            if (complementoResult == null) return BadRequest("Erro ao criar complemento");
-
-            var resultDto = new ComplementoDTO
-            {
-                Id = complementoResult.Id,
-                Nome = complementoResult.Nome,
-                Descricao = complementoResult.Descricao,
-                Preco = complementoResult.Preco,
-                Ativo = complementoResult.Ativo,
-                MaximoPorProduto = complementoResult.MaximoPorProduto,
-                GrupoComplementoId = complementoResult.GrupoComplementoId
-            };
-
-            return Ok(resultDto);
-        }
         [HttpGet("ObterComplementos/{produtoId}")]
         public async Task<ActionResult<List<ComplementoDTO>>> ObterComplementos(int produtoId)
         {

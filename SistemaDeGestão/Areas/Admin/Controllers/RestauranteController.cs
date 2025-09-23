@@ -44,7 +44,7 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception($"{ex.InnerException?.Message ?? ex.Message}");
+                return BadRequest(new { message = "Já existe um restaurante com esse nome de loja ou nome de usuário." });
             }
 
             return Ok(Restaurante);

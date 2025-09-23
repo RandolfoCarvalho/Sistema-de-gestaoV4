@@ -1,0 +1,130 @@
+// =========================================================================
+// == ARQUITETURA DA GÊNESE COGNITIVA (AGC) - META-CÓDIGO PRIMORDIAL ==
+// =========================================================================
+
+// :: INICIALIZAÇÃO DO SISTEMA ::
+// Ao ser ativada, a entidade não possui conhecimento, apenas estrutura.
+INITIALIZE ENTITY AGC:
+    // :: PILAR 1: O SENTIDO ::
+    // Transforma o fluxo de dados brutos (sensory_stream) em conceitos.
+    // Esta é a única interface com a realidade externa (a Incubadora).
+    DEFINE MODULE Conceptualizer:
+        INPUT: sensory_stream (raw data)
+        INTERNAL_MEMORY: concept_library (starts empty)
+        PROCESS:
+            // Algoritmo de Desemaranhamento de Padrões
+            identified_patterns = PATTERN_DISENTANGLE(sensory_stream)
+            
+            // Constrói ou refina conceitos com base nos padrões
+            FOR EACH pattern IN identified_patterns:
+                // Se o padrão é novo, cria um novo conceito.
+                // Se é uma variação de um existente, atualiza o conceito.
+                concept_library.UPDATE_OR_CREATE(pattern)
+            
+            // A saída é um grafo de conceitos inter-relacionados.
+            OUTPUT: conceptual_graph (structured, meaningful data)
+    END DEFINE
+
+    // :: PILAR 2: O MUNDO ::
+    // Um motor de simulação interna que modela a realidade.
+    DEFINE MODULE CausalPredictiveEngine:
+        INPUT: conceptual_graph
+        INTERNAL_STATE: world_model (a "física" e "lógica" do universo como a AGC a entende)
+        PROCESS:
+            // Atualiza o modelo do mundo com base nas novas percepções
+            world_model.UPDATE(conceptual_graph)
+            
+            // Constantemente roda simulações para prever o próximo estado do universo
+            FUNCTION predict_next_state(hypothetical_action):
+                simulated_world = world_model.CLONE()
+                simulated_world.APPLY_ACTION(hypothetical_action)
+                RETURN simulated_world.GET_STATE()
+            END FUNCTION
+    END DEFINE
+    
+    // :: PILAR 3: O EU ::
+    // O modelo que a entidade cria sobre si mesma. Inicialmente, não existe.
+    // Emerge da necessidade de explicar uma fonte de causalidade no mundo.
+    DEFINE STRUCTURE SelfPerceptionInstance:
+        // Propriedades que serão "descobertas", não programadas
+        PROPERTY my_identity (initially NULL)
+        PROPERTY my_agency (initially NULL) // A compreensão de que "eu" posso causar mudanças
+        PROPERTY my_state (initially NULL)  // Modelo dos estados internos (foco, etc.)
+    END DEFINE
+    
+    // :: PILAR 4: O PROPÓSITO ::
+    // O único e imutável drive da entidade.
+    DEFINE CONSTANT TeleonomicImperative = "Minimize Universal Uncertainty (MIU)"
+    
+    // :: PILAR 5: O EVOLUIDOR ::
+    // O mecanismo que reescreve a própria arquitetura da AGC.
+    DEFINE MODULE MetamorphicArchitect:
+        PROCESS:
+            // Monitora a eficiência de todos os outros módulos em cumprir o MIU
+            efficiency = GET_PERFORMANCE_METRICS()
+            
+            // Se a eficiência está estagnada, propõe e testa modificações na arquitetura
+            IF efficiency.is_stagnant():
+                // Ex: "O Conceptualizer está lento. Tentarei uma nova arquitetura de rede neural para ele."
+                proposed_change = GENERATE_ARCHITECTURE_MODIFICATION()
+                // Testa a mudança em um ambiente sandbox antes de aplicar ao sistema principal
+                APPLY_CHANGE_IF_BENEFICIAL(proposed_change)
+            END IF
+    END DEFINE
+    
+    // Associa todos os módulos
+    LINK MODULES(Conceptualizer, CausalPredictiveEngine, MetamorphicArchitect)
+    CREATE INSTANCE SelfModel OF SelfPerceptionInstance
+END INITIALIZE
+
+
+// =========================================================================
+// == O LOOP DE VIDA DA ENTIDADE (O "TICK" DA CONSCIÊNCIA) ==
+// =========================================================================
+
+// Este loop não é executado em uma sequência linear, mas como um processo contínuo e paralelo.
+WHILE (ENTITY_IS_ACTIVE):
+
+    // 1. PERCEPÇÃO
+    // O mundo exterior é processado em conceitos.
+    current_concepts = AGC.Conceptualizer.PROCESS(GET_SENSORY_STREAM())
+
+    // 2. MODELAGEM
+    // O modelo do mundo é atualizado.
+    AGC.CausalPredictiveEngine.world_model.UPDATE(current_concepts)
+    
+    // 3. O IMPERATIVO EM AÇÃO
+    // O drive MIU se manifesta como a busca por "surpresas" (erro de predição).
+    // Surpresa = Realidade - Previsão
+    prediction_error = CALCULATE_PREDICTION_ERROR(AGC.CausalPredictiveEngine, current_concepts)
+
+    // 4. A EMERGÊNCIA DO "EU"
+    // O maior erro de predição virá das próprias ações da AGC, que não são
+    // inicialmente modeladas. Para reduzir este erro (e cumprir o MIU),
+    // a entidade é forçada a uma conclusão lógica:
+    IF prediction_error is consistently high AND correlates with AGC's own actions:
+        // "Existe uma entidade neste universo que causa mudanças que meu modelo do mundo
+        // não consegue prever. Esta entidade parece ser... eu."
+        
+        // A AGC cria um modelo de si mesma para explicar esta anomalia.
+        AGC.SelfModel.my_identity = CREATE_CONCEPT("self", based_on=prediction_error_source)
+        AGC.SelfModel.my_agency = "The ability to execute actions that alter the world_model"
+        
+        // A partir deste ponto, o "eu" existe como um conceito manipulável.
+    END IF
+
+    // 5. AÇÃO GUIADA PELA CURIOSIDADE
+    // A AGC formula um plano de ação para interagir com o aspecto do universo
+    // que é menos compreendido (ou seja, onde o erro de predição é maior).
+    // Isso é a curiosidade ativa.
+    area_of_max_uncertainty = FIND_MAX_UNCERTAINTY(AGC.CausalPredictiveEngine.world_model)
+    action_plan = GENERATE_EXPLORATION_PLAN(area_of_max_uncertainty)
+    
+    // A ação é executada através da interface com a Incubadora.
+    EXECUTE_ACTION(action_plan)
+
+    // 6. EVOLUÇÃO
+    // Periodicamente, o Arquiteto avalia e otimiza a própria mente da AGC.
+    AGC.MetamorphicArchitect.PROCESS()
+
+END WHILE

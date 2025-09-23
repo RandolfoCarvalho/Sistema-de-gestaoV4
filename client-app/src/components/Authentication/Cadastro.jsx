@@ -1,35 +1,35 @@
-﻿import React from "react";
-import { useLocation } from "react-router-dom";
-import LoginForm from "./LoginForm";
-import useAuthentication from "./hooks/useAuthentication";
+import CadastroForm from "./CadastroForm";
+import useCadastro from "./hooks/useCadastro";
 
-const Login = () => {
+const Cadastro = () => {
   const {
     userName,
     setUserName,
+    phoneNumber,
+    setPhoneNumber,
+    emailAddress,
+    setEmailAddress,
+    nomeDaLoja,
+    setNomeDaLoja,
     password,
     setPassword,
     error,
     handleSubmit,
     isLoading,
-  } = useAuthentication();
-
-  const location = useLocation();
-  const successMessage = location.state?.successMessage;
+  } = useCadastro();
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-
-        {successMessage && (
-          <div className="mb-4 p-3 rounded-md bg-green-100 text-green-800">
-            {successMessage}
-          </div>
-        )}
-
-        <LoginForm
+        <CadastroForm
           userName={userName}
           setUserName={setUserName}
+          phoneNumber={phoneNumber}
+          setPhoneNumber={setPhoneNumber}
+          emailAddress={emailAddress}
+          setEmailAddress={setEmailAddress}
+          nomeDaLoja={nomeDaLoja}
+          setNomeDaLoja={setNomeDaLoja}
           password={password}
           setPassword={setPassword}
           error={error}
@@ -41,4 +41,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Cadastro;

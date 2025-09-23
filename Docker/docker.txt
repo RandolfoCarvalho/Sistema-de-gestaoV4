@@ -1,0 +1,53 @@
+docker build -t sistema-de-gestao-webapp -f Dockerfile .
+
+
+
+$ docker tag sistema-de-gestao-webapp randolfo3211/sistema-de-gestao-webapp:v1
+
+
+docker push randolfo3211/sistema-de-gestao-webapp:v1
+
+
+Se tiver dificuldado lembra das portas, 8080 -> host, 5000 ->  a que o docker ta ouvindo:
+
+docker run -d --name sistema-de-gestao-webapp-vx -p 8080:5000 randolfo3211/sistema-de-gestao-webapp:vx2
+
+
+
+MINHA REDE DOCKER
+
+Rodar o sistema:
+
+docker run -d   --name whatsappbot   --network sistema-gestao-net   -p 3001:3001   --restart always   randolfo3211/whatsappbot:v1
+
+docker run -d --name webapp-v1 --network sistema-gestao-net -p 8080:5000 -e ConnectionStrings__DefaultConnection="server=mysql-container;port=3306;database=db_lai;user=root;password=Laberinto123#;" randolfo3211/sistema-de-gestao-webapp:v1
+
+
+rodar o sistema: - ULTIMA VERSAO
+
+docker run -d --name webapp-v1 --network sistema-gestao-net -p 8080:5000 -e 
+ASPNETCORE_ENVIRONMENT=Production -e ConnectionStrings__DefaultConnection="server=mysql-container;port=3306;database=db_lai;user=root;password=Laberinto123#;" 
+-e ConnectionStrings__Redis="meu-redis:6379" 
+-e TokenConfigurations__Secret="SUA_CHAVE_SECRETA_MUITO_FORTE_AQUI" 
+-e TokenConfigurations__Issuer="SeuSistema" 
+-e TokenConfigurations__Audience="ApiUsuarios" 
+-e Jwt__Key="ESTA_E_A_SUA_CHAVE_SECRETA_SUPER_LONGA_E_DIFICIL_DE_ADIVINHAR_12345" 
+-e Jwt__Issuer="SeuSistemaDeGestao" 
+-e Jwt__Audience="UsuariosDoDelivery" randolfo3211/sistema-de-gestao-webapp:v1
+
+
+RODAR O REDIS LOCAL:
+docker run -d --name meu-redis -p 6379:6379 redis
+
+como o backup do banco?]
+nesse casminho tem esse script que roda o backup as 2h da manhã
+# Na sua VPS
+mkdir -p /opt/backups/mysql
+mkdir /opt/scripts
+cd /opt/scripts
+
+Rodar mysql
+docker run -d   --name mysql-container   -e MYSQL_ROOT_PASSWORD="Laberinto123#"   -v /root/mysql/clientes:/var/lib/mysql   -p 3306:3306   --memory=1g   --network sistema-gestao-net   --restart unless-stopped   randolfo3211/mysql:v1
+
+dockerhub token:
+dckr_pat_VokOAy62ymWtGQqvrIa7bB2b7oE

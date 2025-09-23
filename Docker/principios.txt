@@ -1,0 +1,11 @@
+Princípios Chave Aplicados:
+
+Separação de Responsabilidades (Single Responsibility Principle - SRP):
+Componentes devem fazer uma coisa e fazê-la bem.
+Lógica de UI vs. Lógica de Negócios/Estado vs. Lógica Utilitária.
+Componentização: Dividir a UI em pedaços menores, reutilizáveis e mais fáceis de gerenciar.
+Legibilidade e Manutenibilidade: Código fácil de ler, entender e modificar.
+Testabilidade: Componentes menores e funções puras são mais fáceis de testar.
+Reusabilidade: Criar componentes e utilitários que podem ser usados em outras partes da aplicação.
+Gerenciamento de Estado: Usar o estado de forma eficiente e no local apropriado.
+Consistência: Manter um padrão de codificação e estrutura.

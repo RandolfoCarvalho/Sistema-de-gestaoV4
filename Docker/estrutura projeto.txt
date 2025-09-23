@@ -1,0 +1,117 @@
+/src
+├── /assets/             # SVGs como logo.svg
+├── /components/         # UI Genérica e Reutilizável
+│   ├── /ui/             # Componentes "burros"
+│   ├── /layouts/        # Estrutura de páginas
+│   └── /modals/         # Modais genéricos
+├── /features/           # ✨ O CORAÇÃO DA APLICAÇÃO ✨
+│   ├── /admin-panel/    # Feature completa do Painel Admin
+│   ├── /authentication/ # Feature de Login/Registro
+│   ├── /cart/           # Feature do Carrinho
+│   ├── /checkout/       # Feature do Processo de Pagamento
+│   ├── /order-tracking/ # Feature de Acompanhamento de Pedidos
+│   ├── /product/        # Feature de Produtos (Listagem, Detalhes, Busca)
+│   └── /store-profile/  # Feature do Perfil da Loja
+├── /hooks/              # Hooks Genéricos
+├── /lib/                # Configuração de bibliotecas de terceiros
+├── /pages/              # Mapeamento 1:1 com as rotas
+├── /routes/             # Definição e proteção de rotas
+├── /services/           # Camada de comunicação com APIs
+├── /store/              # Gestão de Estado Global (Contexts)
+├── /styles/             # Estilos Globais
+├── /utils/              # Funções Utilitárias Genéricas
+├── App.jsx              # Ponto de entrada principal
+└── index.js             # Renderização inicial do React
+
+
+
+
+detalhado:
+
+/src/
+├── assets/
+│   └── icons/
+│       └── logo.svg
+├── components/
+│   ├── layouts/
+│   │   └── AdminLayout.jsx
+│   └── ui/
+│       ├── BottomNav/
+│       ├── Skeleton/
+│       └── Toast.jsx
+├── features/
+│   ├── admin-panel/
+│   │   ├── components/
+│   │   ├── dashboard/
+│   │   ├── layout/
+│   │   │   ├── Header.jsx
+│   │   │   └── Sidebar.jsx
+│   │   ├── products/
+│   │   │   ├── CreateProduct.jsx
+│   │   │   └── Products.jsx
+│   │   ├── profile/
+│   │   │   └── Perfil.jsx
+│   │   └── whatsapp-bot/
+│   ├── authentication/
+│   │   ├── components/
+│   │   │   ├── LoginForm.tsx
+│   │   │   └── LogoutButton.jsx
+│   │   └── hooks/
+│   │       └── useAuthentication.js
+│   ├── cart/
+│   │   ├── components/
+│   │   └── context/
+│   │       └── CartProvider.jsx
+│   ├── checkout/
+│   │   ├── components/
+│   │   │   ├── AddressForm.jsx
+│   │   │   └── OrderSummary.jsx
+│   │   └── payment/
+│   │       ├── CardPaymentForm.jsx
+│   │       └── PixForm.jsx
+│   ├── order-tracking/
+│   │   ├── components/
+│   │   │   └── Pedidos.js
+│   │   └── modals/
+│   │       └── OrderDetailsModal.js
+│   ├── product-catalog/
+│   │   ├── details/
+│   │   │   └── ProductDetails.jsx
+│   │   ├── list/
+│   │   │   └── Produtos.jsx
+│   │   └── promotions/
+│   │       └── Promocoes.js
+│   └── store-profile/
+│       ├── components/
+│       │   ├── StoreProfileCard.jsx
+│       │   └── StoreStatus.jsx
+│       └── header/
+│           └── HeaderPublic.jsx
+├── hooks/
+│   └── useLocalStorage.js  # (Exemplo de hook genérico)
+├── lib/
+│   ├── auth.js
+│   └── axios.js
+├── pages/
+│   ├── AdminDashboardPage.jsx
+│   ├── LoginPage.jsx
+│   └── StoreHomePage.jsx
+├── routes/
+│   ├── ProtectedRoute.jsx
+│   ├── ProtectedStore.jsx
+│   └── index.jsx
+├── services/
+│   ├── lojaService.js
+│   └── types.js
+├── store/
+│   ├── SignalRProvider.jsx
+│   ├── StoreProvider.jsx
+│   └── UserProvider.jsx
+├── styles/
+│   └── global.css
+├── utils/
+│   ├── alerts.js
+│   ├── formatters.js
+│   └── validators.js
+├── App.jsx
+└── index.js

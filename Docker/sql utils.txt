@@ -1,0 +1,25 @@
+-- DELETE DE PEDIDOS;
+
+DELETE FROM itempedidoopcao;
+DELETE FROM ItensPedido;
+DELETE FROM pedidospendentes;
+DELETE FROM Pedidos;
+DELETE FROM pedidoPagamento;
+
+
+-- DELETE DE PRODUTOS E PEDIDOS;
+
+DELETE FROM produtogrupoadicional;
+DELETE FROM produtosgruposcomplementos;
+DELETE FROM produtocomplementos;
+DELETE FROM produtoadicionais;
+DELETE FROM adicionais;
+DELETE FROM complementos;
+DELETE FROM grupoadicionais;
+DELETE FROM grupocomplementos;
+DELETE FROM itempedidoopcao;
+DELETE FROM ItensPedido;
+DELETE FROM pedidospendentes;
+DELETE FROM Pedidos;
+DELETE FROM pedidoPagamento;
+DELETE FROM produtos;

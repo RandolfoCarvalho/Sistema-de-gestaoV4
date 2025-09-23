@@ -18,6 +18,7 @@ import Produtos from './components/Produtos/Produtos';
 import ProductDetails from './components/ProdutoDetails/ProductDetails';
 import CheckoutPage from './components/Checkout/Checkout';
 import Autenticacao from './components/Authentication/Login';
+import Cadastro from './components/Authentication/Cadastro';
 import Pedidos from "./components/Pedidos/Pedidos";
 import Promocoes from "./components/Promocoes/Promocoes";
 import PedidosDetalhes from "./components/Pedidos/PedidosDetalhes";
@@ -59,6 +60,7 @@ const App = () => {
                                     <Route path="/product/:id" element={<ProductDetails />} />
                                     <Route path="/checkout" element={<CheckoutPage />} />
                                     <Route path="/auth/login" element={<Autenticacao />} />
+                                    <Route path="/auth/Cadastro" element={<Cadastro />} />
                                     <Route path="/pedidos" element={<Pedidos />} />
                                     <Route path="/pedidos/:numeroPedido" element={<PedidosDetalhes />} />
                                     <Route path="/promo" element={<Promocoes />} />

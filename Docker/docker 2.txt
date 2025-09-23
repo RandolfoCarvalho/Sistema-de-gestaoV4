@@ -1,0 +1,9 @@
+docker build -t whatsappbot -f Dockerfile .
+
+
+docker tag whatsappbot randolfo3211/whatsappbot:v1
+
+docker push randolfo3211/whatsappbot:v1
+
+
+docker run -d   --name whatsappbot   --network sistema-gestao-net   -p 3001:3001   --restart always   randolfo3211/whatsappbot:v1

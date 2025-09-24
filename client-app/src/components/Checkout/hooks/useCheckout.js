@@ -9,15 +9,15 @@ export const useCheckout = (cart, cartTotal, taxaEntrega, currentStore, clearCar
     const [formData, setFormData] = useState({
         FinalUserName: localStorage.getItem("FinalUserName") || '',
         FinalUserTelefone: localStorage.getItem("FinalUserTelefone") || '',
-        FinalUserId: localStorage.getItem('userId') || null, 
+        FinalUserId: localStorage.getItem('userId') || null,
         RestauranteId: localStorage.getItem('restauranteId') || 1,
         observacoes: '',
+        TipoEntrega: 'DELIVERY',
         endereco: { Logradouro: '', Numero: '', Complemento: '', Bairro: '', Cidade: '', CEP: '' },
         pagamento: { SubTotal: cartTotal, TaxaEntrega: taxaEntrega, Desconto: 0, ValorTotal: cartTotal + taxaEntrega , FormaPagamento: 'dinheiro' }
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showPaymentModal, setShowPaymentModal] = useState(false);
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('dinheiro');
 
     useEffect(() => {
         setFormData(prev => ({...prev, FinalUserId: userId}));
@@ -30,11 +30,21 @@ export const useCheckout = (cart, cartTotal, taxaEntrega, currentStore, clearCar
             setFormData(prev => ({ ...prev, FinalUserName: nome, FinalUserTelefone: telefone }));
         }
     }, []);
-
+    
     useEffect(() => {
-        const newTotal = cartTotal + (formData.pagamento.TaxaEntrega || 0) - (formData.pagamento.Desconto || 0);
-        setFormData(prev => ({ ...prev, pagamento: { ...prev.pagamento, SubTotal: cartTotal, ValorTotal: newTotal } }));
-    }, [cartTotal, formData.pagamento.TaxaEntrega, formData.pagamento.Desconto]);
+        const taxaAplicada = formData.TipoEntrega === 'RETIRADA' ? 0 : taxaEntrega;
+        const newTotal = cartTotal + taxaAplicada - (formData.pagamento.Desconto || 0);
+        setFormData(prev => ({
+            ...prev,
+            pagamento: {
+                ...prev.pagamento,
+                SubTotal: cartTotal,
+                TaxaEntrega: taxaAplicada,
+                ValorTotal: newTotal
+            }
+        }));
+    }, [cartTotal, taxaEntrega, formData.TipoEntrega, formData.pagamento.Desconto]);
+
 
     const handleUserSuccess = async (userData) => {
         setIsUserModalOpen(false);
@@ -76,7 +86,6 @@ export const useCheckout = (cart, cartTotal, taxaEntrega, currentStore, clearCar
                 });
             }
             else if (response.status === 404) {
-                // Usuário não encontrado, faz o registro
                 const registerResponse = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/FinalUserAuth/register`, {
                     Nome: userData.nome,
                     Telefone: userData.telefone
@@ -119,7 +128,7 @@ export const useCheckout = (cart, cartTotal, taxaEntrega, currentStore, clearCar
     };
 
     const preparePedidoDTO = (currentPaymentMethod) => {
-        const valorTotalCalculadoFrontend = cartTotal + (formData.pagamento?.TaxaEntrega || 0) - (formData.pagamento?.Desconto || 0);
+        const valorTotalCalculadoFrontend = formData.pagamento.ValorTotal;
         return {
             FinalUserName: formData.FinalUserName,
             FinalUserTelefone: formData.FinalUserTelefone,
@@ -127,7 +136,8 @@ export const useCheckout = (cart, cartTotal, taxaEntrega, currentStore, clearCar
             NomeDaLoja: currentStore,
             RestauranteId: Number(localStorage.getItem('restauranteId')),
             Observacoes: formData.observacoes || '',
-            Endereco: { Logradouro: formData.endereco?.Logradouro || '', Numero: formData.endereco?.Numero || '', Complemento: formData.endereco?.Complemento || '', Bairro: formData.endereco?.Bairro || '', Cidade: formData.endereco?.Cidade || '', CEP: formData.endereco?.CEP || '' },
+            TipoEntrega: formData.TipoEntrega,
+            Endereco: formData.TipoEntrega === 'DELIVERY' ? { Logradouro: formData.endereco?.Logradouro || '', Numero: formData.endereco?.Numero || '', Complemento: formData.endereco?.Complemento || '', Bairro: formData.endereco?.Bairro || '', Cidade: formData.endereco?.Cidade || '', CEP: formData.endereco?.CEP || '' } : null,
             Pagamento: { SubTotal: cartTotal, TaxaEntrega: formData.pagamento?.TaxaEntrega || 0, Desconto: formData.pagamento?.Desconto || 0, ValorTotal: valorTotalCalculadoFrontend, FormaPagamento: currentPaymentMethod },
             Itens: cart.map(item => ({ ProdutoId: item.id, NomeProduto: item.nome || item.title || '', Quantidade: item.quantity, PrecoUnitario: 0, SubTotal: 0, PrecoCusto: 0, Observacoes: item.observacoes || '', OpcoesExtras: Array.isArray(item.selectedExtras) ? item.selectedExtras.map(extra => ({ TipoOpcao: extra.type === 'adicional' ? 1 : 0, ReferenciaId: extra.id, Nome: extra.nome, Quantidade: extra.quantity * item.quantity, PrecoUnitario: 0 })) : [] }))
         };

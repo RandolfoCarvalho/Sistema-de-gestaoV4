@@ -35,10 +35,6 @@ const Checkout = () => {
         userId,
     } = useCheckout(cart, cartTotal, taxaEntrega, currentStore, clearCart, navigate);
 
-    const totalGeral = React.useMemo(() => {
-        return Number(cartTotal) + Number(taxaEntrega);
-    }, [cartTotal, taxaEntrega]);
-
     const [blockCheckoutMessage, setBlockCheckoutMessage] = useState('');
 
     useEffect(() => {
@@ -71,46 +67,18 @@ const Checkout = () => {
 
     const handleFinalizarPedido = async (e) => {
         e.preventDefault();
-        let isAuthenticated = false;
+
         if (!formData.FinalUserTelefone || !userId) {
             setIsUserModalOpen(true);
             return;
         }
         
-        try {
-            // Tenta verificar se o usuário existe no backend
-            const result = await axios.post(
-                `${process.env.REACT_APP_API_URL}/api/1.0/FinaluserAuth/Exists`,
-                JSON.stringify(formData.FinalUserTelefone), 
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
-
-            if (result.status === 200) {
-                isAuthenticated = true;
-            }
-        } catch (ex) {
-            if (ex.response && ex.response.status === 404) {
-                console.log("Usuário não encontrado");
-            } else {
-                console.error("Erro ao verificar usuário:", ex);
-            }
-        }
-        if(!isAuthenticated) {
-            setIsUserModalOpen(true);
-            return;
-        }
-        // 1. Verificações de bloqueio (carrinho vazio, loja fechada)
         if (blockCheckoutMessage) {
             showInfo("Atenção", blockCheckoutMessage);
             return;
         }
 
-        // 2. Validação do formulário de endereço, etc.
-        const { isValid, errors } = validateForm(formData); 
+        const { isValid, errors } = validateForm(formData, formData.TipoEntrega); 
         if (!isValid) {
             showError("Formulário incompleto", errors[0]);
             return;
@@ -130,6 +98,8 @@ const Checkout = () => {
             navigate('/pedidos');
         });
     };
+    
+    const taxaExibida = formData.TipoEntrega === 'RETIRADA' ? 0 : taxaEntrega;
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -150,7 +120,7 @@ const Checkout = () => {
                             isOpen={showPaymentModal}
                             onClose={() => setShowPaymentModal(false)}
                             paymentMethod={formData.pagamento?.FormaPagamento}
-                            cartTotal={totalGeral} 
+                            cartTotal={formData.pagamento.ValorTotal} 
                             onPaymentSuccess={handlePaymentSuccess}
                             preparePedidoDTO={preparePedidoDTO}
                             setIsSubmitting={setIsSubmitting}
@@ -162,12 +132,11 @@ const Checkout = () => {
                             <CheckoutForm formData={formData} setFormData={setFormData} />
                         </div>
                         <OrderSummary
-                            taxaEntrega={taxaEntrega} 
+                            taxaEntrega={taxaExibida}
                             cart={cart}
                             cartTotal={cartTotal}
                             updateQuantity={updateQuantity}
                             removeFromCart={removeFromCart}
-                            formData={formData}
                         />
                     </div>
 
@@ -186,7 +155,7 @@ const Checkout = () => {
                             }`}
                             disabled={isSubmitting || !!blockCheckoutMessage}
                         >
-                            {isSubmitting ? "Processando..." : `Ir para Pagamento (R$ ${formData.pagamento.ValorTotal.toFixed(2)})`}
+                            {isSubmitting ? "Processando..." : `Ir para Pagamento (R$ ${formData.pagamento.ValorTotal.toFixed(2).replace('.',',')})`}
                         </button>
                     </form>
                 </div>

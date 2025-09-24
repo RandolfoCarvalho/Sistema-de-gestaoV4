@@ -82,19 +82,47 @@ namespace SistemaDeGestao.Services
             return false;
         }
 
+        //var response = await httpClient.PostAsync("https://bot.fomedique.com.br/send-message", content);
+        //var response = await httpClient.PostAsync("http://localhost:3001/send-message", content);
         public async Task<bool> EnviarMensagemAsync(string session, string telefone, string mensagem)
         {
+            var telefoneFormatado = FormatarParaWhatsAppId(telefone);
             using var httpClient = new HttpClient();
             var jsonBody = new
             {
                 session,
-                phone = telefone,
+                phone = telefoneFormatado,
                 message = mensagem
             };
             var content = new StringContent(JsonSerializer.Serialize(jsonBody), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync("https://bot.fomedique.com.br/send-message", content);
-            //var response = await httpClient.PostAsync("http://localhost:3001/send-message", content);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Erro ao enviar mensagem para {telefoneFormatado}: {errorContent}");
+            }
             return response.IsSuccessStatusCode;
+        }
+
+        private string FormatarParaWhatsAppId(string numeroLocal)
+        {
+            var apenasDigitos = new string(numeroLocal.Where(char.IsDigit).ToArray());
+            if (apenasDigitos.Length == 11 && apenasDigitos[2] == '9')
+            {
+                var ddd = apenasDigitos.Substring(0, 2);
+                var numeroSemNove = apenasDigitos.Substring(3);
+                apenasDigitos = ddd + numeroSemNove; // Ex: "64992926006" -> "6492926006"
+            }
+            if (!apenasDigitos.StartsWith("55"))
+            {
+                apenasDigitos = "55" + apenasDigitos;
+            }
+            if (!apenasDigitos.EndsWith("@c.us"))
+            {
+                apenasDigitos += "@c.us";
+            }
+
+            return apenasDigitos;
         }
     }
 

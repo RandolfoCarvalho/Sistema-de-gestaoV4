@@ -50,13 +50,16 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
         }
 
         [HttpPost("AtivarAcompanhamento")]
-        public async Task AtivarAcompanhamentoAsync(int pedidoId)
+        public async Task<IActionResult> AtivarAcompanhamentoAsync([FromBody] AtivarAcompanhamentoRequest request)
         {
-            var pedido = await _context.Pedidos.FindAsync(pedidoId);
-            if (pedido == null) return;
-
+            var pedido = await _context.Pedidos.FindAsync(request.PedidoId);
+            if (pedido == null)
+            {
+                return NotFound(new { message = $"Pedido com ID {request.PedidoId} não encontrado." });
+            }
             pedido.AcompanhamentoAtivo = true;
             await _context.SaveChangesAsync();
+            return Ok(new { message = "Acompanhamento ativado com sucesso." });
         }
         //todo fazer a mensagem retornar, tratar acentos e espacos para buscar o modelo no banco
         [Route("templates/{restauranteId}/{status}")]
@@ -163,6 +166,11 @@ namespace SistemaDeGestao.Areas.Admin.Controllers
             else
                 return StatusCode(500, "Erro ao enviar a mensagem.");
         }
+       
+    }
+    public class AtivarAcompanhamentoRequest
+    {
+        public int PedidoId { get; set; }
     }
 
 }

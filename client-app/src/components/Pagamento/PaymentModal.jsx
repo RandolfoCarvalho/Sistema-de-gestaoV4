@@ -8,6 +8,7 @@ import CardPaymentForm from "./CardPaymentForm";
 import PixPaymentSection from "./PixPaymentSection";
 import DinheiroPaymentForm from "./DinheiroPaymentForm";
 import PixForm from "./PixForm";
+import ConfirmationPaymentForm from "./ConfirmationPaymentForm";
 import axios from "axios";
 import * as signalR from '@microsoft/signalr';
 
@@ -22,7 +23,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     const [mensagem, setMensagem] = useState("");
     const [countdown, setCountdown] = useState(300);
     const [paymentSuccessState, setPaymentSuccessState] = useState(false);
-    const [paymentResponseData, setPaymentResponseData] = useState(null); 
+    const [paymentResponseData, setPaymentResponseData] = useState(null);
     const amountForDisplay = parseFloat(cartTotal) || 0;
 
     useEffect(() => {
@@ -32,18 +33,18 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             return;
         }
         fetch(`${process.env.REACT_APP_API_URL}/api/1.0/CredenciaisMercadoPago/GetCredentialByRestauranteId/${restauranteId}`)
-        .then(res => {
-            if (!res.ok) throw new Error("Erro ao buscar credencial");
-            return res.json();
-        })
-        .then(data => {
-            if (data.publicKey) {
-            initMercadoPago(data.publicKey, { locale: 'pt-BR' });
-            }
-        })
-        .catch(err => {
-            console.error("Erro ao buscar credencial do restaurante:", err);
-        });
+            .then(res => {
+                if (!res.ok) throw new Error("Erro ao buscar credencial");
+                return res.json();
+            })
+            .then(data => {
+                if (data.publicKey) {
+                    initMercadoPago(data.publicKey, { locale: 'pt-BR' });
+                }
+            })
+            .catch(err => {
+                console.error("Erro ao buscar credencial do restaurante:", err);
+            });
     }, []);
 
     useEffect(() => {
@@ -64,39 +65,29 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     }, [paymentSuccessState, paymentResponseData, onPaymentSuccess]);
 
     useEffect(() => {
-        console.log("Entrou no useEffect de pagamento")
         if (!transactionId || paymentSuccessState) return;
-
         setMensagem("⏳ Aguardando confirmação do pagamento PIX...");
-        console.log("Conectando ao SignalR em:", `${process.env.REACT_APP_API_URL}/pagamentoPixHub`);
         const connection = new signalR.HubConnectionBuilder()
             .withUrl(`${process.env.REACT_APP_API_URL}/pagamentoPixHub`)
             .withAutomaticReconnect()
             .configureLogging(signalR.LogLevel.Information)
             .build();
-        console.log("Conexao para startar")
         const startConnection = async () => {
             try {
                 await connection.start();
-                console.log("Conectado ao SignalR pix.");
                 await connection.invoke("JoinPaymentGroup", transactionId);
-
                 connection.on("PagamentoAprovado", (response) => {
-                    console.log("Pagamento Aprovado recebido via SignalR:", response);
                     setMensagem("✅ Pagamento aprovado com sucesso!");
-                    setPaymentResponseData(response); 
+                    setPaymentResponseData(response);
                     setPaymentSuccessState(true);
                     connection.stop();
                 });
-
             } catch (err) {
                 console.error("Falha na conexão com SignalR: ", err);
                 setMensagem("⚠️ Erro de comunicação. Verifique o status na tela de pedidos.");
             }
         };
-
         startConnection();
-
         return () => {
             if (connection.state === 'Connected') {
                 connection.stop();
@@ -108,30 +99,24 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
         setInternalLoading(true);
         setInternalError(null);
         setMensagem("Validando pedido e processando pagamento...");
-
         const pedidoDTO = preparePedidoDTO(paymentMethod);
-
         if (!pedidoDTO) {
             setInternalError("❌ Não foi possível preparar os dados do pedido.");
             setInternalLoading(false);
             return;
         }
-
-       try {
+        try {
             const response = await paymentProcessor(paymentData, pedidoDTO);
             const isPaymentApproved = response.ok && response.data?.status === "approved";
-            const isDinheiroSuccess = response.ok && paymentMethod === "dinheiro";
+            const isOfflineSuccess = response.ok && ["dinheiro", "maquininha", "pagar na retirada"].includes(paymentMethod);
             const isPixSuccess = response.ok && response.data?.qrCodeBase64;
 
-            if (isPaymentApproved || isDinheiroSuccess || isPixSuccess) {
+            if (isPaymentApproved || isOfflineSuccess || isPixSuccess) {
                 if (paymentMethod === "pix" && isPixSuccess) {
-                    setPixData({
-                        qrCodeBase64: response.data.qrCodeBase64,
-                        qrCodeCopyPaste: response.data.qrCodeString || response.data.qr_code,
-                    });
+                    setPixData({ qrCodeBase64: response.data.qrCodeBase64, qrCodeCopyPaste: response.data.qrCodeString || response.data.qr_code });
                     setTransactionId(response.data.transactionId.toString());
                 } else {
-                    setMensagem(`✅ Pagamento com ${paymentMethod} processado com sucesso!`);
+                    setMensagem(`✅ Pedido com pagamento via ${paymentMethod} confirmado!`);
                     setPaymentResponseData(response);
                     setPaymentSuccessState(true);
                 }
@@ -148,25 +133,14 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             setInternalLoading(false);
         }
     };
-    
+
     const handleCardPaymentSubmit = (formData, additionalData) => {
         const fullName = additionalData.cardholderName?.trim() || "";
         const nameParts = fullName.split(/\s+/);
         const lastName = nameParts.length > 1 ? nameParts.pop() : "";
         const firstName = nameParts.join(" ");
-
         const paymentData = {
-            Amount: parseFloat(formData.transaction_amount), 
-            Token: formData.token,
-            PaymentMethodId: formData.payment_method_id,
-            Installments: formData.installments,
-            IssuerId: formData.issuer_id,
-            PayerFirstName: firstName,
-            PayerLastName: lastName,
-            PayerEmail: formData.payer.email,
-            PayerIdentificationType: formData.payer.identification.type,
-            PayerIdentificationNumber: formData.payer.identification.number,
-            FormaPagamento: "cartao"
+            Amount: parseFloat(formData.transaction_amount), Token: formData.token, PaymentMethodId: formData.payment_method_id, Installments: formData.installments, IssuerId: formData.issuer_id, PayerFirstName: firstName, PayerLastName: lastName, PayerEmail: formData.payer.email, PayerIdentificationType: formData.payer.identification.type, PayerIdentificationNumber: formData.payer.identification.number, FormaPagamento: "cartao"
         };
         handleSubmit(processPayment, paymentData);
     };
@@ -177,32 +151,29 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             setInternalError("❌ O valor do troco deve ser maior que o total a pagar.");
             return;
         }
-        const paymentData = { 
-            FormaPagamento: "dinheiro", 
-            trocoPara: troco 
-        };
-
+        const paymentData = { FormaPagamento: "dinheiro", trocoPara: troco };
         handleSubmit(processPaymentDinheiro, paymentData);
     };
 
     const handlePixSubmit = (formData) => {
-        // Arredonda o valor para 2 casas decimas e converte para número
         const amountArredondado = parseFloat(cartTotal.toFixed(2))
-        const paymentData = { ...formData, 
-            amount: amountArredondado,
-            FormaPagamento: "pix" };
-        console.log("Dados do PIX a serem enviados:", paymentData);
+        const paymentData = { ...formData, amount: amountArredondado, FormaPagamento: "pix" };
         handleSubmit(processPaymentPix, paymentData);
+    };
+
+    // FUNÇÃO QUE ESTAVA FALTANDO
+    const handleConfirmationSubmit = (e) => {
+        e.preventDefault();
+        const paymentData = { FormaPagamento: paymentMethod };
+        handleSubmit(processPaymentDinheiro, paymentData);
     };
 
     const handleCopyPixCode = () => {
         if (pixData?.qrCodeCopyPaste) {
-            navigator.clipboard.writeText(pixData.qrCodeCopyPaste)
-                .then(() => alert('Código PIX copiado!'))
-                .catch(() => alert('Erro ao copiar o código PIX.'));
+            navigator.clipboard.writeText(pixData.qrCodeCopyPaste).then(() => alert('Código PIX copiado!')).catch(() => alert('Erro ao copiar o código PIX.'));
         }
     };
-    
+
     useEffect(() => {
         if (!pixData || countdown <= 0 || paymentSuccessState) return;
         const timer = setInterval(() => setCountdown(prev => prev - 1), 1000);
@@ -210,7 +181,7 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
     }, [countdown, pixData, paymentSuccessState]);
 
     const isLoading = paymentLoading || internalLoading;
-    
+
     const handleClose = () => {
         if (isLoading) return;
         onClose();
@@ -248,41 +219,24 @@ const PaymentModal = ({ isOpen, onClose, paymentMethod, cartTotal, onPaymentSucc
             ) : (
                 <div className="space-y-4">
                     {paymentMethod === "cartao" && (
-                        <CardPaymentForm 
-                            amount={amountForDisplay}
-                            onSubmit={handleCardPaymentSubmit}
-                            onClose={handleClose}
-                            isLoading={isLoading}
-                            ErrorMessage={internalError}
-                        />
+                        <CardPaymentForm amount={amountForDisplay} onSubmit={handleCardPaymentSubmit} onClose={handleClose} isLoading={isLoading} ErrorMessage={internalError} />
                     )}
                     {paymentMethod === "pix" && !pixData && (
-                        <PixForm 
-                            amount={amountForDisplay}
-                            onSubmit={handlePixSubmit}
-                            errorMessage={internalError}
-                            onClose={handleClose}
-                            isLoading={isLoading}
-                        />
+                        <PixForm amount={amountForDisplay} onSubmit={handlePixSubmit} errorMessage={internalError} onClose={handleClose} isLoading={isLoading} />
                     )}
                     {pixData && (
-                        <PixPaymentSection 
-                            pixData={pixData}
-                            onCopyPixCode={handleCopyPixCode}
-                            onClose={handleClose}
-                            countdown={countdown}
-                            mensagemGlobal={mensagem}
-                            isLoading={isLoading} 
-                        />
+                        <PixPaymentSection pixData={pixData} onCopyPixCode={handleCopyPixCode} onClose={handleClose} countdown={countdown} mensagemGlobal={mensagem} isLoading={isLoading} />
                     )}
                     {paymentMethod === "dinheiro" && (
-                        <DinheiroPaymentForm 
+                        <DinheiroPaymentForm amount={amountForDisplay} troco={troco} setTroco={setTroco} onSubmit={handleDinheiroSubmit} onClose={handleClose} isLoading={isLoading} errorMessage={internalError} />
+                    )}
+                    {(paymentMethod === "maquininha" || paymentMethod === "pagar na retirada") && (
+                        <ConfirmationPaymentForm
                             amount={amountForDisplay}
-                            troco={troco}
-                            setTroco={setTroco}
-                            onSubmit={handleDinheiroSubmit}
+                            onSubmit={handleConfirmationSubmit}
                             onClose={handleClose}
                             isLoading={isLoading}
+                            paymentMethodLabel={paymentMethod === "maquininha" ? "Cartão na Entrega" : "Pagamento no Balcão"}
                             errorMessage={internalError}
                         />
                     )}

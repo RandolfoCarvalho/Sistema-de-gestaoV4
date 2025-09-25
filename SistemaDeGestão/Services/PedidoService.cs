@@ -154,6 +154,11 @@ namespace SistemaDeGestao.Services
             if (pedidoDTO == null || !pedidoDTO.Itens.Any())
                 throw new ArgumentException("O pedido deve conter pelo menos um item.");
 
+            if (pedidoDTO.TipoEntrega == "DELIVERY" && pedidoDTO.Endereco == null)
+            {
+                throw new ArgumentException("O endereço de entrega é obrigatório para pedidos do tipo DELIVERY.");
+            }
+
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
@@ -167,16 +172,31 @@ namespace SistemaDeGestao.Services
 
                 var pedido = _mapper.Map<Pedido>(pedidoDTO);
 
+                if (pedido.TipoEntrega == "RETIRADA")
+                {
+                    if (pedido.Pagamento != null)
+                    {
+                        pedido.Pagamento.TaxaEntrega = 0;
+                    }
+                    pedido.EnderecoEntrega = null;
+                }
+
                 await ValidarERecalcularPedido(pedido, pedidoDTO);
 
                 pedido.Numero = GerarNumeroPedido();
                 pedido.Status = OrderStatus.NOVO;
 
-                if (pedido.Pagamento.FormaPagamento == "dinheiro")
+                var formasPagamentoOffline = new List<string> { "dinheiro", "maquininha", "pagar na retirada" };
+                var formaPagamentoAtual = (pedido.Pagamento.FormaPagamento ?? string.Empty).ToLower();
+
+                // 2. Verifica se a forma de pagamento atual está na lista de métodos offline.
+                if (formasPagamentoOffline.Contains(formaPagamentoAtual))
                 {
                     pedido.Pagamento.PagamentoAprovado = true;
                     pedido.Pagamento.DataAprovacao = DateTime.UtcNow;
-                    pedido.Pagamento.TransactionId ??= $"DINHEIRO-{Guid.NewGuid().ToString().Substring(0, 8)}";
+                    // 3. Cria um prefixo dinâmico para o TransactionId para fácil identificação no banco.
+                    var prefixo = formaPagamentoAtual.ToUpper().Replace(" ", "_");
+                    pedido.Pagamento.TransactionId ??= $"{prefixo}-{Guid.NewGuid().ToString().Substring(0, 8)}";
                 }
 
                 _context.Pedidos.Add(pedido);

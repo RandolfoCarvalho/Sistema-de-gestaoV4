@@ -8,6 +8,7 @@ import OrderAnalyticsDashboard from './components/OrderAnalyticsDashboard';
 
 const OrderDashboard = () => {
     const { connection, isConnected, setNotification  } = useSignalR();
+    //buscar e gerencia o estado dos pedidos pelo hook useOrders
     const { orders, setOrders, fetchOrders, processOrders } = useOrders();
     const [activeFilters, setActiveFilters] = useState({
         searchTerm: '',

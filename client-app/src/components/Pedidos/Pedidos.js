@@ -50,16 +50,12 @@ const OrderHistory = () => {
     };
     
     const handleLoginSuccess = (userDataWithToken) => {
-        // A userDataWithToken já contém id, nome, telefone e o TOKEN
         const { id, nome, telefone, token } = userDataWithToken;
-        // Salvar os dados e o token
         localStorage.setItem("userId", id);
         localStorage.setItem("FinalUserName", nome);
         localStorage.setItem("FinalUserTelefone", telefone);
         localStorage.setItem("jwtToken", token);
-
         setUser({ id, nome, telefone });
-
         setShowModal(false); 
         navigate("/pedidos");
     };
@@ -77,7 +73,14 @@ const OrderHistory = () => {
         };
     };
 
-    const getStatusInfo = (statusCode) => {
+    const getStatusInfo = (statusCode, tipoEntrega) => {
+        if (tipoEntrega === 'RETIRADA' && statusCode === 2) {
+            return { text: "Pronto p/ Retirada", color: "bg-purple-500" };
+        }
+        if (tipoEntrega === 'RETIRADA' && statusCode === 3) {
+            return { text: "Retirado", color: "bg-green-500" };
+        }
+
         const statusMap = {
             0: { text: "Pendente", color: "bg-yellow-500" },
             1: { text: "Em preparo", color: "bg-orange-500" },
@@ -124,11 +127,9 @@ const OrderHistory = () => {
                 ) : (
                     orders.map(order => {
                         const { date, time } = formatDate(order.dataPedido);
-                        const statusInfo = getStatusInfo(order.status);
+                        const statusInfo = getStatusInfo(order.status, order.tipoEntrega);
                         const orderNumber = formatOrderNumber(order.numero);
-
                         const whatsappMessage = `Acompanhar pedido número ${orderNumber}`;
-
                         const encodedWhatsappMessage = encodeURIComponent(whatsappMessage);
 
                         return (
@@ -148,7 +149,6 @@ const OrderHistory = () => {
                                 <div className="grid grid-cols-2 gap-3">
                                     <button onClick={() => viewOrderDetails(order)} className="border border-blue-500 text-blue-500 py-3 rounded-lg font-medium flex items-center justify-center gap-2">Detalhes</button>
                                     {storeInfo?.phoneNumber && (
-                                        // 3. Use a variável com a mensagem codificada no link.
                                         <a href={`https://wa.me/55${storeInfo.phoneNumber}?text=${encodedWhatsappMessage}`} target="_blank" rel="noopener noreferrer" className="bg-green-500 text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 text-base">
                                             Acompanhar
                                         </a>

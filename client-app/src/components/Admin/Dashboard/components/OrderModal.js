@@ -100,7 +100,10 @@ const OrderModal = ({ order, onClose }) => {
                 return;
             }
 
-            if (pedidoCompleto.pagamento?.formaPagamento?.toLowerCase() === 'dinheiro') {
+            const formasPagamentoOffline = ['dinheiro', 'pagar na retirada', 'maquininha'];
+            const formaPagamentoAtual = (pedidoCompleto.pagamento?.formaPagamento || '').toLowerCase();
+
+            if (formasPagamentoOffline.includes(formaPagamentoAtual)) {
                 await cancelOrderWithoutRefund(pedidoCompleto);
             } else {
                 await cancelOrderWithRefund(pedidoCompleto);
@@ -129,7 +132,7 @@ const OrderModal = ({ order, onClose }) => {
 
             showSuccessNotification('Pedido cancelado com sucesso!');
         } catch (err) {
-            console.error("Erro ao cancelar pedido (dinheiro):", err);
+            console.error("Erro ao cancelar pedido (sem estorno):", err);
             setError('Erro ao registrar o cancelamento. Por favor, tente novamente.');
         }
     };
@@ -183,7 +186,6 @@ const OrderModal = ({ order, onClose }) => {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 animate-fade-in">
             <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col animate-zoom-in">
-                {/* Header */}
                 <div className="p-5 border-b flex justify-between items-center bg-slate-50 rounded-t-xl">
                     <div>
                         <h2 className="text-xl font-bold text-slate-800">Pedido {order.numero}</h2>
@@ -195,14 +197,12 @@ const OrderModal = ({ order, onClose }) => {
                     </div>
                 </div>
 
-                {/* Tabs */}
                 <div className="flex border-b border-slate-200 px-2">
                     <TabButton label="Detalhes do Pedido" isActive={activeTab === 'detalhes'} onClick={() => setActiveTab('detalhes')} />
                     <TabButton label="Cliente e Entrega" isActive={activeTab === 'entrega'} onClick={() => setActiveTab('entrega')} />
                     <TabButton label="Pagamento" isActive={activeTab === 'pagamento'} onClick={() => setActiveTab('pagamento')} />
                 </div>
 
-                {/* Conteúdo da Tab */}
                 <div className="p-6 overflow-y-auto flex-grow bg-white">
                     {activeTab === 'detalhes' && (
                         <div className="space-y-4">
@@ -265,13 +265,11 @@ const OrderModal = ({ order, onClose }) => {
                     )}
                 </div>
 
-                {/* Footer */}
                 <div className="p-4 border-t bg-slate-50 rounded-b-xl flex justify-end gap-3">
                     <button className="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-100 transition-colors flex items-center gap-2"><Printer size={16} /> Imprimir</button>
                     {order.status !== 'CANCELADO' && <button onClick={() => setShowConfirm(true)} className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors flex items-center gap-2"><X size={16} /> Cancelar Pedido</button>}
                 </div>
 
-                {/* Modal de Confirmação */}
                 {showConfirm && (
                     <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50">
                         <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full animate-zoom-in">

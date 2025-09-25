@@ -28,19 +28,20 @@ const validateAddress = (endereco, errors) => {
  * Valida o formulário completo de checkout.
  * Esta função NÃO mostra alertas, apenas retorna o resultado da validação.
  * @param {object} formData - O estado completo do formulário.
+ * @param {string} tipoEntrega - O tipo de entrega ('DELIVERY' ou 'RETIRADA').
  * @returns {{isValid: boolean, errors: string[]}} - Um objeto com o status da validação e uma lista de mensagens de erro.
  */
-export const validateForm = (formData) => {
+export const validateForm = (formData, tipoEntrega) => {
     const errors = [];
 
-    // 1. Valida o endereço (passando o array de erros para ser preenchido)
-    validateAddress(formData.endereco, errors);
+    // 1. Valida o endereço APENAS se o tipo de entrega for 'DELIVERY'
+    if (tipoEntrega === 'DELIVERY') {
+        validateAddress(formData.endereco, errors);
+    }
 
-    // 2. Valida o pagamento (pode adicionar mais validações aqui se precisar)
-    // OBS: A forma de pagamento geralmente é selecionada em um passo posterior (PaymentModal),
-    // então essa validação pode não ser necessária aqui, mas vamos mantê-la por segurança.
+    // 2. Valida se uma forma de pagamento foi selecionada
     if (!formData.pagamento?.FormaPagamento) {
-        errors.push("A forma de pagamento não foi definida.");
+        errors.push("A forma de pagamento deve ser selecionada.");
     }
 
     // 3. Retorna o objeto padronizado

@@ -12,6 +12,7 @@ namespace SistemaDeGestao.Models
         public string Numero { get; set; }
 
         public DateTime DataPedido { get; set; }
+        public string TipoEntrega { get; set; }
 
         [Required]
         public OrderStatus Status { get; set; }

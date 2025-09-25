@@ -95,7 +95,7 @@ namespace SistemaDeGestao.Services
                 message = mensagem
             };
             var content = new StringContent(JsonSerializer.Serialize(jsonBody), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync("https://bot.fomedique.com.br/send-message", content);
+            var response = await httpClient.PostAsync("http://localhost:3001/send-message", content);
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();

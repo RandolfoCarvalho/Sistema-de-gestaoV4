@@ -1,14 +1,22 @@
 ﻿import React from 'react';
-import { User, Phone, MapPin, DollarSign, List, MessageSquare, Printer, X, Coins, PlusCircle, ChevronsRight } from 'lucide-react';
+// IMPORTAÇÃO DO NOVO ÍCONE 'STORE'
+import { User, Phone, MapPin, DollarSign, List, MessageSquare, Printer, X, Coins, PlusCircle, ChevronsRight, Store, Truck } from 'lucide-react';
 
-// --- HELPERS & SUB-COMPONENTES PARA UM CÓDIGO MAIS LIMPO E ELEGANTE ---
+// --- HELPERS & SUB-COMPONENTES ---
 
 const formatCurrency = (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
 
 const formatDate = (dateString) => new Date(dateString).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
 
-const getStatusInfo = (status) => {
+// LÓGICA DE STATUS APRIMORADA PARA ENTENDER O TIPO DE ENTREGA
+const getStatusInfo = (status, tipoEntrega) => {
     const s = (status || '').toUpperCase();
+    
+    // Se for um pedido para retirada, o status 'EM_ENTREGA' é interpretado como 'PRONTO_PARA_RETIRADA'
+    if (tipoEntrega === 'RETIRADA' && (s === 'EM_ENTREGA' || s === 'PRONTO_PARA_RETIRADA')) {
+        return { text: 'Pronto para Retirada', style: 'bg-purple-100 text-purple-800' };
+    }
+
     switch (s) {
         case 'NOVO': return { text: 'Novo', style: 'bg-green-100 text-green-800' };
         case 'EM_PRODUCAO': return { text: 'Em Preparo', style: 'bg-amber-100 text-amber-800' };
@@ -60,7 +68,8 @@ const ItemDetailRow = ({ item }) => (
 const OrderDetailsModal = ({ order, isOpen, onClose }) => {
     if (!isOpen || !order) return null;
 
-    const statusInfo = getStatusInfo(order.status);
+    // A FUNÇÃO AGORA RECEBE O TIPO DE ENTREGA PARA DECIDIR O TEXTO CORRETO DO STATUS
+    const statusInfo = getStatusInfo(order.status, order.tipoEntrega);
     const endereco = order.enderecoEntrega;
     const pagamento = order.pagamento;
 
@@ -152,18 +161,29 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
                             <InfoPair label="Telefone" value={order.finalUser?.telefone || order.finalUserTelefone} />
                         </DetailSection>
 
-                        <DetailSection icon={MapPin} title="Entrega">
-                            <p>{`${endereco?.logradouro || ''}, ${endereco?.numero || ''}`}</p>
-                            <p>{`${endereco?.bairro || ''} - ${endereco?.cidade || ''}`}</p>
-                            <p>{endereco?.cep || ''}</p>
-                            {endereco?.complemento && <InfoPair label="Complemento" value={endereco.complemento} />}
-                        </DetailSection>
+                        {/* SEÇÃO DE ENTREGA/RETIRADA RENDERIZADA CONDICIONALMENTE */}
+                        {order.tipoEntrega === 'RETIRADA' ? (
+                            <DetailSection icon={Store} title="Retirada no Balcão">
+                                <p className="font-medium text-slate-700">Este pedido é para ser retirado na loja.</p>
+                                <p>Não há endereço de entrega associado.</p>
+                            </DetailSection>
+                        ) : (
+                            <DetailSection icon={MapPin} title="Entrega">
+                                <p>{`${endereco?.logradouro || ''}, ${endereco?.numero || ''}`}</p>
+                                <p>{`${endereco?.bairro || ''} - ${endereco?.cidade || ''}`}</p>
+                                <p>{endereco?.cep || ''}</p>
+                                {endereco?.complemento && <InfoPair label="Complemento" value={endereco.complemento} />}
+                            </DetailSection>
+                        )}
 
                         <DetailSection icon={DollarSign} title="Pagamento">
                             <InfoPair label="Forma de Pagamento" value={pagamento?.formaPagamento} />
                             <div className="pt-2 mt-2 border-t border-slate-200 space-y-1">
                                 <InfoPair label="Subtotal" value={formatCurrency(pagamento?.subTotal)} />
-                                <InfoPair label="Taxa de Entrega" value={formatCurrency(pagamento?.taxaEntrega)} />
+                                {/* TAXA DE ENTREGA SÓ É EXIBIDA SE FOR DO TIPO DELIVERY */}
+                                {order.tipoEntrega === 'DELIVERY' && (
+                                    <InfoPair label="Taxa de Entrega" value={formatCurrency(pagamento?.taxaEntrega)} />
+                                )}
                                 <p className="text-sm font-bold text-slate-800 flex justify-between"><span>Total</span> <span>{formatCurrency(pagamento?.valorTotal)}</span></p>
                             </div>
                             {pagamento?.formaPagamento?.toLowerCase() === 'dinheiro' && pagamento?.trocoPara > 0 && (

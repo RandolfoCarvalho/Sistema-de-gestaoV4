@@ -4,7 +4,7 @@ import { useStore } from '../Context/StoreContext';
 import axios from "axios";
 import {
     PackageCheck, ChefHat, Bike, PartyPopper, Wallet, User,
-    MapPin, Hash, RefreshCw, ShoppingCart, XCircle
+    MapPin, Hash, RefreshCw, ShoppingCart, XCircle, Store
 } from 'lucide-react';
 import BottomNav from '../BottomNav';
 
@@ -23,15 +23,27 @@ const formatDate = (dateString) => {
 
 // --- Componentes de UI de Alta Qualidade ---
 const STATUS_CANCELADO = 4;
-const StatusTracker = ({ status, orderDate }) => {
-    const statusSteps = useMemo(() => [
-        { name: "Recebido", icon: PackageCheck },
-        { name: "Em Preparo", icon: ChefHat },
-        { name: "Saiu para Entrega", icon: Bike },
-        { name: "Entregue", icon: PartyPopper }
-    ], []);
+const StatusTracker = ({ status, orderDate, tipoEntrega }) => {
+    const statusSteps = useMemo(() => {
+        if (tipoEntrega === 'RETIRADA') {
+            return [
+                { name: "Recebido", icon: PackageCheck },
+                { name: "Em Preparo", icon: ChefHat },
+                { name: "Pronto p/ Retirada", icon: Store },
+                { name: "Retirado", icon: PartyPopper }
+            ];
+        }
+        // Padrão para DELIVERY
+        return [
+            { name: "Recebido", icon: PackageCheck },
+            { name: "Em Preparo", icon: ChefHat },
+            { name: "Saiu para Entrega", icon: Bike },
+            { name: "Entregue", icon: PartyPopper }
+        ];
+    }, [tipoEntrega]);
 
     const currentStatusIndex = status > 4 ? 4 : status;
+
     if (status === STATUS_CANCELADO) {
         return (
             <div className="bg-red-50 p-5 rounded-xl shadow-sm border border-red-200">
@@ -50,6 +62,7 @@ const StatusTracker = ({ status, orderDate }) => {
             </div>
         );
     }
+
     return (
         <div className="bg-white p-5 rounded-xl shadow-sm">
             <div className="flex justify-between items-center mb-5">
@@ -86,7 +99,6 @@ const StatusTracker = ({ status, orderDate }) => {
     );
 };
 
-// 2. Card de Item do Pedido (Claro e detalhado)
 const OrderItemCard = ({ item }) => (
     <div className="flex items-start space-x-4 py-4">
         <img
@@ -113,7 +125,6 @@ const OrderItemCard = ({ item }) => (
     </div>
 );
 
-// 3. Card de Informação Genérico e elegante
 const InfoBlock = ({ icon, title, children }) => (
     <div className="bg-white p-4 rounded-xl shadow-sm flex items-start space-x-4">
         <div className="text-blue-600 mt-1">{icon}</div>
@@ -131,7 +142,7 @@ const OrderDetails = () => {
     const location = useLocation();
     const [orderData, setOrderData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const { currentStore } = useStore();
+    const { currentStore, storeInfo } = useStore();
     const userPhone = localStorage.getItem("FinalUserTelefone");
 
     useEffect(() => {
@@ -160,6 +171,7 @@ const OrderDetails = () => {
     if (loading) {
         return <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-500">Carregando detalhes...</div>;
     }
+
     if (!orderData) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4 text-center">
@@ -174,20 +186,19 @@ const OrderDetails = () => {
     
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">
-            {/* Header */}
-                <div className="sticky top-0 bg-white shadow-sm p-4 flex items-center z-10">
-                    <button className="mr-3" onClick={() => navigate(-1)}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                            strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M15 18l-6-6 6-6" />
-                        </svg>
-                    </button>
-                    <h1 className="text-xl font-medium">Detalhes do pedido</h1>
-                </div>
+            <div className="sticky top-0 bg-white shadow-sm p-4 flex items-center z-10">
+                <button className="mr-3" onClick={() => navigate(-1)}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                        strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                </button>
+                <h1 className="text-xl font-medium">Detalhes do pedido</h1>
+            </div>
             <main className="flex-1 overflow-y-auto pb-28">
                 <div className="max-w-4xl mx-auto p-4 space-y-6">
-                    <StatusTracker status={orderData.status} orderDate={orderData.dataPedido} />
+                    <StatusTracker status={orderData.status} orderDate={orderData.dataPedido} tipoEntrega={orderData.tipoEntrega} />
                     <div className="bg-white rounded-xl shadow-sm">
                         <div className="p-4 border-b border-gray-100 flex items-center space-x-3">
                             <ShoppingCart size={20} className="text-gray-500"/>
@@ -198,7 +209,9 @@ const OrderDetails = () => {
                         </div>
                         <div className="p-4 bg-gray-50/50 rounded-b-xl space-y-2 text-sm">
                             <div className="flex justify-between"><span className="text-gray-600">Subtotal</span><span>{formatCurrency(orderData.pagamento.subTotal)}</span></div>
-                            <div className="flex justify-between"><span className="text-gray-600">Taxa de entrega</span><span>{formatCurrency(orderData.pagamento.taxaEntrega)}</span></div>
+                            {orderData.tipoEntrega === 'DELIVERY' && (
+                                <div className="flex justify-between"><span className="text-gray-600">Taxa de entrega</span><span>{formatCurrency(orderData.pagamento.taxaEntrega)}</span></div>
+                            )}
                             {orderData.pagamento.desconto > 0 && (
                                 <div className="flex justify-between text-green-600 font-medium"><span>Desconto</span><span>-{formatCurrency(orderData.pagamento.desconto)}</span></div>
                             )}
@@ -213,14 +226,21 @@ const OrderDetails = () => {
                             <p>{orderData.pagamento.formaPagamento}</p>
                             {orderData.observacoes && <p className="text-xs text-gray-500">Obs: "{orderData.observacoes}"</p>}
                         </InfoBlock>
-                        <InfoBlock icon={<MapPin size={20} />} title="ENDEREÇO DE ENTREGA">
-                            {orderData.enderecoEntrega ? (
-                                <>
-                                    <p>{orderData.enderecoEntrega.logradouro}, {orderData.enderecoEntrega.numero}</p>
-                                    <p>{orderData.enderecoEntrega.bairro}, {orderData.enderecoEntrega.cidade}</p>
-                                </>
-                            ) : <p>Endereço não disponível.</p>}
-                        </InfoBlock>
+                        {orderData.tipoEntrega === 'RETIRADA' ? (
+                            <InfoBlock icon={<Store size={20} />} title="LOCAL DE RETIRADA">
+                                <p>{storeInfo?.nome || 'Endereço da Loja'}</p>
+                                <p>{storeInfo?.endereco || 'Consulte o endereço da loja.'}</p>
+                            </InfoBlock>
+                        ) : (
+                            <InfoBlock icon={<MapPin size={20} />} title="ENDEREÇO DE ENTREGA">
+                                {orderData.enderecoEntrega ? (
+                                    <>
+                                        <p>{orderData.enderecoEntrega.logradouro}, {orderData.enderecoEntrega.numero}</p>
+                                        <p>{orderData.enderecoEntrega.bairro}, {orderData.enderecoEntrega.cidade}</p>
+                                    </>
+                                ) : <p>Endereço não disponível.</p>}
+                            </InfoBlock>
+                        )}
                         <InfoBlock icon={<User size={20} />} title="CLIENTE">
                             <p>{orderData.finalUserName}</p>
                             <p>{orderData.finalUserTelefone}</p>
@@ -238,7 +258,6 @@ const OrderDetails = () => {
                     </div>
                 </div>
             </main>
-
             <BottomNav />
         </div>
     );

@@ -67,12 +67,37 @@ const Checkout = () => {
 
     const handleFinalizarPedido = async (e) => {
         e.preventDefault();
-
+        let isAuthenticated = false;
         if (!formData.FinalUserTelefone || !userId) {
             setIsUserModalOpen(true);
             return;
         }
-        
+        try {
+            // Tenta verificar se o usuário existe no backend
+            const result = await axios.post(
+                `${process.env.REACT_APP_API_URL}/api/1.0/FinaluserAuth/Exists`,
+                JSON.stringify(formData.FinalUserTelefone),
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (result.status === 200) {
+                isAuthenticated = true;
+            }
+        } catch (ex) {
+            if (ex.response && ex.response.status === 404) {
+                console.log("Usuário não encontrado");
+            } else {
+                console.error("Erro ao verificar usuário:", ex);
+            }
+        }
+        if (!isAuthenticated) {
+            setIsUserModalOpen(true);
+            return;
+        }
         if (blockCheckoutMessage) {
             showInfo("Atenção", blockCheckoutMessage);
             return;

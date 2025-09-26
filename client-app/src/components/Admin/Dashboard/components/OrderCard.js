@@ -51,9 +51,7 @@ const OrderItem = ({ item }) => (
     </li>
 );
 
-
 // --- COMPONENTE PRINCIPAL ---
-
 const OrderCard = ({ order }) => {
     if (!order) return null;
     const formattedDate = order.dataPedido
@@ -122,7 +120,6 @@ const OrderCard = ({ order }) => {
                     </InfoItem>
                 )}
             </div>
-
             {/* Lista de Itens Detalhada */}
             {totalItems > 0 && (
                 <div className="border-t border-slate-200 pt-3 mt-3">
@@ -134,7 +131,6 @@ const OrderCard = ({ order }) => {
                     </ul>
                 </div>
             )}
-            
             {/* Observações Gerais */}
             {order.observacoes && order.observacoes.trim() !== '' && (
                 <div className="mt-3 pt-3 border-t border-slate-200 text-sm text-slate-600 italic">

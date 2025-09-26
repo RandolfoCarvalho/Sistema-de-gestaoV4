@@ -174,10 +174,6 @@ namespace SistemaDeGestao.Services
 
                 if (pedido.TipoEntrega == "RETIRADA")
                 {
-                    if (pedido.Pagamento != null)
-                    {
-                        pedido.Pagamento.TaxaEntrega = 0;
-                    }
                     pedido.EnderecoEntrega = null;
                 }
 
@@ -343,7 +339,10 @@ namespace SistemaDeGestao.Services
 
             // --- PASSO 4: Calcular o valor final do pagamento ---
             var taxaEntregaReal = await _restauranteService.ObterTaxaDeEntregaAsync(pedido.RestauranteId);
-
+            if (pedido.TipoEntrega == "RETIRADA")
+            {
+                taxaEntregaReal = 0;
+            }
             pedido.Pagamento.SubTotal = subTotalPedido;
             pedido.Pagamento.TaxaEntrega = taxaEntregaReal;
             pedido.Pagamento.Desconto = pedidoDTO.Pagamento.Desconto ?? 0;

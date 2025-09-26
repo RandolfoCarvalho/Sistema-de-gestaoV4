@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { X, Printer, Coins, PlusCircle, ChevronsRight, Loader2, AlertTriangle } from 'lucide-react';
+import api from '../../../../axiosConfig';
 
 const formatCurrency = (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
 const formatDate = (dateString) => dateString ? new Date(dateString).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Data indisponível';
 
 const getStatusInfo = (status) => {
-    const s = (status || '').toUpperCase();
-    const statusMap = {
+    // 1. Mapeamento de status numérico para string, para unificar a lógica
+    const numericToStringMap = {
+        0: 'NOVO',
+        1: 'EM_PRODUCAO',
+        2: 'EM_ENTREGA',
+        3: 'CONCLUIDO',
+        4: 'CANCELADO'
+    };
+
+    const statusAsString = numericToStringMap[status] || String(status).toUpperCase();
+    // 3. O mapa de estilos agora pode lidar com o status normalizado
+    const statusStyleMap = {
         'NOVO': { text: 'Novo', style: 'bg-green-100 text-green-800' },
         'CONFIRMADO': { text: 'Confirmado', style: 'bg-blue-100 text-blue-800' },
         'EM_PRODUCAO': { text: 'Em Preparo', style: 'bg-amber-100 text-amber-800' },
@@ -15,7 +26,9 @@ const getStatusInfo = (status) => {
         'CONCLUIDO': { text: 'Concluído', style: 'bg-slate-200 text-slate-800' },
         'CANCELADO': { text: 'Cancelado', style: 'bg-red-100 text-red-800' },
     };
-    return statusMap[s] || { text: s, style: 'bg-gray-100 text-gray-800' };
+    
+    // 4. Retorna o estilo correspondente ou um padrão seguro
+    return statusStyleMap[statusAsString] || { text: statusAsString, style: 'bg-gray-100 text-gray-800' };
 };
 const TabButton = ({ label, isActive, onClick }) => (
     <button
@@ -25,7 +38,6 @@ const TabButton = ({ label, isActive, onClick }) => (
         {label}
     </button>
 );
-
 const InfoCard = ({ title, children }) => (
     <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
         <h3 className="font-semibold mb-3 text-slate-800">{title}</h3>
@@ -91,7 +103,7 @@ const OrderModal = ({ order, onClose }) => {
         setError('');
 
         try {
-            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/buscarTransactionId/${order.id}`);
+            const res = await api.order.getOrderDetailsForCancellation(order.id);
             const pedidoCompleto = res.data;
 
             if (!pedidoCompleto) {
@@ -119,7 +131,7 @@ const OrderModal = ({ order, onClose }) => {
 
     const cancelOrderWithoutRefund = async (pedido) => {
         try {
-            await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/Pedido/registrarCancelamento`, {
+            await api.order.cancelOrderWithoutRefund({
                 pedidoId: pedido.id,
                 motivoCancelamento: motivoCancelamento,
                 codigoReembolso: '',
@@ -146,12 +158,12 @@ const OrderModal = ({ order, onClose }) => {
                 return;
             }
 
-            const reembolsoResult = await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/MercadoPago/processaReembolso`, {
+            const reembolsoResult = await api.order.processRefund({
                 transactionId: transactionId,
                 Amount: pedido.pagamento?.valorTotal || 0,
                 RestauranteId: pedido.restauranteId,
             });
-            await axios.post(`${process.env.REACT_APP_API_URL}/api/1.0/Pedido/registrarCancelamento`, {
+            await api.order.cancelOrderWithoutRefund({
                 pedidoId: pedido.id,
                 motivoCancelamento: motivoCancelamento,
                 codigoReembolso: reembolsoResult.data?.id || '',
